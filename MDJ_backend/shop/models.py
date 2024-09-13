@@ -44,6 +44,7 @@ class Produit(models.Model):
     composition = models.CharField(max_length=128,choices=COMPO, blank=True,null=True)
     slug = models.SlugField(unique=True)
     reserve = models.BooleanField(default=False) # si le produit est réservé ou non
+    special = models.BooleanField(default=False) # si le produit est une nouveauté ou non
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -105,7 +106,7 @@ class Panier(models.Model):
 class ZoneLivraison(models.Model):
     nom = models.CharField(max_length=100)
     prix_livraison = models.DecimalField(max_digits=10, decimal_places=2)
-    info = models.TextField(max_length=1000,blank=True,null=True) # plusd info
+    info = models.TextField(max_length=1000,blank=True,null=True) # plus d info
     
     def __str__(self):
         return self.nom
@@ -178,3 +179,9 @@ class Paiement(models.Model):
 
     def __str__(self):
         return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"
+    
+class Temoignage(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL,null=True)
+    contenu = models.TextField(max_length=2000)
+    temoigne_le = models.DateField(auto_now_add=True)
+    likes = models.PositiveIntegerField(default = 0)
