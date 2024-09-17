@@ -1,0 +1,118 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+$blue_color: #377DFF;
+.Header {
+    .navbar {
+        .burger_menu_header{
+          background-color: white;
+          border: none;
+          width: 40px;
+          @media(min-width:584px ){
+            display: none;
+          }
+        }
+        padding: 10px 10px;
+        .right_nav_sec{
+            width: 75%;
+        }
+        
+        @media(max-width:1050px){
+            .right_nav_sec{
+                width: 79%;
+                justify-content: end;
+            }
+            
+        }
+        @media(max-width:960px){
+            .right_nav_sec{
+                margin: auto;
+                width: 100%;
+            }
+            
+        }
+        @media(max-width:820px){
+            .right_nav_sec{
+                flex-direction: column;
+                margin-bottom: 15px;
+                ul{
+                    width: 80%;
+                    margin: 20px 0px;
+                }
+                .left_nav_sec{
+                    width: 80%;
+                    justify-content: space-between;
+                }
+            } 
+        }
+      .navbar-brand {
+        font-family: princess;
+        font-size: 24px;
+        @media(max-width:960px){
+            margin: auto;
+        }
+        @media(max-width:584px){
+          margin: 0;
+      }
+      }
+  
+      div {
+        ul {
+            width: 50%;
+            @media(max-width:1200px){
+                width: 60%;
+            }
+            @media(max-width:1000px){
+                width: 63%;
+            }
+            
+          li {
+            color: black;
+          }
+          .whatsapp_link_header{
+            background-color: $blue_color ;
+            border-radius: 30px;
+            padding: 5px 20px;
+            color: white;
+          }
+          li:hover{
+            color: $blue_color;
+          }
+  
+          .header_whatsapp {
+            width: 30px;
+          }
+        }
+  
+        .user_profile_header {
+          button {
+            border-radius: 5px;
+            padding: 5px;
+            background-color: white;
+            .user_icon_header{
+              width: 20px;
+            }
+
+          }
+        }
+        .user_profile_cart{
+            button {
+                border-radius: 5px;
+                padding: 5px;
+                background-color: white;
+                
+                .cart_header {
+                    .cart_header_img {
+                      width: 25px;
+                      margin:0px 10px;
+                    }
+                  }
+              }
+        }
+  
+        
+      }
+    }
+  }
