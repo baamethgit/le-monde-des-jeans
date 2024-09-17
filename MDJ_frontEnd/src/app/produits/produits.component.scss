@@ -1,0 +1,39 @@
+.product_brand {
+    .brand {
+        // background-image: url("../../assets/img/435688628_122141508104191964_5213991208487601928_n.jpg");
+        height: -10vw;
+        width: 80%;
+        margin: auto;
+        display: flex;
+        object-fit: cover;
+        overflow: hidden;
+        .paste-image-icon{
+            width: 100%;
+            height: 392px;
+            object-fit: cover;
+        }
+      .inner_brand {
+        top: 50%;
+        left: 30%;
+        padding: 10px;
+        border: thick double #000000;
+        backdrop-filter: blur(5px);
+        .inner_brand_path {
+            font-weight: 400;
+            span{
+                font-weight: 600;
+            }
+        }
+  
+        .inner_brand_title {
+            font-size: 54px;
+            font-weight: 500;
+        }
+  
+        .inner_brand_desc {
+            font-size: 20px;
+            font-weight: 500;
+        }
+      }
+    }
+  }
