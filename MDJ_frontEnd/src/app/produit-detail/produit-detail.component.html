@@ -1,0 +1,60 @@
+<section class="produit_detail">
+    <div class="produit_detail_main row justify-content-between">
+        <div class="produit_img d-none d-sm-flex col-md-6 row col-12 d-flex flex-column flex-sm-row">
+            @for (item of product?.produitImage; track item) {
+                <div class="p-2 col-6">
+                    <img class="" src={{item}} alt="" srcset="">
+                </div>
+            }
+        </div>
+        <div id="demo" class="carousel slide d-flex d-sm-none" data-bs-ride="carousel">
+
+            
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+              @for (image of product?.produitImage | slice:1; track $index) {
+                <button type="button" data-bs-target="#demo" [attr.data-bs-slide-to]="$index + 1"></button>
+              }
+            </div>
+            
+            
+            <div class="carousel-inner d-flex">
+              <div class="carousel-item active">
+                <img class="d-block" style="width:100%" src={{first_image}} alt="First slide">
+              </div>
+              @for (item of product?.produitImage | slice:1; track item) {
+                <div class="carousel-item">
+                    <img class="d-block" style="width:100%" src={{item}} alt="" srcset="">
+                </div>
+                }
+            </div>
+            
+            
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </button>
+          </div>
+        <div class="produit_detail_specs col-md-5 col-12 d-flex flex-column justify-content-start my-5">
+            <div class="specs_box mb-5">
+                <div class="name_price_box">
+                    <div class="produit_name">{{product?.produitNom}}</div>
+                    <div class="produit_price">{{product?.produitPrix}} FCFA</div>
+                </div>
+                <div class="size_comp_box d-flex justify-content-between">
+                    <div class="produit_size">Taille : {{product?.produitTaille}}</div>
+                    <div class="produit_comp">Composition : {{product?.produitCompo}}</div>
+                </div>
+            </div>
+            <div class="buy_order mb-5">
+                <div class="d-flex justify-content-around">
+                    <button class="add_cart_bt text-nowrap mb-3 mb-xl-0">Ajouter au panier</button>
+                    <button class="buy_now_bt text-nowrap">Acheter directement</button>
+                </div>
+            </div>
+            <div class="produit_categorie">CATEGORIE : {{product?.categorie}}</div>
+        </div>
+    </div>
+</section>

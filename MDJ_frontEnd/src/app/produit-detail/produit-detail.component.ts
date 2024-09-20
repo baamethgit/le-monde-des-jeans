@@ -1,19 +1,25 @@
 import { Component } from '@angular/core';
 import { Produit } from '../models/produit';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { empty } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { SlicePipe } from '@angular/common';
+
 @Component({
-  selector: 'app-produits',
+  selector: 'app-produit-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './produits.component.html',
-  styleUrl: './produits.component.scss'
+  imports: [SlicePipe],
+  templateUrl: './produit-detail.component.html',
+  styleUrl: './produit-detail.component.scss'
 })
-export class ProduitsComponent {
-product:Produit[]=[];
+export class ProduitDetailComponent {
+product:Produit | undefined;
+products:Produit[]=[];
+first_image:string='';
+
+constructor(private route: ActivatedRoute,){}
 
 ngOnInit():void{
-  this.product=[
+  this.products=[
     {
       produitRef: "PROD001",
       produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
@@ -170,7 +176,7 @@ ngOnInit():void{
     {
       produitRef: "PROD019",
       produitNom: "Blazer classique",
-      produitImage: ["../../assets/img/434324409_122138643518191964_1332089378028437094_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
+      produitImage: ["../../assets/img/434324409_122138643518191964_1332089378028437094_n.jpg", "../../assets/img/434414032_122138644106191964_7060683425115058331_n.jpg", "../../assets/img/435568931_122138645126191964_618494230128699512_n.jpg","../../assets/img/434333100_122138645054191964_3331507873479620966_n.jpg","../../assets/img/434403029_122138644628191964_7201834876180993109_n.jpg"],
       produitPrix: 119.99,
       produitTaille: "52",
       produitCompo: "Polyester",
@@ -185,6 +191,9 @@ ngOnInit():void{
       categorie: "Chaussures"
     }
   ]
+  let ref=this.route.snapshot.paramMap.get('ProduitRef')
+  this.product=this.products.find(c=>c.produitRef==<string>ref)
+  this.first_image=<string>this.product?.produitImage[0];
+  console.log(this.product)
 }
-
 }

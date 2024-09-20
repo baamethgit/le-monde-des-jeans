@@ -1,0 +1,93 @@
+<div class="bg-dark h-100 fixed-left" *ngIf="account">
+    <div class="content-all-sidebar d-flex">
+      <div>
+        <div *ngFor="let item of listMenu; let i = index" class="content-menu-item d-flex" (click)="getListSubMenu(item, i)">
+          <div class="bar-menu" [style.background]="selected == i ? '#ff7900' : '#333'"></div>
+          <div class="d-flex w-100" [style.background]="selected == i ? '#666' : '#333'">
+            <img class="icon-menu" src="{{ item.icon }}" alt="logo-menu" />
+            <p *ngIf="isNavbarCollapsed" class="label-menu">{{ item.label }}</p>
+          </div>
+        </div>
+      </div>
+      <ul class="content-submenus py-3 mb-3 metismenu list-unstyled" id="side-menu" *ngIf="showSubMenu">
+        <div *ngFor="let item of listSubMenu; let i = index" class="content-submenu-item px-4 w-100">
+          <div
+            class="d-flex"
+            *ngIf="item.subItems.length == 0"
+            (click)="selected1 = item.id; showSubMenu = false"
+            style="cursor: pointer"
+            [routerLink]="[item.link]"
+            [routerLinkActive]="'router-link-active'"
+          >
+            <img class="icon-submenu" src="{{ item.link && selected1 == i ? item.iconActive : item.icon }}" alt="logo-submenu" />
+            <p [style.color]="selected1 == item.id ? '#ff7900' : '#fff'" class="label-submenu mx-2">{{ item.label }}</p>
+          </div>
+          <div *ngIf="item.subItems.length > 0">
+            <div class="d-flex" (click)="selected1 = item.id" style="cursor: pointer">
+              <img class="icon-submenu" src="{{ item.icon }}" alt="logo-submenu" />
+              <p [style.color]="'#fff'" class="label-submenu mx-2">{{ item.label }}</p>
+              <fa-icon class="ms-auto" style="cursor: pointer" icon="chevron-down"></fa-icon>
+            </div>
+            <div *ngIf="selected1 == item.id">
+              <div class="ps-3" *ngFor="let item2 of item.subItems; let j = index">
+                <div
+                  class="d-flex"
+                  *ngIf="item2.subItems.length == 0"
+                  (click)="selected2 = item2.id; showSubMenu = false"
+                  style="cursor: pointer"
+                  [routerLink]="[item2.link]"
+                  [routerLinkActive]="'router-link-active'"
+                >
+                  <img class="icon-submenu" src="{{ selected2 == item2.id ? item2.iconActive : item2.icon }}" alt="logo-submenu" />
+                  <p [style.color]="selected2 == item2.id ? '#ff7900' : '#fff'" class="label-submenu mx-2">{{ item2.label }}</p>
+                </div>
+                <div *ngIf="item2.subItems.length > 0">
+                  <div class="d-flex" (click)="selected2 = item2.id" style="cursor: pointer">
+                    <img class="icon-submenu" src="{{ item2.icon }}" alt="logo-submenu" />
+                    <p [style.color]="'#fff'" class="label-submenu mx-2">{{ item2.label }}</p>
+                    <fa-icon class="ms-auto" style="cursor: pointer" icon="chevron-down"></fa-icon>
+                  </div>
+                  <div *ngIf="selected2 == item2.id">
+                    <div class="ps-3" *ngFor="let item3 of item2.subItems; let k = index">
+                      <div
+                        class="d-flex"
+                        *ngIf="item3.subItems.length == 0"
+                        (click)="selected3 = item3.id; showSubMenu = false"
+                        style="cursor: pointer"
+                        [routerLink]="[item3.link]"
+                        [routerLinkActive]="'router-link-active'"
+                      >
+                        <img class="icon-submenu" src="{{ selected3 == item3.id ? item3.iconActive : item3.icon }}" alt="logo-submenu" />
+                        <p [style.color]="selected3 == item3.id ? '#ff7900' : '#fff'" class="label-submenu mx-2">{{ item3.label }}</p>
+                      </div>
+                      <div *ngIf="item3.subItems.length > 0">
+                        <div class="d-flex" (click)="selected3 = item3.id" style="cursor: pointer">
+                          <img class="icon-submenu" src="{{ item3.icon }}" alt="logo-submenu" />
+                          <p [style.color]="'#fff'" class="label-submenu mx-2">{{ item3.label }}</p>
+                          <fa-icon class="ms-auto" style="cursor: pointer" icon="chevron-down"></fa-icon>
+                        </div>
+                        <div *ngFor="let item4 of item3.subItems; let l = index">
+                          <div
+                            class="d-flex"
+                            *ngIf="item4.subItems.length == 0"
+                            (click)="selected4 = item4.id; showSubMenu = false"
+                            style="cursor: pointer"
+                            [routerLink]="[item4.link]"
+                            [routerLinkActive]="'router-link-active'"
+                          >
+                            <img class="icon-submenu" src="{{ selected4 == item4.id ? item4.iconActive : item4.icon }}" alt="logo-submenu" />
+                            <p [style.color]="selected4 == item4.id ? '#ff7900' : '#fff'" class="label-submenu mx-2">{{ item4.label }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ul>
+    </div>
+  </div>
+  
