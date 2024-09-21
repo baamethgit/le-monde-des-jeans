@@ -17,7 +17,7 @@ env = environ.Env()
 environ.Env.read_env()
 
 # Your secret key
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = "django-insecure-@4auoqe$vcb&kapw2%ol_v7i*&-qht#rv&j=!1-9%(jv%2de"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "bd_test",
-    "shop",
+    "shop"
 ]
 
 MIDDLEWARE = [
@@ -98,8 +97,6 @@ DATABASES = {
 #         'PORT': env("DB_PORT"),
 #     }
 # }
-
-
 
 
 
