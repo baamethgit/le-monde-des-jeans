@@ -1,43 +1,43 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-export interface MenuItem {
-  id: number;
-  label: any;
-  icon: string;
-  iconActive?: string;
-  link: string;
-  subItems: any[];
-  parentId?: number;
-  isUiElement?: boolean;
+import { Component, HostListener } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { navbarData } from './navData';
+
+interface SideNavToggle {
+  screenWidth: number;
+  collapsed: boolean;
 }
+
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule,RouterLink,RouterLinkActive],
   templateUrl: './admin-sidebar.component.html',
-  styleUrl: './admin-sidebar.component.scss'
+  styleUrl: './admin-sidebar.component.scss',
 })
 export class AdminSidebarComponent {
   isNavbarCollapsed = false;
-  listMenu!: MenuItem[];
-  listSubMenu!: MenuItem[];
-  showSubMenu = true;
-  changeValueIsMenuCollapse(): void {
-    this.layoutService.valueIsMenuCollapse.subscribe(isAction => {
-      this.isNavbarCollapsed = isAction;
-    });
-  }
+  navData = navbarData;
+    collapsed = false;
+    screenWidth = 0;
 
-  getListSubMenu(item: MenuItem, index: number): void {
-    this.selected = index;
-    if (item.link) {
-      this.router.navigate([item.link]);
-      this.listSubMenu = [];
-    } else {
-      const itemParent = this.listMenu.filter((element: MenuItem) => element.id === item.id);
-      this.listSubMenu = itemParent.length > 0 ? itemParent[0].subItems : [];
-      this.showSubMenu = this.listSubMenu.length > 0;
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+      this.screenWidth = window.innerWidth;
+      if(this.screenWidth <= 768 ) {
+        this.collapsed = false;
+      }
     }
-  }
+
+    ngOnInit(): void {
+        this.screenWidth = window.innerWidth;
+    }
+
+    toggleCollapse(): void {
+      this.collapsed = !this.collapsed;
+    }
+
+    closeSidenav(): void {
+      this.collapsed = false;
+    }
 }

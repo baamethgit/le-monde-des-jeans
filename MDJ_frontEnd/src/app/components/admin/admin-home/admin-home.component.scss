@@ -1,0 +1,31 @@
+/* home-admin.component.css */
+.admin_page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .main-layout {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+  
+  app-admin-header {
+    height: auto; /* Hauteur du header */
+    position:sticky;
+    top:0px;
+  }
+  
+  app-admin-sidebar {
+    width: auto;
+    min-height: 100vh;
+
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto; /* Permet de scroller si le contenu est trop grand */
+  }
+  
