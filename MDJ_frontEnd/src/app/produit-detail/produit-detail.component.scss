@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+.produit_detail {
+    .produit_detail_main {
+      width: 80%;
+        
+        margin: auto;
+      .produit_img {
+        img{
+            width: 100%;
+        }
+      }
+  
+      .produit_detail_specs {
+        .specs_box {
+          .name_price_box {
+            .produit_name {
+                font-size: 40px;
+            }
+  
+            .produit_price {
+                font-size: 28px;
+            }
+          }
+  
+          .size_comp_box {
+            .produit_size {
+            }
+  
+            .produit_comp {
+            }
+          }
+        }
+  
+        .buy_order {
+          div {
+            button {
+              // Styles pour "Ajouter au panier"
+              padding: 10px 40px;
+              border-radius: 10px;
+            }
+  
+            .add_cart_bt{
+                background-color: black;
+                color: white;
+                border: none;
+                border: 2px solid black;
+                
+            }
+            .buy_now_bt{
+                border: 2px solid black;
+            }
+          }
+        }
+        @media(max-width:1311px){
+          .buy_order{
+            div{
+              display: flex;
+            flex-direction: column;
+            }
+            
+          }
+        }
+  
+        .produit_categorie {
+        }
+      }
+    }
+  }
