@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { Produit } from '../models/produit';
-import { empty } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { SlicePipe } from '@angular/common';
+import { Produit } from '../../models/produit';
 
 @Component({
   selector: 'app-produit-detail',

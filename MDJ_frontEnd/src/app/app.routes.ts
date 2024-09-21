@@ -3,9 +3,9 @@ import { DashboardAdminComponent } from './components/admin/dashboard-admin/dash
 import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
 import { ClientsComponent } from './components/admin/clients/clients.component';
 import { AdminAvisClientsComponent } from './components/admin/admin-avis-clients/admin-avis-clients.component';
-import { HomeComponent } from './home/home.component';
-import { ProduitsComponent } from './produits/produits.component';
-import { ProduitDetailComponent } from './produit-detail/produit-detail.component';
+import { HomeComponent } from './components/home/home.component';
+import { ProduitsComponent } from './components/produits/produits.component';
+import { ProduitDetailComponent } from './components/produit-detail/produit-detail.component';
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path:'produits', component: ProduitsComponent, children:[
