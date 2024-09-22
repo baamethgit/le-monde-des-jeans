@@ -7,3 +7,8 @@ export interface Produit {
     categorie:string;
     produitRef:string;
 }
+
+  
+export interface ProduitAvecImageAny extends Omit<Produit, 'produitImage'> {
+    produitImage: any;
+  }

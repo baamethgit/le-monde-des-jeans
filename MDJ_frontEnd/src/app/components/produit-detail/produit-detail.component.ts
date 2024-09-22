@@ -1,36 +1,23 @@
 import { Component } from '@angular/core';
-import { Produit } from '../models/produit';
-import { CarouselModule} from 'primeng/carousel';
 import { ActivatedRoute } from '@angular/router';
 import { SlicePipe } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
+import { Produit } from '../../models/produit';
 
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-  imports: [SlicePipe, CarouselModule],
+  imports: [SlicePipe],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
 export class ProduitDetailComponent {
-product_selected:Produit | undefined;
+product:Produit | undefined;
 products:Produit[]=[];
-list_p:any[]=[];
-responsiveOptions : any[]=[
-  {
-      breakpoint: '576px',
-      numVisible: 1,
-      numScroll: 1,
-      circular: true,
-      showIndicators:false
-  }
-]
+first_image:string='';
 
 constructor(private route: ActivatedRoute,){}
 
 ngOnInit():void{
-  
   this.products=[
     {
       produitRef: "PROD001",
@@ -204,14 +191,8 @@ ngOnInit():void{
     }
   ]
   let ref=this.route.snapshot.paramMap.get('ProduitRef')
-  this.product_selected=this.products.find(c=>c.produitRef==<string>ref)
-  this.list_p=transformProductImages(this.product_selected)
-  console.log(this.list_p)
+  this.product=this.products.find(c=>c.produitRef==<string>ref)
+  this.first_image=<string>this.product?.produitImage[0];
+  console.log(this.product)
 }
 }
-function transformProductImages(product: any): any[] {
-  return product.produitImage.map((imagePath: string, index: number) => ({
-    previewImageSrc: imagePath
-  }));
-}
-

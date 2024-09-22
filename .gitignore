@@ -1,0 +1,7 @@
+.env/
+
+# Ignorer le fichier .env (fichier de configuration)
+.env
+*.sqlite3
+__pycache__/
+*.mdj

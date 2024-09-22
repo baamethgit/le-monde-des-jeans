@@ -1,0 +1,13 @@
+<div class="reviews-container">
+    <div class="review-card" *ngFor="let review of reviews">
+        <button class="delete-btn" (click)="deleteReview(review.id)">×</button>
+        <div class="review-header">
+            <span class="client-name">{{ review.clientName }}</span>
+            <span class="review-date">{{ review.date }}</span>
+        </div>
+        <div class="review-rating">
+            {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+        </div>
+        <p class="review-content">{{ review.content }}</p>
+    </div>
+</div>
