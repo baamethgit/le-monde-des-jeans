@@ -6,6 +6,7 @@ import { AdminAvisClientsComponent } from './components/admin/admin-avis-clients
 import { HomeComponent } from './components/home/home.component';
 import { ProduitsComponent } from './components/produits/produits.component';
 import { ProduitDetailComponent } from './components/produit-detail/produit-detail.component';
+import { UpdateUserComponent } from './components/admin/update-user/update-user.component';
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path:'produits', component: ProduitsComponent, children:[
@@ -16,6 +17,7 @@ export const routes: Routes = [
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: ProduitDetailComponent, pathMatch:'full'},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
+        {path:'infos-client/:phone_number', component: UpdateUserComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
     ]},
 ];

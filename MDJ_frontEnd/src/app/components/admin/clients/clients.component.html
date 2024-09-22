@@ -9,11 +9,11 @@
     <tbody>
         <tr *ngFor="let user of users">
             <td>{{ user.nom_complet }}</td>
-            <td>{{ user.telephone }}</td>
+            <td>{{ user.phone_number }}</td>
             <td>
                 <button class="action-btn view-btn" (click)="viewOrders(user.id)">Voir commandes</button>
                 <button class="action-btn edit-btn" (click)="editUser(user.id)">Modifier</button>
-                <button class="action-btn delete-btn" (click)="deleteUser(user.id)">Supprimer</button>
+                <button class="action-btn delete-btn" (click)="deleteUser(user.phone_number)">Supprimer</button>
             </td>
         </tr>
     </tbody>

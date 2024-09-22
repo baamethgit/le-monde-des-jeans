@@ -1,1 +1,55 @@
-<h1>DASHBOARD</h1>
+<div class="dashboard-container">
+    <h1 class="ms-5 text-primary">Dashboard</h1>
+    
+    <div class="quick-stats row mx-auto justify-content-center">
+      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
+        <h5>Ventes Totales ces 5 derniers jours</h5>
+        <p>{{ totalSales}}</p>
+      </div>
+      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
+        <a href="#" style="color:inherit;text-decoration:none;">
+            <h5>Commandes en Attente de livraison</h5>
+            <p>{{ pendingOrders }}</p>
+        </a>
+      </div>
+      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
+        <h5>Nouveaux Clients</h5>
+        <p>{{ newCustomers }}</p>
+      </div>
+      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
+        <h5>Nouveaux Clients</h5>
+        <p>{{ newCustomers }}</p>
+      </div>
+      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
+        <h5>Nouveaux Clients</h5>
+        <p>{{ newCustomers }}</p>
+      </div>
+      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
+        <h5>Nouveaux Clients</h5>
+        <p>{{ newCustomers }}</p>
+      </div>
+    </div>
+    <div class="recent-orders px-2">
+      <h5 class="text-success text-center mt-5 mb-2">Commandes Récentes</h5>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Montant</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of recentOrders; track order.id) {
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.client }}</td>
+              <td>{{ order.amount}}</td>
+              <td>{{ order.status }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>

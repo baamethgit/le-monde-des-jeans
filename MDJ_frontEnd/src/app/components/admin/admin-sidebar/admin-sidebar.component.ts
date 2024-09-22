@@ -18,19 +18,22 @@ interface SideNavToggle {
 export class AdminSidebarComponent {
   isNavbarCollapsed = false;
   navData = navbarData;
-    collapsed = false;
+    collapsed = true;
     screenWidth = 0;
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-      this.screenWidth = window.innerWidth;
-      if(this.screenWidth <= 768 ) {
-        this.collapsed = false;
-      }
+      // if (window != undefined){
+      // this.screenWidth = window.innerWidth;
+      // if(this.screenWidth <= 768 ) {
+      //   this.collapsed = false;
+      // }
     }
 
     ngOnInit(): void {
-        this.screenWidth = window.innerWidth;
+      // if (window != undefined){
+      //   this.screenWidth = window.innerWidth;
+      // }
     }
 
     toggleCollapse(): void {

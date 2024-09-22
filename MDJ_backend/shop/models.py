@@ -1,22 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from MDJ_backend.settings import AUTH_USER_MODEL
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from datetime import timedelta
 
-class Client(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nom_complet = models.CharField(max_length=128)
-    telephone = models.CharField(max_length=15)
-
-    def __str__(self):
-        return self.user.username
+# Utilisez select_related et prefetch_related dans vos vues pour optimiser les requêtes liées aux produits et commandes.
 
 class Categorie(models.Model):
     nom = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=1000)
     slug = models.SlugField(unique=True)
-
+    image = models.ImageField(upload_to='images_categories/')
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.nom)
@@ -75,10 +70,9 @@ class PanierProduit(models.Model):
         return f"{self.produit} ajouté le {self.date_ajout}"
 
 class Panier(models.Model):
-    client = models.OneToOneField(Client, on_delete=models.CASCADE)
+    client = models.OneToOneField(AUTH_USER_MODEL,on_delete = models.CASCADE)
     produits = models.ManyToManyField(Produit, through=PanierProduit)
     date_creation = models.DateTimeField(auto_now_add=True)
-    # date_modification = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Panier de {self.client.nom_complet}"
@@ -121,7 +115,7 @@ class Commande(models.Model):
         ('ANNULEE', 'Annulée'),
     )
 
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(AUTH_USER_MODEL,on_delete = models.CASCADE)
     ref_code = models.CharField(max_length=20, unique=True) # a générer
     produits = models.ManyToManyField(Produit)
     date_commande = models.DateTimeField(auto_now_add=True)
@@ -181,7 +175,7 @@ class Paiement(models.Model):
         return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"
     
 class Temoignage(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL,null=True)
+    client = models.ForeignKey(AUTH_USER_MODEL,on_delete = models.SET_NULL,null=True)
     contenu = models.TextField(max_length=2000)
     temoigne_le = models.DateField(auto_now_add=True)
     likes = models.PositiveIntegerField(default = 0)
