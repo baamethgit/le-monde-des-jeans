@@ -22,3 +22,22 @@ def verifier_user(request):
         except ObjectDoesNotExist:
             raise AuthenticationFailed('User not found.')
         return user
+
+# utils.py
+from twilio.rest import Client
+
+def send_otp_via_sms(phone_number, otp_code):
+    # Remplace ces valeurs par tes informations d'identification Twilio
+    account_sid = 'AC71adcff5e84b892fa695ba07551dc425'
+    auth_token = '63ef5cfb798fe2093d030fb834bc2566'
+    twilio_number = '+1 870 725 5310'  # Remplace par ton numéro Twilio
+
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        body=f"Votre code de validation est : {otp_code}",
+        from_=twilio_number,
+        to=str(phone_number) 
+    )
+
+    return message.sid  

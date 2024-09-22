@@ -5,19 +5,25 @@ export const navbarData = [
         label: 'Dashboard'
     },
     {
+  
+      routeLink: 'produits',
+      icon: 'fa fa-history',
+      label: 'Produits'
+    }, 
+    {
       routeLink: 'commandes',
       icon: 'fa fa-pie-chart',
       label: 'Commandes'
     },
     {
-      routeLink: 'food-list',
+      routeLink: 'clients',
       icon: 'fa fa-list-ul',
       label: 'Mes Clients'
     },
     {
   
-      routeLink: 'today',
+      routeLink: 'avis',
       icon: 'fa fa-history',
-      label: 'Mes Produits'
+      label: 'Témoignages'
     },  
   ];
