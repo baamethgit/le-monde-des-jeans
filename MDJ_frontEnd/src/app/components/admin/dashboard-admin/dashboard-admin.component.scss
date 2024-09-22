@@ -1,0 +1,22 @@
+.dashboard-container {
+    padding: 20px;
+  }
+  .stat-card {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    width: 30%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }

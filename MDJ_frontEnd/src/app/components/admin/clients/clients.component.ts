@@ -20,15 +20,16 @@ export class ClientsComponent implements OnInit {
   }
 
   loadUsers(): void {
-    // this.userService.getUsers().subscribe({
-    //   next:(users) => {
-    //     this.users = users;
-    //   },
-    //   error:(error) => {
-    //     console.error('Erreur lors du chargement des utilisateurs', error);
-    //   }
-    // });
-    this.users = this.userService.getUsers();
+    this.userService.getUsers().subscribe({
+      next:(users) => {
+        this.users = users;
+        // console.log(this.users);
+      },
+      error:(error) => {
+        console.error('Erreur lors du chargement des utilisateurs', error);
+      }
+    });
+    // this.users = this.userService.getUsers();
   }
   viewOrders(customer_id:number){
 
@@ -36,7 +37,14 @@ export class ClientsComponent implements OnInit {
   editUser(customer_id:number){
 
   }
-  deleteUser(customer_id:number){
-
+  deleteUser(phone_number:string){
+    this.userService.deleteUser(phone_number).subscribe({
+      next: (data) => {
+        console.log('user supprimé avec succés')
+      },
+      error: (error) => {
+        console.log(error.error);
+      }
+    });
   }
 }

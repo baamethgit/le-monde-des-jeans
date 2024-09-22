@@ -29,7 +29,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Client'
     nom_complet = models.CharField(max_length=255)
-    # phone_number = models.CharField(max_length=15, )
     phone_number = PhoneNumberField(region='SN',unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
