@@ -23,6 +23,7 @@
     "@angular/ssr": "^17.0.9",
     "express": "^4.18.2",
     "mdj-front-end": "file:",
+    "primeng": "^17.18.10",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
