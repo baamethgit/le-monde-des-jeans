@@ -43,7 +43,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+<<<<<<< HEAD
     "shop"
+=======
+    "bd_test",
+    "shop",
+>>>>>>> cb1e8a3f39efc8123f6cc8c0528f5fcd90faaadd
 ]
 
 MIDDLEWARE = [
@@ -86,6 +91,22 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+<<<<<<< HEAD
+=======
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env("DB_NAME"),
+#         'USER': env("DB_USER"),
+#         'PASSWORD': env("DB_PASSWORD"),
+#         'HOST': env("DB_HOST"),
+#         'PORT': env("DB_PORT"),
+#     }
+# }
+
+
+>>>>>>> cb1e8a3f39efc8123f6cc8c0528f5fcd90faaadd
 
 # DATABASES = {
 #     'default': {
