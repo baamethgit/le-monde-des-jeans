@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 interface Review {
   id: number;
@@ -8,11 +9,12 @@ interface Review {
   rating: number;
   content: string;
 }
+const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-admin-avis-clients',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbPagination],
   templateUrl: './admin-avis-clients.component.html',
   styleUrl: './admin-avis-clients.component.scss'
 })
@@ -72,5 +74,27 @@ export class AdminAvisClientsComponent {
     // Implémentez la logique de suppression ici
     console.log(`Suppression de l'avis avec l'ID ${id}`);
     this.reviews = this.reviews.filter(review => review.id !== id);
+  }
+
+  page = 1;
+  pageSize = 2;
+  get paginatedCommentaires(): Review[] {
+    const start = (this.page - 1) * this.pageSize; // Calcul de l'index de début
+    return this.reviews.slice(start, start + this.pageSize); // Retourne les commentaires pour la page actuelle
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.reviews.length / this.pageSize);
+  }
+
+  selectPage(page: string | number): void {
+    if (typeof page === 'number') {
+      page = page.toString();
+    }
+    this.page = parseInt(page, 10) || 1;
+  }
+
+  formatInput(input: HTMLInputElement) {
+    input.value = input.value.replace(FILTER_PAG_REGEX, '');
   }
 }
