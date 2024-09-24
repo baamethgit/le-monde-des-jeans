@@ -1,0 +1,16 @@
+<app-checkout-progress-bar [currentStep]="CheckoutStep"></app-checkout-progress-bar>
+
+
+<div class="delivery-options">
+    <label class="option">
+      <input type="radio" name="deliveryOption" [(ngModel)]="selectedOption" value="livraison">
+      <span class="radio-button"></span>
+      <span class="label-text">Livraison : 24h</span>
+    </label>
+    
+    <label class="option">
+      <input type="radio" name="deliveryOption" [(ngModel)]="selectedOption" value="recuperation">
+      <span class="radio-button"></span>
+      <span class="label-text">Récupération</span>
+    </label>
+  </div>
