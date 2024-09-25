@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import environ
+from datetime import timedelta
 
 env = environ.Env()
 environ.Env.read_env()
@@ -49,6 +50,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "phonenumber_field",
+    'rest_framework_simplejwt',
+    
 ]
 
 MIDDLEWARE = [
@@ -149,3 +152,56 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_COOKIE': 'access_token',  # Nom du cookie pour l'access token
+    'AUTH_COOKIE_REFRESH': 'refresh_token',  # Nom du cookie pour le refresh token
+    'AUTH_COOKIE_DOMAIN': None,  # Spécifiez votre domaine en production
+    'AUTH_COOKIE_SECURE': True,  # Cookies sécurisés (HTTPS uniquement)
+    'AUTH_COOKIE_HTTP_ONLY': True,  # Empêche l'accès JavaScript aux cookies
+    'AUTH_COOKIE_PATH': '/',  # Chemin du cookie
+    'AUTH_COOKIE_SAMESITE': 'Lax',  # Protection contre CSRF
+}
+
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Durée de vie plus longue pour le refresh token
+#     'ROTATE_REFRESH_TOKENS': True,
+#     'BLACKLIST_AFTER_ROTATION': True,
+#     'UPDATE_LAST_LOGIN': True,
+
+#     'ALGORITHM': 'HS256',
+#     'SIGNING_KEY': SECRET_KEY,
+#     'VERIFYING_KEY': None,
+#     'AUDIENCE': None,
+#     'ISSUER': None,
+
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+#     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+#     'USER_ID_FIELD': 'phone_number',
+#     'USER_ID_CLAIM': 'phone_number',
+
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     'TOKEN_TYPE_CLAIM': 'token_type',
+
+#     'JTI_CLAIM': 'jti',
+# }
+
+# Configuration pour les cookies
+SIMPLE_JWT['AUTH_COOKIE'] = 'access_token'  # Cookie name
+SIMPLE_JWT['AUTH_COOKIE_REFRESH'] = 'refresh_token'  # Refresh cookie name
+SIMPLE_JWT['AUTH_COOKIE_DOMAIN'] = None  # Spécifiez votre domaine en production
+SIMPLE_JWT['AUTH_COOKIE_SECURE'] = True  # Cookies sécurisés (HTTPS uniquement)
+SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'] = True  # Empêche l'accès JavaScript aux cookies
+SIMPLE_JWT['AUTH_COOKIE_PATH'] = '/'  # Chemin du cookie
+SIMPLE_JWT['AUTH_COOKIE_SAMESITE'] = 'Lax'  # Protection contre CSRF

@@ -7,8 +7,12 @@ import { HomeComponent } from './components/home/home.component';
 import { ProduitsComponent } from './components/produits/produits.component';
 import { ProduitDetailComponent } from './components/produit-detail/produit-detail.component';
 import { UpdateUserComponent } from './components/admin/update-user/update-user.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { PanierComponent } from './components/user/panier/panier.component';
 export const routes: Routes = [
     {path: '', component: HomeComponent},
+    {path: 'resetpwd', component: ResetPasswordComponent},
+    {path: 'panier', component: PanierComponent},
     {path:'produits', component: ProduitsComponent, children:[
         
     ]},

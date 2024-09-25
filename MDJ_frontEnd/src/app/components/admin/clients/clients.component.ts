@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../services/users/user.service';
 import { User } from '../../../models/user';
 import { CommonModule } from '@angular/common';
+import { UpdateUserComponent } from '../update-user/update-user.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,UpdateUserComponent,RouterLink],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss'
 })

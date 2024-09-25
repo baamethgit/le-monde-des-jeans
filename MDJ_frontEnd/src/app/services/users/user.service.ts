@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { User } from '../../models/user';
 import { HttpClient } from '@angular/common/http';
 
@@ -22,7 +22,9 @@ export class UserService {
 
   private baseUrl = 'http://127.0.0.1:8000/';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) {
+    this.checkAuthStatus();
+   }
 
   getUsers(): Observable<User[]> {
     const url = `${this.baseUrl}user/admin_users_list`;
@@ -36,5 +38,45 @@ export class UserService {
   deleteUser(phone_number:string):Observable<User>{
     const url = `${this.baseUrl}user/client/${phone_number}/`;
     return this.http.delete<User>(url);
+  }
+
+  private isLoggedIn = false;
+
+  
+
+  login(phoneNumber: string, password: string): Observable<any> {
+    return this.http.post<any>('/api/login/', { phone_number: phoneNumber, password }, { withCredentials: true }).pipe(
+      tap(() => {
+        this.isLoggedIn = true;
+      })
+    );
+  }
+
+  logout(): Observable<any> {
+    return this.http.post<any>('/api/logout/', {}, { withCredentials: true }).pipe(
+      tap(() => {
+        this.isLoggedIn = false;
+      })
+    );
+  }
+
+  refreshToken(): Observable<any> {
+    return this.http.post<any>('/api/token/refresh/', {}, { withCredentials: true });
+  }
+
+  isAuthenticated(): boolean {
+    return this.isLoggedIn;
+  }
+
+  checkAuthStatus(): Observable<boolean> {
+    return this.http.get<any>('/api/check-auth/', { withCredentials: true }).pipe(
+      tap(() => {
+        this.isLoggedIn = true;
+      }),
+      catchError(() => {
+        this.isLoggedIn = false;
+        return of(false);
+      })
+    );
   }
 }
