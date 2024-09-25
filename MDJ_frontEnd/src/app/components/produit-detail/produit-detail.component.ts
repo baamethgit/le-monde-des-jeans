@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Produit } from '../../models/produit';
 import { CarouselModule} from 'primeng/carousel';
 import { ActivatedRoute } from '@angular/router';
 import { SlicePipe } from '@angular/common';
+import { ProduitDiouma } from '../../models/produit_diouma';
 
 @Component({
   selector: 'app-produit-detail',
@@ -12,8 +12,8 @@ import { SlicePipe } from '@angular/common';
   styleUrl: './produit-detail.component.scss'
 })
 export class ProduitDetailComponent {
-product_selected:Produit | undefined;
-products:Produit[]=[];
+product_selected:ProduitDiouma | undefined;
+products:ProduitDiouma[]=[];
 list_p:any[]=[];
 responsiveOptions : any[]=[
   {
