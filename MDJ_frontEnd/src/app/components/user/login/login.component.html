@@ -1,0 +1,45 @@
+<section class="login-container align-items-center row">
+    <div class="col-8 mx-auto col-sm-10 col-md-6 px-2 py-1 login-image">
+        <img src="../../../../assets/img/434324409_122138643518191964_1332089378028437094_n.jpg" alt="">
+    </div>
+    <div class="mx-auto col-12 px-1 col-md-6 login-form d-flex align-items-center justify-content-center">
+        <form action="#" class="login position-relative " method='POST' (ngSubmit)="loginUser()"
+            [formGroup]="loginForm">
+            <div>
+                <label for="phone_number">phone_number : </label>
+                <input type="text" value="" formControlName="phone_number" class="field w-100" id="phone_number">
+            </div>
+            <ng-container
+                *ngIf="loginForm.controls['phone_number'].invalid && (loginForm.controls['phone_number'].dirty || loginForm.controls['phone_number'].touched)">
+                <small class="text-danger"
+                    *ngIf="loginForm.controls['phone_number'].hasError('email') || loginForm.controls['phone_number'].hasError('validMail')">
+                    Veuillez saisir un numéro de téléphone valide
+                </small>
+                <small class="text-danger" *ngIf="loginForm.controls['phone_number'].hasError('required')">Ce champ est
+                    obligatoire.</small>
+            </ng-container>
+            <div>
+                <label for="password" class="d-flex justify-content-between pe-1"><span>Mot de passe :</span> <a href=""
+                        style="text-decoration: none;">Mot de passe oublié </a></label>
+                <div class="d-flex p-0 justify-content-between align-items-center" style="border:1px solid rgb(118, 118, 118);
+      border-radius: 2px;">
+                    <input [type]="InputType" value="" formControlName="password" id="password"
+                        class="field border-0 m-0 password_input" required="">
+                    <button type="button" class="h-100 bg-transparent border-0 toggle_password"
+                        (click)="togglePassword()">
+                        <i class="h-100 d-inline-block bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div
+                *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+                <small class="text-danger" *ngIf="loginForm.controls['password'].hasError('required')">Ce champ est
+                    obligatoire.</small>
+            </div>
+
+            <div *ngIf="loginError" class="text-danger text-center mt-1"> {{ loginError }}<br>
+            </div>
+            <button class="btn-primary">Se Connecter</button>
+        </form>
+    </div>
+</section>
