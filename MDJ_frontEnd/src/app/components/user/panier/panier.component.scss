@@ -44,5 +44,7 @@
   }
 
 .table-panier{
-  // overflow-y: scroll;
+  // overflow-y: scroll; 
+  overflow-y: auto; /* Active le défilement vertical */
+    max-height: 100vh;
 }

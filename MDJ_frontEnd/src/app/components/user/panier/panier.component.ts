@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 import { Panier } from '../../../models/panier';
@@ -12,7 +12,7 @@ import { ItemPanierComponent } from '../item-panier/item-panier.component';
   templateUrl: './panier.component.html',
   styleUrl: './panier.component.scss'
 })
-export class PanierComponent {
+export class PanierComponent implements OnInit {
   selectedOption: string = 'livraison';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   panier : Panier = {
@@ -62,4 +62,9 @@ export class PanierComponent {
       }
     ]    
   };
+
+  ngOnInit(): void {
+      
+  }
+  
 }

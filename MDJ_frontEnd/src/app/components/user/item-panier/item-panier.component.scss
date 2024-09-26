@@ -1,3 +1,15 @@
 .timer-box{
         font-size: 12px;
 }
+.item-container{
+        flex-wrap: wrap;
+        @media screen and (max-width:800px){
+                .expiration{
+                        order: 3;
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+
+                }                
+        }
+}
