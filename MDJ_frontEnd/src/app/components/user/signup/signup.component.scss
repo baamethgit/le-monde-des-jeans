@@ -1,0 +1,23 @@
+img{
+    max-width: 100%;
+    max-height: 100%;
+}
+form {
+    padding: 1px;
+    transition: all 0.6s;
+    .password_input{
+      flex: 1;
+    }
+  
+    div>label {
+      margin-bottom: 0px;
+    }
+    .toggle_password:focus,
+    .toggle_password:hover{
+      outline: none;
+      box-shadow: none;
+    }
+    input:focus{
+      outline: none;
+    }
+  }

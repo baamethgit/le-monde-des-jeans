@@ -2,17 +2,13 @@ from .views import PasswordChangeView,CheckAuthView, RegisterView,UserDetailView
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
-    # path('register/', RegisterView.as_view()),
     path('register/', RegisterView.as_view(), name='register'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('login/', LoginView.as_view()),
+    path('login/', LoginView.as_view(), name='login'),
     path('user/', UserView.as_view()),
-    path('login/', LoginView.as_view()),
     path('admin_users_list/',UserListView.as_view()),
     path("creer-client/",UserCreateView.as_view()),
     path("client/<str:phone_number>/",UserDetailView.as_view()),  
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    # URL pour vérifier l'état d'authentification
     path('check-auth/', CheckAuthView.as_view(), name='check_auth'), 
 ]

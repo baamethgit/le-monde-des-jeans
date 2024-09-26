@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { User } from '../../models/user';
 import { HttpClient } from '@angular/common/http';
 
@@ -7,24 +7,19 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UserService {
-  listUsers : User[] = [
-    { id: 1, nom_complet: 'Jean Dupont', phone_number: '01 23 45 67 89' },
-    { id: 2, nom_complet: 'Marie Martin', phone_number: '02 34 56 78 90' },
-    { id: 3, nom_complet: 'Pierre Durand', phone_number: '03 45 67 89 01' },
-    { id: 4, nom_complet: 'Sophie Lefebvre', phone_number: '04 56 78 90 12' },
-    { id: 5, nom_complet: 'Luc Moreau', phone_number: '05 67 89 01 23' },
-    { id: 6, nom_complet: 'Élodie Rousseau', phone_number: '06 78 90 12 34' },
-    { id: 7, nom_complet: 'Thomas Bernard', phone_number: '07 89 01 23 45' },
-    { id: 8, nom_complet: 'Camille Petit', phone_number: '08 90 12 34 56' },
-    { id: 9, nom_complet: 'Antoine Girard', phone_number: '09 01 23 45 67' },
-    { id: 10, nom_complet: 'Chloé Lambert', phone_number: '01 12 23 34 45' }
-  ];
-
   private baseUrl = 'http://127.0.0.1:8000/';
 
-  constructor(private http:HttpClient) {
-    this.checkAuthStatus();
-   }
+  private currentUserSubject: BehaviorSubject<User | null>;
+  public currentUser: Observable<User | null>;
+
+  constructor(private http: HttpClient) {
+    this.currentUserSubject = new BehaviorSubject<User | null>(null);
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  public get currentUserValue(): User | null {
+    return this.currentUserSubject.value;
+  }
 
   getUsers(): Observable<User[]> {
     const url = `${this.baseUrl}user/admin_users_list`;
@@ -40,43 +35,65 @@ export class UserService {
     return this.http.delete<User>(url);
   }
 
-  private isLoggedIn = false;
-
-  
-
-  login(phoneNumber: string, password: string): Observable<any> {
-    return this.http.post<any>('/api/login/', { phone_number: phoneNumber, password }, { withCredentials: true }).pipe(
-      tap(() => {
-        this.isLoggedIn = true;
-      })
+  login(phoneNumber: string, password: string): Observable<User> {
+    const url = `${this.baseUrl}user/login/`;
+    return this.http.post<User>(url, { phone_number: phoneNumber, password }, { withCredentials: true }).pipe(
+      tap((user: User) => {
+        this.currentUserSubject.next(user);
+      }),
+      // catchError(this.handleError<User>('login'))
     );
   }
 
+
   logout(): Observable<any> {
-    return this.http.post<any>('/api/logout/', {}, { withCredentials: true }).pipe(
+    const url = `${this.baseUrl}user/logout/`;
+    return this.http.post<any>(url, {}, { withCredentials: true }).pipe(
       tap(() => {
-        this.isLoggedIn = false;
-      })
+        this.currentUserSubject.next(null);
+      }),
+      // catchError(this.handleError('logout'))
     );
   }
 
   refreshToken(): Observable<any> {
-    return this.http.post<any>('/api/token/refresh/', {}, { withCredentials: true });
-  }
-
-  isAuthenticated(): boolean {
-    return this.isLoggedIn;
-  }
-
-  checkAuthStatus(): Observable<boolean> {
-    return this.http.get<any>('/api/check-auth/', { withCredentials: true }).pipe(
-      tap(() => {
-        this.isLoggedIn = true;
-      }),
-      catchError(() => {
-        this.isLoggedIn = false;
-        return of(false);
-      })
+    const url = `${this.baseUrl}user/token/refresh/`;
+    return this.http.post<any>(url, {}, { withCredentials: true }).pipe(
+      catchError(this.handleError('refreshToken'))
     );
   }
+
+  isLoggedIn(): boolean {
+    return !!this.currentUserValue;
+  }
+
+
+   // Nouvelle méthode pour initier l'inscription et demander le code OTP
+   register(NomComplet: string,phoneNumber: string, password: string): Observable<any> {
+    const url = `${this.baseUrl}user/register/`;
+    return this.http.post<any>(url, { nom_complet: NomComplet,phone_number: phoneNumber, password }, { withCredentials: true })
+    // .pipe(
+    //   catchError(this.handleError('register'))
+    // );
+  }
+
+  // Nouvelle méthode pour vérifier le code OTP et finaliser l'inscription
+  verifyOTP(otpCode: string): Observable<any> {
+    const url = `${this.baseUrl}user/verify-otp/`;
+    return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true }).pipe(
+      tap((user: User) => {
+        // Si la vérification réussit, on met à jour l'utilisateur courant
+        this.currentUserSubject.next(user);
+      }),
+      // catchError(this.handleError('verifyOTP'))
+    );
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(`${operation} failed: ${error.message}`);
+      return of(result as T);
+    };
+  }
+
 }

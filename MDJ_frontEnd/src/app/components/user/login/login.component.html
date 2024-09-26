@@ -1,13 +1,15 @@
-<section class="login-container align-items-center row">
-    <div class="col-8 mx-auto col-sm-10 col-md-6 px-2 py-1 login-image">
-        <img src="../../../../assets/img/434324409_122138643518191964_1332089378028437094_n.jpg" alt="">
+<section class="container-md container-fluid align-items-center row">
+    <div class="col-6 h-50 mx-auto px-2 py-1 login-image">
+        <img src="../../../../assets/img/285645_user_icon.png" alt="">
     </div>
-    <div class="mx-auto col-12 px-1 col-md-6 login-form d-flex align-items-center justify-content-center">
-        <form action="#" class="login position-relative " method='POST' (ngSubmit)="loginUser()"
+    <div class="mx-auto col-10 col-sm-8 col-md-6 px-md-5  d-flex align-items-center justify-content-center">
+        <form action="#" class="w-100 h-100 login position-relative " method='POST' (ngSubmit)="loginUser()"
             [formGroup]="loginForm">
+            <h4 class="text-center">CONNEXION</h4>
+            <p>Je n'ai pas encore de compte , <a class="d-inline-block my-1 text-center" style="text-decoration: none;" routerLink="/inscription">CREER UN COMPTE</a></p>
             <div>
-                <label for="phone_number">phone_number : </label>
-                <input type="text" value="" formControlName="phone_number" class="field w-100" id="phone_number">
+                <label for="phone_number">Numéro de Téléphone : </label><br>
+                <input placeholder="+221 | " formControlName="phone_number"  type="text" class="w-100 py-1 px-2 my-2"><br>
             </div>
             <ng-container
                 *ngIf="loginForm.controls['phone_number'].invalid && (loginForm.controls['phone_number'].dirty || loginForm.controls['phone_number'].touched)">
@@ -18,13 +20,13 @@
                 <small class="text-danger" *ngIf="loginForm.controls['phone_number'].hasError('required')">Ce champ est
                     obligatoire.</small>
             </ng-container>
-            <div>
-                <label for="password" class="d-flex justify-content-between pe-1"><span>Mot de passe :</span> <a href=""
-                        style="text-decoration: none;">Mot de passe oublié </a></label>
-                <div class="d-flex p-0 justify-content-between align-items-center" style="border:1px solid rgb(118, 118, 118);
+
+            <div class="mt-1">
+                <label for="password">Mot de passe :</label>
+                <div class="w-100 p-1 my-2 d-flex p-0 justify-content-between my-2 align-items-center" style="border:1px solid rgb(118, 118, 118);
       border-radius: 2px;">
                     <input [type]="InputType" value="" formControlName="password" id="password"
-                        class="field border-0 m-0 password_input" required="">
+                        class="px-2 shadow-0 border-0 m-0 password_input w-100" required="">
                     <button type="button" class="h-100 bg-transparent border-0 toggle_password"
                         (click)="togglePassword()">
                         <i class="h-100 d-inline-block bi bi-eye"></i>
@@ -36,10 +38,11 @@
                 <small class="text-danger" *ngIf="loginForm.controls['password'].hasError('required')">Ce champ est
                     obligatoire.</small>
             </div>
-
+            <a routerLink='/resetpwd' class="d-inline-block my-1 text-center" style="text-decoration: none;">Mot de passe oublié </a>
+            <br>
             <div *ngIf="loginError" class="text-danger text-center mt-1"> {{ loginError }}<br>
             </div>
-            <button class="btn-primary">Se Connecter</button>
+            <button type="submit" class="btn rounded-1 my-2 btn-primary">Se Connecter</button>
         </form>
     </div>
 </section>

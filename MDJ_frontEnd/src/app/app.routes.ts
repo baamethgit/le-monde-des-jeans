@@ -10,10 +10,12 @@ import { UpdateUserComponent } from './components/admin/update-user/update-user.
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PanierComponent } from './components/user/panier/panier.component';
 import { LoginComponent } from './components/user/login/login.component';
+import { SignupComponent } from './components/user/signup/signup.component';
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'resetpwd', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent},
+    {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent},
     {path:'produits', component: ProduitsComponent, children:[
         

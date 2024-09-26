@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule],
+  imports: [CommonModule,ReactiveFormsModule,FormsModule,RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -33,14 +33,19 @@ export class LoginComponent implements OnInit{
     loginUser():void{
       if(this.loginForm.valid){
         let phone_number = this.loginForm.getRawValue().phone_number || '';
+        phone_number = phone_number.trim();
+        if (!phone_number.startsWith('+221')) {
+          phone_number = '+221' + phone_number;
+        }
         let password = this.loginForm.getRawValue().password || '';
         this.userService.login(phone_number,password).subscribe({
-          next: (data) => {
-            window.location.reload();
-            this.router.navigateByUrl('/');
+          next: (user) => {
+            console.log('connecté',user);
+            // window.location.reload();
+            // this.router.navigateByUrl('');
           },
           error: (error) => {
-            this.loginError = error.error.detail;
+            this.loginError = error.error.error;
           }
         })
       }else{

@@ -11,7 +11,7 @@ class Categorie(models.Model):
     nom = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=1000)
     slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='images_categories/')
+    # image = models.ImageField(upload_to='images_categories/')
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.nom)
