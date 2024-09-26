@@ -61,9 +61,9 @@
             </div>
             <div
             *ngIf="SignupForm.controls['password_confirm'].invalid && (SignupForm.controls['password_confirm'].dirty || SignupForm.controls['password_confirm'].touched)">
-            <!-- <small class="text-danger mb-2" *ngIf="SignupForm.controls['password_confirm'].hasError('matching')">
+            <small class="text-danger mb-2" *ngIf="SignupForm.controls['password_confirm'].hasError('matching')">
               Les mots de passe ne correspondent pas
-            </small> -->
+            </small>
             <small class="text-danger" *ngIf="SignupForm.controls['password_confirm'].hasError('required')">Ce champ est
               obligatoire.</small>
           </div>

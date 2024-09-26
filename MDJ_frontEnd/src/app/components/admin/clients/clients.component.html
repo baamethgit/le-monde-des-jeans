@@ -11,7 +11,7 @@
             <td>{{ user.nom_complet }}</td>
             <td>{{ user.phone_number }}</td>
             <td>
-                <button class="action-btn view-btn" (click)="viewOrders(user.id)">Voir commandes</button>
+                <button class="action-btn view-btn" (click)="viewOrders(user.phone_number)">Voir commandes</button>
                 <button class="action-btn edit-btn"><a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/infos-client',user.phone_number]">Modifier</a></button>
                 <button class="action-btn delete-btn" (click)="deleteUser(user.phone_number)">Supprimer</button>
             </td>

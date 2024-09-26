@@ -33,7 +33,7 @@ export class ClientsComponent implements OnInit {
     });
     // this.users = this.userService.getUsers();
   }
-  viewOrders(customer_id:number){
+  viewOrders(customer_phone:string){
 
   }
   editUser(customer_id:number){

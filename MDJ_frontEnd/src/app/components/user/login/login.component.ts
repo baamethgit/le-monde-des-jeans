@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-login',
@@ -15,10 +16,12 @@ export class LoginComponent implements OnInit{
   InputType : string = 'password';
   loginForm! : FormGroup;
   loginError :string = '';
+  currentUser: User | null = null;
 
   constructor(private userService:UserService,private fb:FormBuilder,private router:Router){}
 
   ngOnInit(): void {
+
       this.loginForm = this.fb.group(
         {
           phone_number: ['', [Validators.required]],
@@ -40,12 +43,13 @@ export class LoginComponent implements OnInit{
         let password = this.loginForm.getRawValue().password || '';
         this.userService.login(phone_number,password).subscribe({
           next: (user) => {
-            console.log('connecté',user);
-            // window.location.reload();
-            // this.router.navigateByUrl('');
+            console.log('connecté réussi');
+            this.router.navigate(["/"]);
           },
           error: (error) => {
+            this.loginForm.markAllAsTouched();
             this.loginError = error.error.error;
+            console.log("login échoué")
           }
         })
       }else{

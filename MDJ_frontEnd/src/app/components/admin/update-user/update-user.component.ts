@@ -40,7 +40,7 @@ export class UpdateUserComponent {
       }
     );
 
-    this.userService.getUser(this.user?.phone_number || "").subscribe({
+    this.userService.getUserByphoneNumber(this.user?.phone_number || "").subscribe({
       next: (data) => {
         if (data !== null) {
           this.user = data;

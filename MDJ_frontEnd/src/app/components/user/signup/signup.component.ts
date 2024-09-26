@@ -5,6 +5,7 @@ import { LoginComponent } from '../login/login.component';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
 import Validation from '../../../shared/my-validators';
+import { User } from '../../../models/user';
 
 
 @Component({
@@ -20,6 +21,10 @@ export class SignupComponent implements OnInit{
   SignupError :string = '';
   otpCode: string = '';
   otpSent: boolean = false;
+  user : User = {
+    phone_number : "",
+    nom_complet : "",
+  };
 
   fb = inject(FormBuilder);
   constructor(private userService : UserService,private router:Router){}
@@ -33,9 +38,9 @@ export class SignupComponent implements OnInit{
         password: ['', [Validators.required]],
         password_confirm: ['', [Validators.required]],
       },
-      // {
-      //   validators: [Validation.match('password', 'password_confirm')]
-      // }
+      {
+        validators: [Validation.match('password', 'password_confirm')]
+      }
     );
       
   }
@@ -50,17 +55,17 @@ export class SignupComponent implements OnInit{
   
   register():void{
     if(this.SignupForm.valid){
-      let nom_complet = this.SignupForm.getRawValue().phone_number || '';
       let phone_number = this.SignupForm.getRawValue().phone_number || '';
       phone_number = phone_number.trim();
       if (!phone_number.startsWith('+221')) {
         phone_number = '+221' + phone_number;
       }
-      let password = this.SignupForm.getRawValue().password || '';
-      this.userService.register(nom_complet,phone_number,password).subscribe({
+      this.user.nom_complet = this.SignupForm.getRawValue().nom_complet || '';
+      this.user.phone_number = phone_number;
+      this.user.password = this.SignupForm.getRawValue().password || '';
+      this.userService.register(this.user).subscribe({
         next: (data) => {
           this.otpSent = true;
-          
         },
         error: (error) => {
           this.SignupError = error.error.error;
@@ -75,14 +80,14 @@ export class SignupComponent implements OnInit{
 
  
   onVerifyOTP() {
-    this.userService.verifyOTP(this.otpCode).subscribe({
-      next:(data)=>{
-        console.log('Inscription réussie', data);
-        this.router.navigate(['/login']);
-      },
-      error:(error)=>{
-        // this.errorMessage = "Erreur lors de la vérification du code OTP. Veuillez réessayer.";
-      }
-  });
+  //   this.userService.verifyOTP(this.otpCode).subscribe({
+  //     next:(data)=>{
+  //       console.log('Inscription réussie', data);
+  //       this.router.navigate(['/login']);
+  //     },
+  //     error:(error)=>{
+  //       // this.errorMessage = "Erreur lors de la vérification du code OTP. Veuillez réessayer.";
+  //     }
+  // });
   }
 }

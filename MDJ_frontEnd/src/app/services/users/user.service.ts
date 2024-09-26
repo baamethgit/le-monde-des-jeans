@@ -1,24 +1,79 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../../models/user';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://127.0.0.1:8000/';
+  private baseUrl = 'http://127.0.0.1:8000/user/';
 
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser: Observable<User | null>;
+  private jwtKey = 'jwt';
+  loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
-  constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(null);
-    this.currentUser = this.currentUserSubject.asObservable();
+  constructor(private http: HttpClient) { }
+
+  private hasToken(): boolean {
+    return !!this.getToken();
   }
 
-  public get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
+  isLoggedIn(): Observable<boolean> {
+    return this.loggedIn.asObservable();
+  }
+
+  setToken(token: string) {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    localStorage.setItem(this.jwtKey, token);
+  }
+  }
+
+  getToken(): string | null {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    return localStorage.getItem(this.jwtKey);
+    }
+  return null}
+
+  removeToken() {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    localStorage.removeItem(this.jwtKey);
+  }
+  }
+
+  register(user: User): Observable<User> {
+    return this.http.post<User>(`${this.baseUrl}register/`, user);
+  }
+
+  getUser(): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}get-user/`, { withCredentials: true });
+  }
+
+  updateUser(user: Object): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}user/`, user, { withCredentials: true  });
+  }
+
+  changePassword(currentPassword : string,newPassword:string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}change_password/`, {mdp_actuel : currentPassword,nouveau_mdp:newPassword}, {withCredentials: true  });
+  }
+
+  login(phone_number: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}login/`, { phone_number, password })
+      .pipe(
+        tap(response => {
+          if (response.jwt) {
+            console.log("connecté")
+            this.setToken(response.jwt);
+            this.loggedIn.next(true);
+          } else {
+            console.log('pas de token');
+          }
+        })
+      );
+  }
+
+  logout(): void {
+    this.removeToken();
+    this.loggedIn.next(false);
   }
 
   getUsers(): Observable<User[]> {
@@ -26,74 +81,27 @@ export class UserService {
     return this.http.get<User[]>(url);
   }
 
-  getUser(phone_number:string):Observable<User>{
+  getUserByphoneNumber(phone_number:string):Observable<User>{
     const url = `${this.baseUrl}user/client/${phone_number}/`;
     return this.http.get<User>(url);
   }
+
+  
+
   deleteUser(phone_number:string):Observable<User>{
     const url = `${this.baseUrl}user/client/${phone_number}/`;
     return this.http.delete<User>(url);
   }
 
-  login(phoneNumber: string, password: string): Observable<User> {
-    const url = `${this.baseUrl}user/login/`;
-    return this.http.post<User>(url, { phone_number: phoneNumber, password }, { withCredentials: true }).pipe(
-      tap((user: User) => {
-        this.currentUserSubject.next(user);
-      }),
-      // catchError(this.handleError<User>('login'))
-    );
-  }
-
-
-  logout(): Observable<any> {
-    const url = `${this.baseUrl}user/logout/`;
-    return this.http.post<any>(url, {}, { withCredentials: true }).pipe(
-      tap(() => {
-        this.currentUserSubject.next(null);
-      }),
-      // catchError(this.handleError('logout'))
-    );
-  }
-
-  refreshToken(): Observable<any> {
-    const url = `${this.baseUrl}user/token/refresh/`;
-    return this.http.post<any>(url, {}, { withCredentials: true }).pipe(
-      catchError(this.handleError('refreshToken'))
-    );
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.currentUserValue;
-  }
-
-
-   // Nouvelle méthode pour initier l'inscription et demander le code OTP
-   register(NomComplet: string,phoneNumber: string, password: string): Observable<any> {
-    const url = `${this.baseUrl}user/register/`;
-    return this.http.post<any>(url, { nom_complet: NomComplet,phone_number: phoneNumber, password }, { withCredentials: true })
-    // .pipe(
-    //   catchError(this.handleError('register'))
-    // );
-  }
 
   // Nouvelle méthode pour vérifier le code OTP et finaliser l'inscription
-  verifyOTP(otpCode: string): Observable<any> {
-    const url = `${this.baseUrl}user/verify-otp/`;
-    return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true }).pipe(
-      tap((user: User) => {
-        // Si la vérification réussit, on met à jour l'utilisateur courant
-        this.currentUserSubject.next(user);
-      }),
-      // catchError(this.handleError('verifyOTP'))
-    );
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
-      return of(result as T);
-    };
-  }
+  // verifyOTP(otpCode: string): Observable<any> {
+  //   const url = `${this.baseUrl}user/verify-otp/`;
+  //   return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true }).pipe(
+  //     tap((user: User) => {
+  //     }),
+  //     // catchError(this.handleError('verifyOTP'))
+  //   );
+  // }
 
 }

@@ -11,6 +11,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { PanierComponent } from './components/user/panier/panier.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { SignupComponent } from './components/user/signup/signup.component';
+import { userGuard } from './utils/user.guard';
 export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'resetpwd', component: ResetPasswordComponent},
@@ -27,5 +28,5 @@ export const routes: Routes = [
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:phone_number', component: UpdateUserComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
-    ]},
+    ],canActivate: [userGuard]},
 ];

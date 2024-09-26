@@ -12,15 +12,26 @@ import { UserService } from '../../services/users/user.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit{
-  currentUser: User | null = null;
+  currentUser: User | undefined = undefined;
+  is_authenticated = false;
   private userService = inject(UserService);
 
   constructor(){}
 
   ngOnInit(): void {
-    this.userService.currentUser.subscribe(user => {
-      this.currentUser = user;
-      console.log(this.currentUser)
-    });
+    this.userService.getUser().subscribe({
+      next: (data) => {
+          this.currentUser = data;
+          this.is_authenticated = true;
+      },
+      error: (error) => {
+        this.is_authenticated = false;
+      }
+    })
+  }
+
+  logout(): void {
+    this.userService.logout();
+    window.location.reload();
   }
 }

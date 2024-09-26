@@ -9,8 +9,8 @@ def verifier_user(request):
         if not auth_header:
             raise AuthenticationFailed('Unauthenticated! No auth header provided.')
 
-        token = auth_header.split()[1]
         try:
+            token = auth_header.split()[1]
             payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         except jwt.DecodeError:
             raise AuthenticationFailed('Invalid token.')
