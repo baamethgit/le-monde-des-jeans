@@ -1,9 +1,9 @@
 <section class="produit_detail my-4">
   <div class="produit_detail_main row justify-content-between">
       <div class="produit_img d-none d-sm-flex col-md-6 row col-12 d-flex flex-column flex-sm-row">
-          @for (item of product_selected?.produitImage; track item) {
+          @for (item of product_selected?.images; track item) {
               <div class="p-2 col-6">
-                  <img class="" src={{item}} alt="" srcset="">
+                  <img class="" src={{item.image}} alt="" srcset="">
               </div>
           }
       </div>
@@ -14,23 +14,21 @@
   [responsiveOptions]="responsiveOptions"
    class="pcaroussel d-flex d-sm-none">
       <ng-template let-item pTemplate="item">
-          <!-- @for (item of product_selected?.produitImage; track item) {
               <div class="d-flex">
-                  <img class="w-100" src={{item}} alt="" srcset="">
+                  <img class="w-100" src={{item.image}} alt="" srcset="">
               </div>
-          } -->
           <img class="w-100" src={{item.previewImageSrc}} alt="" srcset="">
       </ng-template>
 </p-carousel>
       <div class="produit_detail_specs col-md-5 col-12 d-flex flex-column justify-content-start my-5">
           <div class="specs_box mb-5">
               <div class="name_price_box">
-                  <div class="produit_name">{{product_selected?.produitNom}}</div>
-                  <div class="produit_price">{{product_selected?.produitPrix}} FCFA</div>
+                  <div class="produit_name">{{product_selected?.nom}}</div>
+                  <div class="produit_price">{{product_selected?.prix}} FCFA</div>
               </div>
               <div class="size_comp_box d-flex justify-content-between">
-                  <div class="produit_size">Taille : {{product_selected?.produitTaille}}</div>
-                  <div class="produit_comp">Composition : {{product_selected?.produitCompo}}</div>
+                  <div class="produit_size">Taille : {{product_selected?.taille}}</div>
+                  <div class="produit_comp">Composition : {{product_selected?.composition}}</div>
               </div>
           </div>
           <div class="buy_order mb-5">
@@ -39,173 +37,30 @@
                   <button class="buy_now_bt text-nowrap">Acheter directement</button>
               </div>
           </div>
-          <div class="produit_categorie">CATEGORIE : {{product_selected?.categorie}}</div>
+          <div class="produit_categorie">CATEGORIE : {{product_selected?.categorie?.nom}}</div>
       </div>
   </div>
 </section>
 <section class="Derniers_articles d-flex flex-column my-5 mx-auto">
   <div class="last_uploads_head my-3">
-      <h3 class="last_uploads_title">Vous pourrez aussi aimer : </h3>
+      <h3 class="last_uploads_title text-center">Vous pourrez aussi aimer : </h3>
   </div>
   <div class="d-flex justify-content-end">
       <div class="last_uploads_content d-flex overflow-x-scroll">
-          <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-             <div class="last_content_item_img container">
-                 <div class="position-relative">
-                     <div class="last_content_item_img_new">NEW</div>
-                     <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-                 </div>
-             </div>
-             <div class="last_content_item_infos">
-                 <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-                 <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-             </div>
-         </div>
-         <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-      <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-          <div class="last_content_item_img container">
-              <div class="position-relative">
-                  <div class="last_content_item_img_new">NEW</div>
-                  <img class="bg-info" src="../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg" alt="">
-              </div>
-          </div>
-          <div class="last_content_item_infos">
-              <div class="last_content_item_title fw-semibold opacity-75">96 Nuptse Dip Dye Korea Puffers Jacket</div>
-              <div class="last_content_item_price fw-semibold">5.000 FCFA</div>
-          </div>
-      </div>
-         
+          @for (item of must_like_product; track $index) {
+            <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
+                <div class="last_content_item_img container">
+                    <div class="position-relative">
+                        <div class="last_content_item_img_new">NEW</div>
+                        <img class="bg-info" [src]="item.images[0].image" alt="">
+                    </div>
+                </div>
+                <div class="last_content_item_infos">
+                    <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
+                    <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
+                </div>
+        </div>
+          }
      </div>
   </div>
   <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>

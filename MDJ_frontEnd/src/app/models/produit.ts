@@ -1,9 +1,9 @@
-export interface Produit {
-    produitNom ?: string;
-    produitImage: string[];
-    produitPrix: number;
-    produitTaille: string;
-    produitCompo: string;
-    categorie:string;
-    produitRef:string;
-}
+// export interface Produit {
+//     produitNom ?: string;
+//     produitImage: string[];
+//     produitPrix: number;
+//     produitTaille: string;
+//     produitCompo: string;
+//     categorie:string;
+//     produitRef:string;
+// }

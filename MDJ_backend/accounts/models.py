@@ -50,3 +50,12 @@ class CodeOTP(models.Model):
     def is_valid(self):
         expiration_time = self.created_at + timezone.timedelta(minutes=2)
         return timezone.now() < expiration_time
+
+class Avis(models.Model):
+    class Meta:
+        verbose_name_plural = 'Avis'
+    Avis_author=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='avis')
+    Texte_avis=models.TextField()
+
+    def __str__(self):
+        return str(self.Avis_author)

@@ -3,6 +3,17 @@ import { Observable } from 'rxjs';
 import { User } from '../../models/user';
 import { HttpClient } from '@angular/common/http';
 
+
+
+export interface Avis{
+  Texte_avis:string,
+  Avis_author:user
+}
+
+export interface user{
+  nom_complet:string,
+  phone_number:string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -36,5 +47,10 @@ export class UserService {
   deleteUser(phone_number:string):Observable<User>{
     const url = `${this.baseUrl}user/client/${phone_number}/`;
     return this.http.delete<User>(url);
+  }
+
+  getAllAvis():Observable<Avis[]>{
+    const url=`${this.baseUrl}user/avisAPI/Avis`
+    return this.http.get<Avis[]>(url)
   }
 }

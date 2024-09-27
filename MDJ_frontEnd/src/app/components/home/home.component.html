@@ -6,7 +6,7 @@
                 Découvrez notre sélection de vêtements et accessoires tendance à prix mini.
                 Explorez notre collection et trouvez votre prochain coup de cœur !
             </p>
-            <button class="bg-black bt_accueil">Achetez Maintenant</button>
+            <button [routerLink]="['/produits']" class="bg-black bt_accueil">Achetez Maintenant</button>
         </div>
         <div class="img_accueil col-12 col-sm-8">
             <img src="../../assets/img/incendiary-fantastically-beautiful-girl-coat-eco-fur-moves-fun-picture-lovely-lady-pink-clothes-removebg-preview 1.png" alt="" srcset="">
@@ -380,42 +380,15 @@
         <h1 class="category_title">Categories</h1>
     </div>
     <div class="category_list mt-5 row justify-content-center">
-        <div class="category_item text-center my-2 mx-1">
-            <div class="Category_img mb-3">
-                <img class="rounded-circle" src="../../assets/img/438822645_122145726572191964_3491541453282750870_n.jpg" alt="" srcset="">
+        @for (item of catagorie_list; track $index) {
+            <div class="category_item text-center my-2 mx-1">
+                <div class="Category_img mb-3">
+                    <img class="rounded-circle" src='{{item.image}}' alt="" srcset="">
+                </div>
+                <div class="category_name">{{item.nom}}</div>
             </div>
-            <div class="category_name">Tee-shirt</div>
-        </div>
-        <div class="category_item text-center my-2 mx-1">
-            <div class="Category_img mb-3">
-                <img class="rounded-circle" src="../../assets/img/438822645_122145726572191964_3491541453282750870_n.jpg" alt="" srcset="">
-            </div>
-            <div class="category_name">Tee-shirt</div>
-        </div>
-        <div class="category_item text-center my-2 mx-1">
-            <div class="Category_img mb-3">
-                <img class="rounded-circle" src="../../assets/img/438822645_122145726572191964_3491541453282750870_n.jpg" alt="" srcset="">
-            </div>
-            <div class="category_name">Tee-shirt</div>
-        </div>
-        <div class="category_item text-center my-2 mx-1">
-            <div class="Category_img mb-3">
-                <img class="rounded-circle" src="../../assets/img/438822645_122145726572191964_3491541453282750870_n.jpg" alt="" srcset="">
-            </div>
-            <div class="category_name">Tee-shirt</div>
-        </div>
-        <div class="category_item text-center my-2 mx-1">
-            <div class="Category_img mb-3">
-                <img class="rounded-circle" src="../../assets/img/438822645_122145726572191964_3491541453282750870_n.jpg" alt="" srcset="">
-            </div>
-            <div class="category_name">Tee-shirt</div>
-        </div>
-        <div class="category_item text-center my-2 mx-1">
-            <div class="Category_img mb-3">
-                <img class="rounded-circle" src="../../assets/img/438822645_122145726572191964_3491541453282750870_n.jpg" alt="" srcset="">
-            </div>
-            <div class="category_name">Tee-shirt</div>
-        </div>
+        }
+        
     </div>
 </section>
 <section class="Contacts pb-5 pt-3">
