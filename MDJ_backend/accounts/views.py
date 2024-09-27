@@ -97,14 +97,6 @@ class LoginView(APIView):
         return Response({"error": "Identifiants invalides"}, status=status.HTTP_401_UNAUTHORIZED)
     
     
-class LogoutView(APIView):
-    def post(self, request):
-        response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
-        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
-        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
-        return response
-
-    
 class UserView(APIView):
     def get(self, request):
         user = verifier_user(request)
@@ -155,9 +147,7 @@ class UserDetailView(APIView):
         return Response(serializer.data)
 
     def put(self, request, phone_number):
-        user = self.get_object(phone_number)
-        if user is None:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        user = verifier_user(request)
         serializer = UserSerializer(user, data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()

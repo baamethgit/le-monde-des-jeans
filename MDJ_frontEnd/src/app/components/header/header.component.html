@@ -15,9 +15,17 @@
           <div class="user_profile_header me-5">
             <button class="border text-nowrap d-flex align-items-center">
               <img class="user_icon_header" src="../../assets/img/285645_user_icon.png" alt="">
-              <span *ngIf="is_authenticated">{{currentUser?.nom_complet}}</span> 
+              <div class="dropdown border-0 bg-transparent" *ngIf="is_authenticated">
+                <button class="btn text-dark border-0 shadow-none dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{currentUser?.nom_complet}}
+                </button>
+                <ul class="dropdown-menu p-2 ms-0">
+                  <li><a class="dropdown-item" routerLink="/">Voir Profil</a></li>
+                  <li><a class="dropdown-item" href="#" (click)="logout()">Se déconnecter</a></li>
+                </ul>
+              </div>
+              <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span> 
             </button>
-            <button (click)="logout()">Se déconnecter</button>
           </div>
           <div class="user_profile_cart">
             <button class="border d-flex bt_card">

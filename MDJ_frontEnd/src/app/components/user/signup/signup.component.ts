@@ -77,7 +77,6 @@ export class SignupComponent implements OnInit{
       this.SignupForm.markAllAsTouched();
     }
   }
-
  
   onVerifyOTP() {
   //   this.userService.verifyOTP(this.otpCode).subscribe({

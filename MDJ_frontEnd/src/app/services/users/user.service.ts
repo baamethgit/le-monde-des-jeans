@@ -48,8 +48,12 @@ export class UserService {
     return this.http.get<User>(`${this.baseUrl}get-user/`, { withCredentials: true });
   }
 
-  updateUser(user: Object): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}user/`, user, { withCredentials: true  });
+  updateUser(user: Object,phone_number:string): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}/client/${phone_number}`, user, { withCredentials: true  });
+  }
+
+  resetPassword(user: Object,phone_number:string): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}/client/${phone_number}/`, user, { withCredentials: true  });
   }
 
   changePassword(currentPassword : string,newPassword:string): Observable<any> {
