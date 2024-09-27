@@ -3,18 +3,14 @@
       <p class='w-100 mb-0 px-4 py-3 border-bottom' style="text-transform: uppercase;">MODIFIER LES INFORMATIONS DU CLIENT</p>
       <div class='d-flex p-3 maj_info'>
         <form method="POST" class="row " [formGroup]="userForm" (submit)="updateUser()">
-          <p class="col-6">
+          <p class="col-12 col-md-6">
             <label for="">Nom Complet</label><br>
             <input class="px-2 py-1 border" type="text" formControlName="nom_complet">
             <ng-container *ngIf="userForm.controls['nom_complet'].invalid && (userForm.controls['nom_complet'].dirty || userForm.controls['nom_complet'].touched)">
-              <small class="text-danger"
-               *ngIf="userForm.controls['nom_complet'].hasError('pattern')">
-                Veuillez saisir le nom complet (prenom et nom) (avec des lettres)
-              </small>
               <small class="text-danger" *ngIf="userForm.controls['nom_complet'].hasError('required')">Ce champ est obligatoire.</small>
             </ng-container>
           </p>
-          <p class="col-6">
+          <p class="col-12 col-md-6">
             <label for="">Numéro de téléphone</label><br>
             <input class="px-2 py-1 border" type="text" formControlName="phone_number">
             <ng-container *ngIf="userForm.controls['phone_number'].invalid && (userForm.controls['phone_number'].dirty || userForm.controls['phone_number'].touched)">

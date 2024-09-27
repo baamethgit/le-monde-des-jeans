@@ -49,12 +49,9 @@ export class UserService {
   }
 
   updateUser(user: Object,phone_number:string): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}/client/${phone_number}`, user, { withCredentials: true  });
+    return this.http.put<User>(`${this.baseUrl}client/${phone_number}`, user, { withCredentials: true  });
   }
 
-  resetPassword(user: Object,phone_number:string): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}/client/${phone_number}/`, user, { withCredentials: true  });
-  }
 
   changePassword(currentPassword : string,newPassword:string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}change_password/`, {mdp_actuel : currentPassword,nouveau_mdp:newPassword}, {withCredentials: true  });
@@ -81,19 +78,19 @@ export class UserService {
   }
 
   getUsers(): Observable<User[]> {
-    const url = `${this.baseUrl}user/admin_users_list`;
+    const url = `${this.baseUrl}admin_users_list/`;
     return this.http.get<User[]>(url);
   }
 
   getUserByphoneNumber(phone_number:string):Observable<User>{
-    const url = `${this.baseUrl}user/client/${phone_number}/`;
+    const url = `${this.baseUrl}client/${phone_number}/`;
     return this.http.get<User>(url);
   }
 
   
 
   deleteUser(phone_number:string):Observable<User>{
-    const url = `${this.baseUrl}user/client/${phone_number}/`;
+    const url = `${this.baseUrl}client/${phone_number}/`;
     return this.http.delete<User>(url);
   }
 
