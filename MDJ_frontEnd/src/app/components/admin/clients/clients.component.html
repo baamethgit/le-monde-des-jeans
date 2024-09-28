@@ -1,20 +1,60 @@
-<table class="user-list">
-    <thead>
-        <tr>
-            <th>Nom complet</th>
-            <th>Téléphone</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let user of users">
-            <td>{{ user.nom_complet }}</td>
-            <td>{{ user.phone_number }}</td>
-            <td>
-                <button class="action-btn view-btn" (click)="viewOrders(user.phone_number)">Voir commandes</button>
-                <button class="action-btn edit-btn"><a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/infos-client',user.phone_number]">Modifier</a></button>
-                <button class="action-btn delete-btn" (click)="deleteUser(user.phone_number)">Supprimer</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<form>
+	<div class="mb-3 row">
+		<label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Rechercher un client</label>
+		<div class="col-xs-3 col-sm-auto">
+			<input
+				id="table-complete-search"
+				type="text"
+				class="form-control"
+				name="searchTerm"
+				[(ngModel)]="searchTerm"
+                (input)="onSearch()"
+			/>
+		</div>
+		<!-- @if (user) {
+			<span class="col col-form-label">Loading...</span>
+		} -->
+	</div>
+
+	<table class="table table-striped user-list">
+		<thead>
+			<tr>
+				<th scope="col" >Nom Complet</th>
+				<th scope="col">Téléphone</th>
+				<th scope="col" class="static-right">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (user of users; track user.id) {
+				<tr>
+					<td><ngb-highlight [result]="user.nom_complet" [term]="searchTerm" /></td>
+					<td><ngb-highlight [result]="user.phone_number" [term]="searchTerm" /></td>
+                    <td>
+                        <button class="action-btn view-btn" (click)="viewOrders(user.phone_number)">Voir commandes</button>
+                        <button class="action-btn edit-btn"><a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/infos-client',user.phone_number]">Modifier</a></button>
+                        <button class="action-btn delete-btn" (click)="deleteUser(user.phone_number)">Supprimer</button>
+                    </td>
+
+				</tr>
+			} @empty {
+				<tr>
+					<td colspan="4" class="bg-warning" style="text-align: center">Aucun client trouvé.</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<div *ngIf="users.length" class="d-flex justify-content-between p-2">
+		<ngb-pagination (pageChange)="loadUsers()" [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize">
+		</ngb-pagination>
+
+		<!-- <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="pageSize">
+			<option [ngValue]="5">5 Clients par page</option>
+            <option [ngValue]="10">10 Clients par page</option>
+            <option [ngValue]="25">25 Clients par page</option>
+			<option [ngValue]="50">50 Clients par page</option>
+			<option [ngValue]="100">100 Clients par page</option>
+		</select> -->
+        <p>{{totalItems}} clients au total</p>
+	</div>
+</form>

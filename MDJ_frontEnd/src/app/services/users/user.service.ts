@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../../models/user';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -77,9 +77,20 @@ export class UserService {
     this.loggedIn.next(false);
   }
 
-  getUsers(): Observable<User[]> {
-    const url = `${this.baseUrl}admin_users_list/`;
-    return this.http.get<User[]>(url);
+  // getUsers(): Observable<User[]> {
+  //   const url = `${this.baseUrl}admin_users_list/`;
+  //   return this.http.get<User[]>(url);
+  // }
+  getUsers(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
+    return this.http.get(`${this.baseUrl}admin_users_list/`, { params });
   }
 
   getUserByphoneNumber(phone_number:string):Observable<User>{

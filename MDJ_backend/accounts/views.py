@@ -15,7 +15,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 from django.contrib.auth import authenticate
-
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
 
 class RegisterView(APIView):
     def post(self, request):
@@ -115,10 +116,24 @@ class PasswordChangeView(APIView):
         else:
             raise ValidationError('mot de passe actuel incorrect')
 
-class UserListView(ListAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
+class UserListView(ListAPIView):
+    serializer_class = UserSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        queryset = CustomUser.objects.all()
+        search_term = self.request.query_params.get('search', None)
+        if search_term:
+            queryset = queryset.filter(
+                Q(phone_number__icontains=search_term) |
+                Q(nom_complet__icontains=search_term) 
+            )
+        return queryset
 
 class UserCreateView(APIView):
     permission_classes = [IsAuthenticated]
