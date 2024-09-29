@@ -1,0 +1,12 @@
+<section class="Temoignages_page">
+    <div class="Temoignages_page_head w-75 m-auto">
+        <div class="nbr_temoignage">{{Avis.length}} témoignages</div>
+        
+    </div>
+    @for (item of Avis; track $index) {
+        <div class="user_tem w-75 m-auto my-5">
+            <div class="username_tem mb-3">{{item.Avis_author.nom_complet}}</div>
+            <div class="text_tem">{{item.Texte_avis}}</div>
+        </div>
+    }
+</section>

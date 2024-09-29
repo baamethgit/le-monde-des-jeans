@@ -1,190 +1,54 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Produit, ProduitService } from '../../services/produits/produit.service';
+import { categorie, CategorieService } from '../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
 import { ProduitDiouma } from '../../models/produit_diouma';
 @Component({
   selector: 'app-produits',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterOutlet],
   templateUrl: './produits.component.html',
   styleUrl: './produits.component.scss'
 })
-export class ProduitsComponent {
-product:ProduitDiouma[]=[];
+export class ProduitsComponent implements OnInit {
+  list_categorie: any[] = [];
+  current_category: string = ''; // Par défaut, afficher tous les produits
 
-ngOnInit():void{
-  this.product=[
-    {
-      produitRef: "PROD001",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 39.99,
-      produitTaille: "M",
-      produitCompo: "Coton",
-      categorie: "Chemises"
-    },
-    {
-      produitRef: "PROD002",
-      produitNom: "Jean slim",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 59.99,
-      produitTaille: "32",
-      produitCompo: "Coton",
-      categorie: "Pantalons"
-    },
-    {
-      produitRef: "PROD003",
-      produitNom: "Robe d'été",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 45.50,
-      produitTaille: "S",
-      produitCompo: "Viscose",
-      categorie: "Lacoste"
-    },
-    {
-      produitRef: "PROD004",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 89.99,
-      produitTaille: "42",
-      produitCompo: "Synthétique",
-      categorie: "Chaussures"
-    },
-    {
-      produitRef: "PROD005",
-      produitNom: "T-shirt basique",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 15.99,
-      produitTaille: "L",
-      produitCompo: "Coton",
-      categorie: "Tee-shirt"
-    },
-    {
-      produitRef: "PROD006",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 199.99,
-      produitTaille: "M",
-      produitCompo: "Cuir",
-      categorie: "Lacoste"
-    },
-    {
-      produitRef: "PROD007",
-      produitNom: "Écharpe en laine",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 29.99,
-      produitTaille: "Unique",
-      produitCompo: "Laine",
-      categorie: "Pull"
-    },
-    {
-      produitRef: "PROD008",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 49.99,
-      produitTaille: "34",
-      produitCompo: "Coton",
-      categorie: "Pantalons"
-    },
-    {
-      produitRef: "PROD009",
-      produitNom: "Blouson bomber",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 79.99,
-      produitTaille: "XL",
-      produitCompo: "Polyester",
-      categorie: "Pull"
-    },
-    {
-      produitRef: "PROD010",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 129.99,
-      produitTaille: "M",
-      produitCompo: "Cachemire",
-      categorie: "Pull"
-    },
-    {
-      produitRef: "PROD011",
-      produitNom: "Jupe plissée",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 39.99,
-      produitTaille: "38",
-      produitCompo: "Polyester",
-      categorie: "Pantalons"
-    },
-    {
-      produitRef: "PROD012",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 34.99,
-      produitTaille: "Unique",
-      produitCompo: "Soie",
-      categorie: "Lacoste"
-    },
-    {
-      produitRef: "PROD013",
-      produitNom: "Chemisier en soie",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 89.99,
-      produitTaille: "S",
-      produitCompo: "Soie",
-      categorie: "Chemises"
-    },
-    {
-      produitRef: "PROD014",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 24.99,
-      produitTaille: "M",
-      produitCompo: "Polyester",
-      categorie: "Tee-shirt"
-    },
-    {
-      produitRef: "PROD015",
-      produitNom: "Robe de soirée",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 149.99,
-      produitTaille: "40",
-      produitCompo: "Polyester",
-      categorie: "Costumes"
-    },
-    {
-      produitRef: "PROD016",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 19.99,
-      produitTaille: "Unique",
-      produitCompo: "Coton",
-      categorie: "Lacoste"
-    },
-    {
-      produitRef: "PROD017",
-      produitNom: "Sweat à capuche",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 54.99,
-      produitTaille: "L",
-      produitCompo: "Coton",
-      categorie: "Pull"
-    },
-    {
-      produitRef: "PROD018",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 49.99,
-      produitTaille: "M",
-      produitCompo: "Nylon",
-      categorie: "Lacoste"
-    },
-    {
-      produitRef: "PROD019",
-      produitNom: "Blazer classique",
-      produitImage: ["../../assets/img/434324409_122138643518191964_1332089378028437094_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 119.99,
-      produitTaille: "52",
-      produitCompo: "Polyester",
-      categorie: "Costumes"
-    },
-    {
-      produitRef: "PROD020",
-      produitImage: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-      produitPrix: 9.99,
-      produitTaille: "39-42",
-      produitCompo: "Coton",
-      categorie: "Chaussures"
+  constructor(
+    private produitService: ProduitService, 
+    private router: Router, 
+    private categorieService: CategorieService, 
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    // Récupérer la liste des catégories
+    this.categorieService.getAllCategories().subscribe({
+      next: (data: any[]) => {
+        this.list_categorie = data;
+      },
+      error: (error) => {
+        console.log('Erreur lors de l\'affichage des catégories :', error.error.detail);
+      }
+    });
+
+    // Surveiller les changements de l'URL pour mettre à jour la catégorie active
+    this.route.url.subscribe(() => {
+      const slug = this.route.snapshot.firstChild?.paramMap.get('slug');
+      this.current_category = slug ? slug : ''; // Si slug est null, tous les produits sont affichés
+    });
+  }
+
+  switch_category(categorySlug: string): void {
+    this.current_category = categorySlug; // Mettre à jour la catégorie active
+
+    // Si aucun slug n'est fourni (pour "Tous les produits"), rediriger vers la page principale des produits
+    if (categorySlug === '') {
+      this.router.navigate(['/produits']);
+    } else {
+      this.router.navigate(['/produits/categorie', categorySlug]);
     }
-  ]
-}
-
+  }
 }

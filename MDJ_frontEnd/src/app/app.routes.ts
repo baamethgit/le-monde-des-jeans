@@ -4,9 +4,13 @@ import { AdminHomeComponent } from './components/admin/admin-home/admin-home.com
 import { ClientsComponent } from './components/admin/clients/clients.component';
 import { AdminAvisClientsComponent } from './components/admin/admin-avis-clients/admin-avis-clients.component';
 import { HomeComponent } from './components/home/home.component';
-import { ProduitsComponent } from './components/produits/produits.component';
 import { ProduitDetailComponent } from './components/produit-detail/produit-detail.component';
 import { UpdateUserComponent } from './components/admin/update-user/update-user.component';
+import { ProduitsComponent } from './components/produits/produits.component';
+import { ProductFilterComponent } from './components/produits/product-filter/product-filter.component';
+import path from 'path';
+import { AllProductsComponent } from './components/produits/all-products/all-products.component';
+import { AvisComponent } from './avis/avis.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PanierComponent } from './components/user/panier/panier.component';
 import { LoginComponent } from './components/user/login/login.component';
@@ -28,9 +32,11 @@ export const routes: Routes = [
     {path: 'profile', component: ProfilComponent},
     {path: 'profile/edit', component: ProfilUpdateComponent},
     {path:'produits', component: ProduitsComponent, children:[
-        
+        {path:'',component:AllProductsComponent, pathMatch:'full'},
+        {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
-    {path:'produits/:ProduitRef', component: ProduitDetailComponent, pathMatch:'full'},
+    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
+    {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: ProduitDetailComponent, pathMatch:'full'},

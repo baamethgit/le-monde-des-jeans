@@ -11,6 +11,11 @@ class Categorie(models.Model):
     nom = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=1000)
     slug = models.SlugField(unique=True)
+    image = models.ImageField(upload_to='images_categories/')
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.nom)
+    #     super().save(*args, **kwargs)
     # image = models.ImageField(upload_to='images_categories/')
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -31,19 +36,41 @@ class Produit(models.Model):
         ('coton', 'Coton'),
         ('nilon', 'Nilon'),
     )
+    COULEUR = (
+        ('BL', 'Bleu'),
+        ('RD', 'Rouge'),
+        ('GR', 'Vert'),
+        ('YW', 'Jaune'),
+        ('BK', 'Noir'),
+        ('WH', 'Blanc'),
+        ('OR', 'Orange'),
+        ('PR', 'Pourpre'),
+        ('PK', 'Rose'),
+        ('GY', 'Gris'),
+        ('BR', 'Marron'),
+    )
 
     nom = models.CharField(max_length=200)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
-    taille = models.CharField(max_length=128,choices=TAILLES, blank=True,null=True)
-    composition = models.CharField(max_length=128,choices=COMPO, blank=True,null=True)
-    slug = models.SlugField(unique=True)
-    reserve = models.BooleanField(default=False) # si le produit est réservé ou non
-    special = models.BooleanField(default=False) # si le produit est une nouveauté ou non
+    taille = models.CharField(max_length=128, choices=TAILLES, blank=True, null=True)
+    composition = models.CharField(max_length=128, choices=COMPO, blank=True, null=True)
+    couleur = models.CharField(max_length=128, choices=COULEUR, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    QuantiteStock = models.IntegerField(default=1, null=False, blank=False)
+    reserve = models.BooleanField(default=False)
+    special = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        # Si l'objet n'a pas encore d'ID, il est nécessaire de l'enregistrer une première fois
+        # pour générer l'ID (nécessaire pour créer un slug unique)
+        if not self.id:
+            super().save(*args, **kwargs)
+
+        # Générer le slug en utilisant le nom et l'ID si le slug est vide ou à recréer
         if not self.slug:
-            self.slug = slugify(self.nom)
+            self.slug = slugify(self.nom) + "-" + str(self.id)
+
         super().save(*args, **kwargs)
 
     def __str__(self):

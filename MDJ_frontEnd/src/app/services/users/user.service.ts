@@ -3,6 +3,17 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../../models/user';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
+
+
+export interface Avis{
+  Texte_avis:string,
+  Avis_author:user
+}
+
+export interface user{
+  nom_complet:string,
+  phone_number:string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -105,6 +116,10 @@ export class UserService {
     return this.http.delete<any>(url);
   }
 
+  getAllAvis():Observable<Avis[]>{
+    const url=`${this.baseUrl}user/avisAPI/Avis`
+    return this.http.get<Avis[]>(url)
+  }
 
   verifyOTP(otpCode: string): Observable<any> {
     const url = `${this.baseUrl}user/verify-otp/`;

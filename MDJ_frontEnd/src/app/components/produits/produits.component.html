@@ -16,40 +16,42 @@
 </section>
 <section class="product">
     <div class="product_main d-flex flex-column flex-md-row justify-content-between align-items-center align-items-md-start">
-        <div class="product_filter ">
+        <div class="product_filter me-5">
             <h4 class="filter_title d-flex align-items-center my-4">
                <img src="../../assets/img/9104236_filter_setting_sort_configuration_icon.png" alt="" srcset=""> 
                Filtres
             </h4>
             <h4 class="my-4">CATEGORIES</h4>
             <ul>
-                <li>Tous les Articles</li>
-                <li>Chemises</li>
-                <li>Pantalons</li>
-                <li>Pull</li>
-                <li>Costumes</li>
-                <li>Lacoste</li>
-                <li>Tee-shirt</li>
-                <li>Chaussures</li> 
+                <li>
+                    <a
+                      (click)="switch_category('')"
+                      class="link_category"
+                      [ngClass]="{'active': current_category === ''}"
+                    >
+                      Tous les produits
+                    </a>
+                  </li>
+                @for (item of list_categorie; track $index) {
+                    <li>
+                        <a
+                          (click)="switch_category(item.slug)"
+                          class="link_category"
+                          [ngClass]="{'active': current_category === item.slug}"
+                        >
+                          {{item.nom}}
+                        </a>
+                      </li>
+                }
             </ul>
         </div>
-        <div class="product_list row">
-            <h4 class="my-5">Tous Les Produits</h4>
-            @for (item of product; track item) {
-                <div class="product_item col-6 col-xl-3 col-lg-3 p-1 p-sm-2">
-                    <a [routerLink]="['/Produits', item.produitRef]" class="">
-                        <div class="product_item_img">
-                            <img src={{item.produitImage[0]}} alt="" srcset="">
-                        </div>
-                        <div class="product_item_infos">
-                            <div class="product_item_name">{{ item.produitNom }}</div>
-                            <div class="product_item_price">{{ item.produitPrix }}</div>
-                        </div>
-                        
-                    </a>
-                </div>
-            }
-            
+        
+            <router-outlet class="p-0 m-0 row">
+                
+            </router-outlet>
         </div>
-    </div>
+                
+            
+        
+    
 </section>

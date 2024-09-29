@@ -1,0 +1,19 @@
+
+<div class="product_list row">
+    <h4 class="my-5">{{current_category}}</h4>
+            @for (item of produits_category; track item) {
+                <div class="product_item col-6 col-xl-3 col-lg-3 p-1 p-sm-2">
+                    <a [routerLink]="['/produits', item.slug]" class="">
+                        <div class="product_item_img">
+                             <img [src]="item.images[0].image" alt="">
+                        </div>
+                        <div class="product_item_infos">
+                            <div class="product_item_name">{{ item.nom }}</div>
+                            <div class="product_item_price">{{ item.prix }}</div>
+                        </div>
+                        
+                    </a>
+                </div>
+            }
+</div>
+
