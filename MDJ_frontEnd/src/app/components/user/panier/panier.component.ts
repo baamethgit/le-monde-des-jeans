@@ -68,4 +68,7 @@ export class PanierComponent implements OnInit {
       
   }
   
+  deleteProd(){
+
+  }
 }

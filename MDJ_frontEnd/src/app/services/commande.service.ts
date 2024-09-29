@@ -13,7 +13,12 @@ export class CommandeService {
   constructor() { }
 
   getDeliveryZones():Observable<ZoneLivraison[]>{
-    const url = `${this.baseUrl}shop/zones/`;
+    const url = `${this.baseUrl}apiProduit/zones/`;
     return this.http.get<ZoneLivraison[]>(url); 
+  }
+
+  getDeliveryZoneByNumber(num:number):Observable<ZoneLivraison>{
+    const url = `${this.baseUrl}apiProduit/zone/${num}/`;
+    return this.http.get<ZoneLivraison>(url); 
   }
 }

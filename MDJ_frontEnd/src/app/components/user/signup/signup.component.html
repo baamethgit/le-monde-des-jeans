@@ -67,8 +67,6 @@
             <small class="text-danger" *ngIf="SignupForm.controls['password_confirm'].hasError('required')">Ce champ est
               obligatoire.</small>
           </div>
-            <a routerLink='/resetpwd' class="d-inline-block my-1 text-center" style="text-decoration: none;">Mot de passe oublié </a>
-            <br>
             <div *ngIf="SignupError" class="text-danger text-center mt-1"> {{ SignupError }}<br>
             </div>
             <button (click)="register()" type="submit" class="btn rounded-1 my-2 btn-primary">Envoyer</button>
@@ -76,7 +74,7 @@
         </form>
     <div *ngIf="otpSent">
         <h2>Vérification OTP</h2>
-        <form (ngSubmit)="onVerifyOTP()">
+        <form method="post" (ngSubmit)="onVerifyOTP()">
           <div>
             <label for="otpCode">Code OTP:</label>
             <input type="text" id="otpCode" [(ngModel)]="otpCode" name="otpCode" required>
@@ -87,6 +85,6 @@
     </div>
 </section>
 
-<div *ngIf="isloading" class="bg-dark bg-opacity-50 position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top:0;left:0">
+<div *ngIf="isloading" class="bg-dark bg-opacity-50 position-absolute d-flex align-items-center justify-content-center" style="width:100vw;height:100vh ;top:0;left:0">
     <h1>LOADING ...</h1>
 </div>

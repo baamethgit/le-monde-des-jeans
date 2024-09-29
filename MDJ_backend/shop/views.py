@@ -7,9 +7,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
 from accounts import models as accountModel
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView
 from .serializers import ZoneSerializer
 from .models import ZoneLivraison
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
@@ -64,3 +65,8 @@ class getDeliveryZones(ListAPIView):
     serializer_class = ZoneSerializer
 
 
+
+class getDeliveryZoneByNum(RetrieveAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    lookup_field = 'numero'
