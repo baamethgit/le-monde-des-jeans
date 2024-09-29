@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Avis, UserService } from '../services/users/user.service';
+import { Avis } from '../../models/temoignage';
+import { UserService } from '../../services/users/user.service';
 
 @Component({
   selector: 'app-avis',

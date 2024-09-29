@@ -2,6 +2,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class CustomUserCreationForm(UserCreationForm):
     phone_number = PhoneNumberField(region='SN')  # Région Sénégal

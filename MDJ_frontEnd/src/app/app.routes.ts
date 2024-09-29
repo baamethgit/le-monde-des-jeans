@@ -8,7 +8,7 @@ import { ProduitDetailComponent } from './components/produit-detail/produit-deta
 import { ProduitsComponent } from './components/produits/produits.component';
 import { ProductFilterComponent } from './components/produits/product-filter/product-filter.component';
 import { AllProductsComponent } from './components/produits/all-products/all-products.component';
-import { AvisComponent } from './avis/avis.component';
+import { AvisComponent } from './components/avis/avis.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { PanierComponent } from './components/user/panier/panier.component';
 import { LoginComponent } from './components/user/login/login.component';

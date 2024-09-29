@@ -64,6 +64,7 @@ class Avis(models.Model):
         verbose_name_plural = 'Avis'
     Avis_author=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='avis')
     Texte_avis=models.TextField()
+    temoigne_le = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return str(self.Avis_author)
