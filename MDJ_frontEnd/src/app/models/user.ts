@@ -1,6 +1,7 @@
 export interface User {
-    id:number;
+    id?:number;
     nom_complet : string;
     phone_number: string;
-    slug?:string;
+    password?: string;
+    slug:string;
 }

@@ -11,7 +11,7 @@ class Categorie(models.Model):
     nom = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=1000)
     slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='images_categories/')
+    # image = models.ImageField(upload_to='images_categories/')
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.nom)
@@ -98,6 +98,7 @@ class Panier(models.Model):
 
 
 class ZoneLivraison(models.Model):
+    numero = models.PositiveIntegerField(unique=True)
     nom = models.CharField(max_length=100)
     prix_livraison = models.DecimalField(max_digits=10, decimal_places=2)
     info = models.TextField(max_length=1000,blank=True,null=True) # plus d info

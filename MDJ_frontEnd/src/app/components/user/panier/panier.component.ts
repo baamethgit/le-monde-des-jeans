@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 import { Panier } from '../../../models/panier';
 import { ItemPanierComponent } from '../item-panier/item-panier.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-panier',
   standalone: true,
-  imports: [FormsModule,CommonModule,CheckoutProgressBarComponent,ItemPanierComponent],
+  imports: [FormsModule,CommonModule,CheckoutProgressBarComponent,ItemPanierComponent,RouterLink],
   templateUrl: './panier.component.html',
   styleUrl: './panier.component.scss'
 })
-export class PanierComponent {
+export class PanierComponent implements OnInit {
   selectedOption: string = 'livraison';
-  CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
+  CheckoutStep : CheckoutStep = CheckoutStep.Panier;
   panier : Panier = {
     produits : [
       {
@@ -62,4 +63,9 @@ export class PanierComponent {
       }
     ]    
   };
+
+  ngOnInit(): void {
+      
+  }
+  
 }

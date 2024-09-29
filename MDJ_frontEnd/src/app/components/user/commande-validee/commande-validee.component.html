@@ -1,0 +1,30 @@
+<app-checkout-progress-bar [currentStep]="CheckoutStep" style="top:60px;z-index:3000;"></app-checkout-progress-bar>
+
+<section class="d-flex justify-content-center align-items-center p-2">
+    <div class="shadowed_div col-12 col-sm-8 col-md-6 mx-auto p-5">
+        <h6 style="color:gray" class="text-center">MERCI</h6>
+        <h4 class="text-center" style="">VOTRE COMMANDE A ETE VALIDEE</h4>
+        <p class="px-md-3 d-flex justify-content-around align-items-center">
+            <span style="color: gray;">Date : </span>
+            <span class="fw-bold">21 Octobre 2024</span>
+        </p>
+        <p class="px-md-3 d-flex justify-content-around align-items-center">
+            <span style="color: gray;">Total : </span>
+            <span class="fw-bold">23000 frs</span>
+        </p>
+        <p class="px-md-3 d-flex justify-content-around align-items-center">
+            <span style="color: gray;">Zone de Livraison : </span>
+            <span class="fw-bold">Ngor-Almadies</span>
+        </p>
+        <p class="px-md-3 d-flex justify-content-around align-items-center">
+            <span style="color: gray;">Méthode de Paiement : </span>
+            <span class="fw-bold">Orange Money</span>
+        </p>
+        <p class="mx-auto d-flex align-items-center justify-content-center text-center">
+            <button class="my-1 w-50 bg-dark rounded-3 border-0 p-2" style="color:white">
+                <a class="text-decoration-none text-light" [routerLink]="['/commande-validee']">Mes commandes
+                </a>
+            </button>
+        </p>
+    </div>
+</section>
