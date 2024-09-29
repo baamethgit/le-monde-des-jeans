@@ -3,8 +3,6 @@ import { CarouselModule} from 'primeng/carousel';
 import { ActivatedRoute } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { Produit, ProduitService } from '../../services/produits/produit.service';
-import { error } from 'console';
-import { ProduitDiouma } from '../../models/produit_diouma';
 
 @Component({
   selector: 'app-produit-detail',
@@ -14,8 +12,7 @@ import { ProduitDiouma } from '../../models/produit_diouma';
   styleUrl: './produit-detail.component.scss'
 })
 export class ProduitDetailComponent {
-product_selected:ProduitDiouma | undefined;
-products:ProduitDiouma[]=[];
+products:Produit[]=[];
 list_p:any[]=[];
 product_selected:Produit | undefined;
 must_like_product:Produit[]=[];

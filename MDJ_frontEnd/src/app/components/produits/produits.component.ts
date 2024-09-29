@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { Produit, ProduitService } from '../../services/produits/produit.service';
-import { categorie, CategorieService } from '../../services/categories/categorie.service';
-import { RouterLink } from '@angular/router';
-import { ProduitDiouma } from '../../models/produit_diouma';
+import { ProduitService } from '../../services/produits/produit.service';
+import { CategorieService } from '../../services/categories/categorie.service';
+
+
 @Component({
   selector: 'app-produits',
   standalone: true,
