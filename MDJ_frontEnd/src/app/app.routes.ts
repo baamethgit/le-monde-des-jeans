@@ -12,12 +12,21 @@ import { PanierComponent } from './components/user/panier/panier.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { SignupComponent } from './components/user/signup/signup.component';
 import { userGuard } from './utils/user.guard';
+import { ProfilComponent } from './components/user/profil/profil.component';
+import { ProfilUpdateComponent } from './components/user/profil-update/profil-update.component';
+import { DetailClientComponent } from './components/admin/detail-client/detail-client.component';
+import { DetailCommandeComponent } from './components/user/detail-commande/detail-commande.component';
+import { CommandeValideeComponent } from './components/user/commande-validee/commande-validee.component';
 export const routes: Routes = [
-    {path: '', component: HomeComponent},
+    {path: '', component: HomeComponent,canActivate: [userGuard]},
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent},
+    {path: 'detail-commande', component: DetailCommandeComponent},
+    {path: 'commande-validee', component:CommandeValideeComponent},
+    {path: 'profile', component: ProfilComponent},
+    {path: 'profile/edit', component: ProfilUpdateComponent},
     {path:'produits', component: ProduitsComponent, children:[
         
     ]},
@@ -26,7 +35,7 @@ export const routes: Routes = [
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: ProduitDetailComponent, pathMatch:'full'},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
-        {path:'infos-client/:phone_number', component: UpdateUserComponent, pathMatch:'full'},
+        {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
     ]},
 ];

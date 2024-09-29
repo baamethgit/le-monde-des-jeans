@@ -1,70 +1,72 @@
 import { Component } from '@angular/core';
 import { User } from '../../../models/user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../services/users/user.service';
 import { Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import Validation from '../../../shared/my-validators';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-update-user',
+  selector: 'app-profil-update',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
-  templateUrl: './update-user.component.html',
-  styleUrl: './update-user.component.scss'
+  imports: [CommonModule,FormsModule,ReactiveFormsModule],
+  templateUrl: './profil-update.component.html',
+  styleUrl: './profil-update.component.scss'
 })
-export class UpdateUserComponent {
+export class ProfilUpdateComponent {
   user!: User;
   error: string = '';
   message: string = '';
   userForm ! : FormGroup;
   passwordForm! : FormGroup;
+
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
-    this.passwordForm = this.formBuilder.group(
-      {
-        currentPassword: ['', [Validators.required]],
-        newPassword: ['', [Validators.required]],
-        passwordConfirm: ['', [Validators.required]],
-      }
-      ,
-      {
-        validators: [Validation.match('newPassword', 'passwordConfirm')]
-      }
-    );
-    this.userForm = this.formBuilder.group(
-      {
-        nom_complet: ['', [Validators.required]],
-        phone_number: ['', [Validators.required]]
-      }
-    );
-
-    this.userService.getUserByphoneNumber(this.user?.phone_number || "").subscribe({
+    this.userService.getUser().subscribe({
       next: (data) => {
         if (data !== null) {
           this.user = data;
           this.initiazeForm();
         } else {
+          // this.user = undefined;
         }
       },
       error: (error) => {
         console.log(error.error.detail);
       }
     });
-  
+
+    this.userForm = this.formBuilder.group(
+      {
+        nom_complet: ['', [Validators.required,Validators.minLength(5)]],
+        phone_number: ['', [Validators.required]],
+      },
+      // {
+      //   validators: [Validation.phoneNumberValidation('phone_number')]
+      // }
+
+    );
+
+    this.passwordForm = this.formBuilder.group(
+      {
+        currentPassword: ['', [Validators.required]],
+        newPassword: ['', [Validators.required]],
+        passwordConfirm: ['', [Validators.required]],
+      },
+      {
+        validators: [Validation.match('newPassword', 'passwordConfirm')]
+      }
+    );
   }
 
-
-  togglePassword(input: HTMLInputElement) { // A mettre dans utils
+  togglePassword(input: HTMLInputElement) {
     if (input.type === 'password') {
       input.type = 'text';
     } else {
       input.type = 'password';
     }
   }
-
 
   initiazeForm() {
     if (this.user) {
@@ -97,17 +99,17 @@ export class UpdateUserComponent {
     if (this.passwordForm.valid) {
       const currentPassword = this.passwordForm.getRawValue().currentPassword || '';
       const newPassword = this.passwordForm.getRawValue().newPassword || '';
-      // this.userService.changePassword(currentPassword, newPassword).subscribe({
-      //   next: (data) => {
-      //     this.passwordForm.reset();
-      //     this.message = "Le mot de passe est modifié avec succès";
-      //   },
-      //   error: (error) => {
-      //     this.error = error.error[0]
-      //     this.passwordForm.markAllAsTouched();
-      //     this.message = ''
-      //   }
-      // })
+      this.userService.changePassword(currentPassword, newPassword).subscribe({
+        next: (data) => {
+          this.passwordForm.reset();
+          this.message = "Le mot de passe est modifié avec succès";
+        },
+        error: (error) => {
+          this.error = error.error[0]
+          this.passwordForm.markAllAsTouched();
+          this.message = ''
+        }
+      })
     } else {
       this.passwordForm.markAllAsTouched();
       this.message = ''

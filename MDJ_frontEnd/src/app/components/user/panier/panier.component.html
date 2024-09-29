@@ -1,5 +1,5 @@
 <section class="container-fluid container-md">
-<app-checkout-progress-bar [currentStep]="CheckoutStep" class="sticky-top bg-info" style="top:60px;z-index:3000;"></app-checkout-progress-bar>
+<app-checkout-progress-bar [currentStep]="CheckoutStep" class="bg-info" style="top:60px;z-index:3000;"></app-checkout-progress-bar>
 
 <section class="row position-relative">
   <div class="col-12 col-md-8 table-panier">
@@ -32,7 +32,10 @@
     <span>Total</span>
     <span>12000 frcs</span>
   </p>
-  <button class="my-1 w-75 mx-auto bg-dark rounded-3 border-0 p-2" style="color:white">Continuer</button>
+  <button class="my-1 w-75 mx-auto bg-dark rounded-3 border-0 p-2" style="color:white">
+    <a class="text-decoration-none text-light" [routerLink]="['/detail-commande']">Continuer
+    </a>
+    </button>
 </div>
 </section>
 </section>

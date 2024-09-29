@@ -17,6 +17,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 class RegisterView(APIView):
     def post(self, request):
@@ -98,11 +99,7 @@ class LoginView(APIView):
         return Response({"error": "Identifiants invalides"}, status=status.HTTP_401_UNAUTHORIZED)
     
     
-class UserView(APIView):
-    def get(self, request):
-        user = verifier_user(request)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+
 
 class PasswordChangeView(APIView):
     def post(self,request):
@@ -146,32 +143,27 @@ class UserCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDetailView(APIView):
-    # permission_classes = [IsAuthenticated]
 
-    def get_object(self, phone_number):
-        try:
-            return CustomUser.objects.get(phone_number=phone_number)
-        except CustomUser.DoesNotExist:
-            return None
-
-    def get(self, request, phone_number):
-        user = self.get_object(phone_number)
-        if user is None:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    def get(self, request):
+        user = verifier_user(request)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
-    def put(self, request, phone_number):
+    def put(self, request):
         user = verifier_user(request)
         serializer = UserSerializer(user, data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
-    def delete(self, request, phone_number):
-        user = self.get_object(phone_number)
-        if user is None:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+class deleteUserView(APIView):
+    def delete(self, request,slug):
+        user = get_object_or_404(CustomUser, slug=slug)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class getUserBySlug(RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'slug'

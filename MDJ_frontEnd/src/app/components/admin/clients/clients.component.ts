@@ -6,11 +6,13 @@ import { UpdateUserComponent } from '../update-user/update-user.component';
 import { RouterLink } from '@angular/router';
 import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { DetailClientComponent } from '../detail-client/detail-client.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [CommonModule,FormsModule,UpdateUserComponent,RouterLink, NgbHighlight, NgbPaginationModule],
+  imports: [CommonModule,FormsModule,UpdateUserComponent,RouterLink, NgbHighlight, NgbPaginationModule,DetailClientComponent,LoaderComponent],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss'
 })
@@ -54,10 +56,11 @@ export class ClientsComponent implements OnInit {
   editUser(customer_id:number){
 
   }
-  deleteUser(phone_number:string){
-    this.userService.deleteUser(phone_number).subscribe({
+  deleteUser(slug:string){
+    this.userService.deleteUser(slug).subscribe({
       next: (data) => {
-        console.log('user supprimé avec succés')
+        console.log('user supprimé avec succés');
+        this.loadUsers();
       },
       error: (error) => {
         console.log(error.error);

@@ -8,7 +8,7 @@ class UserSerializer(ModelSerializer):
     phone_number = PhoneNumberField(region="SN")
     class Meta:
         model = CustomUser
-        fields = ["nom_complet","phone_number","password"]
+        fields = ["nom_complet","phone_number",'slug',"password"]
 
     # Pour crypter le password
     def create(self, validated_data):

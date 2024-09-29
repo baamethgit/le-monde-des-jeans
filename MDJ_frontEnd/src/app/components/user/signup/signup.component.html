@@ -1,4 +1,4 @@
-<section class="container-md container-fluid align-items-center row">
+<section class="container-md container-fluid position-relative align-items-center row">
     <div class="col-6 h-50 mx-auto px-2 py-1 login-image">
         <img src="../../../../assets/img/285645_user_icon.png" alt="">
     </div>
@@ -71,7 +71,8 @@
             <br>
             <div *ngIf="SignupError" class="text-danger text-center mt-1"> {{ SignupError }}<br>
             </div>
-            <button (click)="register()" type="submit" class="btn rounded-1 my-2 btn-primary">S'Inscrire</button>
+            <button (click)="register()" type="submit" class="btn rounded-1 my-2 btn-primary">Envoyer</button>
+            <br><small>Vous recevrez un code de vérification sur votre numéro.</small>
         </form>
     <div *ngIf="otpSent">
         <h2>Vérification OTP</h2>
@@ -85,3 +86,7 @@
       </div>
     </div>
 </section>
+
+<div *ngIf="isloading" class="bg-dark bg-opacity-50 position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top:0;left:0">
+    <h1>LOADING ...</h1>
+</div>

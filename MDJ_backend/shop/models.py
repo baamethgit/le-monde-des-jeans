@@ -98,6 +98,7 @@ class Panier(models.Model):
 
 
 class ZoneLivraison(models.Model):
+    numero = models.PositiveIntegerField(unique=True)
     nom = models.CharField(max_length=100)
     prix_livraison = models.DecimalField(max_digits=10, decimal_places=2)
     info = models.TextField(max_length=1000,blank=True,null=True) # plus d info

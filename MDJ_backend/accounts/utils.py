@@ -13,7 +13,7 @@ def verifier_user(request):
             token = auth_header.split()[1]
             payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         except jwt.DecodeError:
-            raise AuthenticationFailed('Invalid token.')
+            raise AuthenticationFailed('Invalid token .')
         except Exception as e:
             raise AuthenticationFailed(f'Error decoding token: {str(e)}')
 

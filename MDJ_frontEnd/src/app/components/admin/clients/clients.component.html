@@ -31,8 +31,8 @@
 					<td><ngb-highlight [result]="user.phone_number" [term]="searchTerm" /></td>
                     <td>
                         <button class="action-btn view-btn" (click)="viewOrders(user.phone_number)">Voir commandes</button>
-                        <button class="action-btn edit-btn"><a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/infos-client',user.phone_number]">Modifier</a></button>
-                        <button class="action-btn delete-btn" (click)="deleteUser(user.phone_number)">Supprimer</button>
+                        <button class="action-btn edit-btn"><a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/infos-client',user.slug]">Modifier</a></button>
+                        <button class="action-btn delete-btn" (click)="deleteUser(user.slug)">Supprimer</button>
                     </td>
 
 				</tr>

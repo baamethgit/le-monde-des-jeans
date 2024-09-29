@@ -1,4 +1,4 @@
-<section class="modifier_info_user row">
+<section class="container-fluid container-md mx-auto modifier_info_user row">
     <div class="col-12 col-md-6 my-3 mx-auto border border-1 rounded-1 p-0" style="height: auto;">
       <p class='w-100 mb-0 px-4 py-3 border-bottom fw-bold' style="text-transform: uppercase;">PARAMETRE DU COMPTE</p>
       <p class="text-center">Modifier les infos de votre compte</p>
@@ -28,11 +28,11 @@
         </form>
       </div>
     </div>
-    <div class="maj_mdp col-12 col-md-9 my-4 mx-auto border border-1 rounded-1 p-0">
-      <p class='w-100 mb-0 px-4 py-3 border-bottom' style="text-transform: uppercase;">Changer le mot de passe du client</p>
+    <div class="maj_mdp col-12 col-md-5 my-4 mx-auto border border-1 rounded-1 p-0">
+      <p class='w-100 mb-0 px-4 py-3 border-bottom fw-bold' style="text-transform: uppercase;">Changer le mot de passe</p>
       <h4 class="bg-success text-center py-1 text-light w-100" *ngIf="message">{{ message }}</h4>
       <div class='p-3'>
-        <form action="" method='POST' class="row" [formGroup]="passwordForm" (submit)="changePassword()">
+        <form method='post' class="row" [formGroup]="passwordForm" (ngSubmit)="changePassword()">
           <div class="col-12">
             <label for="">Mot de passe actuel</label><br>
             <div class="d-flex p-0 justify-content-between align-items-center" style="border:1px solid rgb(118, 118, 118);border-radius: 3px;">
@@ -75,11 +75,12 @@
             </small>
             <small class="text-danger" *ngIf="passwordForm.controls['passwordConfirm'].hasError('required')">La confirmation de mot de passe est obligatoire..</small>
           </div>
-          <p class="submit_btn d-block ms-3 mt-4 col-4 " style="width: auto;">
-            <input type="submit" class='py-2 fw-bold ' name='modifier_mot_de_passe'>
+          <p class="submit_btn d-block mx-auto ms-3 mt-4 col-4 ">
+            <input type="submit" value="Changer le mot de passe" class='py-2 fw-bold ' name='modifier_mot_de_passe'>
           </p>
         </form>
       </div>
     </div>
   </section>
+  
   

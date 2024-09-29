@@ -61,7 +61,7 @@ export class ResetPasswordComponent implements OnInit{
   }
 
   onPasswordChanged() {
-    this.userService.updateUser(this.user,this.user.phone_number).subscribe({
+    this.userService.updateUser(this.user).subscribe({
       next: (data) => {
         console.log("Mot de passe Réinitialisé");
       },

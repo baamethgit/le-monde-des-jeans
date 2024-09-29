@@ -40,16 +40,16 @@ export class UserService {
   }
   }
 
-  register(user: User): Observable<User> {
-    return this.http.post<User>(`${this.baseUrl}register/`, user);
+  register(nom_complet:string,phone_number:string,pasword:string): Observable<User> {
+    return this.http.post<User>(`${this.baseUrl}register/`, {nom_complet:nom_complet,phone_number:phone_number,password:pasword});
   }
 
   getUser(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}get-user/`, { withCredentials: true });
   }
 
-  updateUser(user: Object,phone_number:string): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}client/${phone_number}`, user, { withCredentials: true  });
+  updateUser(user: Object): Observable<User> {
+    return this.http.put<User>(`${this.baseUrl}client/`, user, { withCredentials: true  });
   }
 
 
@@ -57,12 +57,12 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}change_password/`, {mdp_actuel : currentPassword,nouveau_mdp:newPassword}, {withCredentials: true  });
   }
 
+
   login(phone_number: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}login/`, { phone_number, password })
       .pipe(
         tap(response => {
           if (response.jwt) {
-            console.log("connecté")
             this.setToken(response.jwt);
             this.loggedIn.next(true);
           } else {
@@ -90,30 +90,25 @@ export class UserService {
       params = params.set('search', searchTerm);
     }
 
-    return this.http.get(`${this.baseUrl}admin_users_list/`, { params });
+    return this.http.get<User[]>(`${this.baseUrl}admin_users_list/`, { params });
   }
 
-  getUserByphoneNumber(phone_number:string):Observable<User>{
-    const url = `${this.baseUrl}client/${phone_number}/`;
+  getUserByphoneNumber(slug:string):Observable<User>{
+    const url = `${this.baseUrl}user/${slug}/`;
     return this.http.get<User>(url);
   }
 
   
 
-  deleteUser(phone_number:string):Observable<User>{
-    const url = `${this.baseUrl}client/${phone_number}/`;
-    return this.http.delete<User>(url);
+  deleteUser(slug:string):Observable<any>{
+    const url = `${this.baseUrl}delete-user/${slug}/`;
+    return this.http.delete<any>(url);
   }
 
 
-  // Nouvelle méthode pour vérifier le code OTP et finaliser l'inscription
-  // verifyOTP(otpCode: string): Observable<any> {
-  //   const url = `${this.baseUrl}user/verify-otp/`;
-  //   return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true }).pipe(
-  //     tap((user: User) => {
-  //     }),
-  //     // catchError(this.handleError('verifyOTP'))
-  //   );
-  // }
+  verifyOTP(otpCode: string): Observable<any> {
+    const url = `${this.baseUrl}user/verify-otp/`;
+    return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true })
+  }
 
 }
