@@ -14,5 +14,5 @@ import { AdminHeaderComponent } from "./components/admin/admin-header/admin-head
 })
 export class AppComponent {
   title = 'MDJ_frontEnd';
-  isAdmin = true;
+  isAdmin = false;
 }

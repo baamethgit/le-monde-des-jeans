@@ -1,0 +1,92 @@
+<section class="container-md container-fluid position-relative align-items-center row">
+    <div class="col-6 h-50 mx-auto px-2 py-1 login-image">
+        <img src="../../../../assets/img/285645_user_icon.png" alt="">
+    </div>
+    <div class="mx-auto col-10 col-sm-8 col-md-6 px-md-5  d-flex align-items-center justify-content-center">
+        <form *ngIf="!otpSent" action="#" class="w-100 h-100 login position-relative " method='POST' (ngSubmit)="register()"
+            [formGroup]="SignupForm">
+            <h4 class="text-center">CREER UN COMPTE</h4>
+            <p>Je déja un compte , <a class="d-inline-block my-1 text-center" style="text-decoration: none;" routerLink="/login">ME CONNECTER</a></p>
+            <div>
+                <label for="nom_complet">Nom Complet</label><br>
+                <input formControlName="nom_complet"  type="text" class="w-100 py-1 px-2 my-2"><br>
+            </div>
+            <ng-container
+                *ngIf="SignupForm.controls['nom_complet'].invalid && (SignupForm.controls['nom_complet'].dirty || SignupForm.controls['nom_complet'].touched)">
+                <small class="text-danger" *ngIf="SignupForm.controls['nom_complet'].hasError('required')">Ce champ est
+                    obligatoire.</small>
+            </ng-container>
+            <div>
+                <label for="phone_number">Numéro de Téléphone : </label><br>
+                <input placeholder="+221 | " formControlName="phone_number"  type="text" class="w-100 py-1 px-2 my-2"><br>
+            </div>
+            <ng-container
+                *ngIf="SignupForm.controls['phone_number'].invalid && (SignupForm.controls['phone_number'].dirty || SignupForm.controls['phone_number'].touched)">
+                <small class="text-danger"
+                    *ngIf="SignupForm.controls['phone_number'].hasError('email') || SignupForm.controls['phone_number'].hasError('validMail')">
+                    Veuillez saisir un numéro de téléphone valide
+                </small>
+                <small class="text-danger" *ngIf="SignupForm.controls['phone_number'].hasError('required')">Ce champ est
+                    obligatoire.</small>
+            </ng-container>
+
+            <div class="mt-1">
+                <label for="password">Mot de passe :</label>
+                <div class="w-100 p-1 my-2 d-flex p-0 justify-content-between my-2 align-items-center" style="border:1px solid rgb(118, 118, 118);
+      border-radius: 2px;">
+                    <input #input1 [type]="InputType" value="" formControlName="password" id="password"
+                        class="px-2 shadow-0 border-0 m-0 password_input w-100" required="">
+                    <button type="button" class="h-100 bg-transparent border-0 toggle_password"
+                        (click)="togglePassword(input1)">
+                        <i class="h-100 d-inline-block bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div
+            *ngIf="SignupForm.controls['password'].invalid && (SignupForm.controls['password'].dirty || SignupForm.controls['password'].touched)">
+            <small class="text-danger" *ngIf="SignupForm.controls['password'].hasError('required')">Ce champ est
+                obligatoire.</small>
+            </div>
+            <div class="mt-1">
+                <label for="password_confirm">Confirmer mot de passe :</label>
+                <div class="w-100 p-1 my-2 d-flex p-0 justify-content-between my-2 align-items-center" style="border:1px solid rgb(118, 118, 118);
+      border-radius: 2px;">
+                    <input #input2 [type]="InputType" value="" formControlName="password_confirm" id="password_confirm"
+                        class="px-2 shadow-0 border-0 m-0 password_input w-100">
+                    <button type="button" class="h-100 bg-transparent border-0 toggle_password"
+                    (click)="togglePassword(input2)">
+                        <i class="h-100 d-inline-block bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <div
+            *ngIf="SignupForm.controls['password_confirm'].invalid && (SignupForm.controls['password_confirm'].dirty || SignupForm.controls['password_confirm'].touched)">
+            <small class="text-danger mb-2" *ngIf="SignupForm.controls['password_confirm'].hasError('matching')">
+              Les mots de passe ne correspondent pas
+            </small>
+            <small class="text-danger" *ngIf="SignupForm.controls['password_confirm'].hasError('required')">Ce champ est
+              obligatoire.</small>
+          </div>
+            <a routerLink='/resetpwd' class="d-inline-block my-1 text-center" style="text-decoration: none;">Mot de passe oublié </a>
+            <br>
+            <div *ngIf="SignupError" class="text-danger text-center mt-1"> {{ SignupError }}<br>
+            </div>
+            <button (click)="register()" type="submit" class="btn rounded-1 my-2 btn-primary">Envoyer</button>
+            <br><small>Vous recevrez un code de vérification sur votre numéro.</small>
+        </form>
+    <div *ngIf="otpSent">
+        <h2>Vérification OTP</h2>
+        <form (ngSubmit)="onVerifyOTP()">
+          <div>
+            <label for="otpCode">Code OTP:</label>
+            <input type="text" id="otpCode" [(ngModel)]="otpCode" name="otpCode" required>
+          </div>
+          <button type="submit" class="btn rounded-1 my-2 btn-primary">Vérifier</button>
+        </form>
+      </div>
+    </div>
+</section>
+
+<div *ngIf="isloading" class="bg-dark bg-opacity-50 position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top:0;left:0">
+    <h1>LOADING ...</h1>
+</div>

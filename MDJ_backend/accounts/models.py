@@ -2,8 +2,9 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-
 from phonenumber_field.modelfields import PhoneNumberField
+from django.template.defaultfilters import slugify
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
@@ -33,12 +34,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    slug = models.SlugField(unique=True,blank=True)
 
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['nom_complet']
 
     objects = CustomUserManager()
 
+
+    def save(self, *args, **kwargs):
+        if self.slug != slugify(self.phone_number):
+            self.slug = slugify(self.phone_number)
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return str(self.phone_number)
 

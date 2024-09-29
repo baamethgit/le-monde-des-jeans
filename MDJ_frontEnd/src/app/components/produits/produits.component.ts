@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Produit, ProduitService } from '../../services/produits/produit.service';
 import { categorie, CategorieService } from '../../services/categories/categorie.service';
+import { RouterLink } from '@angular/router';
+import { ProduitDiouma } from '../../models/produit_diouma';
 @Component({
   selector: 'app-produits',
   standalone: true,

@@ -1,0 +1,39 @@
+<section class="profil_utilisateur container-fluid container-md px-md-5 mx-md-5 ">
+    <div class="row mx-auto justify-content-center align-items-center">
+      <div class="col-12 col-sm-6 col-lg-4 border border-1 rounded-1 p-0" style="height: auto;">
+        <p class='w-100 mb-0 px-4 py-3 border-bottom'>INFO COMPTE</p>
+        <div class='py-3 ps-4 pe-1'>
+         <span class="fw-bold text-center">{{user?.nom_complet }}</span><br>
+          <span class="text-center" >{{ user?.phone_number }}</span><br><br>
+          <button class="btn btn-primary ">
+            <a style="color:white;text-decoration:none;" class='p-2 w-100'
+            [routerLink]="['/profile/edit']">
+            MODIFIER LE COMPTE
+          </a></button>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-lg-4 p-3">
+        <div class="row">
+          <div class="col-12 my-1 rounder rounded-1 p-3 d-flex align-items-center" style="background: #EAF6FE;">
+            <div class="">
+              <p class="m-0 fw-bold">154</p>
+              <p class="m-0">commandes totales</p>
+            </div>
+          </div>
+          <div class="col-12 my-1 rounder rounded-1 p-3 d-flex align-items-center" style="background: #FFF3EB;">
+
+            <div class="">
+              <p class="m-0 fw-bold">05</p>
+              <p class="m-0">commandes en attente de livraison</p>
+            </div>
+          </div>
+          <div class="col-12 my-1 rounder rounded-1 p-3 d-flex align-items-center" style="background: #EAF7E9;">
+            <div class="">
+              <p class="m-0 fw-bold">149</p>
+              <p class="m-0">commandes Livrées</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

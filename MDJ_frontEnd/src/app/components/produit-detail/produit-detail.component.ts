@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SlicePipe } from '@angular/common';
 import { Produit, ProduitService } from '../../services/produits/produit.service';
 import { error } from 'console';
+import { ProduitDiouma } from '../../models/produit_diouma';
 
 @Component({
   selector: 'app-produit-detail',
@@ -13,7 +14,8 @@ import { error } from 'console';
   styleUrl: './produit-detail.component.scss'
 })
 export class ProduitDetailComponent {
-
+product_selected:ProduitDiouma | undefined;
+products:ProduitDiouma[]=[];
 list_p:any[]=[];
 product_selected:Produit | undefined;
 must_like_product:Produit[]=[];

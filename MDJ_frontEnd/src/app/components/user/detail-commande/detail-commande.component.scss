@@ -1,0 +1,86 @@
+.paiement-method-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .option:hover {
+    background-color: #f8fafc;
+  }
+  .option input[type="radio"] {
+    display: none;
+  }
+  .radio-button {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e0;
+    border-radius: 50%;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .option input[type="radio"]:checked + .radio-button {
+    border-color: #3b82f6;
+  }
+  .option input[type="radio"]:checked + .radio-button::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #3b82f6;
+    border-radius: 50%;
+  }
+  .label-text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .option input[type="radio"]:checked + .option{
+    background-color: #f8fafc;
+  }
+
+  .delivery-address {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .delivery-zone p,
+  .delivery-cost p,
+  .delivery-method p {
+    margin-bottom: 10px;
+  }
+  
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .delivery-cost span {
+    color: #ff0000;
+    font-weight: bold;
+  }
+  
+  .delivery-method {
+    font-style: italic;
+  }

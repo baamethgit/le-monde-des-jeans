@@ -13,16 +13,26 @@
         </ul>
         <div class="d-flex justify-content-between left_nav_sec">
           <div class="user_profile_header me-5">
-            <button class="text-nowrap d-flex align-items-center">
-              <img class="user_icon_header" src="../../assets/img/285645_user_icon.png" alt="" srcset="">Ameth Ba
+            <button class="border text-nowrap d-flex align-items-center">
+              <img class="user_icon_header" src="../../assets/img/285645_user_icon.png" alt="">
+              <div class="dropdown border-0 bg-transparent" *ngIf="is_authenticated">
+                <button class="btn text-dark border-0 shadow-none dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{currentUser?.nom_complet}}
+                </button>
+                <ul class="dropdown-menu p-2 ms-0">
+                  <li><a class="dropdown-item" routerLink="/profile">Voir Profil</a></li>
+                  <li><a class="dropdown-item" href="#" (click)="logout()">Se déconnecter</a></li>
+                </ul>
+              </div>
+              <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span> 
             </button>
           </div>
           <div class="user_profile_cart">
-            <button class="d-flex bt_card">
+            <button class="border d-flex bt_card">
               <div class="cart_header">
                 <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
               </div>
-              <span class="text-nowrap">Mes commandes</span>
+              <span class="text-nowrap" ><a href="/panier">Mes commandes</a></span>
             </button>
           </div>
         </div>

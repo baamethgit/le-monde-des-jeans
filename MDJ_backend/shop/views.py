@@ -7,8 +7,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
 from accounts import models as accountModel
-# Create your views here.
-
+from rest_framework.generics import ListAPIView
+from .serializers import ZoneSerializer
+from .models import ZoneLivraison
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
@@ -58,7 +59,8 @@ class AvisViewSet(viewsets.ModelViewSet):
     serializer_class=serializer.AvisSerializer
 
 
-
-
+class getDeliveryZones(ListAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
 
 
