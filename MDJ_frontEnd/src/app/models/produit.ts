@@ -1,10 +1,17 @@
+import { categorie } from "./categorie";
+import { ProduitImage } from "./image-produit";
 
 export interface Produit {
-    nom ?: string;
-    images: string[];
+    id: number;
+    nom: string;
     prix: number;
-    taille: string;
-    compo: string;
-    categorie:string;
-    ref:string;
-}
+    categorie: categorie;
+    taille?: string;
+    composition?: string;
+    couleur?: string;
+    slug: string;
+    QuantiteStock: number;
+    reserve: boolean;
+    special: boolean;
+    images: ProduitImage[];  // Change this to array of objects with 'image' property
+  }

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { categorie, CategorieService } from '../../services/categories/categorie.service';
+import { CategorieService } from '../../services/categories/categorie.service';
 import { error } from 'console';
 import { RouterLink } from '@angular/router';
+import { categorie } from '../../models/categorie';
 
 @Component({
   selector: 'app-home',

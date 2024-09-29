@@ -57,7 +57,7 @@ class Produit(models.Model):
     composition = models.CharField(max_length=128, choices=COMPO, blank=True, null=True)
     couleur = models.CharField(max_length=128, choices=COULEUR, blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
-    QuantiteStock = models.IntegerField(default=1, null=False, blank=False)
+    QuantiteStock = models.PositiveBigIntegerField(default=1, null=False, blank=False)
     reserve = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
 
@@ -202,8 +202,3 @@ class Paiement(models.Model):
     def __str__(self):
         return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"
     
-class Temoignage(models.Model):
-    client = models.ForeignKey(AUTH_USER_MODEL,on_delete = models.SET_NULL,null=True)
-    contenu = models.TextField(max_length=2000)
-    temoigne_le = models.DateField(auto_now_add=True)
-    likes = models.PositiveIntegerField(default = 0)

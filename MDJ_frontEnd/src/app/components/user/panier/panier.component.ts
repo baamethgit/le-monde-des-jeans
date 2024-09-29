@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 import { Panier } from '../../../models/panier';
 import { ItemPanierComponent } from '../item-panier/item-panier.component';
 import { RouterLink } from '@angular/router';
+import { User } from '../../../models/user';
+import { UserService } from '../../../services/users/user.service';
+
 
 @Component({
   selector: 'app-panier',
@@ -16,56 +19,29 @@ import { RouterLink } from '@angular/router';
 export class PanierComponent implements OnInit {
   selectedOption: string = 'livraison';
   CheckoutStep : CheckoutStep = CheckoutStep.Panier;
-  panier : Panier = {
-    produits : [
-      {
-        ref: "PROD001",
-        images: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-        prix: 39.99,
-        taille: "M",
-        compo: "Coton",
-        categorie: "Chemises"
-      },
-      {
-        ref: "PROD002",
-        nom: "Jean slim",
-        images: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-        prix: 59.99,
-        taille: "32",
-        compo: "Coton",
-        categorie: "Pantalons"
-      },
-      {
-        ref: "PROD003",
-        nom: "Robe d'été",
-        images: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-        prix: 45.50,
-        taille: "S",
-        compo: "Viscose",
-        categorie: "Lacoste"
-      },
-      {
-        ref: "PROD004",
-        images: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-        prix: 89.99,
-        taille: "42",
-        compo: "Synthétique",
-        categorie: "Chaussures"
-      },
-      {
-        ref: "PROD005",
-        nom: "T-shirt basique",
-        images: ["../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg", "../../assets/img/434184115_122138643842191964_5638486375775067626_n.jpg"],
-        prix: 15.99,
-        taille: "L",
-        compo: "Coton",
-        categorie: "Tee-shirt"
-      }
-    ]    
-  };
+  currentUser: User | undefined = undefined;
+  is_authenticated = false;
+  private userService = inject(UserService);
+  panier:Panier|undefined;
+  
+  constructor(){}
 
   ngOnInit(): void {
-      
+    this.userService.getUser().subscribe({
+      next: (data) => {
+          this.currentUser = data;
+          this.is_authenticated = true;
+          this.userService.getUserCart(<string>this.currentUser.phone_number).subscribe({
+            next:(data)=>{
+              this.panier=data
+              console.log('panier: ',this.panier)
+            }
+          })
+      },
+      error: (error) => {
+        this.is_authenticated = false;
+      }
+    })
   }
   
   deleteProd(){

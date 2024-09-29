@@ -1,2 +1,3 @@
-export interface ImageProduit {
-}
+export interface ProduitImage {
+    image: string;
+  }
