@@ -1,0 +1,35 @@
+.modifier_info_user{
+    .maj_info{
+      input{
+            width: 100%;
+          }
+        @media screen and (max-width:350px) {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+    *:focus {
+        box-shadow: none !important;
+    }
+    .maj_mdp input[type='password']{
+        border-right: none !important;
+    }
+    input:focus{
+        outline: none;
+        border:none;
+    }
+  }
+  
+  .toggle_password:focus,
+    .toggle_password:hover{
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .password_input{
+      flex: 1;
+    }
+  
+  
+  small{
+    font-style: italic;
+  }

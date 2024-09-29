@@ -1,5 +1,5 @@
 <div class="reviews-container">
-    <div class="review-card" *ngFor="let review of reviews">
+    <div class="review-card" *ngFor="let review of paginatedCommentaires">
         <button class="delete-btn" (click)="deleteReview(review.id)">×</button>
         <div class="review-header">
             <span class="client-name">{{ review.clientName }}</span>
@@ -10,4 +10,40 @@
         </div>
         <p class="review-content">{{ review.content }}</p>
     </div>
+</div>
+<div class="d-flex justify-content-center">
+<ngb-pagination 
+    [(page)]="page"
+    [pageSize]="pageSize"
+    [collectionSize]="reviews.length" 
+    [boundaryLinks]="true"
+	[maxSize]="5"
+    [rotate]="true"
+	(pageChange)="selectPage($event)">
+>
+	<ng-template ngbPaginationPages let-page>
+		@if (totalPages > 0) {
+			<li class="ngb-custom-pages-item">
+				<div class="mb-3 d-flex flex-nowrap px-2">
+					<label id="paginationInputLabel" for="paginationInput" class="col-form-label me-2 ms-1">Page</label>
+					<input
+						#i
+						type="text"
+						inputmode="numeric"
+						pattern="[0-9]*"
+						class="form-control custom-pages-input"
+						id="paginationInput"
+						[value]="page"
+						(keyup.enter)="selectPage(i.value)"
+						(blur)="selectPage(i.value)"
+						(input)="formatInput($any($event).target)"
+						aria-labelledby="paginationInputLabel paginationDescription"
+						style="width: 2.5rem"
+					/>
+					<span id="paginationDescription" class="col-form-label text-nowrap px-2"> sur  {{ totalPages }}</span>
+				</div>
+			</li>
+		}
+	</ng-template>
+</ngb-pagination>
 </div>

@@ -1,0 +1,50 @@
+.checkout-progress {
+    display: flex;
+    justify-content: space-between;
+    @media screen and (max-width:700px) {
+      font-size: 12px;
+      
+    }
+  }
+  .step {
+    // flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .actif { 
+    border-bottom:2px solid black;
+    color:black;
+    .num{
+        background-color: black;
+        color:white;
+    }
+  }
+  .complet {
+    border-bottom:2px solid #4CAF50;
+    color:#4CAF50;
+    .num{
+        display: none;
+    }
+    .complete_mark{
+        display: inline !important;
+    }
+
+  }
+  .attente {
+    color:gray;
+    .num{
+      background-color: gray;
+      color:white;
+  }
+  }
+
+  .num{
+    width: 30px;
+    height: 30px;
+    background-color: gray;
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 8px;
+  }

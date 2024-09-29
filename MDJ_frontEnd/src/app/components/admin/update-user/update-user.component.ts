@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/users/user.service';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import Validation from '../../../shared/my-validators';
 
 @Component({
   selector: 'app-update-user',
@@ -14,7 +15,7 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './update-user.component.scss'
 })
 export class UpdateUserComponent {
-  user: User | undefined;
+  user!: User;
   error: string = '';
   message: string = '';
   userForm ! : FormGroup;
@@ -28,10 +29,10 @@ export class UpdateUserComponent {
         newPassword: ['', [Validators.required]],
         passwordConfirm: ['', [Validators.required]],
       }
-      // ,
-      // {
-      //   validators: [Validation.match('newPassword', 'passwordConfirm')]
-      // }
+      ,
+      {
+        validators: [Validation.match('newPassword', 'passwordConfirm')]
+      }
     );
     this.userForm = this.formBuilder.group(
       {
@@ -40,13 +41,12 @@ export class UpdateUserComponent {
       }
     );
 
-    this.userService.getUser(this.user?.phone_number || "").subscribe({
+    this.userService.getUserByphoneNumber(this.user?.phone_number || "").subscribe({
       next: (data) => {
         if (data !== null) {
           this.user = data;
           this.initiazeForm();
         } else {
-          this.user = undefined;
         }
       },
       error: (error) => {
@@ -55,14 +55,7 @@ export class UpdateUserComponent {
     });
   
   }
-  initiazeForm() {
-    if (this.user) {
-      this.userForm.patchValue({
-        nom_complet: this.user.nom_complet,
-        phone_number: this.user.phone_number,
-      });
-    }
-  }
+
 
   togglePassword(input: HTMLInputElement) { // A mettre dans utils
     if (input.type === 'password') {
@@ -73,25 +66,27 @@ export class UpdateUserComponent {
   }
 
 
+  initiazeForm() {
+    if (this.user) {
+      this.userForm.patchValue({
+        nom_complet: this.user.nom_complet,
+        phone_number: this.user.phone_number
+      });
+    }
+  }
+
   updateUser() {
     if (this.userForm.valid) {
-      console.log("data : ", this.userForm.getRawValue())
-      const [prenom, nom] = this.userForm.getRawValue().prenom_nom?.split(' ') || [];
-      const { prenom_nom, ...rest } = this.userForm.getRawValue(); // Enlever prenom_nom
-      const new_data = {
-        ...rest,
-        prenom,
-        nom
-      };
-      console.log("data : ", new_data)
-      // this.userService.updateUser(new_data).subscribe({
-      //   next: (data) => {
-      //     this.router.navigate(['profile/'])
-      //   },
-      //   error: (error) => {
-      //     console.log('Erreur lors de la maj du user :', error.error.detail);
-      //   }
-      // });
+      this.user.nom_complet = this.userForm.getRawValue().nom_complet;
+      this.user.phone_number = this.userForm.getRawValue().phone_number;
+      this.userService.updateUser(this.user).subscribe({
+        next: (data) => {
+          this.router.navigate(['/profile']);
+        },
+        error: (error) => {
+          console.log('Erreur lors de la maj du user :', error.error.detail);
+        }
+      });
     }
     else {
       this.userForm.markAllAsTouched();

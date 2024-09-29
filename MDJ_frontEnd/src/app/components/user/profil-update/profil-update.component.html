@@ -1,0 +1,86 @@
+<section class="container-fluid container-md mx-auto modifier_info_user row">
+    <div class="col-12 col-md-6 my-3 mx-auto border border-1 rounded-1 p-0" style="height: auto;">
+      <p class='w-100 mb-0 px-4 py-3 border-bottom fw-bold' style="text-transform: uppercase;">PARAMETRE DU COMPTE</p>
+      <p class="text-center">Modifier les infos de votre compte</p>
+      <div class='d-flex p-3 maj_info'>
+        <form method="post" class="row " [formGroup]="userForm" (ngSubmit)="updateUser()">
+          <p class="col-12 col-sm-6">
+            <label for="">Nom Complet</label><br>
+            <input class="px-2 py-1 border" type="text" formControlName="nom_complet">
+            <ng-container *ngIf="userForm.controls['nom_complet'].invalid && (userForm.controls['nom_complet'].dirty || userForm.controls['nom_complet'].touched)">
+              <small class="text-danger"
+               *ngIf="userForm.controls['nom_complet'].hasError('minLength')">
+                Veuillez saisir le nom complet (5 caractères minumum)
+              </small>
+              <small class="text-danger" *ngIf="userForm.controls['nom_complet'].hasError('required')">Ce champ est obligatoire.</small>
+            </ng-container>
+          </p>
+          <p class="col-12 col-sm-6">
+            <label for="">Numéro de téléphone</label><br>
+            <input class="px-2 py-1 border" type="text" formControlName="phone_number">
+            <!-- <ng-container *ngIf="userForm.controls['phone_number'].invalid && (userForm.controls['phone_number'].dirty || userForm.controls['phone_number'].touched)">
+              <small class="text-danger">Veuillez saisir un numéro sénégalais valide</small>
+            </ng-container> -->
+          </p>
+          <p class="submit_btn col-4 d-block ms-3" style="width: auto;">
+            <input type="submit" value="Sauvegarder les modifications" class='py-2 fw-bold' name="param_compte">
+          </p>
+        </form>
+      </div>
+    </div>
+    <div class="maj_mdp col-12 col-md-5 my-4 mx-auto border border-1 rounded-1 p-0">
+      <p class='w-100 mb-0 px-4 py-3 border-bottom fw-bold' style="text-transform: uppercase;">Changer le mot de passe</p>
+      <h4 class="bg-success text-center py-1 text-light w-100" *ngIf="message">{{ message }}</h4>
+      <div class='p-3'>
+        <form method='post' class="row" [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="col-12">
+            <label for="">Mot de passe actuel</label><br>
+            <div class="d-flex p-0 justify-content-between align-items-center" style="border:1px solid rgb(118, 118, 118);border-radius: 3px;">
+            <input formControlName="currentPassword" #input1 required class="form-control shadow-none px-2 py-1 border-0 m-0 password_input" type="password">
+              <button type="button" class="h-100 bg-transparent border-0 toggle_password" (click)="togglePassword(input1)">
+                <i class="h-100 d-inline-block bi bi-eye"></i>
+              </button>
+            </div>
+            <ng-container *ngIf="passwordForm.controls['currentPassword'].invalid && (passwordForm.controls['currentPassword'].dirty || passwordForm.controls['currentPassword'].touched)">
+              <small *ngIf="passwordForm.controls['currentPassword'].hasError('required')" class="text-danger">Ce champ est obligatoire.</small>
+            </ng-container>
+            <div *ngIf="error" class="text-danger my-1"> Le mot de passe est incorrect.<br>
+              <span class="text-primary text-center" style="font-style: italic;" >j'ai oublié mon mot de passe</span>
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="">Nouveau mot de passe</label><br>
+            <div class="d-flex p-0 justify-content-between align-items-center" style="border:1px solid rgb(118, 118, 118);border-radius: 3px;">
+            <input #input2 class="form-control shadow-none px-2 py-1 border-0 m-0 password_input" type="password" formControlName="newPassword">
+              <button type="button" class="h-100 bg-transparent border-0 toggle_password" (click)="togglePassword(input2)">
+                <i class="h-100 d-inline-block bi bi-eye"></i>
+              </button>
+            </div>
+            <div *ngIf="passwordForm.controls['newPassword'].invalid && (passwordForm.controls['newPassword'].dirty || passwordForm.controls['newPassword'].touched)">
+              <small class="text-danger" *ngIf="passwordForm.controls['newPassword'].hasError('required')">Ce champ est obligatoire.</small>
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="">Confirmez le mot de passe</label><br>
+            <div class="d-flex p-0 justify-content-between align-items-center" style="border:1px solid rgb(118, 118, 118);border-radius: 3px;">
+            <input formControlName="passwordConfirm" #input3 class="form-control shadow-none px-2 py-1 border-0 m-0 password_input" type="password">
+            <button type="button" class="h-100 bg-transparent border-0 toggle_password" (click)="togglePassword(input3)">
+              <i class="h-100 d-inline-block bi bi-eye"></i>
+            </button>
+            </div>
+          </div>
+          <div *ngIf="passwordForm.controls['passwordConfirm'].invalid && (passwordForm.controls['passwordConfirm'].dirty || passwordForm.controls['passwordConfirm'].touched)">
+            <small class="text-danger mb-2" *ngIf="passwordForm.controls['passwordConfirm'].hasError('matching')">
+                Les deux mots de passe ne correspondent pas .
+            </small>
+            <small class="text-danger" *ngIf="passwordForm.controls['passwordConfirm'].hasError('required')">La confirmation de mot de passe est obligatoire..</small>
+          </div>
+          <p class="submit_btn d-block mx-auto ms-3 mt-4 col-4 ">
+            <input type="submit" value="Changer le mot de passe" class='py-2 fw-bold ' name='modifier_mot_de_passe'>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+  
+  
