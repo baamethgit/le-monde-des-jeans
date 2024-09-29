@@ -43,8 +43,24 @@
     font-weight: 500;
   }
 
-.table-panier{
-  // overflow-y: scroll; 
-  overflow-y: auto; /* Active le défilement vertical */
-    max-height: 100vh;
+// .table-panier{
+//   // overflow-y: scroll; 
+//   overflow-y: auto; /* Active le défilement vertical */
+//     max-height: 100vh;
+// }
+table {
+  font-family: arial, sans-serif;
+  // border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }

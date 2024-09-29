@@ -7,9 +7,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework import viewsets
 from accounts import models as accountModel
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView
 from .serializers import ZoneSerializer
 from .models import ZoneLivraison
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
@@ -118,3 +119,8 @@ class PanierViewSet(viewsets.ModelViewSet):
         panier = get_object_or_404(models.Panier, id=pk)
         panier.nettoyer_produits_expires()
         return Response({"detail": "Produits expirés nettoyés"}, status=status.HTTP_200_OK)
+
+class getDeliveryZoneByNum(RetrieveAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    lookup_field = 'numero'
