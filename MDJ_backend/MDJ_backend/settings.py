@@ -64,6 +64,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_COOKIE_SECURE = True  # Assure que les cookies de session ne sont envoyés que via HTTPS
+SESSION_COOKIE_HTTPONLY = True
+
 ROOT_URLCONF = "MDJ_backend.urls"
 
 TEMPLATES = [

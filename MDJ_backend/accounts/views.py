@@ -18,6 +18,11 @@ from django.contrib.auth import authenticate
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from django.contrib.auth.hashers import check_password
+from rest_framework.exceptions import ValidationError
+from django.contrib.auth.hashers import make_password, check_password
+import time
 
 class RegisterView(APIView):
     def post(self, request):
@@ -35,49 +40,56 @@ class RegisterView(APIView):
         # Envoyer le code OTP par SMS
         send_otp_via_sms(phone_number, otp_code)
 
-        # Stocker temporairement les informations d'inscription
-        request.session['phone_number'] = phone_number
-        request.session['password'] = password
-        request.session['nom_complet'] = nom_complet
-        request.session['otp_code'] = str(otp_code)
+        expires_at = timezone.now() + timezone.timedelta(minutes=10)
 
-        return Response({"message": "Code OTP envoyé"}, status=status.HTTP_200_OK)
+        # Créer une instance de CodeOTP
+        CodeOTP.objects.create(
+            phone_number=phone_number,
+            otp_code=str(otp_code),
+            expires_at=expires_at,
+            nom_complet=nom_complet,
+            hashed_password=make_password(password)  # Hasher le mot de passe
+        )
 
+        return Response({"message": "Code OTP envoyé", "expires_in": 600}, status=status.HTTP_200_OK)
+ 
 class VerifyOTPView(APIView):
     def post(self, request):
-        phone_number = request.session.get('phone_number')
-        stored_otp = request.session.get('otp_code')
-        password = request.session.get("password")
-        nom_complet = request.session.get("nom_complet")
+        phone_number = request.data.get('phone_number')
         submitted_otp = request.data.get("otp_code")
 
-        if not all([phone_number, stored_otp, password, nom_complet, submitted_otp]):
-            return Response({"error": "Informations d'inscription incomplètes"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            otp_record = CodeOTP.objects.get(phone_number=phone_number)
+        except CodeOTP.DoesNotExist:
+            return Response({"error": "OTP non trouvé pour ce numéro"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if submitted_otp != stored_otp:
+        # Vérifier si l'OTP est toujours valide
+        if not otp_record.is_valid():
+            otp_record.delete()
+            return Response({"error": "Le code OTP a expiré"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if submitted_otp != otp_record.otp_code:
+            otp_record.delete()
             return Response({"error": "Code OTP invalide"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Vérifier à nouveau si l'utilisateur n'existe pas déjà
+        # Vérifier si l'utilisateur n'existe pas déjà
         if CustomUser.objects.filter(phone_number=phone_number).exists():
+            otp_record.delete()
             return Response({"error": "Un compte avec ce numéro de téléphone existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Créer l'utilisateur
-        user_data = {
-            'phone_number': phone_number,
-            'nom_complet': nom_complet,
-            'password': password
-        }
-        serializer = UserSerializer(data=user_data)
-        if serializer.is_valid():
-            serializer.save()
-            # Nettoyer les données de session
-            for key in ['phone_number', 'password', 'nom_complet', 'otp_code']:
-                if key in request.session:
-                    del request.session[key]
-            return Response({"message": "Utilisateur créé avec succès"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = CustomUser(phone_number=otp_record.phone_number,nom_complet=otp_record.nom_complet)
+            user.save()
+            user.password = otp_record.hashed_password
+            user.save(update_fields=['password'])
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Supprimer le record OTP une fois l'utilisateur créé
+        otp_record.delete()
+
+        return Response({"message": "Utilisateur créé avec succès"}, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
     def post(self, request):

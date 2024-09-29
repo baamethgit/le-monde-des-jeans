@@ -65,7 +65,7 @@ export class SignupComponent implements OnInit{
       }
       const nom_complet = this.SignupForm.getRawValue().nom_complet || '';
       const password = this.SignupForm.getRawValue().password || '';
-      this.userService.register(nom_complet,phone_number,password).subscribe({
+      this.userService.register({nom_complet:nom_complet,phone_number:phone_number,password:password}).subscribe({
         next: (data) => {
           this.otpSent = true;
           this.isloading = false;
@@ -82,7 +82,12 @@ export class SignupComponent implements OnInit{
   }
  
   onVerifyOTP() {
-    this.userService.verifyOTP(this.otpCode).subscribe({
+    let phone_number = this.SignupForm.getRawValue().phone_number || '';
+      phone_number = phone_number.trim();
+      if (!phone_number.startsWith('+221')) {
+        phone_number = '+221' + phone_number;
+      }
+    this.userService.verifyOTP(phone_number,this.otpCode).subscribe({
       next:(data)=>{
         this.router.navigate(['/login']);
       },

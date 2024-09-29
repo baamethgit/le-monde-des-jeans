@@ -51,10 +51,6 @@ export class UserService {
   }
   }
 
-  register(nom_complet:string,phone_number:string,pasword:string): Observable<User> {
-    return this.http.post<User>(`${this.baseUrl}register/`, {nom_complet:nom_complet,phone_number:phone_number,password:pasword});
-  }
-
   getUser(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}get-user/`, { withCredentials: true });
   }
@@ -88,10 +84,6 @@ export class UserService {
     this.loggedIn.next(false);
   }
 
-  // getUsers(): Observable<User[]> {
-  //   const url = `${this.baseUrl}admin_users_list/`;
-  //   return this.http.get<User[]>(url);
-  // }
   getUsers(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -117,13 +109,27 @@ export class UserService {
   }
 
   getAllAvis():Observable<Avis[]>{
-    const url=`${this.baseUrl}user/avisAPI/Avis`
+    const url=`${this.baseUrl}avisAPI/Avis`
     return this.http.get<Avis[]>(url)
   }
 
-  verifyOTP(otpCode: string): Observable<any> {
-    const url = `${this.baseUrl}user/verify-otp/`;
-    return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true })
+  // register(nom_complet:string,phone_number:string,pasword:string): Observable<User> {
+  //   return this.http.post<User>(`${this.baseUrl}register/`, {nom_complet:nom_complet,phone_number:phone_number,password:pasword});
+  // }
+
+  // verifyOTP(otpCode: string): Observable<any> {
+  //   const url = `${this.baseUrl}verify-otp/`;
+  //   return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true })
+  // }
+
+   // Étape 1 : Envoyer les informations d'inscription et recevoir l'OTP
+   register(signupData: { phone_number: string, password: string, nom_complet: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}register/`, signupData);
+  }
+
+  // Étape 2 : Vérifier l'OTP et finaliser l'inscription
+  verifyOTP(phone_number: string,otpCode: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}verify-otp/`, { phone_number: phone_number,otp_code: otpCode }, { withCredentials: true });
   }
 
 }
