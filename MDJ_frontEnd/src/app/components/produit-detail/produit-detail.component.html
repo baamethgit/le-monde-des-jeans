@@ -1,7 +1,7 @@
 <section class="produit_detail my-4">
   <div class="produit_detail_main row justify-content-between">
       <div class="produit_img d-none d-sm-flex col-md-6 row col-12 d-flex flex-column flex-sm-row">
-          @for (item of product_selected?.images; track item) {
+          @for (item of product_selected()!.images; track item) {
               <div class="p-2 col-6">
                   <img class="" src={{item.image}} alt="" srcset="">
               </div>
@@ -23,21 +23,21 @@
       <div class="produit_detail_specs col-md-5 col-12 d-flex flex-column justify-content-start my-5">
           <div class="specs_box mb-5">
               <div class="name_price_box">
-                  <div class="produit_name">{{product_selected?.nom}}</div>
-                  <div class="produit_price">{{product_selected?.prix}} FCFA</div>
+                  <div class="produit_name">{{product_selected()!.nom}}</div>
+                  <div class="produit_price">{{product_selected()!.prix}} FCFA</div>
               </div>
               <div class="size_comp_box d-flex justify-content-between">
-                  <div class="produit_size">Taille : {{product_selected?.taille}}</div>
-                  <div class="produit_comp">Composition : {{product_selected?.composition}}</div>
+                  <div class="produit_size">Taille : {{product_selected()!.taille}}</div>
+                  <div class="produit_comp">Composition : {{product_selected()!.composition}}</div>
               </div>
           </div>
           <div class="buy_order mb-5">
               <div class="d-flex justify-content-around">
-                  <button class="add_cart_bt text-nowrap mb-3 mb-xl-0">Ajouter au panier</button>
-                  <button class="buy_now_bt text-nowrap">Acheter directement</button>
+                  <button class="add_cart_bt text-nowrap mb-3 mb-xl-0" (click)="addToCart()">Ajouter au panier</button>
+                  <button class="buy_now_bt text-nowrap" (click)="CreerCommande()">Acheter directement</button>
               </div>
           </div>
-          <div class="produit_categorie">CATEGORIE : {{product_selected?.categorie?.nom}}</div>
+          <div class="produit_categorie">CATEGORIE : {{product_selected()!.categorie.nom}}</div>
       </div>
   </div>
 </section>

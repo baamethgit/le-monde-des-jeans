@@ -113,17 +113,8 @@ export class UserService {
     return this.http.get<Avis[]>(url)
   }
 
-  // register(nom_complet:string,phone_number:string,pasword:string): Observable<User> {
-  //   return this.http.post<User>(`${this.baseUrl}register/`, {nom_complet:nom_complet,phone_number:phone_number,password:pasword});
-  // }
-
-  // verifyOTP(otpCode: string): Observable<any> {
-  //   const url = `${this.baseUrl}verify-otp/`;
-  //   return this.http.post<any>(url, { otp_code: otpCode }, { withCredentials: true })
-  // }
-
    // Étape 1 : Envoyer les informations d'inscription et recevoir l'OTP
-   register(signupData: { phone_number: string, password: string, nom_complet: string }): Observable<any> {
+  register(signupData: { phone_number: string, password: string, nom_complet: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}register/`, signupData);
   }
 
@@ -131,5 +122,7 @@ export class UserService {
   verifyOTP(phone_number: string,otpCode: string): Observable<any> {
     return this.http.post(`${this.baseUrl}verify-otp/`, { phone_number: phone_number,otp_code: otpCode }, { withCredentials: true });
   }
+
+  
 
 }
