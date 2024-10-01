@@ -22,6 +22,8 @@ import { CommandeValideeComponent } from './components/user/commande-validee/com
 import { detailProduitResolver } from './services/produits/resolvers/detail-produit.resolver';
 import { ProduitService } from './services/produits/produit.service';
 import { inject } from '@angular/core';
+import { AdminListeCommandesComponent } from './components/admin/admin-liste-commandes/admin-liste-commandes.component';
+import { AdminDetailCommandeComponent } from './components/admin/admin-detail-commande/admin-detail-commande.component';
 export const routes: Routes = [
     {path: '', component: HomeComponent,
         resolve: {
@@ -33,10 +35,10 @@ export const routes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent},
-    {path: 'detail-commande', component: DetailCommandeComponent},
     {path: 'commande-validee', component:CommandeValideeComponent},
     {path: 'profile', component: ProfilComponent},
     {path: 'profile/edit', component: ProfilUpdateComponent},
+    {path: 'detail-commande', component: DetailCommandeComponent},
     {path:'produits', component: ProduitsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
@@ -49,7 +51,8 @@ export const routes: Routes = [
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
-        {path:'commandes', component: ProduitDetailComponent, pathMatch:'full'},
+        {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
+        {path: 'commande/:ref', component: AdminDetailCommandeComponent},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},

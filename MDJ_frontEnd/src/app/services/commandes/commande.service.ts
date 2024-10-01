@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { ZoneLivraison } from '../../models/zone-livraison';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Panier } from '../../models/panier';
 import { Produit } from '../../models/produit';
+import { Commande } from '../../models/commande';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,20 @@ export class CommandeService {
   creerCommande(produits : Produit[]){
     
   }
+
+
+  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = '',dateFilter : Date): Observable<Commande[]> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString())
+      .set('date_filtre', dateFilter.toString());
+    
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
+    return this.http.get<Commande[]>(`${this.baseUrl}commandes/`, { params });
+  }
+
 
 }
