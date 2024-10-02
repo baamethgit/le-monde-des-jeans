@@ -3,11 +3,13 @@ from . import views
 from rest_framework.routers import DefaultRouter
 from .views import getDeliveryZones,getDeliveryZoneByNum
 from django.urls import path
+ 
 
 router = DefaultRouter()
 # router.register(r'users', vie.UserViewSet)
 router.register(r'products', views.ProductViewSet, basename='products')
 router.register(r'categories', views.CategoryViewSet, basename='categories')
+router.register(r'commandes', views.CommandeViewSet)
 
 
 urlpatterns = [

@@ -4,12 +4,12 @@ from . import  models
 from . import serializer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from accounts import models as accountModel
 from rest_framework.generics import ListAPIView,RetrieveAPIView
-from .serializers import ZoneSerializer
-from .models import ZoneLivraison
+from .serializers import ZoneSerializer,CommandeSerializer
+from .models import ZoneLivraison,Commande
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -70,3 +70,49 @@ class getDeliveryZoneByNum(RetrieveAPIView):
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
     lookup_field = 'numero'
+
+class CommandeViewSet(viewsets.ModelViewSet):
+    queryset = Commande.objects.all()
+    serializer_class = CommandeSerializer
+
+    def get_permissions(self):
+        pass
+        # if self.action in ['list', 'retrieve']:
+        #     permission_classes = [IsAuthenticated]
+        # else:
+        #     permission_classes = [IsAdminUser]
+        # return [permission() for permission in permission_classes]
+
+    def perform_create(self, serializer):
+        # Générer un ref_code unique ici
+        import uuid
+        ref_code = uuid.uuid4().hex[:20].upper()
+        serializer.save(client=self.request.user, ref_code=ref_code)
+
+    @action(detail=True, methods=['post'])
+    def changer_statut(self, request, pk=None):
+        commande = self.get_object()
+        nouveau_statut = request.data.get('statut')
+        if nouveau_statut not in dict(Commande.STATUT_CHOICES):
+            return Response({'erreur': 'Statut invalide'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Appeler la méthode appropriée en fonction du nouveau statut
+        statut_methods = {
+            'PAYEE': commande.marquer_comme_payee,
+            'EN_PREPARATION': commande.commencer_preparation,
+            'EXPEDIEE': commande.marquer_comme_expediee,
+            'LIVREE': commande.marquer_comme_livree,
+            'ANNULEE': commande.annuler
+        }
+        
+        method = statut_methods.get(nouveau_statut)
+        if method:
+            method()
+            return Response({'statut': commande.statut})
+        else:
+            return Response({'erreur': 'Changement de statut non autorisé'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def total(self, request, pk=None):
+        commande = self.get_object()
+        return Response({'total': commande.get_total()})
