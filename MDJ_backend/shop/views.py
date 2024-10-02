@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from . import  models
 from . import serializer
@@ -10,6 +9,8 @@ from accounts import models as accountModel
 from rest_framework.generics import ListAPIView,RetrieveAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
 from .models import ZoneLivraison,Commande
+from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -71,17 +72,33 @@ class getDeliveryZoneByNum(RetrieveAPIView):
     serializer_class = ZoneSerializer
     lookup_field = 'numero'
 
+
+
+
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+class CommandeListView(ListAPIView):
+    serializer_class = CommandeSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        queryset = Commande.objects.all()
+        search_term = self.request.query_params.get('search', None)
+        
+        if search_term:
+            queryset = queryset.filter(
+                Q(client__phone_number__icontains=search_term) |
+                Q(client__nom_complet__icontains=search_term) | 
+                Q(ref_code__icontains=search_term)
+            )
+        return queryset
+    
 class CommandeViewSet(viewsets.ModelViewSet):
     queryset = Commande.objects.all()
     serializer_class = CommandeSerializer
-
-    def get_permissions(self):
-        pass
-        # if self.action in ['list', 'retrieve']:
-        #     permission_classes = [IsAuthenticated]
-        # else:
-        #     permission_classes = [IsAdminUser]
-        # return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         # Générer un ref_code unique ici
@@ -116,3 +133,5 @@ class CommandeViewSet(viewsets.ModelViewSet):
     def total(self, request, pk=None):
         commande = self.get_object()
         return Response({'total': commande.get_total()})
+    
+    
