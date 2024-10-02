@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, retry, tap } from 'rxjs';
 import { User } from '../../models/user';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Avis } from '../../models/temoignage';
+import { Panier } from '../../models/panier';
 
 
 
-export interface Avis{
-  Texte_avis:string,
-  Avis_author:user
-}
 
-export interface user{
-  nom_complet:string,
-  phone_number:string
-}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -109,6 +105,7 @@ export class UserService {
   }
 
   getAllAvis():Observable<Avis[]>{
+    const url=`${this.baseUrl}user/API/Avis`
     const url=`${this.baseUrl}avisAPI/Avis`
     return this.http.get<Avis[]>(url)
   }
@@ -123,6 +120,16 @@ export class UserService {
     return this.http.post(`${this.baseUrl}verify-otp/`, { phone_number: phone_number,otp_code: otpCode }, { withCredentials: true });
   }
 
-  
+
+  getUserCart(userPhone:string):Observable<Panier>{
+    const url=`${this.baseUrl}API/paniers/${userPhone}`
+    console.log('user id: ', userPhone)
+    return this.http.get<Panier>(url)
+  }
+
+  delProductFromCart(id_product_to_delete: number):Observable<any>{
+    const url=`${this.baseUrl}API/panier-produits/${id_product_to_delete}`
+    return this.http.delete<any>(url)
+  }
 
 }

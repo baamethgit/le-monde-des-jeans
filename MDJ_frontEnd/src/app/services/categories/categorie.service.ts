@@ -1,14 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { categorie } from '../../models/categorie';
 
 
-export interface categorie{
-  nom:string,
-  description:string,
-  slug:string,
-  image:string,
-}
+
 
 
 @Injectable({

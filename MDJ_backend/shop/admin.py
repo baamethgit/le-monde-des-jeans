@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Produit,Paiement,Commande,ZoneLivraison,ImageProduit,Categorie,Panier,PanierProduit,Temoignage
+from .models import Produit,Paiement,Commande,ZoneLivraison,ImageProduit,Categorie,Panier,PanierProduit
 
 # Register your models here.
 
@@ -17,4 +17,3 @@ admin.site.register(ImageProduit)
 admin.site.register(Categorie, CategorySlug)
 admin.site.register(PanierProduit)
 admin.site.register(Panier)
-admin.site.register(Temoignage)

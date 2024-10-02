@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { Produit, ProduitService } from '../../../services/produits/produit.service';
-import { categorie, CategorieService } from '../../../services/categories/categorie.service';
+import { ProduitService } from '../../../services/produits/produit.service';
+import {  CategorieService } from '../../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
+import { Produit } from '../../../models/produit';
+import { categorie } from '../../../models/categorie';
 
 @Component({
   selector: 'app-all-products',

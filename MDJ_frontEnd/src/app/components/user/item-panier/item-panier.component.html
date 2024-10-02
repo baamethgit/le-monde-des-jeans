@@ -1,9 +1,13 @@
-<div class="my-2  px-2 d-flex justify-content-between align-items-center item-container">
-    <div class="img-container d-flex align-items-center ">
-        <p><img style="width: 60px;height:70px;" src="../../../../assets/img/435568931_122138645126191964_618494230128699512_n.jpg" alt=""></p>
+
+<div class="my-2 border px-2 d-flex justify-content-between align-items-center item-container">
+    <div class="img-container d-flex align-items-center border">
+        <p><img style="width: 30px;height:30px;" 
+            [src]="getProductImageUrl()" 
+            [alt]="produit?.nom || 'Product image'"></p>
         <p class="d-flex align-items-center justify-content-between flex-row flex-md-column">
-            <span class="fw-bold">Pull blanc</span>
-            <span class="my-2 mx-4 text-danger">retirer</span>
+            <span class="fw-bold">{{produit?.nom}}</span>
+            <button class="my-2 mx-4" (click)="removeProduit(panierProduit?.id)">retirer</button>
+
         </p>
     </div>
     <div class="expiration ">
@@ -21,5 +25,6 @@
     </div>
 </div>
     </div>
-    <p class=" prix text-primary fw-bold">13423 frcs</p>
+    <p class="border prix text-primary fw-bold">{{produit?.prix}} frcs</p>
+
 </div>

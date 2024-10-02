@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { Produit, ProduitService } from '../../../services/produits/produit.service';
+import { ProduitService } from '../../../services/produits/produit.service';
 import { ActivatedRoute, Route, RouterLink } from '@angular/router';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { Subscription } from 'rxjs';
+import { Produit } from '../../../models/produit';
 
 @Component({
   selector: 'app-product-filter',

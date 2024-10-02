@@ -13,6 +13,7 @@ router.register(r'categories', views.CategoryViewSet, basename='categories')
 router.register(r'commandes', views.CommandeViewSet)
 
 
+
 urlpatterns = [
     path("", include(router.urls)),
     path('zones/', getDeliveryZones.as_view(), name="delivery-zones"),

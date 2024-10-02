@@ -2,9 +2,11 @@ import { Component, inject, input } from '@angular/core';
 import { CarouselModule} from 'primeng/carousel';
 import { ActivatedRoute } from '@angular/router';
 import { SlicePipe } from '@angular/common';
-import { Produit, ProduitService } from '../../services/produits/produit.service';
+import { ProduitService } from '../../services/produits/produit.service';
 import { CommandeService } from '../../services/commandes/commande.service';
 import { UserService } from '../../services/users/user.service';
+import { Produit } from '../../models/produit';
+
 
 @Component({
   selector: 'app-produit-detail',
