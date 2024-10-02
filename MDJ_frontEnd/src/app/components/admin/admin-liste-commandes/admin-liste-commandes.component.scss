@@ -1,0 +1,142 @@
+.admin-orders {
+    font-family: Arial, sans-serif;
+    // max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 100%; /* Modifiez si vous aviez une largeur fixe */
+  }
+  
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+  }
+  
+ 
+  
+  .actions-header,
+  .actions-cell {
+    position: sticky;
+    right: 0;
+    background-color: #fff; /* Ou la couleur de fond de votre choix */
+    z-index: 20;
+  }
+  
+  .actions-header {
+    box-shadow: -5px 0 5px -5px rgba(0,0,0,0.1);
+  }
+  
+  .actions-cell {
+    box-shadow: -5px 0 5px -5px rgba(0,0,0,0.1);
+  }
+  
+  /* Styles pour la barre de défilement */
+  .table-container::-webkit-scrollbar {
+    height: 14px;
+    margin-top: 5px;
+    border:1px solid black;
+  }
+  
+  .table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb {
+    background: #3303e1;
+    border-radius: 4px;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: space-around;
+  }
+  
+  .search-input, .filter-select, .date-input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .orders-table {
+    width: 100%;
+    // border-collapse: collapse;
+    margin-bottom: 20px;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .orders-table th, .orders-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    white-space: nowrap;  
+    text-align: left;
+  }
+  
+
+  .orders-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f2f2f2; /* Assurez-vous que cela correspond à votre style existant */
+    font-weight: bold;
+  }
+  
+
+
+  //
+  .orders-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9em;
+  }
+  
+  .status.pending { background-color: #ffeeba; color: #856404; }
+  .status.processing { background-color: #b8daff; color: #004085; }
+  .status.shipped { background-color: #c3e6cb; color: #155724; }
+  .status.delivered { background-color: #d4edda; color: #155724; }
+  
+  .action-btn {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .action-btn.view { background-color: #007bff; color: white; }
+  .action-btn.edit { background-color: #28a745; color: white; }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .page-btn {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+
+  .orders-table .searchresult{
+    color: yellow;
+    font-weight: bold;
+  }

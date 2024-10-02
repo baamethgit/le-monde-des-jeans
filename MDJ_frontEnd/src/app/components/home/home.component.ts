@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CategorieService } from '../../services/categories/categorie.service';
 import { error } from 'console';
 import { RouterLink } from '@angular/router';
+import { Produit } from '../../models/produit';
 import { categorie } from '../../models/categorie';
+
 
 @Component({
   selector: 'app-home',
@@ -13,6 +15,7 @@ import { categorie } from '../../models/categorie';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  produits = input<Produit[]>
   catagorie_list:categorie[]=[];
   constructor(private categorie:CategorieService){}
 

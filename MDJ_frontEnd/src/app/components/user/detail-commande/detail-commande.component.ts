@@ -3,10 +3,11 @@ import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progr
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ZoneLivraison } from '../../../models/zone-livraison';
 import { UserService } from '../../../services/users/user.service';
-import { CommandeService } from '../../../services/commande.service';
+import { CommandeService } from '../../../services/commandes/commande.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
+import { Commande } from '../../../models/commande';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class DetailCommandeComponent implements OnInit{
   methodePaiement = 'paiement_livraison';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   @Input() a_livrer : boolean = true;
+  @Input() commande : Commande | undefined;
   zones: ZoneLivraison[] = [];
   selectedZone: ZoneLivraison | undefined;
   prixLivraison : number = 0;

@@ -19,25 +19,40 @@ import { ProfilUpdateComponent } from './components/user/profil-update/profil-up
 import { DetailClientComponent } from './components/admin/detail-client/detail-client.component';
 import { DetailCommandeComponent } from './components/user/detail-commande/detail-commande.component';
 import { CommandeValideeComponent } from './components/user/commande-validee/commande-validee.component';
+import { detailProduitResolver } from './services/produits/resolvers/detail-produit.resolver';
+import { ProduitService } from './services/produits/produit.service';
+import { inject } from '@angular/core';
+import { AdminListeCommandesComponent } from './components/admin/admin-liste-commandes/admin-liste-commandes.component';
+import { AdminDetailCommandeComponent } from './components/admin/admin-detail-commande/admin-detail-commande.component';
 export const routes: Routes = [
-    {path: '', component: HomeComponent,canActivate: [userGuard]},
+    {path: '', component: HomeComponent,
+        resolve: {
+            produits: () => inject(ProduitService).getProducts()
+          },
+          canActivate: [userGuard]},
+
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent},
-    {path: 'detail-commande', component: DetailCommandeComponent},
     {path: 'commande-validee', component:CommandeValideeComponent},
     {path: 'profile', component: ProfilComponent},
     {path: 'profile/edit', component: ProfilUpdateComponent},
+    {path: 'detail-commande', component: DetailCommandeComponent},
     {path:'produits', component: ProduitsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
-    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
+    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full',
+        resolve : {
+            product_selected : detailProduitResolver
+        }
+    },
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
-        {path:'commandes', component: ProduitDetailComponent, pathMatch:'full'},
+        {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
+        {path: 'commande/:ref', component: AdminDetailCommandeComponent},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},

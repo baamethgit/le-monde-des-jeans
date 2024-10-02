@@ -104,8 +104,17 @@ class Panier(models.Model):
     def __str__(self):
         return f"Panier de {self.client.nom_complet}"
 
-    def get_total(self):
+    def get_montant(self):
         return sum(produit.prix for produit in self.produits.all())
+    
+    @property
+    def montant(self):
+        return self.get_montant()
+
+    @property
+    def quantitePanier(self):
+        cartitems = self.produits.all()
+        return 12
     
     def nettoyer_produits_expires(self):
         for panier_produit in self.panierproduit_set.all():
