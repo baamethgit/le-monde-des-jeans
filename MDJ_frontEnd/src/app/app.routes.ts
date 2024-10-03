@@ -34,7 +34,7 @@ export const routes: Routes = [
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
-    {path: 'panier', component: PanierComponent},
+    {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
     {path: 'commande-validee', component:CommandeValideeComponent},
     {path: 'profile', component: ProfilComponent},
     {path: 'profile/edit', component: ProfilUpdateComponent},

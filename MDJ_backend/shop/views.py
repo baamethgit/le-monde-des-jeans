@@ -172,23 +172,16 @@ class CommandeViewSet(viewsets.ModelViewSet):
     
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def panier_detail(request):
     user = verifier_user(request)
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     panier, created = Panier.objects.get_or_create(client=user)
-    
-    if request.method == 'GET':
-        panier.nettoyer_produits_expires()
-        serializer = PanierSerializer(panier)
-        return Response(serializer.data)
-    
-    elif request.method == 'POST':
-        # Cette méthode peut être utilisée pour créer un nouveau panier si nécessaire
-        serializer = PanierSerializer(panier)
-        return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+    panier.nettoyer_produits_expires()
+    serializer = PanierSerializer(panier)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def ajouter_produit(request):
@@ -212,10 +205,10 @@ def retirer_produit(request):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     panier = Panier.objects.get(client=user)
-    produit_id = request.data.get('produit_id')
-    panier_produit = get_object_or_404(PanierProduit, panier=panier, produit_id=produit_id)
+    produit_slug = request.data.get('produit_slug')
+    produit = get_object_or_404(Produit, slug=produit_slug)
+    panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
     
-    produit = panier_produit.produit
     produit.reserve = False
     produit.save()
     panier_produit.delete()
@@ -247,3 +240,11 @@ def vider_panier(request):
         produit.save()
         panier_produit.delete()
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def viderPanierDansCommande(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    

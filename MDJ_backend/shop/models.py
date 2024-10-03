@@ -81,6 +81,8 @@ class ImageProduit(models.Model):
     image = models.ImageField(upload_to='images_produits/',verbose_name='photo')
     
 
+
+
 class PanierProduit(models.Model):
     """
     pour gérer la relation entre un produit et le panier
@@ -93,8 +95,8 @@ class PanierProduit(models.Model):
         return timezone.now() > self.date_ajout + timedelta(minutes=5)
     # pesner à dynamiser le timing pour l'évolutivité
     
-    def __str__(self) -> str:
-        return f"{self.produit} ajouté le {self.date_ajout}"
+    # def __str__(self) -> str:
+    #     return f"{self.produit} ajouté le {self.date_ajout}"
 
 class Panier(models.Model):
     client = models.OneToOneField(AUTH_USER_MODEL,on_delete = models.CASCADE)
@@ -131,6 +133,7 @@ class Panier(models.Model):
             produit.save()
             return True
         return False
+
 
 
 class ZoneLivraison(models.Model):

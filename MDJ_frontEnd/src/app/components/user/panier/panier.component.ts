@@ -7,12 +7,14 @@ import { ItemPanierComponent } from '../item-panier/item-panier.component';
 import { RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
 import { UserService } from '../../../services/users/user.service';
+import { PanierService } from '../../../services/panier.service';
+import { IcontenuPanier, Ipanier } from './panier.model';
 
 
 @Component({
   selector: 'app-panier',
   standalone: true,
-  imports: [FormsModule,CommonModule,CheckoutProgressBarComponent,ItemPanierComponent,RouterLink],
+  imports: [FormsModule,CommonModule,CheckoutProgressBarComponent,RouterLink],
   templateUrl: './panier.component.html',
   styleUrl: './panier.component.scss'
 })
@@ -20,9 +22,12 @@ export class PanierComponent implements OnInit {
   selectedOption: string = 'livraison';
   CheckoutStep : CheckoutStep = CheckoutStep.Panier;
   currentUser: User | undefined = undefined;
-  is_authenticated = false;
+  contenupanier! : IcontenuPanier;
+
   private userService = inject(UserService);
-  panier:Panier|undefined;
+  private panierService = inject(PanierService);
+
+  panier:Omit<Ipanier,'produits'>|undefined;
   
   constructor(){}
 
@@ -30,16 +35,14 @@ export class PanierComponent implements OnInit {
     this.userService.getUser().subscribe({
       next: (data) => {
           this.currentUser = data;
-          this.is_authenticated = true;
-          this.userService.getUserCart(<string>this.currentUser.phone_number).subscribe({
+          this.panierService.getPanier().subscribe({
             next:(data)=>{
-              this.panier=data
+              this.panier = data;
               console.log('panier: ',this.panier)
             }
           })
       },
       error: (error) => {
-        this.is_authenticated = false;
       }
     })
   }
