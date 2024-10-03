@@ -113,7 +113,7 @@ export class UserService {
   }
 
   getAllAvis():Observable<Avis[]>{
-    const url=`${this.baseUrl}user/API/Avis`
+    const url=`${this.baseUrl}API/Avis`
     return this.http.get<Avis[]>(url)
   }
 

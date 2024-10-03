@@ -71,6 +71,18 @@ $blue_color: #377DFF;
           opacity: 0.7;
         }
       }
+      .form-select{
+        width: fit-content;
+        option{
+          background-color: white;
+        }
+        option:hover{
+          background-color: #dadada;
+        }
+        option::selection{
+          background-color: #377DFF;
+        }
+      }
     }
 
     
@@ -83,22 +95,42 @@ $blue_color: #377DFF;
 }
 .product_list {
   width: 100%;
+
   .product_item {
-    
     a {
       .product_item_img {
-        img {
+        .responsive-product-image {
           width: 100%;
+          height: auto;
+          object-fit: cover;
         }
       }
 
       .product_item_infos {
-
         .product_item_price {
           color: $blue_color;
         }
       }
     }
+  }
+}
+
+// Media queries pour ajuster la taille des images si nécessaire
+@media (max-width: 576px) {
+  .product_list .product_item .product_item_img .responsive-product-image {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 992px) {
+  .product_list .product_item .product_item_img .responsive-product-image {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 993px) {
+  .product_list .product_item .product_item_img .responsive-product-image {
+    max-width: 100%;
   }
 }
 
