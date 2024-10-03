@@ -2,7 +2,6 @@ from rest_framework.serializers import ModelSerializer,FloatField,IntegerField
 # from rest_framework import serializers
 
 from .models import ZoneLivraison,Commande,Panier
-from .serializer import ProductSerializer
 from accounts.serializers import UserSerializer
 from accounts import models as accountModel
 from accounts import serializers as accountserializer
@@ -69,11 +68,11 @@ class PanierProduitSerializer(serializers.ModelSerializer):
         fields = ['id', 'panier', 'produit', 'date_ajout']
 
 
-class PanierSerializer(serializers.ModelSerializer):
-    produits = PanierProduitSerializer(source='panierproduit_set', many=True, read_only=True)  # Nested serializer for products in the cart
-    client = accountserializer.UserSerializer(read_only=True)  # Nested serializer for the client
+# class PanierSerializer(serializers.ModelSerializer):
+#     produits = PanierProduitSerializer(source='panierproduit_set', many=True, read_only=True)  # Nested serializer for products in the cart
+#     client = accountserializer.UserSerializer(read_only=True)  # Nested serializer for the client
 
-    class Meta:
-        model = models.Panier
-        fields = ['id', 'client', 'produits', 'date_creation', 'get_total']
+#     class Meta:
+#         model = models.Panier
+#         fields = ['id', 'client', 'produits', 'date_creation', 'get_total']
 

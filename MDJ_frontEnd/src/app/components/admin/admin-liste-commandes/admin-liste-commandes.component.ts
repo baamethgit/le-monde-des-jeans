@@ -6,6 +6,7 @@ import { CommandesDirective, SortEvent } from '../../../directives/commandes.dir
 import { Commande } from '../../../models/commande';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
+import { CommandeService } from '../../../services/commandes/commande.service';
 
 @Component({
   selector: 'app-admin-liste-commandes',
@@ -26,12 +27,14 @@ export class AdminListeCommandesComponent implements OnInit{
   commandes : Commande[] = [];
   filteredcommandes: Commande[] = [];
   statusFilter: string = '';
-  dateFilter: string = '';
+  dateFilter!: Date;
   sanitizer = inject(DomSanitizer);
 
 
+  commandeService = inject(CommandeService);
+
   ngOnInit(): void {
-      this.loadcommandes();
+      this.loadCommandes();
   }
 
   highlightText(text: string): SafeHtml {
@@ -49,7 +52,11 @@ export class AdminListeCommandesComponent implements OnInit{
   }
 
   loadCommandes() : void{
-    
+    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm, this.dateFilter).subscribe({
+      next:(response)=>{
+        this.commandes = [];
+      }
+    })
   }
 
   onSort({ column, direction }: SortEvent) {
@@ -64,42 +71,18 @@ export class AdminListeCommandesComponent implements OnInit{
 		// this.service.sortDirection = direction;
 	}
 
-
-
-  loadcommandes() {
-    // Ici, vous feriez normalement un appel à un service pour récupérer les commandes
-    // Pour cet exemple, nous utilisons des données statiques
-    // this.commandes = [
-    //   { id: '#12345', customer: 'Jean Dupont', date: '2024-03-15', amount: 129.99, status: 'pending' },
-    //   { id: '#12346', customer: 'Marie Martin', date: '2024-03-14', amount: 89.50, status: 'processing' },
-    //   // Ajoutez d'autres commandes ici
-    // ];
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    this.filteredcommandes = this.commandes.filter(order => {
-      return 
-        // (this.searchTerm === '' || 
-        //  order.id.includes(this.searchTerm) || 
-        //  order.customer.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
-        // (this.statusFilter === '' || order.status === this.statusFilter) &&
-        // (this.dateFilter === '' || order.date === this.dateFilter)
-    });
-  }
-
   onSearchChange() {
-    this.applyFilters();
+    this.loadCommandes();
   }
 
   onStatusFilterChange(event: Event) {
     this.statusFilter = (event.target as HTMLSelectElement).value;
-    this.applyFilters();
+    this.loadCommandes();
   }
 
   onDateFilterChange(event: Event) {
-    this.dateFilter = (event.target as HTMLInputElement).value;
-    this.applyFilters();
+    // this.dateFilter = (event.target as HTMLInputElement).value;
+    this.loadCommandes();
   }
 
   viewOrder(orderId: string) {

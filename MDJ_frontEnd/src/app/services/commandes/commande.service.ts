@@ -46,17 +46,18 @@ export class CommandeService {
   }
 
 
+      
   getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = '',dateFilter : Date): Observable<Commande[]> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('page_size', pageSize.toString())
-      .set('date_filtre', dateFilter.toString());
-    
-    if (searchTerm) {
-      params = params.set('search', searchTerm);
-    }
+        let params = new HttpParams()
+          .set('page', page.toString())
+          .set('page_size', pageSize.toString())
+          .set('date_filtre', dateFilter.toString());
+        
+        if (searchTerm) {
+          params = params.set('search', searchTerm);
+        }
 
-    return this.http.get<Commande[]>(`${this.baseUrl}commandes/`, { params });
+        return this.http.get<Commande[]>(`${this.baseUrl}commandes/`, { params });
   }
 
 
