@@ -1,4 +1,5 @@
 import { PanierProduit } from "../../../models/panier-produit";
+import { Produit } from "../../../models/produit";
 import { User } from "../../../models/user";
 
 export interface Ipanier{
@@ -14,5 +15,6 @@ export interface Ipanier{
 
 export interface IcontenuPanier{
     id? : number,
-    produits :PanierProduit[];
+    produit :Produit;
+    date_ajout : string;
 }
