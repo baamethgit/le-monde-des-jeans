@@ -19,6 +19,7 @@ import { ProfilUpdateComponent } from './components/user/profil-update/profil-up
 import { DetailClientComponent } from './components/admin/detail-client/detail-client.component';
 import { DetailCommandeComponent } from './components/user/detail-commande/detail-commande.component';
 import { CommandeValideeComponent } from './components/user/commande-validee/commande-validee.component';
+import { ContactsComponent } from './components/contacts/contacts.component';
 export const routes: Routes = [
     {path: '', component: HomeComponent,canActivate: [userGuard]},
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
@@ -35,6 +36,7 @@ export const routes: Routes = [
     ]},
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
+    {path:'contacts', component:ContactsComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: ProduitDetailComponent, pathMatch:'full'},
