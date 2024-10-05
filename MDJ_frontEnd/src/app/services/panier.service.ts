@@ -17,6 +17,7 @@ export class PanierService {
     return this.http.get<Omit<Ipanier,'produits'>>(`${this.apiUrl}/panier/`,{withCredentials: true  });
   }
 
+
   ajouterProduit(produitSlug: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/panier/ajouter/`, { produit_slug: produitSlug },{withCredentials: true  });
   }
