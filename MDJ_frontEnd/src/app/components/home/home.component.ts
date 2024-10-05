@@ -1,13 +1,16 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+
 import { CategorieService } from '../../services/categories/categorie.service';
 import { error } from 'console';
 import { RouterLink } from '@angular/router';
+import { Produit } from '../../models/produit';
 import { categorie } from '../../models/categorie';
 import { Produit } from '../../models/produit';
 import { ProduitService } from '../../services/produits/produit.service';
 import { Avis } from '../../models/temoignage';
 import { UserService } from '../../services/users/user.service';
+
 
 @Component({
   selector: 'app-home',
@@ -17,6 +20,7 @@ import { UserService } from '../../services/users/user.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  produits = input<Produit[]>
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
   avis_list:Avis[]=[];

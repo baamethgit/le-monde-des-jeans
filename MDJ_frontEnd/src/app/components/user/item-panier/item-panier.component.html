@@ -1,3 +1,4 @@
+
 <div class="my-2 border px-2 d-flex justify-content-between align-items-center item-container">
     <div class="img-container d-flex align-items-center border">
         <p><img style="width: 30px;height:30px;" 
@@ -6,9 +7,10 @@
         <p class="d-flex align-items-center justify-content-between flex-row flex-md-column">
             <span class="fw-bold">{{produit?.nom}}</span>
             <button class="my-2 mx-4" (click)="removeProduit(panierProduit?.id)">retirer</button>
+
         </p>
     </div>
-    <div class="expiration border">
+    <div class="expiration ">
     <div class="d-flex d-md-block align-items-center px-md-4">
         <p class="my-0">Expire dans : </p>
 <div class="d-flex justify-content-around">
@@ -24,4 +26,5 @@
 </div>
     </div>
     <p class="border prix text-primary fw-bold">{{produit?.prix}} frcs</p>
+
 </div>

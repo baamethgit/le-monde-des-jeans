@@ -1,0 +1,82 @@
+<div class="admin-orders">
+	<h1>Commandes</h1>
+	
+	<div class="filters">
+	  <input type="text" [(ngModel)]="searchTerm" 
+	  placeholder="Rechercher par numéro ou client" 
+	  class="search-input " style="width:auto;"
+	  (search)="onSearch()"
+	  >
+	  <div class="d-flex align-items-center ">
+		<span class="d-inline-block me-3 ">Filtrer par Statut : </span>
+		<select class="filter-select" style="cursor:pointer">
+			<option value="">----------</option>
+			<option value="pending">En attente</option>
+			<option value="processing">En cours</option>
+			<option value="shipped">Expédié</option>
+			<option value="delivered">Livré</option>
+		</select>
+	</div>
+	<div class="d-flex align-items-center">
+		<span class="d-inline-block me-3 ">Choisir une date</span>
+		<input [(ngModel)]="dateFiltre" type="date" class="date-input" style="cursor:pointer" (change)="onDateFilterChange($event)">
+	</div>
+	</div>
+	<div class="table-container">
+	<table class="orders-table">
+	  <thead>
+		<tr>
+		  <th>Numéro</th>
+		  <th>Client</th>
+		  <th>Commandé le</th>
+		  <th>Montant ( en frcs)</th>
+		  <th>zone de livraison</th>
+		  <th>Statut</th>
+		  <th>Livré le</th>
+		  <th class="actions-header">Actions</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<tr>
+		  <td>1DFy2345</td>
+		  <td>
+			<span [innerHTML]="highlightText('Jean Dupont')"></span><br>
+			<span class="text-center"  [innerHTML]="highlightText('770333723')"></span>
+		  </td>
+		  <td>15 Septembre 2024</td>
+		  <td class="text-center text-primary fw-bold">12900</td>
+		  <td>Zone 1 : Ngor Almadies</td>
+		  <td><span class="status pending">En attente</span></td>
+		  <td>18 Septembre 2024</td>
+		  <td class="actions-cell">
+			<button class="action-btn view" >
+				<a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/commande','23A']">Voir</a>
+			</button>
+			<button class="action-btn edit" >Modifier</button>
+		  </td>
+		</tr>
+		<tr>
+		  <td>DE342F89</td>
+		  <td>
+			<span>Marie Martin</span><br>
+			<span class="text-center">770333723</span>
+		  </td>
+		  <td>23 Octobre 2024</td>
+		  <td class="text-center text-primary fw-bold">89540</td>
+		  <td>Zone 2 : Ucad Colobane</td>
+		  <td><span class="status processing">En cours</span></td>
+		  <td>25 Octobre 2024</td>
+		  <td class="actions-cell">
+			<button class="action-btn view">Voir</button>
+			<button class="action-btn edit">Modifier</button>
+		  </td>
+		</tr>
+	  </tbody>
+	</table>
+</div>
+	<div class="pagination">
+	  <button class="page-btn me-2">&lt;</button>
+	  <span>Page {{page}} sur {{totalPage}}</span>
+	  <button class="page-btn ms-2">&gt;</button>
+	</div>
+  </div>

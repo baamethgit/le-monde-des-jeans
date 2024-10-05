@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-paiement',
@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './paiement.component.scss'
 })
 export class PaiementComponent {
-
+  @Input() PaymentMethod! : string;
 }

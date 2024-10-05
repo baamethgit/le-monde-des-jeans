@@ -7,8 +7,8 @@ from shop import views as shopView
 router = DefaultRouter()
 # router.register(r'users', vie.UserViewSet)
 router.register(r'Avis', shopView.AvisViewSet, basename='avis')
-router.register(r'panier-produits', shopView.PanierProduitViewSet)  # Ajout des routes pour PanierProduit
-router.register(r'paniers', shopView.PanierViewSet)  # Ajout des routes pour Panier
+# router.register(r'panier-produits', shopView.PanierProduitViewSet)  # Ajout des routes pour PanierProduit
+# router.register(r'paniers', shopView.PanierViewSet)  # Ajout des routes pour Panier
 
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView

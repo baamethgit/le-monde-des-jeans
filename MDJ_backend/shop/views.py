@@ -1,20 +1,37 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from . import  models
 from . import serializers
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from accounts import models as accountModel
-from rest_framework.generics import ListAPIView
-from .serializers import ZoneSerializer
-from .models import ZoneLivraison
+from rest_framework.generics import ListAPIView,RetrieveAPIView
+from .serializers import ZoneSerializer,CommandeSerializer
+from .models import ZoneLivraison,Commande
+from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Panier, Produit, PanierProduit
+from .serializers import PanierSerializer, PanierProduitSerializer
+from django.shortcuts import get_object_or_404
+from . import views
+from accounts.utils import verifier_user
+
+class getDeliveryZones(ListAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+
+class getDeliveryZoneByNum(RetrieveAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    lookup_field = 'numero'
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
-
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Produit.objects.all()
@@ -53,16 +70,9 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-
 class AvisViewSet(viewsets.ModelViewSet):
     queryset=accountModel.Avis.objects.all()
     serializer_class=serializers.AvisSerializer
-
-
-class getDeliveryZones(ListAPIView):
-    queryset = ZoneLivraison.objects.all()
-    serializer_class = ZoneSerializer
-
 
 class PanierProduitViewSet(viewsets.ModelViewSet):
     queryset = models.PanierProduit.objects.all()
@@ -98,23 +108,143 @@ class PanierProduitViewSet(viewsets.ModelViewSet):
         produit.reserve = False
         produit.save()
 
-        return Response({"detail": "Produit supprimé avec succès"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "Produit supprimé avec succès"}, status=status.HTTP_204_NO_CONTENT)    
 
-class PanierViewSet(viewsets.ModelViewSet):
-    queryset = models.Panier.objects.all()
-    serializer_class = serializers.PanierSerializer
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
-    def retrieve(self, request, *args, **kwargs):
-        # Récupérer le panier à partir du numéro de téléphone de l'utilisateur
-        telephone = kwargs.get('pk')  # 'pk' sera utilisé ici pour passer le numéro de téléphone
-        client = get_object_or_404(accountModel.CustomUser, phone_number=telephone)  # Supposons que 'User' est le modèle d'utilisateur qui contient le champ 'telephone'
-        panier = get_object_or_404(models.Panier, client=client)
-        print('client :', client)
-        serializer = self.get_serializer(panier)
-        return Response(serializer.data)
+class CommandeListView(ListAPIView):
+    serializer_class = CommandeSerializer
+    pagination_class = CustomPagination
 
-    def nettoyer_produits(self, request, pk=None):
-        # Méthode personnalisée pour nettoyer les produits expirés dans un panier
-        panier = get_object_or_404(models.Panier, id=pk)
-        panier.nettoyer_produits_expires()
-        return Response({"detail": "Produits expirés nettoyés"}, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        queryset = Commande.objects.all()
+        search_term = self.request.query_params.get('search', None)
+        
+        if search_term:
+            queryset = queryset.filter(
+                Q(client__phone_number__icontains=search_term) |
+                Q(client__nom_complet__icontains=search_term) | 
+                Q(ref_code__icontains=search_term)
+            )
+        return queryset
+    
+class CommandeViewSet(viewsets.ModelViewSet):
+    queryset = Commande.objects.all()
+    serializer_class = CommandeSerializer
+
+    def perform_create(self, serializer):
+        # Générer un ref_code unique ici
+        import uuid
+        ref_code = uuid.uuid4().hex[:20].upper()
+        serializer.save(client=self.request.user, ref_code=ref_code)
+
+    @action(detail=True, methods=['post'])
+    def changer_statut(self, request, pk=None):
+        commande = self.get_object()
+        nouveau_statut = request.data.get('statut')
+        if nouveau_statut not in dict(Commande.STATUT_CHOICES):
+            return Response({'erreur': 'Statut invalide'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Appeler la méthode appropriée en fonction du nouveau statut
+        statut_methods = {
+            'PAYEE': commande.marquer_comme_payee,
+            'EN_PREPARATION': commande.commencer_preparation,
+            'EXPEDIEE': commande.marquer_comme_expediee,
+            'LIVREE': commande.marquer_comme_livree,
+            'ANNULEE': commande.annuler
+        }
+        
+        method = statut_methods.get(nouveau_statut)
+        if method:
+            method()
+            return Response({'statut': commande.statut})
+        else:
+            return Response({'erreur': 'Changement de statut non autorisé'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def total(self, request, pk=None):
+        commande = self.get_object()
+        return Response({'total': commande.get_total()})
+    
+    
+
+
+@api_view(['GET'])
+def panier_detail(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    panier, created = Panier.objects.get_or_create(client=user)
+    panier.nettoyer_produits_expires()
+    serializer = PanierSerializer(panier)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def ajouter_produit(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    panier, _ = Panier.objects.get_or_create(client=user)
+    produit_slug = request.data.get('produit_slug')
+    produit = get_object_or_404(Produit, slug=produit_slug)
+    
+    if panier.ajouter_produit(produit):
+        return Response({"message": "Produit ajouté au panier"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def retirer_produit(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    panier = Panier.objects.get(client=user)
+    produit_slug = request.data.get('produit_slug')
+    produit = get_object_or_404(Produit, slug=produit_slug)
+    panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
+    
+    produit.reserve = False
+    produit.save()
+    panier_produit.delete()
+    
+    return Response({"message": "Produit retiré du panier"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def contenu_panier(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    panier = Panier.objects.get(client=user)
+    panier.nettoyer_produits_expires()
+    panier_produits = PanierProduit.objects.filter(panier=panier)
+    serializer = PanierProduitSerializer(panier_produits, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def vider_panier(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    panier = Panier.objects.get(client=user)
+    for panier_produit in PanierProduit.objects.filter(panier=panier):
+        produit = panier_produit.produit
+        produit.reserve = False
+        produit.save()
+        panier_produit.delete()
+    return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def viderPanierDansCommande(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    

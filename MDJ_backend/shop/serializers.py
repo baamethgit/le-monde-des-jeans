@@ -1,6 +1,8 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,FloatField,IntegerField
 # from rest_framework import serializers
-from .models import ZoneLivraison
+
+from .models import ZoneLivraison,Commande,Panier
+from accounts.serializers import UserSerializer
 from accounts import models as accountModel
 from accounts import serializers as accountserializer
 from rest_framework import serializers
@@ -39,17 +41,28 @@ class ZoneSerializer(ModelSerializer):
         fields = "__all__"
 
 class PanierProduitSerializer(serializers.ModelSerializer):
-    produit = ProductSerializer(read_only=True)  # Nested serializer for product details
+    produit = ProductSerializer(read_only=True) 
 
     class Meta:
         model = models.PanierProduit
-        fields = ['id', 'panier', 'produit', 'date_ajout']
+        fields = ['id', 'produit', 'date_ajout']
 
-
-class PanierSerializer(serializers.ModelSerializer):
-    produits = PanierProduitSerializer(source='panierproduit_set', many=True, read_only=True)  # Nested serializer for products in the cart
-    client = accountserializer.UserSerializer(read_only=True)  # Nested serializer for the client
-
+class PanierSerializer(ModelSerializer):
+    client = UserSerializer()
+    produits = ProductSerializer(many=True)
+    montant = FloatField()
+    quantitePanier = IntegerField()
     class Meta:
-        model = models.Panier
-        fields = ['id', 'client', 'produits', 'date_creation', 'get_total']
+        model = Panier
+        fields = ['id','client', 'produits', 'date_creation', 'montant','quantitePanier']
+        read_only_fields = ['montant', 'quantitePanier']
+    # class Meta:
+    #     model = Panier
+    #     fields = '__all__'
+        
+class CommandeSerializer(ModelSerializer):
+    class Meta:
+        model = Commande
+        fields = '__all__'
+        read_only_fields = ['ref_code', 'client']
+

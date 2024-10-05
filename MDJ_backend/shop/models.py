@@ -81,6 +81,8 @@ class ImageProduit(models.Model):
     image = models.ImageField(upload_to='images_produits/',verbose_name='photo')
     
 
+
+
 class PanierProduit(models.Model):
     """
     pour gérer la relation entre un produit et le panier
@@ -90,11 +92,11 @@ class PanierProduit(models.Model):
     date_ajout = models.DateTimeField(auto_now_add=True)
 
     def est_expire(self):
-        return timezone.now() > self.date_ajout + timedelta(minutes=5)
+        return timezone.now() > self.date_ajout + timedelta(minutes=15)
     # pesner à dynamiser le timing pour l'évolutivité
     
-    def __str__(self) -> str:
-        return f"{self.produit} ajouté le {self.date_ajout}"
+    # def __str__(self) -> str:
+    #     return f"{self.produit} ajouté le {self.date_ajout}"
 
 class Panier(models.Model):
     client = models.OneToOneField(AUTH_USER_MODEL,on_delete = models.CASCADE)
@@ -104,8 +106,17 @@ class Panier(models.Model):
     def __str__(self):
         return f"Panier de {self.client.nom_complet}"
 
-    def get_total(self):
+    def get_montant(self):
         return sum(produit.prix for produit in self.produits.all())
+    
+    @property
+    def montant(self):
+        return self.get_montant()
+
+    @property
+    def quantitePanier(self):
+        cartitems = self.produits.all()
+        return 12
     
     def nettoyer_produits_expires(self):
         for panier_produit in self.panierproduit_set.all():
@@ -122,6 +133,7 @@ class Panier(models.Model):
             produit.save()
             return True
         return False
+
 
 
 class ZoneLivraison(models.Model):
