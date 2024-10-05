@@ -92,7 +92,7 @@ class PanierProduit(models.Model):
     date_ajout = models.DateTimeField(auto_now_add=True)
 
     def est_expire(self):
-        return timezone.now() > self.date_ajout + timedelta(minutes=5)
+        return timezone.now() > self.date_ajout + timedelta(minutes=15)
     # pesner à dynamiser le timing pour l'évolutivité
     
     # def __str__(self) -> str:
