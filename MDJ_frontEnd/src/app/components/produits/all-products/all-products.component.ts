@@ -4,12 +4,12 @@ import {  CategorieService } from '../../../services/categories/categorie.servic
 import { RouterLink } from '@angular/router';
 import { Produit } from '../../../models/produit';
 import { categorie } from '../../../models/categorie';
-import { CommonModule } from '@angular/common';
+import { CommonModule ,NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [RouterLink,CommonModule],
+  imports: [RouterLink,CommonModule, NgOptimizedImage],
   templateUrl: './all-products.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
@@ -40,5 +40,15 @@ export class AllProductsComponent {
       }
     })
   }
+
+  calculateHeight(image: any): number {
+    const width = 300; // Largeur fixe que nous utilisons
+    if (image.width && image.height) {
+      const aspectRatio = image.height / image.width;
+      return Math.round(width * aspectRatio);
+    }
+    return 300; // Hauteur par défaut si les dimensions ne sont pas disponibles
+  }
+  
 }
 

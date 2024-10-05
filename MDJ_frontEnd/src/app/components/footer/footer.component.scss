@@ -1,4 +1,5 @@
 $dark-color: #141718;
+$blue_color: #377DFF;
 *{
     list-style: none;
     box-sizing: border-box;
@@ -23,12 +24,17 @@ $dark-color: #141718;
     {
         li
         {
+            a{
+                color:#ffffff;
+            }
+            a:hover{
+                color: $blue_color;
+            }
             padding-top: 5px;
         }
     }
     .footer-top{
         img{
-            width: 25px;
             margin: 5px;
         }
     }
