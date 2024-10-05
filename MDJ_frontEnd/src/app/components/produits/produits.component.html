@@ -1,6 +1,6 @@
 <section class="product_brand">
     <div class="brand text-center d-flex justify-content-center">
-        <img class="paste-image-icon" src="../../assets/img/435688628_122141508104191964_5213991208487601928_n.jpg" alt="" srcset="">
+        <img class="paste-image-icon" ngSrc="../../assets/img/435688628_122141508104191964_5213991208487601928_n.jpg" fill priority alt="" srcset="">
         <div class="inner_brand">
             <div class="inner_brand_path">
                 Accueil > <span class="inner_brand_current_location">Shop</span>
@@ -15,14 +15,14 @@
     </div>
 </section>
 <section class="product">
-    <div class="product_main d-flex flex-column flex-md-row justify-content-between align-items-center align-items-md-start">
+    <div class="product_main d-flex flex-column flex-md-row justify-content-between px-3 px-md-0 align-items-md-start">
         <div class="product_filter me-5">
             <h4 class="filter_title d-flex align-items-center my-4">
                <img src="../../assets/img/9104236_filter_setting_sort_configuration_icon.png" alt="" srcset=""> 
                Filtres
             </h4>
             <h4 class="my-4">CATEGORIES</h4>
-            <ul>
+            <ul class="d-none d-md-block">
                 <li>
                     <a
                       (click)="switch_category('')"
@@ -41,15 +41,23 @@
                         >
                           {{item.nom}}
                         </a>
-                      </li>
+                    </li>
                 }
             </ul>
+            <select class="form-select show-tick d-md-none ps-2 pe-5" (change)="onCategorySelect($event)">
+                <option value="">Tous les produits</option>
+                @for (item of list_categorie; track $index) {
+                  <option value="{{item.slug}}">{{item.nom}}</option>
+                }
+            </select>
+              
+              
         </div>
         
             <router-outlet class="p-0 m-0 row">
                 
             </router-outlet>
-        </div>
+    </div>
                 
             
         

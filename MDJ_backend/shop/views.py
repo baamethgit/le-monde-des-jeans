@@ -241,10 +241,5 @@ def vider_panier(request):
         panier_produit.delete()
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-def viderPanierDansCommande(request):
-    user = verifier_user(request)
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
     

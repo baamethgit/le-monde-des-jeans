@@ -196,8 +196,12 @@ class Commande(models.Model):
 
     def annuler(self):
         if self.statut != 'LIVREE':
+            for produit in self.produits:
+                produit.reserve = False
+                produit.save()
             self.statut = 'ANNULEE'
             self.save()
+    
 
 class Paiement(models.Model):
     METHODE_PAIEMENT_CHOICES = (

@@ -61,6 +61,8 @@ class PanierSerializer(ModelSerializer):
     #     fields = '__all__'
         
 class CommandeSerializer(ModelSerializer):
+    client = UserSerializer()
+    produits = ProductSerializer(many=True)
     class Meta:
         model = Commande
         fields = '__all__'

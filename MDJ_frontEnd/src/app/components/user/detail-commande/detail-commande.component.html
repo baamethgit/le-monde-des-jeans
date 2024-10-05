@@ -5,9 +5,9 @@
             <div class="col-10 mx-auto my-3 border p-2 rounded-2">
                 <h5 class="text-center">Informations</h5>
                 <div>
-                    <p class="rounded-1 p-2"><span class="fw-bold">Nom Complet : </span><span>{{client.nom_complet}}</span></p>
+                    <p class="rounded-1 p-2"><span class="fw-bold">Nom Complet : </span><span>{{commande?.client?.nom_complet}}</span></p>
                     <p class="rounded-1 p-2"><span class="fw-bold">Numéro de Téléphone :
-                        </span><span>{{client.phone_number}}</span></p>
+                        </span><span>{{commande?.client?.phone_number}}</span></p>
                 </div>
             </div>
             <div class="col-10 mx-auto border p-3 rounded-2" *ngIf="a_livrer">
@@ -70,29 +70,13 @@
         <div class="col-12 my-3 col-md-5 p-4 p-md-0">
             <div class="border p-4 rounded-2">
                 <h4 class="text-center">COMMANDE</h4>
-                <div class="d-flex justify-content-between align-items-center">
+                <div *ngFor="let produit of commande?.produits" class="d-flex justify-content-between align-items-center">
                     <article class="d-flex align-items-center">
                         <img src="../../../../assets/img/285645_user_icon.png" alt="" class="image"
                             style="width:35px;height:35px">
-                        <span class="fw-bold">Jean</span>
+                        <span class="fw-bold">{{produit.nom}}</span>
                     </article>
-                    <span class="text-primary">1200 frcs</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <article class="d-flex align-items-center">
-                        <img src="../../../../assets/img/285645_user_icon.png" alt="" class="image"
-                            style="width:35px;height:35px">
-                        <span class="fw-bold">Jean</span>
-                    </article>
-                    <span class="text-primary">1200 frcs</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <article class="d-flex align-items-center">
-                        <img src="../../../../assets/img/285645_user_icon.png" alt="" class="image"
-                            style="width:35px;height:35px">
-                        <span class="fw-bold">Jean</span>
-                    </article>
-                    <span class="text-primary">1200 frcs</span>
+                    <span class="text-primary">{{produit.prix}} frcs</span>
                 </div>
                 <p class="d-flex justify-content-between my-2">
                     <span>Livraison</span>
@@ -100,7 +84,7 @@
                 </p>
                 <p class="d-flex justify-content-between fw-bold border-top my-2">
                     <span>TOTAL</span>
-                    <span>4200 frcs</span>
+                    <span>{{totalCommande}} frcs</span>
                 </p>
             </div>
         </div>

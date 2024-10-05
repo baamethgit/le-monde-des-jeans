@@ -4,11 +4,12 @@ import {  CategorieService } from '../../../services/categories/categorie.servic
 import { RouterLink } from '@angular/router';
 import { Produit } from '../../../models/produit';
 import { categorie } from '../../../models/categorie';
+import { CommonModule ,NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink,CommonModule, NgOptimizedImage],
   templateUrl: './all-products.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
@@ -22,7 +23,8 @@ export class AllProductsComponent {
   ngOnInit():void{
     this.produitService.getProducts().subscribe({
       next: (data:Produit[])=>{
-        this.produits=data
+        this.produits=data;
+        console.log(this.produits)
       },
       error: (error) => {
              console.log('Erreur lors de l affichage des produits :', error.error.detail);
@@ -38,5 +40,15 @@ export class AllProductsComponent {
       }
     })
   }
+
+  calculateHeight(image: any): number {
+    const width = 300; // Largeur fixe que nous utilisons
+    if (image.width && image.height) {
+      const aspectRatio = image.height / image.width;
+      return Math.round(width * aspectRatio);
+    }
+    return 300; // Hauteur par défaut si les dimensions ne sont pas disponibles
+  }
+  
 }
 

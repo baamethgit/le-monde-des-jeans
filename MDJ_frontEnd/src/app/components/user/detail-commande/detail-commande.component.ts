@@ -21,33 +21,18 @@ export class DetailCommandeComponent implements OnInit{
   methodePaiement = 'paiement_livraison';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   @Input() a_livrer : boolean = true;
-  @Input() commande : Commande | undefined;
+  commande : Commande | undefined;
   zones: ZoneLivraison[] = [];
   selectedZone: ZoneLivraison | undefined;
   prixLivraison : number = 0;
+  message : string = '';
   numZone = 1;
   client! : User;
   commandeService = inject(CommandeService);
   userService = inject(UserService);
 
-  onZoneChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedZoneNumber = parseInt(selectElement.value, 10);
-    this.loadZone(selectedZoneNumber);
-  }
-
-  loadZone(n:number){
-    this.commandeService.getDeliveryZoneByNumber(n).subscribe({
-      next:(data)=>{
-        this.selectedZone = data;
-      },
-      error:(error)=>{
-
-      }
-    })
-  }
-
   constructor(){}
+
   ngOnInit(): void {
         this.userService.getUser().subscribe({
           next: (data) => {
@@ -66,6 +51,50 @@ export class DetailCommandeComponent implements OnInit{
 
           }
         })
+        this.loadData()
+  }
 
+  loadData(){
+    this.commandeService.getCurrentCommande().subscribe({
+      next:(data)=>{
+        this.commande = data;
+      },
+      error:(error)=>{
+        this.message = ''
+      }
+    })
+  }
+
+
+  get totalCommande(){
+    return this.prixLivraison + 0;
+  }
+  
+  onZoneChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedZoneNumber = parseInt(selectElement.value, 10);
+    this.loadZone(selectedZoneNumber);
+  }
+
+  loadZone(n:number){
+    this.commandeService.getDeliveryZoneByNumber(n).subscribe({
+      next:(data)=>{
+        this.selectedZone = data;
+      },
+      error:(error)=>{
+
+      }
+    })
+  }
+
+  supprimerCommande(){
+    this.commandeService.supprimerCommande(2).subscribe({
+      next:(data)=>{
+        this.loadData();
+      },
+      error:(error)=>{
+
+      }
+    })
   }
 }
