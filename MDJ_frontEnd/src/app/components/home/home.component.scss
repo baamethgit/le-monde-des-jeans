@@ -18,7 +18,6 @@ $blue_color: #377DFF;
             color: rgba(0, 0, 0, 0.548);
         }
         img{
-            width: 50px;
             margin-bottom:15px;
         }
     }
@@ -53,9 +52,7 @@ $blue_color: #377DFF;
         .contact_box{
             background-color: #F3F5F7;
 
-            img{
-                width: 30px;
-            }
+        
 
         }
     }
@@ -65,14 +62,22 @@ $blue_color: #377DFF;
         color: $blue_color;
     }
     .category_list{
-        .category_item{
-            width: fit-content;
-            img{
-                width: 150px;
-                height: 150px;
-            }
-            .category_name{
-                font-weight: 600;
+        a{
+            color: black;
+            .category_item{
+                width: fit-content;
+
+                .Category_img{
+                    width: 150px;
+                    height: 150px;
+                    position: relative;
+                    img{
+                        position: absolute; width: 100%; height: 100%; inset: 0;
+                    }
+                }
+                .category_name{
+                    font-weight: 600;
+                }
             }
         }
     }
@@ -90,27 +95,33 @@ $blue_color: #377DFF;
            width: 300px;
            padding: 5px;
             .last_content_item_img{
-                .last_content_item_img_new{
-                    position: absolute;
-                    z-index: 1;
-                    top: 8%;
-                    left: 5%;
-                    background-color: white;
-                    padding: 3px 10px;
-                    border-radius: 5px;
-                    font-size: 16px;
-                    font-weight: 700;
-                }
-                img{
-                    width: 200px;
+                div{
+                    width: 250px;
+                    height: 300px;
+                    .last_content_item_img_new{
+                        position: absolute;
+                        z-index: 1;
+                        top: 8%;
+                        left: 5%;
+                        background-color: white;
+                        padding: 3px 10px;
+                        border-radius: 5px;
+                        font-size: 16px;
+                        font-weight: 700;
+                        width: fit-content;
+                        height: fit-content;
+                    }
+                    img{
+                        position: absolute; width: 100%; height: 100%; inset: 0;
+                    }
                 }
             }
         }
-        @media(max-width: 500px){
-            .last_content_item{
-                width: 200px;
-            }
-           }
+        // @media(max-width: 500px){
+        //     .last_content_item{
+        //         width: 200px;
+        //     }
+        //    }
     }
     .last_uploads_button{
         border-radius: 5px;
@@ -126,7 +137,7 @@ $blue_color: #377DFF;
     }
     .brand_list{
         img{
-            width: 100px;
+            width: 150px;
             opacity: 0.7;
         }
     }
@@ -231,8 +242,16 @@ $blue_color: #377DFF;
             }
         }
         .img_accueil{
+            position: relative;
+            height: 35vw;
+            width: 60vw;
+            margin: auto;
+            @media(max-width:571px){
+                height: 55vw;
+                width: 80vw;
+            }
             img{
-                width: 100%;
+                position: absolute; width: 100%; height: 100%; inset: 0;
                 filter: drop-shadow(16px 4px 12.6px rgba(0, 0, 0, 0.25));
             }
         }
@@ -241,9 +260,6 @@ $blue_color: #377DFF;
     .accueil_networks{
         h2{
             font-size: 24px;
-        }
-        img{
-            width: 40px;
         }
     }
 }

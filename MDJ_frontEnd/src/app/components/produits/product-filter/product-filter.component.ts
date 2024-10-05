@@ -4,11 +4,12 @@ import { ActivatedRoute, Route, RouterLink } from '@angular/router';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { Subscription } from 'rxjs';
 import { Produit } from '../../../models/produit';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-product-filter',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './product-filter.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
@@ -47,5 +48,14 @@ ngOnDestroy(): void {
   if (this.routeSub) {
     this.routeSub.unsubscribe();
   }
+}
+
+calculateHeight(image: any): number {
+  const width = 300; // Largeur fixe que nous utilisons
+  if (image.width && image.height) {
+    const aspectRatio = image.height / image.width;
+    return Math.round(width * aspectRatio);
+  }
+  return 300; // Hauteur par défaut si les dimensions ne sont pas disponibles
 }
 }

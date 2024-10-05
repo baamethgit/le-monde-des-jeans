@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ProduitService } from '../../services/produits/produit.service';
 import { CategorieService } from '../../services/categories/categorie.service';
@@ -8,7 +8,7 @@ import { CategorieService } from '../../services/categories/categorie.service';
 @Component({
   selector: 'app-produits',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterOutlet, NgOptimizedImage],
   templateUrl: './produits.component.html',
   styleUrl: './produits.component.scss'
 })
@@ -39,6 +39,11 @@ export class ProduitsComponent implements OnInit {
       const slug = this.route.snapshot.firstChild?.paramMap.get('slug');
       this.current_category = slug ? slug : ''; // Si slug est null, tous les produits sont affichés
     });
+  }
+
+  onCategorySelect(event: Event): void {
+    const categorySlug = (event.target as HTMLSelectElement).value;
+    this.switch_category(categorySlug);
   }
 
   switch_category(categorySlug: string): void {
