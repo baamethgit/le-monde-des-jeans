@@ -1,25 +1,24 @@
 <div class="admin-orders">
 	<h1>Commandes</h1>
-	
 	<div class="filters">
 	  <input type="text" [(ngModel)]="searchTerm" 
 	  placeholder="Rechercher par numéro ou client" 
 	  class="search-input " style="width:auto;"
-	  (search)="onSearch()"
+	  (input)="onSearch()"
 	  >
 	  <div class="d-flex align-items-center ">
 		<span class="d-inline-block me-3 ">Filtrer par Statut : </span>
-		<select class="filter-select" style="cursor:pointer">
+		<select [(ngModel)]="statutFiltre" class="filter-select" style="cursor:pointer" (change)="loadCommandes()">
 			<option value="">----------</option>
-			<option value="pending">En attente</option>
-			<option value="processing">En cours</option>
-			<option value="shipped">Expédié</option>
+			<option value="EN_ATTENTE">En attente</option>
+			<option value="EN_COURS_LIVRAISON">En cours de livraison</option>
+			<option value="LIVREE">Livrée</option>
 			<option value="delivered">Livré</option>
 		</select>
 	</div>
 	<div class="d-flex align-items-center">
 		<span class="d-inline-block me-3 ">Choisir une date</span>
-		<input [(ngModel)]="dateFiltre" type="date" class="date-input" style="cursor:pointer" (change)="onDateFilterChange($event)">
+		<input [(ngModel)]="dateFilter" type="date" class="date-input" style="cursor:pointer"(ngModelChange)="onDateFilterChange($event)">
 	</div>
 	</div>
 	<div class="table-container">
@@ -37,41 +36,27 @@
 		</tr>
 	  </thead>
 	  <tbody>
-		<tr>
-		  <td>1DFy2345</td>
+		<tr *ngFor="let commande of commandes">
+		  <td [innerHTML]="highlightText(commande.ref_code)"></td>
 		  <td>
-			<span [innerHTML]="highlightText('Jean Dupont')"></span><br>
-			<span class="text-center"  [innerHTML]="highlightText('770333723')"></span>
+			<span [innerHTML]="highlightText(commande.client.nom_complet)"></span><br>
+			<span class="text-center" [innerHTML]="highlightText(commande.client.phone_number)"></span>
 		  </td>
-		  <td>15 Septembre 2024</td>
-		  <td class="text-center text-primary fw-bold">12900</td>
-		  <td>Zone 1 : Ngor Almadies</td>
-		  <td><span class="status pending">En attente</span></td>
-		  <td>18 Septembre 2024</td>
+		  <td>{{commande.date_commande | date : 'dd MMMM YYYY'}}</td>
+		  <td class="text-center text-primary fw-bold">{{ commande.total }}</td>
+		  <td *ngIf="commande.zone_livraison">Zone {{commande.zone_livraison.numero}} : {{commande.zone_livraison.nom}}</td>
+		  <td *ngIf="!commande.zone_livraison">Récupéré au magasin</td>
+		  <td><span class="status pending">{{commande.statut.toString()}}</span></td>
+		  <td *ngIf="commande.date_livraison">{{commande.date_livraison | date : 'dd MMMM YYYY'}}</td>
+		  <td *ngIf="!commande.date_livraison" class="text-center">---</td>
 		  <td class="actions-cell">
 			<button class="action-btn view" >
-				<a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/commande','23A']">Voir</a>
+				<a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/commande',commande.ref_code]">Voir</a>
 			</button>
 			<button class="action-btn edit" >Modifier</button>
 		  </td>
 		</tr>
-		<tr>
-		  <td>DE342F89</td>
-		  <td>
-			<span>Marie Martin</span><br>
-			<span class="text-center">770333723</span>
-		  </td>
-		  <td>23 Octobre 2024</td>
-		  <td class="text-center text-primary fw-bold">89540</td>
-		  <td>Zone 2 : Ucad Colobane</td>
-		  <td><span class="status processing">En cours</span></td>
-		  <td>25 Octobre 2024</td>
-		  <td class="actions-cell">
-			<button class="action-btn view">Voir</button>
-			<button class="action-btn edit">Modifier</button>
-		  </td>
-		</tr>
-	  </tbody>
+</tbody>
 	</table>
 </div>
 	<div class="pagination">

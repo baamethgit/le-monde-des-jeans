@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -126,16 +127,15 @@ def changerStatutCommande(request,commande_id):
     return Response({"message": f"La commande {commande.ref_code} est supprimé"}, status=status.HTTP_200_OK)
 
 
-from rest_framework.views import APIView
 
 class CommandeUpdateView(APIView):
-    def put(self, request,id_commande):
+    def patch(self, request,id_commande):
         user = verifier_user(request)
         if not user:
             return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
         
         commande = get_object_or_404(Commande, id=id_commande, client=user)
-        serializer = CommandeSerializer(instance = commande, data=request.data, partial=True)
+        serializer = CommandeSerializer(commande, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

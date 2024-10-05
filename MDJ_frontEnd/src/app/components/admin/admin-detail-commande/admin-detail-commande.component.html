@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-sm-12 col-md-8">
           <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-secondary">
+            <button (click)="supprimerCommande()" class="btn btn-secondary" >
               <i class="fa-solid fa-trash me-2 mb-1"></i>Supprimer de l'historique
             </button>
             <button class="btn btn-secondary ms-1">
@@ -49,11 +49,11 @@
           </div>
         </div>
   
-        <div class="col-sm-12 col-md-4 border-start">
+        <div class="d-flex justify-content-center col-sm-12 col-md-4 border-start">
           <div class="d-flex align-items-center">
             <p class="me-2 mt-2">Changer le statut</p>
             <div class="dropdown">
-              <button class="btn btn- dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button  class="btn btn- dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ textStatut }} Livrée
               </button>
               <ul class="dropdown-menu">
@@ -61,11 +61,11 @@
                   <button class="dropdown-item" type="button">Livré</button>
                 </li>
                 <li>
-                  <button  class="dropdown-item" type="button">
-                    En attente de Livraison
+                  <button  (click)="changeStatut(StatutCommande.EN_COURS_LIVRAISON)" class="dropdown-item" type="button">
+                    En cours de Livraison
                   </button>
                 </li>
-                <li><button class="dropdown-item" type="button">Valider Think</button></li>
+                <li><button (click)="changeStatut(StatutCommande.ANNULEE)" class="dropdown-item" type="button">Annuler</button></li>
               </ul>
             </div>
           </div>

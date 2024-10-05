@@ -10,7 +10,7 @@
                         </span><span>{{commande?.client?.phone_number}}</span></p>
                 </div>
             </div>
-            <div class="col-10 mx-auto border p-3 rounded-2" *ngIf="a_livrer">
+            <div class="col-10 mx-auto border p-3 rounded-2"  *ngIf="!commande?.recupere_magasin" >
                 <h5 class="text-center">Adresse de Livraison</h5>
                 <div *ngIf="zones.length" class="delivery-zone">
                     <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
@@ -30,7 +30,7 @@
                     <p>{{selectedZone?.info || 'infos sur cette zone'}}</p>
                 </div>
             </div>
-            <div class="col-10 mx-auto border p-3 rounded-2" *ngIf="a_livrer">
+            <div *ngIf="commande?.recupere_magasin" class="col-10 mx-auto border p-3 rounded-2">
                 <p class="text-center ">
                     Vous avez choisi de récupérer au magasin.<br>
                     Notre localisation :</p>
@@ -48,19 +48,19 @@
                 <div class="paiement-method-options">
                     <label class="option">
                         <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement"
-                            value="paiement_livraison">
+                            value="PAIEMENT_LIVRAISON">
                         <span class="radio-button"></span>
                         <span class="label-text">Paiement à la Récupération</span>
                     </label>
 
                     <label class="option">
-                        <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement" value="wave">
+                        <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement" value="WAVE">
                         <span class="radio-button"></span>
                         <span class="label-text">Wave</span>
                     </label>
 
                     <label class="option">
-                        <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement" value="orange_money">
+                        <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement" value="ORANGE_MONEY">
                         <span class="radio-button"></span>
                         <span class="label-text">Orange Money</span>
                     </label>
@@ -87,14 +87,14 @@
                     <span>{{totalCommande}} frcs</span>
                 </p>
             </div>
-            <p  class="py-3 d-flex justify-content-between flex-wrap">
-                <button class="btn btn-danger">Supprimer la commande</button>
-                <button class="btn btn-warning">Annuler </button>
+            <p *ngIf="commande" class="py-3 d-flex justify-content-between flex-wrap">
+                <button class="btn btn-danger" (click)="supprimerCommande(commande.id)">Supprimer la commande</button>
+                <button class="btn btn-warning" (click)="annulerCommande(commande.id)">Annuler </button>
             </p>
         </div>
     </div>
     <p class="mx-auto d-flex align-items-center justify-content-center text-center">
-        <button (click)="payerCommande(commande?.id)" class="my-1 w-25 bg-dark rounded-3 border-0 p-2" style="color:white">PAYER</button>
+        <button *ngIf="commande" (click)="payerCommande(commande.id)" class="my-1 w-25 bg-dark rounded-3 border-0 p-2" style="color:white">PAYER</button>
     </p>
 
 </section>

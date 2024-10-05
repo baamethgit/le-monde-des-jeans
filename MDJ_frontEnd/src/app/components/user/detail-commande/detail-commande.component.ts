@@ -5,9 +5,11 @@ import { ZoneLivraison } from '../../../models/zone-livraison';
 import { UserService } from '../../../services/users/user.service';
 import { CommandeService } from '../../../services/commandes/commande.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
 import { Commande } from '../../../models/commande';
+import { PaymentMethod } from '../../../models/PaymentMethod';
+import { Paiement } from '../../../models/paiement';
 
 
 @Component({
@@ -18,7 +20,7 @@ import { Commande } from '../../../models/commande';
   styleUrl: './detail-commande.component.scss'
 })
 export class DetailCommandeComponent implements OnInit{
-  methodePaiement = 'paiement_livraison';
+  methodePaiement = 'PAIEMENT_LIVRAISON';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   @Input() a_livrer : boolean = true;
   commande : Commande | undefined;
@@ -31,14 +33,15 @@ export class DetailCommandeComponent implements OnInit{
   commandeService = inject(CommandeService);
   userService = inject(UserService);
   modelOpen = false;
+  isLoading = false;
+  paiement! : Paiement;
 
-  constructor(){}
+  constructor(private router : Router){}
 
   ngOnInit(): void {
         this.commandeService.getDeliveryZones().subscribe({
           next:(data)=>{
             this.zones = data;
-            console.log(this.zones)
             this.selectedZone = this.zones[1];
           },
           error:(error)=>{
@@ -48,14 +51,16 @@ export class DetailCommandeComponent implements OnInit{
         this.loadData();
   }
 
-  payerCommande(id_commande:number | undefined){
-    if(id_commande != undefined){
-      this.openPaymentOverlay();
-    }
+  payerCommande(id_commande:number){
+      this.openPaymentOverlay(this.methodePaiement);
   }
 
-  openPaymentOverlay(){
+  openPaymentOverlay(operateur : string){
     this.modelOpen = true;
+  }
+
+  validerCommande(operateur : string){
+
   }
 
   loadData(){
@@ -69,6 +74,9 @@ export class DetailCommandeComponent implements OnInit{
     })
   }
 
+  marquerCommePayee(){
+    
+  }
 
   get totalCommande(){
     return this.prixLivraison + 0;
@@ -91,14 +99,26 @@ export class DetailCommandeComponent implements OnInit{
     })
   }
 
-  supprimerCommande(){
-    this.commandeService.supprimerCommande(2).subscribe({
+  supprimerCommande(id:number){
+      this.commandeService.supprimerCommande(id).subscribe({
+        next:(data)=>{
+          // this.alertMessage = 'Votre commande est supprimé'
+          this.router.navigate(['/'])
+        },
+        error:(error)=>{
+  
+        }
+      })
+  }
+
+  annulerCommande(id:number){
+    this.commandeService.updateCommande(id,{statut:'ANNULEE'}).subscribe({
       next:(data)=>{
-        this.loadData();
+        this.router.navigate(['/mdj_admin/commandes/'])
       },
       error:(error)=>{
 
       }
     })
-  }
+}
 }

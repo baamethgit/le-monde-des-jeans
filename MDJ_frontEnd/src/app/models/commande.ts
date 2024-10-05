@@ -13,6 +13,5 @@ export interface Commande {
     statut : StatutCommande;
     zone_livraison : ZoneLivraison;
     recupere_magasin : boolean;
-    achat_direct : boolean;
     total : number
 }

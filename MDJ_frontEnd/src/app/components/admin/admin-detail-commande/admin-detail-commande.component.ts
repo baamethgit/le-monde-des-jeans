@@ -1,11 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Commande } from '../../../models/commande';
-
-
-export enum StatutCommande {
-  EN_ATTENTE_PAIEMENT = 'EN_ATTENTE_PAIEMENT',
-  LIVREE = 'LIVREE',
-}
+import { CommandeService } from '../../../services/commandes/commande.service';
+import { StatutCommande } from '../../../models/StatutCommande';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-detail-commande',
@@ -17,9 +14,32 @@ export enum StatutCommande {
 export class AdminDetailCommandeComponent {
   textStatut : string = '';
   statutCommande!: StatutCommande;
-  commande = input<Commande>;
+  commande! : Commande;
+  commandeService = inject(CommandeService);
+  protected readonly StatutCommande = StatutCommande;
+
+
+  constructor(private router:Router){}
 
   changeStatut(statut: StatutCommande){
-
+      this.commandeService.updateCommande(this.commande.id,{'statut':statut.toString()}).subscribe({
+        next:(data)=>{
+        
+        },
+        error:(error)=>{
+  
+        }
+      })
   }
+
+  supprimerCommande(){
+    this.commandeService.supprimerCommande(this.commande.id).subscribe({
+      next:(data)=>{
+        this.router.navigate(['/mdj_admin/commandes/'])
+      },
+      error:(error)=>{
+
+      }
+    })
+}
 }

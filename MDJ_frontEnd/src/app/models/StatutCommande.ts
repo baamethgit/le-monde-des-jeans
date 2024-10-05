@@ -5,10 +5,9 @@ export enum StatutCommande {
   
     EN_PREPARATION = 'En préparation',
 
-    EXPEDIEE = 'Expédiée',
+    EN_COURS_LIVRAISON = 'En cours de Livraison',
 
     LIVREE = 'Livrée',
     
     ANNULEE = 'Annulée',
   }
-  

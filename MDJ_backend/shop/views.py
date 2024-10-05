@@ -123,51 +123,54 @@ class CommandeListView(ListAPIView):
         queryset = Commande.objects.all()
         search_term = self.request.query_params.get('search', None)
         
+        
         if search_term:
             queryset = queryset.filter(
                 Q(client__phone_number__icontains=search_term) |
                 Q(client__nom_complet__icontains=search_term) | 
-                Q(ref_code__icontains=search_term)
+                Q(ref_code__icontains=search_term) 
             )
+        
+       
         return queryset
     
-class CommandeViewSet(viewsets.ModelViewSet):
-    queryset = Commande.objects.all()
-    serializer_class = CommandeSerializer
+# class CommandeViewSet(viewsets.ModelViewSet):
+#     queryset = Commande.objects.all()
+#     serializer_class = CommandeSerializer
 
-    def perform_create(self, serializer):
-        # Générer un ref_code unique ici
-        import uuid
-        ref_code = uuid.uuid4().hex[:20].upper()
-        serializer.save(client=self.request.user, ref_code=ref_code)
+#     def perform_create(self, serializer):
+#         # Générer un ref_code unique ici
+#         import uuid
+#         ref_code = uuid.uuid4().hex[:20].upper()
+#         serializer.save(client=self.request.user, ref_code=ref_code)
 
-    @action(detail=True, methods=['post'])
-    def changer_statut(self, request, pk=None):
-        commande = self.get_object()
-        nouveau_statut = request.data.get('statut')
-        if nouveau_statut not in dict(Commande.STATUT_CHOICES):
-            return Response({'erreur': 'Statut invalide'}, status=status.HTTP_400_BAD_REQUEST)
+#     @action(detail=True, methods=['post'])
+#     def changer_statut(self, request, pk=None):
+#         commande = self.get_object()
+#         nouveau_statut = request.data.get('statut')
+#         if nouveau_statut not in dict(Commande.STATUT_CHOICES):
+#             return Response({'erreur': 'Statut invalide'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Appeler la méthode appropriée en fonction du nouveau statut
-        statut_methods = {
-            'PAYEE': commande.marquer_comme_payee,
-            'EN_PREPARATION': commande.commencer_preparation,
-            'EXPEDIEE': commande.marquer_comme_expediee,
-            'LIVREE': commande.marquer_comme_livree,
-            'ANNULEE': commande.annuler
-        }
+#         # Appeler la méthode appropriée en fonction du nouveau statut
+#         statut_methods = {
+#             'PAYEE': commande.marquer_comme_payee,
+#             'EN_PREPARATION': commande.commencer_preparation,
+#             'EXPEDIEE': commande.marquer_comme_expediee,
+#             'LIVREE': commande.marquer_comme_livree,
+#             'ANNULEE': commande.annuler
+#         }
         
-        method = statut_methods.get(nouveau_statut)
-        if method:
-            method()
-            return Response({'statut': commande.statut})
-        else:
-            return Response({'erreur': 'Changement de statut non autorisé'}, status=status.HTTP_400_BAD_REQUEST)
+#         method = statut_methods.get(nouveau_statut)
+#         if method:
+#             method()
+#             return Response({'statut': commande.statut})
+#         else:
+#             return Response({'erreur': 'Changement de statut non autorisé'}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['get'])
-    def total(self, request, pk=None):
-        commande = self.get_object()
-        return Response({'total': commande.get_total()})
+#     @action(detail=True, methods=['get'])
+#     def total(self, request, pk=None):
+#         commande = self.get_object()
+#         return Response({'total': commande.get_total()})
     
     
 

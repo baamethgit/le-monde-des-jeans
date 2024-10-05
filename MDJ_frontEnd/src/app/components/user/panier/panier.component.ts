@@ -47,7 +47,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
   commander(){
     this.commandeService.creerCommande(true).subscribe({
       next:(data)=>{
-        this.router.navigate(['/panier-valider']);
+        this.router.navigate(['/detail-commande']);
       },
       error : (error)=>{
         if(error.error.message_erreur)

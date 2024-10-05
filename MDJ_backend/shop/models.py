@@ -145,7 +145,7 @@ class Commande(models.Model):
         ('EN_ATTENTE', 'En attente de paiement'),
         ('PAYEE', 'Payée'),
         ('EN_PREPARATION', 'En préparation'),
-        ('EXPEDIEE', 'Expédiée'),
+        ('EN_COURS_LIVRAISON', 'En cours de Livraison'),
         ('LIVREE', 'Livrée'),
         ('ANNULEE', 'Annulée'),
     )
@@ -158,7 +158,6 @@ class Commande(models.Model):
     statut = models.CharField(max_length=30, choices=STATUT_CHOICES, default='EN_ATTENTE')
     zone_livraison = models.ForeignKey(ZoneLivraison, on_delete=models.SET_NULL, null=True, blank=True)
     recupere_magasin = models.BooleanField(default=False)
-    achat_direct = models.BooleanField(default=False)
     
     def est_expire(self):
         return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'

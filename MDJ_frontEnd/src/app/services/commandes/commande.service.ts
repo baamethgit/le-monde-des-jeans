@@ -24,17 +24,23 @@ export class CommandeService {
   }
 
 
-  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = '',dateFilter : Date): Observable<Commande[]> {
+  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
         let params = new HttpParams()
           .set('page', page.toString())
-          .set('page_size', pageSize.toString())
-          .set('date_filtre', dateFilter.toString());
+          .set('page_size', pageSize.toString());
         
         if (searchTerm) {
           params = params.set('search', searchTerm);
         }
+        // if (dateFilter) {
+        //   params = params.set('date_filtre', dateFilter.toString());
+        // }
 
-        return this.http.get<Commande[]>(`${this.baseUrl}commandes/`, { params });
+        // if (statut) {
+        //   params = params.set('statut', statut);
+        // }
+
+        return this.http.get(`${this.baseUrl}apiProduit/list-commandes/`, { params });
   }
 
   creerCommande(fromPanier: boolean = false, produitSlug?: string): Observable<any> {
@@ -73,5 +79,9 @@ export class CommandeService {
 
   getCommandesByStatus(commandeStatus: string): Observable<any> {
     return this.http.post(`${this.baseUrl}apiProduit/commandes/${commandeStatus}/filtrer/`, {},{withCredentials: true  });
+  }
+
+  updateCommande(id: number, newData: any){
+    return this.http.patch(`${this.baseUrl}apiProduit/commandes/${id}/update/`, newData,{withCredentials: true  });
   }
 }
