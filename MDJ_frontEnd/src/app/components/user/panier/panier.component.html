@@ -3,6 +3,7 @@
 
 <section class="row position-relative mb-2">
   <div class="col-12 col-md-8 table-panier">
+    <p *ngIf="errorMessage" class="w-100 py-3 mx-auto text-center bg-warning">{{errorMessage}}</p>
     <table class="w-100">
       <thead class="my-3">
         <tr><th>Produit</th>

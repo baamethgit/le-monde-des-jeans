@@ -12,11 +12,6 @@ class Categorie(models.Model):
     description = models.TextField(blank=True, max_length=1000)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='images_categories/')
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = slugify(self.nom)
-    #     super().save(*args, **kwargs)
-    # image = models.ImageField(upload_to='images_categories/')
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.nom)
@@ -92,8 +87,8 @@ class PanierProduit(models.Model):
     date_ajout = models.DateTimeField(auto_now_add=True)
 
     def est_expire(self):
-        return timezone.now() > self.date_ajout + timedelta(minutes=15)
-    # pesner à dynamiser le timing pour l'évolutivité
+        return timezone.now() > self.date_ajout + timedelta(minutes=10)
+    # penser à dynamiser le timing pour l'évolutivité
     
     # def __str__(self) -> str:
     #     return f"{self.produit} ajouté le {self.date_ajout}"
@@ -164,10 +159,21 @@ class Commande(models.Model):
     zone_livraison = models.ForeignKey(ZoneLivraison, on_delete=models.SET_NULL, null=True, blank=True)
     recupere_magasin = models.BooleanField(default=False)
     achat_direct = models.BooleanField(default=False)
+    
+    def est_expire(self):
+        return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'
+    
+    def liberer_produits_apres_delais(self):
+        if self.est_expire():
+            for produit in self.produits.all():
+                produit.reserve = False
+                produit.save()
+            self.delete()
 
     def __str__(self):
         return f"Commande {self.ref_code} par {self.client.nom_complet}"
-
+    
+    @property
     def get_total(self):
         total = sum(prod.prix for prod in self.produits.all())
         if self.zone_livraison and not self.recupere_magasin:
@@ -196,7 +202,7 @@ class Commande(models.Model):
 
     def annuler(self):
         if self.statut != 'LIVREE':
-            for produit in self.produits:
+            for produit in self.produits.all():
                 produit.reserve = False
                 produit.save()
             self.statut = 'ANNULEE'

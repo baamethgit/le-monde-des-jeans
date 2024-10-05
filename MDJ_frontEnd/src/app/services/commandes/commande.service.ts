@@ -70,4 +70,8 @@ export class CommandeService {
   supprimerCommande(commandeId: number): Observable<any> {
       return this.http.delete(`${this.baseUrl}apiProduit/commandes/${commandeId}/delete/`,{withCredentials: true  });
   }
+
+  getCommandesByStatus(commandeStatus: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}apiProduit/commandes/${commandeStatus}/filtrer/`, {},{withCredentials: true  });
+  }
 }

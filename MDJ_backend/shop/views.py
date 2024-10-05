@@ -196,7 +196,7 @@ def ajouter_produit(request):
     if panier.ajouter_produit(produit):
         return Response({"message": "Produit ajouté au panier"}, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message_erreur": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def retirer_produit(request):

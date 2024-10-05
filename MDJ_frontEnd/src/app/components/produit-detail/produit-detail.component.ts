@@ -19,8 +19,7 @@ import { PanierService } from '../../services/panier.service';
 export class ProduitDetailComponent {
 list_p:any[]=[];
 product_selected : Produit | undefined;
-// product_selected = input<Produit | null>(null);
-// product_selected:Produit | undefined;
+errorMessage = ''
 must_like_product:Produit[]=[];
 commandeService = inject(CommandeService);
 panierService = inject(PanierService);
@@ -69,9 +68,12 @@ acheterDirectement(productSlug : string | undefined){
   if(productSlug != undefined){
     this.commandeService.creerCommande(false,productSlug).subscribe({
       next:(data)=>{
+        this.router.navigate(['/detail-commande']);
+        this.errorMessage = '';
       },
       error : (error)=>{
-          
+        if(error.error.message_erreur)
+          this.errorMessage = error.error.message_erreur;
       },
     })
   }
@@ -83,7 +85,8 @@ addToCart(){
       this.router.navigate(['/panier']);
     },
     error : (error)=>{
-        
+      if(error.error.message_erreur)
+        this.errorMessage = error.error.message_erreur;
     },
   })
 }

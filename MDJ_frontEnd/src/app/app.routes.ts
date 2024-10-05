@@ -26,6 +26,7 @@ import { ProduitService } from './services/produits/produit.service';
 import { inject } from '@angular/core';
 import { AdminListeCommandesComponent } from './components/admin/admin-liste-commandes/admin-liste-commandes.component';
 import { AdminDetailCommandeComponent } from './components/admin/admin-detail-commande/admin-detail-commande.component';
+import { MesCommandesComponent } from './components/user/mes-commandes/mes-commandes.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent,
@@ -42,6 +43,7 @@ export const routes: Routes = [
     {path: 'profile', component: ProfilComponent},
     {path: 'profile/edit', component: ProfilUpdateComponent},
     {path: 'detail-commande', component: DetailCommandeComponent},
+    {path: 'mes-commandes', component: MesCommandesComponent},
     {path:'produits', component: AllProductsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}

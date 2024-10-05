@@ -23,7 +23,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
   CheckoutStep : CheckoutStep = CheckoutStep.Panier;
   currentUser: User | undefined = undefined;
   contenupanier : IcontenuPanier[] = [];
-  message : string = '';
+  errorMessage : string = '';
   private panierService = inject(PanierService);
   private commandeService = inject(CommandeService);
 
@@ -50,7 +50,8 @@ export class PanierComponent implements OnInit ,OnDestroy{
         this.router.navigate(['/panier-valider']);
       },
       error : (error)=>{
-          
+        if(error.error.message_erreur)
+          this.errorMessage = error.error.message_erreur;
       },
     })
   }
@@ -70,9 +71,10 @@ export class PanierComponent implements OnInit ,OnDestroy{
     this.panierService.viderPanier().subscribe({
       next: (data) => {
           this.loadData();
-          this.message = 'Votre Panier est vidé !'
+          // this.message = 'Votre Panier est vidé !'
       },
       error: (error) => {
+        
       }
     });
   }

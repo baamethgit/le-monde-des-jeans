@@ -15,7 +15,7 @@ def creer_commande(request):
 
     commande_existante = Commande.objects.filter(client=user, statut='EN_ATTENTE').first()
     if commande_existante:
-        return Response({"error": "Une commande en attente existe déjà", "commande_id": commande_existante.id}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message_erreur": "Vous avez déja une commande en attente,validez d'abord.", "commande_id": commande_existante.id}, status=status.HTTP_400_BAD_REQUEST)
 
     commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
    
@@ -23,11 +23,15 @@ def creer_commande(request):
         panier = Panier.objects.get(client=user)
         # je dw vérifier dabord s'il ya des produits pour ne pas créer un commande vide
         for panier_produit in panier.panierproduit_set.all():
+            panier_produit.produit.reserve = True
+            panier_produit.produit.save()
             commande.produits.add(panier_produit.produit)
         panier.panierproduit_set.all().delete()  # Vider le panier
     
     elif request.data.get('produit_slug'):
         produit = get_object_or_404(Produit, slug=request.data['produit_slug'])
+        produit.reserve = True
+        produit.save()
         commande.produits.add(produit)
     
     else:
@@ -43,7 +47,7 @@ def detail_commande(request, commande_id):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande, id=commande_id, client=user)
-        
+    commande.liberer_produits_apres_delais()
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
@@ -54,7 +58,7 @@ def detail_commande_courante(request):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande,client=user,statut = 'EN_ATTENTE')
-        
+    commande.liberer_produits_apres_delais()
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
@@ -65,6 +69,9 @@ def liste_commandes(request):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commandes = Commande.objects.filter(client=user).order_by('-date_commande')
+    for commande in commandes.all():
+        commande.liberer_produits_apres_delais() 
+        
     serializer = CommandeSerializer(commandes, many=True)
     return Response(serializer.data)
 
@@ -99,7 +106,7 @@ def deleteCommande(request,commande_id):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande, id=commande_id, client=user)
-    for produit in commande.produits:
+    for produit in commande.produits.all():
         produit.reserve = False
         produit.save()
     commande.delete()
@@ -117,3 +124,18 @@ def changerStatutCommande(request,commande_id):
     commande.delete()
     
     return Response({"message": f"La commande {commande.ref_code} est supprimé"}, status=status.HTTP_200_OK)
+
+
+from rest_framework.views import APIView
+
+class CommandeUpdateView(APIView):
+    def put(self, request,id_commande):
+        user = verifier_user(request)
+        if not user:
+            return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        commande = get_object_or_404(Commande, id=id_commande, client=user)
+        serializer = CommandeSerializer(instance = commande, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

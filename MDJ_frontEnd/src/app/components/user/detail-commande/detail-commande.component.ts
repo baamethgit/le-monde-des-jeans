@@ -30,17 +30,11 @@ export class DetailCommandeComponent implements OnInit{
   client! : User;
   commandeService = inject(CommandeService);
   userService = inject(UserService);
+  modelOpen = false;
 
   constructor(){}
 
   ngOnInit(): void {
-        this.userService.getUser().subscribe({
-          next: (data) => {
-              this.client = data;
-          },
-          error: (error) => {
-          }
-        })
         this.commandeService.getDeliveryZones().subscribe({
           next:(data)=>{
             this.zones = data;
@@ -51,7 +45,17 @@ export class DetailCommandeComponent implements OnInit{
 
           }
         })
-        this.loadData()
+        this.loadData();
+  }
+
+  payerCommande(id_commande:number | undefined){
+    if(id_commande != undefined){
+      this.openPaymentOverlay();
+    }
+  }
+
+  openPaymentOverlay(){
+    this.modelOpen = true;
   }
 
   loadData(){
