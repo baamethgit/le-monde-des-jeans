@@ -20,7 +20,8 @@
           </td>
           <td class="static-right">
             <!-- Expire dans {{ tempsRestant[content.produit.id].minutes}}min {{ tempsRestant[content.produit.id].seconds }}s -->
-              <p class="my-0 d-flex flex-column flex-sm-row"><span class="d-inline-block me-1">Expire dans </span><span class="ms-1 text-danger">{{content.date_ajout}} 5 min 35 s</span></p>
+              <p class="my-0 d-flex flex-column flex-sm-row"><span class="d-inline-block me-1">Expire dans </span><span class="ms-1 text-danger">5 min 35 s</span></p>
+              
               <p class="my-1 text-danger ps-2" style='font-style:italic'>
                 <button (click)="removeProd(content.produit.slug)" class="btn btn-danger p-0 px-1">Retirer</button></p>
           </td>
@@ -42,7 +43,7 @@
     <label class="option">
       <input type="radio" name="deliveryOption" [(ngModel)]="selectedOption" value="livraison">
       <span class="radio-button"></span>
-      <span class="label-text">Livraison : 24h</span>
+      <span class="label-text">Livraison</span>
     </label>
     
     <label class="option">
@@ -55,8 +56,11 @@
     <span>Total</span>
     <span>{{panier?.montant}}</span>
   </p>
-  <button class="my-1 w-75 mx-auto bg-dark rounded-3 border-0 p-2" style="color:white">
-    <a class="text-decoration-none text-light" [routerLink]="['/detail-commande']">Continuer
+  <button class="my-1 w-75 mx-auto bg-dark rounded-3 border-0 p-2"
+          (click)="commander()"
+          style="color:white"
+          [disabled]="!contenupanier.length">
+    <a class="text-decoration-none text-light">Continuer
     </a>
     </button>
 </div>

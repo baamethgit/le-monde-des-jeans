@@ -39,14 +39,14 @@ export const routes: Routes = [
     {path: 'profile', component: ProfilComponent},
     {path: 'profile/edit', component: ProfilUpdateComponent},
     {path: 'detail-commande', component: DetailCommandeComponent},
-    {path:'produits', component: ProduitsComponent, children:[
+    {path:'produits', component: AllProductsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full',
-        resolve : {
-            product_selected : detailProduitResolver
-        }
+        // resolve : {
+        //     product_selected : detailProduitResolver
+        // }
     },
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[

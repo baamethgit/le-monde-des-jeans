@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
 import { UserService } from '../../../services/users/user.service';
 import { PanierService } from '../../../services/panier.service';
 import { IcontenuPanier, Ipanier } from './panier.model';
 import { interval, startWith, Subscription, switchMap } from 'rxjs';
+import { CommandeService } from '../../../services/commandes/commande.service';
 
 
 @Component({
@@ -24,15 +25,17 @@ export class PanierComponent implements OnInit ,OnDestroy{
   contenupanier : IcontenuPanier[] = [];
   message : string = '';
   private panierService = inject(PanierService);
+  private commandeService = inject(CommandeService);
 
   panier:Omit<Ipanier,'produits'>|undefined;
   tempsRestant: { [key: number]: { minutes: number, seconds: number } } = {};
   private timerSubscription! : Subscription;
-  constructor(){}
+
+  constructor(private router : Router){}
 
   ngOnInit() {
     this.loadData();
-    this.demarrerTimer();
+    // this.demarrerTimer();
   }
 
   ngOnDestroy() {
@@ -41,7 +44,16 @@ export class PanierComponent implements OnInit ,OnDestroy{
     }
   }
   
-  
+  commander(){
+    this.commandeService.creerCommande(true).subscribe({
+      next:(data)=>{
+        this.router.navigate(['/panier-valider']);
+      },
+      error : (error)=>{
+          
+      },
+    })
+  }
 
   removeProd(produitSlug:string){
     this.panierService.retirerProduit(produitSlug).subscribe({
@@ -92,20 +104,20 @@ export class PanierComponent implements OnInit ,OnDestroy{
   }
 
   demarrerTimer() {
-    this.timerSubscription = interval(1000).pipe(
-      startWith(0),
-      switchMap(() => this.panierService.getPanier())
-    ).subscribe({
-      next:(data)=>{
-        this.panier = data;
-        this.mettreAJourTempsRestant();
-        this.verifierExpirations();
-      },
-      error:(error)=>{
-        console.error('Erreur lors de la mise à jour du panier', error)
-      }
-    }
-    );
+    // this.timerSubscription = interval(1000).pipe(
+    //   startWith(0),
+    //   switchMap(() => this.panierService.getPanier())
+    // ).subscribe({
+    //   next:(data)=>{
+    //     // this.panier = data;
+    //     // this.mettreAJourTempsRestant();
+    //     // this.verifierExpirations();
+    //   },
+    //   error:(error)=>{
+    //     console.error('Erreur lors de la mise à jour du panier', error)
+    //   }
+    // }
+    // );
   }
 
   verifierExpirations() {
