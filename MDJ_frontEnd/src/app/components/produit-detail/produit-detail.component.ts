@@ -45,8 +45,8 @@ ngOnInit():void{
       this.product_selected =data;
       this.list_p=this.product_selected.images;
 
-      if (this.product_selected && this.product_selected.categorie?.slug) {
-        const categorySlug = this.product_selected.categorie.slug;
+      if (this.product_selected && this.product_selected.categorie_detail?.slug) {
+        const categorySlug = this.product_selected.categorie_detail.slug;
         this.produitService.getProductByCategory(categorySlug).subscribe({
           next: (data: Produit[]) => {
             this.must_like_product = data;

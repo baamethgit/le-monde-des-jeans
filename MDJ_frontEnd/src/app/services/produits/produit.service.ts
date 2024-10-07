@@ -1,7 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Produit } from '../../models/produit';
+import { User } from '../../models/user';
+import { url } from 'inspector';
+import { categorie } from '../../models/categorie';
+import { ProduitImage } from '../../models/image-produit';
 
 
 @Injectable({
@@ -16,12 +20,33 @@ export class ProduitService {
     return this.http.get<Produit[]>(this.apiUrl)
   }
 
+
+  getProductsAdmin(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
+    return this.http.get<User[]>(`${this.apiUrl}`, { params });
+  }
+
+
+
   getProductBySlug(slug:string): Observable<Produit> {
     const url = `${this.apiUrl}${slug}/`; 
     return this.http.get<Produit>(url);
   }
 
+
+  
   getProductByCategory(categorie:string):Observable<Produit[]>{
     return this.http.get<Produit[]>(`${this.apiUrl}?categorie=${categorie}`)
+  }
+
+  CreateProduct(formData: FormData): Observable<any> {
+    return this.http.post<Produit>(this.apiUrl, formData);
   }
 }

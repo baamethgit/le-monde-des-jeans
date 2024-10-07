@@ -33,6 +33,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
 
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Produit.objects.all()
     serializer_class = serializers.ProductSerializer
@@ -43,6 +44,31 @@ class ProductViewSet(viewsets.ModelViewSet):
         produit = get_object_or_404(models.Produit, slug=slug)
         serializer = self.get_serializer(produit)
         return Response(serializer.data)
+    
+    def create(self, request, *args, **kwargs):
+        produit_data = {
+            'nom': request.data.get('nom'),
+            'prix': request.data.get('prix'),
+            'categorie': request.data.get('categorie'),
+            'taille': request.data.get('taille'),
+            'composition': request.data.get('composition'),
+            'couleur': request.data.get('couleur'),
+            'special':request.data.get('special'),
+            'description':request.data.get('description'),
+            'QuantiteStock':request.data.get('QuantiteStock')
+        }
+        produit_serializer = self.get_serializer(data=produit_data)
+        if produit_serializer.is_valid():
+            produit = produit_serializer.save()
+            
+            # Gérer les images
+            images = request.FILES.getlist('image')
+            for image in images:
+                models.ImageProduit.objects.create(produit=produit, image=image)
+            
+            return Response(produit_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(produit_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         queryset = super().get_queryset()

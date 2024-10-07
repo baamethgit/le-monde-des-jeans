@@ -12,7 +12,7 @@ from . import models
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Categorie
-        fields = ['id', 'nom', 'slug', 'image'] # Tu peux ajouter d'autres champs si nécessaire
+        fields = '__all__' 
 
 
 class ImageProduitSerializer(serializers.ModelSerializer):
@@ -20,12 +20,22 @@ class ImageProduitSerializer(serializers.ModelSerializer):
         model = models.ImageProduit
         fields = ['image']
 
+# class ProductSerializer(serializers.ModelSerializer):
+#     images = ImageProduitSerializer(many=True, read_only=True)  # Nested serializer
+#     class Meta:
+#         model = models.Produit
+#         fields = '__all__'
+
 class ProductSerializer(serializers.ModelSerializer):
-    images = ImageProduitSerializer(many=True, read_only=True)  # Nested serializer
-    categorie = CategorySerializer()
+    categorie = serializers.PrimaryKeyRelatedField(queryset=models.Categorie.objects.all(), write_only=True)
+    categorie_detail = CategorySerializer(source='categorie', read_only=True)  # Lecture only...
+    images = ImageProduitSerializer(many=True, read_only=True)
+
     class Meta:
         model = models.Produit
-        fields = ['id', 'nom', 'prix', 'categorie', 'taille', 'composition', 'couleur', 'slug', 'QuantiteStock', 'reserve', 'special', 'images']
+        fields = ['id', 'nom', 'prix', 'taille', 'composition', 'couleur', 'slug', 'QuantiteStock', 'special', 'categorie', 'categorie_detail', 'images']
+        # 'categorie' pour l'ID en écriture, 'categorie_detail' pour la lecture des détails
+
 
 class AvisSerializer(serializers.ModelSerializer):
 

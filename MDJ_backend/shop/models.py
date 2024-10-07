@@ -4,6 +4,7 @@ from MDJ_backend.settings import AUTH_USER_MODEL
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from datetime import timedelta
+import itertools
 
 # Utilisez select_related et prefetch_related dans vos vues pour optimiser les requêtes liées aux produits et commandes.
 
@@ -53,6 +54,7 @@ class Produit(models.Model):
     nom = models.CharField(max_length=200)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
+    description=models.TextField(null=True, blank=True),
     taille = models.CharField(max_length=128, choices=TAILLES, blank=True, null=True)
     composition = models.CharField(max_length=128, choices=COMPO, blank=True, null=True)
     couleur = models.CharField(max_length=128, choices=COULEUR, blank=True, null=True)
@@ -62,15 +64,16 @@ class Produit(models.Model):
     special = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Si l'objet n'a pas encore d'ID, il est nécessaire de l'enregistrer une première fois
-        # pour générer l'ID (nécessaire pour créer un slug unique)
-        if not self.id:
-            super().save(*args, **kwargs)
-
-        # Générer le slug en utilisant le nom et l'ID si le slug est vide ou à recréer
         if not self.slug:
-            self.slug = slugify(self.nom) + "-" + str(self.id)
-
+            max_length = Produit._meta.get_field('slug').max_length
+            self.slug = orig = slugify(self.nom)[:max_length]
+            
+            for i in itertools.count(1):
+                if not Produit.objects.filter(slug=self.slug).exists():
+                    break
+                # Tronquer le slug original dynamiquement pour faire de la place pour le suffixe
+                self.slug = "{}-{}".format(orig[:max_length - len(str(i)) - 1], i)
+        
         super().save(*args, **kwargs)
 
     def __str__(self):
