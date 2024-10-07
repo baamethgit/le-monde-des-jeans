@@ -23,6 +23,10 @@ export class CommandeService {
     return this.http.get<ZoneLivraison>(url); 
   }
 
+  createZone(newZone : ZoneLivraison):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/creer-zone/`;
+    return this.http.post<ZoneLivraison>(url,newZone, { withCredentials: true });
+  }
 
   getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
         let params = new HttpParams()

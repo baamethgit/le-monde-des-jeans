@@ -1,0 +1,45 @@
+<div class="mx-auto p-1 px-md-5 m-0 mx-md-5" style="width:90%">
+    <div>
+      <div>
+        <div>
+          <h5 class="text-success my-3">Modifier Zone {{zone.numero}}</h5>
+        </div>
+        <div>
+          <form [formGroup]="zoneCreationForm">
+            <div class="mb-3">
+              <label for="numero" class="form-label">Numéro</label>
+              <input type="number" class="form-control" id="numero" formControlName="numero">
+            </div>
+            <ng-container *ngIf="zoneCreationForm.controls['numero'].invalid && (zoneCreationForm.controls['numero'].dirty || zoneCreationForm.controls['numero'].touched)">
+                <small class="text-danger" *ngIf="zoneCreationForm.controls['numero'].hasError('required')">Ce champ est obligatoire.</small>
+              </ng-container>
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom">
+            </div>
+            <ng-container *ngIf="zoneCreationForm.controls['nom'].invalid && (zoneCreationForm.controls['nom'].dirty || zoneCreationForm.controls['nom'].touched)">
+                <small class="text-danger" *ngIf="zoneCreationForm.controls['nom'].hasError('required')">Le nom est obligatoire.</small>
+              </ng-container>
+            <div class="mb-3">
+              <label for="prix" class="form-label">Prix de Livraison</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="prix" formControlName="prix_livraison">
+                <span class="input-group-text">FCFA</span>
+              </div>
+            </div>
+            <ng-container *ngIf="zoneCreationForm.controls['numero'].invalid && (zoneCreationForm.controls['numero'].dirty || zoneCreationForm.controls['numero'].touched)">
+                <small class="text-danger" *ngIf="zoneCreationForm.controls['numero'].hasError('required')">Le prix est obligatoire.</small>
+              </ng-container>
+            <div class="mb-3">
+              <label for="info" class="form-label">Informations</label>
+              <textarea class="form-control" id="info" rows="3" formControlName="info"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" type="reset" (click)="resetForm()">Annuler</button>
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>

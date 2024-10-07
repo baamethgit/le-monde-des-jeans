@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from accounts import models as accountModel
-from rest_framework.generics import ListAPIView,RetrieveAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
 from .models import ZoneLivraison,Commande
 from django.db.models import Q
@@ -28,6 +28,11 @@ class getDeliveryZoneByNum(RetrieveAPIView):
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
     lookup_field = 'numero'
+
+class CreateZone(CreateAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()

@@ -4,7 +4,9 @@ from MDJ_backend.settings import AUTH_USER_MODEL
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from datetime import timedelta
-
+from django.db import IntegrityError
+import random
+from django.db import transaction
 # Utilisez select_related et prefetch_related dans vos vues pour optimiser les requêtes liées aux produits et commandes.
 
 class Categorie(models.Model):
@@ -159,6 +161,30 @@ class Commande(models.Model):
     zone_livraison = models.ForeignKey(ZoneLivraison, on_delete=models.SET_NULL, null=True, blank=True)
     recupere_magasin = models.BooleanField(default=False)
     
+    @classmethod
+    def generate_ref_code(cls):
+        timestamp = int(timezone.now().timestamp())
+        random_num = random.randint(1000, 9999)  # Ajoute un nombre aléatoire
+        return f"{timestamp:x}{random_num}"  # Combine le timestamp et un numéro aléatoire
+
+    def save(self, *args, **kwargs):
+        if not self.ref_code:
+            attempts = 0
+            max_attempts = 3
+            while attempts < max_attempts:
+                self.ref_code = self.generate_ref_code()
+                try:
+                    with transaction.atomic():
+                        super().save(*args, **kwargs)
+                        break
+                except IntegrityError:  # En cas de collision
+                    attempts += 1
+                    if attempts == max_attempts:
+                        raise
+        else:
+            super().save(*args, **kwargs)
+        
+        
     def est_expire(self):
         return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'
     

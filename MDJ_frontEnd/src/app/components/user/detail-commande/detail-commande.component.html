@@ -23,7 +23,7 @@
                     </select>
                 </div>
                 <div class="delivery-cost">
-                    <p><span class="fw-bold text-dark">Coût Livraison : </span><span>{{ selectedZone?.prix_livraison }}frs</span></p>
+                    <p><span class="fw-bold text-dark">Coût Livraison : </span><span>{{ selectedZone?.prix_livraison }} <strong>FCFA</strong></span></p>
                 </div>
 
                 <div class="delivery-method">
@@ -44,25 +44,26 @@
             </div>
             <div class="col-10 mx-auto my-3 border p-2 rounded-2">
                 <h5 class="text-center">Méthode de paiement</h5>
-                <small>Choisissez votre méthode de paiement</small>
+                <small class="my-1 text-center">Choisissez votre méthode de paiement</small>
                 <div class="paiement-method-options">
-                    <label class="option">
-                        <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement"
-                            value="PAIEMENT_LIVRAISON">
-                        <span class="radio-button"></span>
-                        <span class="label-text">Paiement à la Récupération</span>
-                    </label>
-
                     <label class="option">
                         <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement" value="WAVE">
                         <span class="radio-button"></span>
-                        <span class="label-text">Wave</span>
+                        <span class="label-text d-flex justify-content-between align-items-center w-100">
+                            <span>Wave</span>
+                            <img src="../../../../assets/img/wave.png" alt="" style="width: 40px;height:40px;">
+                        </span>
                     </label>
 
                     <label class="option">
                         <input type="radio" name="paymentOption" [(ngModel)]="methodePaiement" value="ORANGE_MONEY">
                         <span class="radio-button"></span>
-                        <span class="label-text">Orange Money</span>
+
+                        <span class="label-text d-flex justify-content-between align-items-center w-100">
+                            <span>Orange Money</span>
+                            <img src="../../../../assets/img/orange-money.jpg" alt="" style="width: 40px;height:40px;">
+                        </span>
+                        
                     </label>
                 </div>
             </div>

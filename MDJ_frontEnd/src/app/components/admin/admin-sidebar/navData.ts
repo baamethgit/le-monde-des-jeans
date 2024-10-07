@@ -25,5 +25,11 @@ export const navbarData = [
       routeLink: 'avis',
       icon: 'fa fa-history',
       label: 'Témoignages'
+    },
+    {
+  
+      routeLink: 'zones-livraison',
+      icon: 'bi bi-geo-alt-fill',
+      label: 'Zones de Livraisons'
     },  
   ];
