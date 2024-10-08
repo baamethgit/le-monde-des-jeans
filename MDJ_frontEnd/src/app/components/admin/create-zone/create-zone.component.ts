@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './create-zone.component.scss'
 })
 export class CreateZoneComponent implements OnInit{
-  // zone : ZoneLivraison;
   commandeService = inject(CommandeService);
   alertMessage : string = '';
   zoneCreationForm! : FormGroup;
@@ -35,13 +34,14 @@ export class CreateZoneComponent implements OnInit{
         prix_livraison : this.zoneCreationForm.getRawValue().prix_livraison,
         info : this.zoneCreationForm.getRawValue().info
       } as ZoneLivraison;
-      this.creatZone(zone);
+      this.createZone(zone);
     }else{
       this.zoneCreationForm.markAllAsTouched();
     }
 
   }
-  creatZone(newZone : ZoneLivraison){
+
+  createZone(newZone : ZoneLivraison){
     this.commandeService.createZone(newZone).subscribe({
       next:(response)=>{
           this.alertMessage = "Une nouvelle Zone a été créée";

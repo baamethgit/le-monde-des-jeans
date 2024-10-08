@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import views,commande_views
 from rest_framework.routers import DefaultRouter
-from .views import getDeliveryZones,getDeliveryZoneByNum,CommandeListView,CreateZone
+from .views import getDeliveryZones,getDeliveryZoneByNum,CommandeListView,CreateZone,DeleteZoneView,UpdateZoneView
 from django.urls import path
  
 
@@ -14,7 +14,9 @@ urlpatterns = [
     path("", include(router.urls)),
     path('zones/', getDeliveryZones.as_view(), name="delivery-zones"),
     path('list-commandes/', CommandeListView.as_view(), name="list-commandes"),
-    path('zone/<int:numero>/', getDeliveryZoneByNum.as_view(), name="single-delivery-zone"),
+    path('zone/<int:id>/delete/', DeleteZoneView.as_view(), name="single-delivery-zone"),
+    path('zone/<int:id>/update/', UpdateZoneView.as_view(), name="single-delivery-zone"),
+    path('zone/<int:id>/', getDeliveryZoneByNum.as_view(), name="single-delivery-zone"),
     path('creer-zone/', CreateZone.as_view(), name="create-zone"),
     path('panier/', views.panier_detail, name='panier_detail'),
     path('panier/ajouter/', views.ajouter_produit, name='ajouter_produit'),

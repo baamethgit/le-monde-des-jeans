@@ -3,6 +3,7 @@ import { CommandeService } from '../../../services/commandes/commande.service';
 import { ZoneLivraison } from '../../../models/zone-livraison';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-update-zone',
@@ -15,36 +16,43 @@ export class UpdateZoneComponent implements OnInit{
 zone! : ZoneLivraison;
 commandeService = inject(CommandeService);
 alertMessage : string = '';
-zoneCreationForm! : FormGroup;
+zoneUpdateForm! : FormGroup;
 fb = inject(FormBuilder);
 
+constructor(private route: ActivatedRoute, private router : Router){}
+
 ngOnInit(): void {
-   this.zoneCreationForm = this.fb.group({
+   this.zoneUpdateForm = this.fb.group({
         numero: ['', [Validators.required]],
         nom: ['', [Validators.required]],
         prix_livraison: ['', [Validators.required]],
         info: ['', [Validators.maxLength(2500)]],
-    })
+    });
+    this.initializeForm();
 }
 
 onSubmit(){
-  if (this.zoneCreationForm.valid){
+  if (this.zoneUpdateForm.valid){
     const zone = {
-      numero : this.zoneCreationForm.getRawValue().numero,
-      nom : this.zoneCreationForm.getRawValue().nom,
-      prix_livraison : this.zoneCreationForm.getRawValue().prix_livraison,
-      info : this.zoneCreationForm.getRawValue().info
+      id : this.zone.id,
+      numero : this.zoneUpdateForm.getRawValue().numero,
+      nom : this.zoneUpdateForm.getRawValue().nom,
+      prix_livraison : this.zoneUpdateForm.getRawValue().prix_livraison,
+      info : this.zoneUpdateForm.getRawValue().info
     } as ZoneLivraison;
-    this.creatZone(zone);
+
+    this.updateZone(zone);
   }else{
-    this.zoneCreationForm.markAllAsTouched();
+    this.zoneUpdateForm.markAllAsTouched();
   }
 
 }
-creatZone(newZone : ZoneLivraison){
-  this.commandeService.createZone(newZone).subscribe({
+
+updateZone(newZone : ZoneLivraison){
+  this.commandeService.updateZone(newZone,newZone.id).subscribe({
     next:(response)=>{
-        this.alertMessage = "Une nouvelle Zone a été créée";
+        this.alertMessage = "La zone est mis à jour";
+        this.router.navigate(['mdj_admin/zones-livraison']);
     },
     error : (error) => {
         console.log(error.error);
@@ -52,7 +60,20 @@ creatZone(newZone : ZoneLivraison){
   })
 }
 
-resetForm(){
-  this.zoneCreationForm.reset();
-}
+  resetForm(){
+    this.zoneUpdateForm.reset();
+  }
+
+  initializeForm(){
+    const idZone=this.route.snapshot.params['id'];
+    this.commandeService.getDeliveryZoneByNumber(idZone).subscribe({
+      next:(response)=>{
+        this.zone = response;
+        this.zoneUpdateForm.patchValue(this.zone);
+    },
+    error : (error) => {
+        console.log(error.error);
+    },
+    })
+  }
 }

@@ -16,7 +16,7 @@
                     <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
                     <select (change)="onZoneChange($event)">
                         <ng-container *ngFor="let zone of zones">
-                            <option [value]="zone.numero">
+                            <option [value]="zone.id">
                                 Zone {{zone.numero}} : {{ zone.nom }}
                             </option>
                         </ng-container>

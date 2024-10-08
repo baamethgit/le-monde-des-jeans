@@ -28,6 +28,16 @@ export class CommandeService {
     return this.http.post<ZoneLivraison>(url,newZone, { withCredentials: true });
   }
 
+  updateZone(newZone : ZoneLivraison, idZone : number):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/zone/${idZone}/update/`;
+    return this.http.put<any>(url,newZone, { withCredentials: true });
+  }
+
+  deleteZone(idZone : number):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/zone/${idZone}/delete/`;
+    return this.http.delete<any>(url, { withCredentials: true });
+  }
+
   getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
         let params = new HttpParams()
           .set('page', page.toString())

@@ -18,6 +18,7 @@ export class ListeZonesComponent implements OnInit{
   commandeService = inject(CommandeService);
   open = false;
   action : 'add' | 'update' = 'add';
+  alertMessage = "";
   private modalService = inject(NgbModal);
   constructor(){}
   ngOnInit(): void {
@@ -34,27 +35,16 @@ export class ListeZonesComponent implements OnInit{
     }
   })
   }
-  // loadZone(n:number){
-  //   this.commandeService.getDeliveryZoneByNumber(n).subscribe({
-  //     next:(data)=>{
-  //       this.selectedZone = data;
-  //     },
-  //     error:(error)=>{
 
-  //     }
-  //   })
-  // }
-
-  openModal(content:TemplateRef<any>,action:'add' | 'update'){
-    this.open = true;
-    this.modalService.open(content);
-    this.action = action;
-  }
-  addZone(){
-    this.openModal('content' as any,'add');
-  }
-
-  UpdateZone(){
-    // this.openModal('update');
+  deleteZone(idZone : number){
+      this.commandeService.deleteZone(idZone).subscribe({
+        next:(value) =>{
+            this.alertMessage = 'La zone est supprimé';
+            this.loadZones();
+        },
+        error : (err) => {
+            
+        },
+      })
   }
 }

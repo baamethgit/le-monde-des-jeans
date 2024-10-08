@@ -66,7 +66,7 @@ export const routes: Routes = [
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
         {path:'zones-livraison', component: ListeZonesComponent, pathMatch:'full'},
-        {path:'zones/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
+        {path:'zone/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
         {path:'creer-zone', component: CreateZoneComponent , pathMatch:'full'},
     ]},
 ];

@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from accounts import models as accountModel
-from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView, UpdateAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
 from .models import ZoneLivraison,Commande
 from django.db.models import Q
@@ -27,13 +27,31 @@ class getDeliveryZones(ListAPIView):
 class getDeliveryZoneByNum(RetrieveAPIView):
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
-    lookup_field = 'numero'
+    lookup_field = 'id'
 
 class CreateZone(CreateAPIView):
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
     
-
+class DeleteZoneView(DestroyAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    lookup_field = 'id'  
+     
+# class UpdateZoneView(UpdateAPIView):
+#     queryset = ZoneLivraison.objects.all()
+#     serializer_class = ZoneSerializer
+#     lookup_field = 'id'  
+    
+class UpdateZoneView(APIView):
+    def put(self, request,id):
+        user = verifier_user(request)
+        zone = models.ZoneLivraison.objects.filter(pk = id).first()
+        serializer = ZoneSerializer(instance = zone, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
