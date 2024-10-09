@@ -87,6 +87,7 @@ class PanierProduit(models.Model):
     panier = models.ForeignKey('Panier', on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     date_ajout = models.DateTimeField(auto_now_add=True)
+    quantite = models.PositiveIntegerField(default=1)
 
     def est_expire(self):
         return timezone.now() > self.date_ajout + timedelta(minutes=10)
@@ -113,20 +114,23 @@ class Panier(models.Model):
     @property
     def quantitePanier(self):
         cartitems = self.produits.all()
-        return 12
+        return cartitems.length()
     
     def nettoyer_produits_expires(self):
         for panier_produit in self.panierproduit_set.all():
             if panier_produit.est_expire():
                 produit = panier_produit.produit
-                produit.reserve = False
+                # produit.reserve = False
+                produit.QuantiteStock += 1
                 produit.save()
                 panier_produit.delete()
 
-    def ajouter_produit(self, produit):
-        if not produit.reserve:
+    def ajouter_produit(self, produit : Produit):
+        # if not produit.reserve:
+        if produit.QuantiteStock:
             PanierProduit.objects.create(panier=self, produit=produit)
-            produit.reserve = True
+            # produit.reserve = True
+            produit.QuantiteStock -= 1
             produit.save()
             return True
         return False
@@ -236,15 +240,16 @@ class Commande(models.Model):
 
 class Paiement(models.Model):
     METHODE_PAIEMENT_CHOICES = (
-        ('OM', 'Orange Money'),
-        ('WV', 'Wave'),
+        ('ORANGE_MONEY', 'Orange Money'),
+        ('WAVE', 'Wave'),
         ('CC', 'Carte de crédit'),
     )
 
     commande = models.OneToOneField(Commande, on_delete=models.CASCADE)
     montant = models.DecimalField(max_digits=10, decimal_places=2)
-    methode_paiement = models.CharField(max_length=2, choices=METHODE_PAIEMENT_CHOICES)
+    methode_paiement = models.CharField(max_length=20, choices=METHODE_PAIEMENT_CHOICES)
     date_paiement = models.DateTimeField(auto_now_add=True)
+    id_transaction = models.CharField(max_length=50)
 
     def __str__(self):
         return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"

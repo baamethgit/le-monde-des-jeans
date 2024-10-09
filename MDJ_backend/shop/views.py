@@ -45,7 +45,6 @@ class DeleteZoneView(DestroyAPIView):
     
 class UpdateZoneView(APIView):
     def put(self, request,id):
-        user = verifier_user(request)
         zone = models.ZoneLivraison.objects.filter(pk = id).first()
         serializer = ZoneSerializer(instance = zone, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -235,7 +234,8 @@ def retirer_produit(request):
     produit = get_object_or_404(Produit, slug=produit_slug)
     panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
     
-    produit.reserve = False
+    # produit.reserve = False
+    produit.QuantiteStock += 1
     produit.save()
     panier_produit.delete()
     
@@ -262,7 +262,8 @@ def vider_panier(request):
     panier = Panier.objects.get(client=user)
     for panier_produit in PanierProduit.objects.filter(panier=panier):
         produit = panier_produit.produit
-        produit.reserve = False
+        # produit.reserve = False
+        produit.QuantiteStock += 1
         produit.save()
         panier_produit.delete()
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)

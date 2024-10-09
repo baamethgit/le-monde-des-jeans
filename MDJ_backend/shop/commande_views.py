@@ -24,16 +24,19 @@ def creer_commande(request):
         panier = Panier.objects.get(client=user)
         # je dw vérifier dabord s'il ya des produits pour ne pas créer un commande vide
         for panier_produit in panier.panierproduit_set.all():
-            panier_produit.produit.reserve = True
+            # panier_produit.produit.reserve = True
             panier_produit.produit.save()
             commande.produits.add(panier_produit.produit)
+        commande.save()
         panier.panierproduit_set.all().delete()  # Vider le panier
     
     elif request.data.get('produit_slug'):
         produit = get_object_or_404(Produit, slug=request.data['produit_slug'])
-        produit.reserve = True
+        # produit.reserve = True
+        produit.QuantiteStock -= 1
         produit.save()
         commande.produits.add(produit)
+        commande.save()
     
     else:
         return Response({"error": "Données invalides pour créer une commande"}, status=status.HTTP_400_BAD_REQUEST)
@@ -120,7 +123,7 @@ def changerStatutCommande(request,commande_id):
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    statut = request.data.get('nouveau_statut')
+    # statut = request.data.get('nouveau_statut')
     commande = get_object_or_404(Commande, id=commande_id, client=user)
     commande.delete()
     

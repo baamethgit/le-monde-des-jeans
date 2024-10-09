@@ -10,7 +10,21 @@
                         </span><span>{{commande?.client?.phone_number}}</span></p>
                 </div>
             </div>
-            <div class="col-10 mx-auto border p-3 rounded-2"  *ngIf="!commande?.recupere_magasin" >
+            <div class="col-10 mx-auto my-3 border p-2 rounded-2 delivery-options ">
+                <span class="text-center">Comment recevoir votre colis?</span>
+                <label class="option">
+                  <input type="radio" name="deliveryOption" [(ngModel)]="selectedOption" value="livraison">
+                  <span class="radio-button"></span>
+                  <span class="label-text">Livraison</span>
+                </label>
+                
+                <label class="option">
+                  <input type="radio" name="deliveryOption" [(ngModel)]="selectedOption" value="recuperation">
+                  <span class="radio-button"></span>
+                  <span class="label-text">Récupération</span>
+                </label>
+              </div>
+            <div class="col-10 mx-auto border p-3 rounded-2"  *ngIf="selectedOption === 'livraison'" >
                 <h5 class="text-center">Adresse de Livraison</h5>
                 <div *ngIf="zones.length" class="delivery-zone">
                     <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
@@ -23,19 +37,20 @@
                     </select>
                 </div>
                 <div class="delivery-cost">
-                    <p><span class="fw-bold text-dark">Coût Livraison : </span><span>{{ selectedZone?.prix_livraison }} <strong>FCFA</strong></span></p>
+                    <p><span class="fw-bold text-dark">Coût Livraison : </span>
+                    <span >{{ selectedZone?.prix_livraison }} <strong>FCFA</strong></span></p>
                 </div>
 
                 <div class="delivery-method">
                     <p>{{selectedZone?.info || 'infos sur cette zone'}}</p>
                 </div>
             </div>
-            <div *ngIf="commande?.recupere_magasin" class="col-10 mx-auto border p-3 rounded-2">
+            <div *ngIf="selectedOption != 'livraison'"  class="col-10 mx-auto border p-3 rounded-2">
                 <p class="text-center ">
                     Vous avez choisi de récupérer au magasin.<br>
                     Notre localisation :</p>
                 <div class="col-11 mx-auto map border border-3 p-0" style="height:min-content">
-                    <iframe
+                    <iframe title="Notre localisation"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30867.77002466047!2d-17.534116831674332!3d14.742459791953513!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xec112dd6f2bfcb5%3A0xe5df9d85ac34dfd2!2sNgor%2C%20Dakar!5e0!3m2!1sfr!2ssn!4v1726004310944!5m2!1sfr!2ssn"
                         width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -81,7 +96,8 @@
                 </div>
                 <p class="d-flex justify-content-between my-2">
                     <span>Livraison</span>
-                    <span>{{selectedZone?.prix_livraison || 0}} frcs</span>
+                    <span *ngIf="selectedOption != 'livraison'" >0 frcs</span>
+                    <span *ngIf="selectedOption == 'livraison'" >{{selectedZone?.prix_livraison || 0}} frcs</span>
                 </p>
                 <p class="d-flex justify-content-between fw-bold border-top my-2">
                     <span>TOTAL</span>
@@ -95,10 +111,24 @@
         </div>
     </div>
     <p class="mx-auto d-flex align-items-center justify-content-center text-center">
-        <button *ngIf="commande" (click)="payerCommande(commande.id)" class="my-1 w-25 bg-dark rounded-3 border-0 p-2" style="color:white">PAYER</button>
+        <button *ngIf="commande" (click)="openModal(content)" class="my-0 my-md-1 w-25 bg-dark rounded-3 border-0 p-2" style="color:white">PAYER</button>
     </p>
 
 </section>
 
 
 
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<form>
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae voluptatem, incidunt atque ea voluptates aut vitae beatae excepturi eius maxime eos nobis corporis eaque earum qui veritatis et obcaecati quibusdam?
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button *ngIf="commande" type="button" class="btn btn-outline-secondary" (click)="payerCommande(commande.id)">Save</button>
+	</div>
+</ng-template>

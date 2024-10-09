@@ -45,7 +45,7 @@ class PanierProduitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.PanierProduit
-        fields = ['id', 'produit', 'date_ajout']
+        fields = ['id', 'produit', 'date_ajout','quantite']
 
 class PanierSerializer(ModelSerializer):
     client = UserSerializer()
