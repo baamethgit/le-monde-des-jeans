@@ -30,7 +30,7 @@
                     <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
                     <select (change)="onZoneChange($event)">
                         <ng-container *ngFor="let zone of zones">
-                            <option [value]="zone.id">
+                            <option [value]="zone.id" [selected]="selectedZone?.id">
                                 Zone {{zone.numero}} : {{ zone.nom }}
                             </option>
                         </ng-container>
@@ -101,7 +101,7 @@
                 </p>
                 <p class="d-flex justify-content-between fw-bold border-top my-2">
                     <span>TOTAL</span>
-                    <span>{{totalCommande}} frcs</span>
+                    <span>{{commande?.montant}} FCFA</span>
                 </p>
             </div>
             <p *ngIf="commande" class="py-3 d-flex justify-content-between flex-wrap">

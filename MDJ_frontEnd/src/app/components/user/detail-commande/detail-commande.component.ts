@@ -36,6 +36,7 @@ export class DetailCommandeComponent implements OnInit{
   paiement! : Paiement;
   selectedOption: string = 'livraison';
 
+
   protected modalService = inject(NgbModal);
 
   constructor(private readonly router : Router){}
@@ -62,7 +63,7 @@ export class DetailCommandeComponent implements OnInit{
 
       newData['recupere_magasin'] = this.selectedOption === 'recuperation';
       if (this.selectedOption === 'livraison') { 
-          newData['zone_livraison'] = this.selectedZone;
+          newData['zone_livraison'] = this.selectedZone?.id;
       }
     
         this.commandeService.updateCommande(id_commande,newData).subscribe(
@@ -82,6 +83,9 @@ export class DetailCommandeComponent implements OnInit{
     this.commandeService.getCurrentCommande().subscribe({
       next:(data)=>{
         this.commande = data;
+        this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
+        this.selectedZone = this.commande?.recupere_magasin ? undefined : this.commande?.zone_livraison;
+        console.log(this.selectedZone)
       },
       error:(error)=>{
         this.message = ''
@@ -90,14 +94,23 @@ export class DetailCommandeComponent implements OnInit{
   }
 
 
-  get totalCommande(){
-    return this.prixLivraison + 0;
-  }
   
   onZoneChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedZoneNumber = parseInt(selectElement.value, 10);
     this.loadZone(selectedZoneNumber);
+    // @ts-ignore
+    // this.commandeService.updateCommande(this.commande?.id,{'recupere_magasin':false,'zone_livraison':this.selectedZone?.id}).subscribe(
+    //   {
+    //     next(value) {
+    //         console.log('update valide',value);
+    //     },
+    //     error(err) {
+    //         console.log("erreur lors de la maj")
+    //     },
+    //   }
+    // )
+    // this.loadData();
   }
 
   loadZone(n:number){

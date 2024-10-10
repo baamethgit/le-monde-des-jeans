@@ -193,9 +193,10 @@ class Commande(models.Model):
         return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'
     
     def liberer_produits_apres_delais(self):
-        if self.est_expire():
+        if self.est_expire() and self.id:
             for produit in self.produits.all():
-                produit.reserve = False
+                # produit.reserve = False
+                produit.QuantiteStock -= 1
                 produit.save()
             self.delete()
 
@@ -203,7 +204,7 @@ class Commande(models.Model):
         return f"Commande {self.ref_code} par {self.client.nom_complet}"
     
     @property
-    def get_total(self):
+    def montant(self):
         total = sum(prod.prix for prod in self.produits.all())
         if self.zone_livraison and not self.recupere_magasin:
             total += self.zone_livraison.prix_livraison

@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Commande, Produit, Panier
-from .serializers import CommandeSerializer, ProductSerializer
+from .serializers import CommandeSerializer, CommandeUpdateSerializer
 from accounts.utils import verifier_user
 
 
@@ -51,6 +51,18 @@ def detail_commande(request, commande_id):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande, id=commande_id, client=user)
+    commande.liberer_produits_apres_delais()
+    serializer = CommandeSerializer(commande)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def detail_commande_by_refcode(request, ref_code):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    commande = get_object_or_404(Commande, ref_code=ref_code, client=user)
     commande.liberer_produits_apres_delais()
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
@@ -138,7 +150,7 @@ class CommandeUpdateView(APIView):
             return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
         
         commande = get_object_or_404(Commande, id=id_commande, client=user)
-        serializer = CommandeSerializer(commande, data=request.data, partial=True)
+        serializer = CommandeUpdateSerializer(commande, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

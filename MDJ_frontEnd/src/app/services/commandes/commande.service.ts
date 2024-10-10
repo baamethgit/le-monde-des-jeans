@@ -71,6 +71,11 @@ export class CommandeService {
     return this.http.get(`${this.baseUrl}apiProduit/detail-commande/${commandeId}/`,{withCredentials: true  });
   }
 
+  getCommandeByRefCode(commandeRefCode: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/detail-commande-ref/${commandeRefCode}/`,{withCredentials: true  });
+  }
+
+
   getCurrentCommande(): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/commandes-en-attente/`,{withCredentials: true  });
   }

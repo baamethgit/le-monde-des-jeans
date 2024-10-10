@@ -61,7 +61,7 @@ export const routes: Routes = [
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
-        {path: 'commande/:ref', component: AdminDetailCommandeComponent},
+        {path: 'commande/:ref-code', component: AdminDetailCommandeComponent},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},

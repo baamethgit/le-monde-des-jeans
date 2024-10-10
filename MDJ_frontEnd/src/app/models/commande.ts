@@ -13,5 +13,5 @@ export interface Commande {
     statut : StatutCommande;
     zone_livraison? : ZoneLivraison;
     recupere_magasin : boolean;
-    total : number
+    montant : number
 }

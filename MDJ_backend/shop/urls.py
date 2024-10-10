@@ -25,6 +25,7 @@ urlpatterns = [
     path('panier/vider/', views.vider_panier, name='vider_panier'),
     path('creer-commande/', commande_views.creer_commande, name='creer_commande'),
     path('detail-commande/<int:commande_id>/', commande_views.detail_commande, name='detail_commande'),
+    path('detail-commande-ref/<str:ref_code>/', commande_views.detail_commande_by_refcode, name='detail_commande-by-refcode'),
     path('commandes-client/', commande_views.liste_commandes, name='liste_commandes'),
     path('commandes-en-attente/', commande_views.detail_commande_courante, name='commande_courante'),
     path('commandes/<int:commande_id>/valider/', commande_views.valider_commande, name='valider_commande'),
