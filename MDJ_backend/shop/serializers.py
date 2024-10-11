@@ -40,6 +40,11 @@ class ZoneSerializer(ModelSerializer):
         model = ZoneLivraison
         fields = "__all__"
 
+class PaiementSerializer(ModelSerializer):
+    class Meta:
+        model = models.Paiement
+        fields = "__all__"
+
 class PanierProduitSerializer(serializers.ModelSerializer):
     produit = ProductSerializer(read_only=True) 
 

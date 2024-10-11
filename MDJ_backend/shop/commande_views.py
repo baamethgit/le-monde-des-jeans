@@ -3,10 +3,20 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Commande, Produit, Panier
-from .serializers import CommandeSerializer, CommandeUpdateSerializer
+from .models import Commande, Produit, Panier,Paiement
+from .serializers import CommandeSerializer, CommandeUpdateSerializer, PaiementSerializer
 from accounts.utils import verifier_user
 
+
+
+@api_view(['POST'])
+def creer_paiement(request):
+    user = verifier_user(request)
+    if not user:
+        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+    paiement = Paiement.objects.create()
+    serializer = PaiementSerializer(paiement)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def creer_commande(request):
