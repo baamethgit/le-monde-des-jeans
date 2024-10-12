@@ -13,11 +13,7 @@ class Categorie(models.Model):
     description = models.TextField(blank=True, max_length=1000)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='images_categories/')
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = slugify(self.nom)
-    #     super().save(*args, **kwargs)
-    # image = models.ImageField(upload_to='images_categories/')
+    
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.nom)
@@ -62,6 +58,7 @@ class Produit(models.Model):
     QuantiteStock = models.PositiveBigIntegerField(default=1, null=False, blank=False)
     reserve = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
+    isDeletable=models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:

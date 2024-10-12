@@ -45,6 +45,25 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(produit)
         return Response(serializer.data)
     
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)  # Toujours partiel
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if 'image' in request.FILES:
+            # Gérer les mises à jour d'images comme avant
+            instance.images.all().delete()
+            images = request.FILES.getlist('image')
+            for image in images:
+                models.ImageProduit.objects.create(produit=instance, image=image)
+
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+    
     def create(self, request, *args, **kwargs):
         produit_data = {
             'nom': request.data.get('nom'),
