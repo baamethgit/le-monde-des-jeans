@@ -233,7 +233,7 @@ class Commande(models.Model):
     def annuler(self):
         if self.statut != 'LIVREE':
             for produit in self.produits.all():
-                produit.reserve = False
+                produit.QuantiteStock += 1
                 produit.save()
             self.statut = 'ANNULEE'
             self.save()

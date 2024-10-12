@@ -85,10 +85,10 @@ export class DetailCommandeComponent implements OnInit{
         this.commande = data;
         this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
         this.selectedZone = this.commande?.recupere_magasin ? undefined : this.commande?.zone_livraison;
-        console.log(this.selectedZone)
       },
       error:(error)=>{
-        this.message = ''
+        this.message = '';
+        this.router.navigate(['/panier']);
       }
     })
   }
