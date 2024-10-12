@@ -99,10 +99,20 @@ $blue_color: #377DFF;
   .product_item {
     a {
       .product_item_img {
-        .responsive-product-image {
+        .image-container {
+          position: relative;
           width: 100%;
-          height: auto;
-          object-fit: cover;
+          padding-top: 125%; // This creates a 4:5 aspect ratio (80% width : 100% height)
+          overflow: hidden;
+
+          .responsive-product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
         }
       }
 

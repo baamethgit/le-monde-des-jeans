@@ -19,4 +19,15 @@ export class CategorieService {
     return this.http.get<categorie[]>(`${this.apiUrl}`)
   }
 
+  createCategory(data:FormData):Observable<categorie>{
+    return this.http.post<categorie>(this.apiUrl,data)
+  }
+
+  deleteCategory(id:number):Observable<any>{
+    return this.http.delete<categorie>(`${this.apiUrl}${id}`)
+  }
+  updateCategory(id:number, data:FormData):Observable<categorie>{
+    return this.http.put<categorie>(`${this.apiUrl}${id}/`, data)
+  }
+
 }

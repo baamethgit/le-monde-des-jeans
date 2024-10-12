@@ -1,7 +1,12 @@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  <i class="bi bi-plus-circle mx-2"></i>Ajouter un produit
+<div class="d-flex justify-content-between">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    <i class="bi bi-plus-circle mx-2"></i>Ajouter un produit
   </button>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterCategory">
+    <i class="bi bi-plus-circle mx-2"></i>Ajouter une Categorie
+  </button>
+</div>
   
   <!-- Modal -->
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -17,7 +22,7 @@
           <div class="center">
             <form action="#" [formGroup]="AddProductForm" (ngSubmit)="createProduct()">
               <div formArrayName="images">
-                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)" 
+                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedProd($event)" 
                  [accept]="acceptedFilesType">
                   <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                     <div class="text-center">
@@ -30,7 +35,7 @@
                   <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
                     <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
                       <img class="preview_image" [src]="url" alt="Preview">
-                      <button type="button" class="delete_preview" (click)="removeImage(i)">Supprimer</button>
+                      <button type="button" class="delete_preview" (click)="removeImageProd(i)">Supprimer</button>
                     </div>
                   </div>
                 </div>
@@ -135,7 +140,69 @@
       </div>
     </div>
   </div>
-<div class="table-container">
+  <div class="modal fade" id="exampleModalCenterCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Ajout d'une categorie</h5>
+          
+        </div>
+        <div class="modal-body">
+          <div class="center">
+            <form action="#" [formGroup]="AddCategoryForm" (ngSubmit)="createCategory()">
+              <div formArrayName="images">
+                <ngx-file-drop [multiple]="false" dropZoneLabel="Drop files here" (onFileDrop)="droppedCat($event)" 
+                 [accept]="acceptedFilesType">
+                  <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                    <div class="text-center">
+                      <div>Vous pouvez deposer l'image de la categorie ici (obligatoire) :</div>
+                      <button type="button" (click)="openFileSelector()" class="drop_file_button btn btn-primary">Parcourir vos fichiers</button>
+                    </div>
+                  </ng-template>
+                </ngx-file-drop>
+                <div *ngIf="files.length > 0">
+                  <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                    <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                      <img class="preview_image" [src]="url" alt="Preview">
+                      <button type="button" class="delete_preview" (click)="removeImageCat(i)">Supprimer</button>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="AddCategoryForm.get('images')?.hasError('required') && AddCategoryForm.get('images')?.touched" class="text-danger">
+                  Au moins une image est requise.
+                </div>
+              </div>
+              <div class="d-flex flex-column justify-content-between">
+                <div class="d-flex flex-column">
+                  <div class="coolinput">
+                    <label for="nom_categorie" class="text">Nom categorie : </label>
+                    <input formControlName="nom_categorie" type="text" class="input" name="input">
+                  </div>
+                  <ng-container
+                            *ngIf="AddCategoryForm.controls['nom_categorie'].invalid && (AddCategoryForm.controls['nom_categorie'].dirty || AddCategoryForm.controls['nom_categorie'].touched)">
+                            <small class="text-danger" *ngIf="AddCategoryForm.controls['nom_categorie'].hasError('required')">Ce champ est
+                                obligatoire.</small>
+                                <small class="text-danger" *ngIf="AddCategoryForm.controls['nom_categorie'].hasError('pattern')">Seul les lettres sont autorisees</small>
+                  </ng-container>
+                </div>
+          
+                <div class="d-flex flex-column">
+                    <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
+                    <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn rounded-1 my-2 btn-primary">Valider</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<div class="table-container my-4">
     <h2>Liste des Produits</h2>
     <table class="table table-bordered orders-table">
         <thead class="position-sticky">
@@ -163,11 +230,145 @@
                 <td class="text-center">{{item.QuantiteStock}}</td>
                 <td class="text-center">{{item.taille}}</td>
                 <td class="actions-cell text-center">
-                    <button class="action-btn view" style="background-color: rgb(134, 224, 99); border: none;" >
+                    <button class="action-btn view" [routerLink]="['/produits', item.slug]" style="background-color: rgb(134, 224, 99); border: none;" >
                         <i class="fa fa-eye" aria-hidden="true"></i>
                     </button>
-                    <button class="action-btn edit mx-1" style="background-color: rgb(32, 149, 228); border: none;" ><i class="fas fa-edit    "></i></button>
-                    <button class="delete" style="background-color: red; border: none;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button class="action-btn edit mx-1" (click)="openUpdateProductModal(contentUpdateProd, item)" style="background-color: rgb(32, 149, 228); border: none;" ><i class="fas fa-edit    "></i></button>
+                    <button (click)="openSm(content)" type="button" style="background-color: red; border: none;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <ng-template #content let-modal>
+                      <div class="modal-header">
+                        <h4 class="modal-title">Confirmer Suppression</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Voulez vous supprimer le produit ?&hellip;</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" (click)="deleteProd(item.id);modal.close('Close click')" class="btn rounded-1 my-2 btn-danger">Supprimer</button>
+                        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Fermer</button>
+                      </div>
+                    </ng-template>
+                    <ng-template #contentUpdateProd let-modal>
+                      <div class="modal-header">
+                        <h4 class="modal-title">Mise a jour du produit</h4>
+                      </div>
+                      <div class="modal-body">
+                        <form action="#" [formGroup]="UpdateProductForm" (ngSubmit)="UpdateProduct(item.id)">
+                          <div formArrayName="images">
+                            <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedProdUpdate($event)" 
+                             [accept]="acceptedFilesType">
+                              <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                <div class="text-center">
+                                  <div>Déposez vos images ici (obligatoire) :</div>
+                                  <button type="button" (click)="openFileSelector()" class="drop_file_button btn btn-primary">Parcourir vos fichiers</button>
+                                </div>
+                              </ng-template>
+                            </ngx-file-drop>
+                            <div *ngIf="files.length > 0">
+                              <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                                <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                                  <img class="preview_image" [src]="url" alt="Preview">
+                                  <button type="button" class="delete_preview" (click)="removeImageProdUpdate(i)">Supprimer</button>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="UpdateProductForm.get('images')?.hasError('required') && UpdateProductForm.get('images')?.touched" class="text-danger">
+                              Au moins une image est requise.
+                            </div>
+                          </div>
+                          <div class="d-flex justify-content-between">
+                            <div class="coolinput">
+                              <label for="nom_produit" class="text">Nom produit : </label>
+                              <input formControlName="nom_produit" type="text" class="input" name="input" placeholder="{{item.nom}}">
+                            </div>
+                      
+                            <div class="d-flex flex-column">
+                              <div class="coolinput">
+                                <label for="prix_produit"  class="text">Prix : </label>
+                                <input formControlName="prix_produit" type="text" class="input" name="input" placeholder="{{item.prix}}">
+                              </div>
+                              <ng-container
+                                      *ngIf="UpdateProductForm.controls['prix_produit'].invalid && (UpdateProductForm.controls['prix_produit'].dirty || UpdateProductForm.controls['prix_produit'].touched)">
+                                      <small class="text-danger" *ngIf="UpdateProductForm.controls['prix_produit'].hasError('required')">Ce champ est
+                                          obligatoire.</small>
+                                          <small class="text-danger" *ngIf="UpdateProductForm.controls['prix_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
+                              </ng-container>
+                            </div>
+                          </div>
+                          
+                          <div class="d-flex justify-content-between my-2">
+                            <div class="d-flex flex-column">
+                              <select class="form-select" formControlName="categorySelect">
+                                <option value="" disabled selected>Selectionnez une categorie</option>
+                                @for (item of category; track $index) {
+                                  <option value={{item.id}} >{{item.nom}}</option>
+                                }
+                              </select>
+                              <ng-container
+                                        *ngIf="UpdateProductForm.controls['categorySelect'].invalid && (UpdateProductForm.controls['categorySelect'].dirty || UpdateProductForm.controls['categorySelect'].touched)">
+                                        <small class="text-danger" *ngIf="UpdateProductForm.controls['categorySelect'].hasError('required')">Ce champ est
+                                            obligatoire.</small>
+                              </ng-container>
+                            </div>
+                      
+                      
+                            <select class="form-select" formControlName="taille">
+                              <option value="" disabled selected>Taille</option>
+                              @for (item of tailles; track $index) {
+                                <option value="{{item.value}}">{{item.label}}</option>
+                              }
+                            </select>
+                          </div>
+                          
+                          
+                    
+                          <div class="d-flex justify-content-between">
+                            <select class="form-select" formControlName="couleur" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                              <option value="" disabled selected>Couleur</option>
+                              @for (item of couleur; track $index) {
+                                <option value="{{item.value}}">{{item.label}}</option>
+                              }
+                            </select>
+                            
+                            <select class="form-select"  formControlName="composition">
+                              <option value="" disabled selected>Composition</option>
+                              @for (item of compo; track $index) {
+                                <option value="{{item.value}}">{{item.label}}</option>
+                              }
+                            </select>
+                          </div>
+            
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div class="coolinput">
+                              <label for="Stock"  class="text">Stock : </label>
+                              <input formControlName="stock_produit" type="text" class="input" name="input" placeholder="1">
+                            </div>
+                            <ng-container
+                                    *ngIf="UpdateProductForm.controls['stock_produit'].invalid && (AddProductForm.controls['stock_produit'].dirty || UpdateProductForm.controls['stock_produit'].touched)">
+                                        <small class="text-danger" *ngIf="UpdateProductForm.controls['stock_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
+                            </ng-container>
+            
+                            
+                            <div class="d-flex flex-column align-items-center">
+                              <span>Special</span>
+                              <label class="checkbox-container">
+                                <input formControlName="special_checkbox" class="custom-checkbox" type="checkbox">
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                          </div>
+            
+                          <div>
+                            <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
+                            <textarea formArrayName="desc_produit" class="form-control" id="exampleFormControlTextarea1" rows="3">{{item.Description}}</textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="submit" (click)="modal.close('Close click')" class="btn rounded-1 my-2 btn-danger">Mettre a jour</button>
+                            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Fermer</button>
+                          </div>
+                        </form>
+                      </div>
+                      
+                    </ng-template>
                   </td>
               </tr>
           }
@@ -175,13 +376,112 @@
         </tbody>
       </table>
       <div *ngIf="produits.length" class="d-flex justify-content-between p-2">
-		<ngb-pagination (pageChange)="loadProducts()" [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
-		</ngb-pagination>
+        <ngb-pagination (pageChange)="loadProducts()" [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+        </ngb-pagination>
         <p>{{collectionSize}} produits au total</p>
         <select class="form-select" style="width: max-content;" [(ngModel)]="pageSize" (ngModelChange)="loadProducts();">
             <option selected [ngValue]="10">10 produits par page</option>
             <option [ngValue]="50">50 produits par page</option>
             <option [ngValue]="collectionSize">Tous les produits</option>
-          </select>
-	</div>
+        </select>
+	    </div>
 </div>
+<div class="Category_table my-4">
+  <h2>Liste des Categories</h2>
+    <table class="table table-bordered orders-table">
+        <thead class="position-sticky">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Categorie</th>
+            <th class="actions-header text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          @for (item of category; track $index) {
+            <tr>
+                <td>{{item.id}}</td>
+                <td>
+                    <img src="{{item.image}}" width="30" alt="">
+                    {{item.nom}}
+                </td>
+                <td class="actions-cell text-center">
+                    <button (click)="openWindowCustomClass(updateCategory)" class="action-btn edit mx-1" style="background-color: rgb(32, 149, 228); border: none;" ><i class="fas fa-edit    "></i></button>
+                    <button (click)="openSm(content)" type="button" style="background-color: red; border: none;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <ng-template #content let-modal>
+                      <div class="modal-header">
+                        <h4 class="modal-title">Confirmer Suppression</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Voulez vous supprimer la categorie ? Tous les produits de cette categorie seront egalement supprimes&hellip;</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" (click)="deleteCat(item.id);modal.close('Close click')" class="btn rounded-1 my-2 btn-danger">Supprimer</button>
+                        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Fermer</button>
+                      </div>
+                    </ng-template>
+                    <ng-template #updateCategory let-modal>
+                      <div class="modal-header">
+                        <h4 class="modal-title">Mettre a jour la categorie</h4>
+                      </div>
+                      <div class="modal-body">
+                        <div class="center">
+                          <form action="#" [formGroup]="UpdateCategoryForm" (ngSubmit)="UpdateCat(item.id)">
+                            <div formArrayName="images">
+                              <ngx-file-drop [multiple]="false" dropZoneLabel="Drop files here" (onFileDrop)="droppedCatUpdate($event)" 
+                               [accept]="acceptedFilesType">
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                  <div class="text-center">
+                                    <div>Vous pouvez deposer l'image de la categorie ici (obligatoire) :</div>
+                                    <button type="button" (click)="openFileSelector()" class="drop_file_button btn btn-primary">Parcourir vos fichiers</button>
+                                  </div>
+                                </ng-template>
+                              </ngx-file-drop>
+                              <div *ngIf="files.length > 0">
+                                <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                                  <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                                    <img class="preview_image" [src]="url" alt="Preview">
+                                    <button type="button" class="delete_preview" (click)="removeImageCat(i)">Supprimer</button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div *ngIf="UpdateCategoryForm.get('images')?.hasError('required') && UpdateCategoryForm.get('images')?.touched" class="text-danger">
+                                Au moins une image est requise.
+                              </div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-between">
+                              <div class="d-flex flex-column">
+                                <div class="coolinput">
+                                  <label for="nom_categorie" class="text">Nom categorie : </label>
+                                  <input formControlName="nom_categorie" type="text" class="input" name="input" placeholder="{{item.nom}}">
+                                </div>
+                                <ng-container
+                                          *ngIf="UpdateCategoryForm.controls['nom_categorie'].invalid && (UpdateCategoryForm.controls['nom_categorie'].dirty || UpdateCategoryForm.controls['nom_categorie'].touched)">
+                                          <small class="text-danger" *ngIf="UpdateCategoryForm.controls['nom_categorie'].hasError('required')">Ce champ est
+                                              obligatoire.</small>
+                                              <small class="text-danger" *ngIf="UpdateCategoryForm.controls['nom_categorie'].hasError('pattern')">Seul les lettres sont autorises</small>
+                                </ng-container>
+                              </div>
+                        
+                              <div class="d-flex flex-column">
+                                  <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
+                                  <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3" >{{item.description}}</textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="submit"  class="rounded-1 my-2 btn btn-success">Update</button>
+                              <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Fermer</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                      
+                    </ng-template>
+                  </td>
+              </tr>
+          }
+          
+        </tbody>
+      </table>
+</div>
+

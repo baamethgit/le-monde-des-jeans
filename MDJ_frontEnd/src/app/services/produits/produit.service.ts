@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Produit } from '../../models/produit';
 import { User } from '../../models/user';
-import { url } from 'inspector';
-import { categorie } from '../../models/categorie';
-import { ProduitImage } from '../../models/image-produit';
 
 
 @Injectable({
@@ -48,5 +45,13 @@ export class ProduitService {
 
   CreateProduct(formData: FormData): Observable<any> {
     return this.http.post<Produit>(this.apiUrl, formData);
+  }
+
+  deleteProduct(id:number):Observable<any>{
+    return this.http.delete<Produit>(`${this.apiUrl}${id}`)
+  }
+
+  updateProduct(id:number, data:FormData):Observable<Produit>{
+    return this.http.put<Produit>(`${this.apiUrl}${id}/`, data)
   }
 }
