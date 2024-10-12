@@ -33,29 +33,27 @@ import { CreateZoneComponent } from './components/admin/create-zone/create-zone.
 
 export const routes: Routes = [
     {path: '', component: HomeComponent,
-        resolve: {
-            produits: () => inject(ProduitService).getProducts()
-          },
-          canActivate: [userGuard]},
-
+          canActivate: [userGuard]}
+        ,
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
-    {path: 'commande-validee', component:CommandeValideeComponent},
-    {path: 'profile', component: ProfilComponent},
-    {path: 'profile/edit', component: ProfilUpdateComponent},
-    {path: 'detail-commande', component: DetailCommandeComponent},
-    {path: 'mes-commandes', component: MesCommandesComponent},
+    {path: 'commande-validee', component:CommandeValideeComponent,
+        canActivate: [userGuard]},
+    {path: 'profile', component: ProfilComponent,
+        canActivate: [userGuard]},
+    {path: 'profile/edit', component: ProfilUpdateComponent,
+        canActivate: [userGuard]},
+    {path: 'detail-commande', component: DetailCommandeComponent,
+        canActivate: [userGuard]},
+    {path: 'mes-commandes', component: MesCommandesComponent,
+        canActivate: [userGuard]},
     {path:'produits', component: AllProductsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
-    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full',
-        // resolve : {
-        //     product_selected : detailProduitResolver
-        // }
-    },
+    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'contacts', component:ContactsComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[

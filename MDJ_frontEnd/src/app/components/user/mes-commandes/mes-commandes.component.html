@@ -12,32 +12,32 @@
       </div>
       
       <div class="tab-content" *ngIf="activeTab === 'pending'">
-        <div class="order-card" *ngFor="let order of pendingOrders">
+        <div class="order-card" *ngFor="let order of mesCommandes">
           <div class="order-header">
-            <h2>Commande {{order.id}}</h2>
-            <span class="status-badge" [ngClass]="getStatusClass(order.status)">
-              {{getStatusLabel(order.status)}}
-            </span>
-          </div>
-          <div class="order-date">Commandé le {{order.date}}</div>
-          <div class="order-details">
-            <div class="items">
-              <strong>Articles:</strong>
-              <ul>
-                <li *ngFor="let item of order.items">{{item}}</li>
-              </ul>
+              <p class="fs-4">Commande N° <span class="fw-bold fs-3">{{order.ref_code}}</span></p>
+              <span class="status-badge status-{{ order.statut.toString() }}">
+                {{order.statut}}
+              </span>
             </div>
-            <div class="delivery-info">
-              <i class="bi bi-truck"></i> {{order.deliveryAddress}}
+            <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
+            <div class="order-details">
+              <div class="items">
+                <strong>Articles:</strong>
+                <ul>
+                  <li *ngFor="let item of order.produits">{{item.nom}}</li>
+                </ul>
+              </div>
+              <div class="delivery-info">
+                  <i class="bi bi-truck"></i> Zone {{order.zone_livraison?.numero}} : {{order.zone_livraison?.nom}}
+              </div>
+              <div class="delivery-time">
+                  <i class="bi bi-clock"></i> Livrée le {{order.date_livraison | date : 'dd MMMM YYYY'}}
+              </div>
+              <div class="order-total">
+                Total: {{order.montant}} FCFA
+              </div>
             </div>
-            <div class="delivery-time">
-              <i class="bi bi-clock"></i> Livraison via DDK 218
-            </div>
-            <div class="order-total">
-              Total: {{order.total}} FCFA
-            </div>
-          </div>
-        </div>
+      </div>
         <p *ngIf="pendingOrders.length === 0" class="no-orders">
           Aucune commande en cours
         </p>
@@ -71,15 +71,14 @@
               </div>
         </div> -->
         
-        <div class="order-card" *ngFor="let order of mesCommandes">
+        <div class="order-card" *ngFor="let order of mesCommandesLivrees">
             <div class="order-header">
-                <h2>Commande {{order.id}}</h2>
-                <span class="status-badge" [ngClass]="getStatusClass('en_cours')">
-                  <!-- {{getStatusLabel(order.statut.toString())}} -->
-                   En Attente
+                <p class="fs-4">Commande N° <span class="fw-bold fs-3">{{order.ref_code}}</span></p>
+                <span class="status-badge status-{{ order.statut.toString() }}">
+                  {{order.statut}}
                 </span>
               </div>
-              <div class="order-date">Commandé le {{order.date_commande}}</div>
+              <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
               <div class="order-details">
                 <div class="items">
                   <strong>Articles:</strong>
@@ -88,10 +87,10 @@
                   </ul>
                 </div>
                 <div class="delivery-info">
-                    <i class="bi bi-truck"></i> {{order.zone_livraison}}
+                    <i class="bi bi-truck"></i> Zone {{order.zone_livraison?.numero}} : {{order.zone_livraison?.nom}}
                 </div>
                 <div class="delivery-time">
-                    <i class="bi bi-clock"></i> Livrée le {{order.date_livraison}}
+                    <i class="bi bi-clock"></i> Livrée le {{order.date_livraison | date : 'dd MMMM YYYY'}}
                 </div>
                 <div class="order-total">
                   Total: {{order.montant}} FCFA

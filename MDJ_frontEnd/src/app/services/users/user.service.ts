@@ -122,15 +122,14 @@ export class UserService {
   }
 
 
-  getUserCart(userPhone:string):Observable<Panier>{
-    const url=`${this.baseUrl}API/paniers/${userPhone}`
-    console.log('user id: ', userPhone)
-    return this.http.get<Panier>(url)
-  }
+  // getUserCart(userPhone:string):Observable<Panier>{
+  //   const url=`${this.baseUrl}API/paniers/${userPhone}`
+  //   return this.http.get<Panier>(url,{ withCredentials: true })
+  // }
 
-  delProductFromCart(id_product_to_delete: number):Observable<any>{
-    const url=`${this.baseUrl}API/panier-produits/${id_product_to_delete}`
-    return this.http.delete<any>(url)
-  }
+  // delProductFromCart(id_product_to_delete: number):Observable<any>{
+  //   const url=`${this.baseUrl}API/panier-produits/${id_product_to_delete}`
+  //   return this.http.delete<any>(url,{ withCredentials: true })
+  // }
 
 }

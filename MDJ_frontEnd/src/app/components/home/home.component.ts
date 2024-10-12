@@ -19,7 +19,6 @@ import { UserService } from '../../services/users/user.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  produits = input<Produit[]>
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
   avis_list:Avis[]=[];

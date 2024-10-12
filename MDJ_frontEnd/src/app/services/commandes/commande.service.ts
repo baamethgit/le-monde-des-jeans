@@ -3,6 +3,7 @@ import { ZoneLivraison } from '../../models/zone-livraison';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Commande } from '../../models/commande';
+import { StatutCommande } from '../../models/StatutCommande';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,11 @@ export class CommandeService {
   }
 
   getListeCommandes(): Observable<any> {
-    return this.http.get(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
+    return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
+  }
+
+  getListeCommandesByStatut(statut:StatutCommande): Observable<any> {
+    return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{'statut':statut},{withCredentials: true });
   }
 
   validerCommande(commandeId: number): Observable<any> {
@@ -103,4 +108,16 @@ export class CommandeService {
   updateCommande(id: number, newData: any){
     return this.http.patch(`${this.baseUrl}apiProduit/commandes/${id}/update/`, newData,{withCredentials: true  });
   }
+
+  
+  getStatsCommande():Observable<any>{
+    const url=`${this.baseUrl}apiProduit/stats-commandes/`
+    return this.http.get(url,{ withCredentials: true })
+  }
+
+  getHistoriquesCommande():Observable<any>{
+    const url=`${this.baseUrl}apiProduit/historique-commandes/`
+    return this.http.get(url,{ withCredentials: true })
+  }
+
 }

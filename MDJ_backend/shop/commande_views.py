@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Commande, Produit, Panier,Paiement
-from .serializers import CommandeSerializer, CommandeUpdateSerializer, PaiementSerializer
+from .serializers import CommandeSerializer, CommandeUpdateSerializer, PaiementSerializer,CommandeHistoriqueSerializer
 from accounts.utils import verifier_user
-
+from django.db.models import Count
 
 
 @api_view(['POST'])
@@ -88,16 +88,20 @@ def detail_commande_courante(request):
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def liste_commandes(request):
     user = verifier_user(request)
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    commandes = Commande.objects.filter(client=user).order_by('-date_commande')
-    for commande in commandes.all():
-        commande.liberer_produits_apres_delais() 
+    if request.data.get('statut'):
+        statut = request.data.get('statut')
+        commandes = Commande.objects.filter(client=user,statut = statut).order_by('-date_commande')
+    else:
+        commandes = Commande.objects.filter(client=user).order_by('-date_commande')
         
+    # for commande in commandes.all():
+    #     commande.liberer_produits_apres_delais() 
     serializer = CommandeSerializer(commandes, many=True)
     return Response(serializer.data)
 
@@ -164,3 +168,51 @@ class CommandeUpdateView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    
+    
+class HistoriqueCommandes(APIView):
+    def get(self, request):
+        user = verifier_user(request)
+        # Résumé des commandes par statut
+        # resume = (Commande.objects
+        #           .filter(client=user)
+        #           .values('statut')
+        #           .annotate(count=Count('id'))
+        #           .order_by('statut'))
+
+        # Détails des commandes pour chaque statut
+        details = {}
+        for statut in dict(Commande.STATUT_CHOICES).keys():
+            commandes = Commande.objects.filter(
+                client=user,
+                statut=statut
+            ).order_by('-date_commande')
+            serializer = CommandeHistoriqueSerializer(commandes, many=True)
+            details[statut] = serializer.data
+
+        response_data = {
+            # 'resume': resume,
+            'details': details
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+class StatsCommandes(APIView):
+    def get(self, request):
+        user = verifier_user(request)
+        # Résumé des commandes par statut
+        resume = (Commande.objects
+                  .filter(client=user)
+                  .values('statut')
+                  .annotate(count=Count('id'))
+                  .order_by('statut'))
+        
+        
+
+        response_data = {
+            'data': resume
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    

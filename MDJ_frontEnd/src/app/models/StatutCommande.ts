@@ -1,7 +1,7 @@
 export enum StatutCommande {
     EN_ATTENTE = 'En attente de paiement',
   
-    PAYEE = 'Payée',
+    PAYEE = 'PAYEE',
   
     EN_PREPARATION = 'En préparation',
 
