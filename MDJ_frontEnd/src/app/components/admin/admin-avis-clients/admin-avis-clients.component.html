@@ -1,14 +1,20 @@
 <div class="reviews-container">
+    <h2 class="reviews-title">Avis Clients</h2>
     <div class="review-card" *ngFor="let review of paginatedCommentaires">
-        <button class="delete-btn border" (click)="deleteReview(review.id)">×</button>
+        <button class="delete-btn" (click)="deleteReview(review.id)" aria-label="Supprimer l'avis">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
         <div class="review-header">
             <span class="client-name">{{ review.clientName }}</span>
-            <span class="review-date">{{ review.date.toDateString() | date : 'dd MMMM YYYY' }}</span>
         </div>
         <div class="review-rating">
-            {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+            <span class="star" *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= review.rating">★</span>
         </div>
         <p class="review-content">{{ review.content }}</p>
+        <span class="review-date">{{ review.date | date : 'dd MMMM yyyy' }}</span>
     </div>
 </div>
 <div class="d-flex justify-content-center">
