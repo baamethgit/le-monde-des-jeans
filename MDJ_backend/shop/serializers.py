@@ -27,13 +27,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = models.Produit
         fields = ['id', 'nom', 'prix', 'categorie', 'taille', 'composition', 'couleur', 'slug', 'QuantiteStock', 'reserve', 'special', 'images']
 
-class AvisSerializer(serializers.ModelSerializer):
-
-    Avis_author=accountserializer.UserSerializer()
-    
-    class Meta:
-        model=accountModel.Avis
-        fields=['Texte_avis', 'Avis_author']
 
 class ZoneSerializer(ModelSerializer):
     class Meta:
