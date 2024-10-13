@@ -109,6 +109,17 @@ $blue_color: #377DFF;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
+@media (max-width: 768px) {
+  .product-grid__container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .product-grid__container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
 
 .product-item {
   background: #ffffff;
@@ -174,17 +185,7 @@ $blue_color: #377DFF;
   color: #28a745; /* Ou toute autre couleur qui correspond à votre thème */
 }
 
-@media (max-width: 768px) {
-  .product-grid__container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-}
 
-@media (max-width: 480px) {
-  .product-grid__container {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-}
 
 
 a{
