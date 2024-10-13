@@ -17,7 +17,7 @@ export class ProfilComponent implements OnInit{
   nb_commandes_livrees : number = 0;
   nb_commandes_attente : number = 0;
   nb_commandes_total : number = 0;
-  statsCommande : any;
+
   private commandeService = inject(CommandeService);
 
   constructor (private UserService:UserService){}
@@ -33,7 +33,9 @@ export class ProfilComponent implements OnInit{
     })
     this.commandeService.getStatsCommande().subscribe({
       next: (response) => {
-          this.statsCommande = response.data;
+          this.nb_commandes_total = response.total_commandes;
+          this.nb_commandes_attente = response.commande_cours_livraison;
+          this.nb_commandes_livrees = response.commandes_livrees;
       },
       error: (error) => {
       }

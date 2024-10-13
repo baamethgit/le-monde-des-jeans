@@ -198,17 +198,15 @@ class CommandeUpdateView(APIView):
 class StatsCommandes(APIView):
     def get(self, request):
         user = verifier_user(request)
-        # Résumé des commandes par statut
-        resume = (Commande.objects
-                  .filter(client=user)
-                  .values('statut')
-                  .annotate(count=Count('id'))
-                  .order_by('statut'))
-        
-        
+
+        total_commandes = Commande.objects.all().filter(client = user).count()
+        commande_cours_livraison = Commande.objects.all().filter(client = user,statut='EN_COURS_LIVRAISON').count()
+        commandes_livrees = Commande.objects.all().filter(client = user,statut='LIVREE').count()
 
         response_data = {
-            'data': resume
+            'total_commandes': total_commandes,
+            'commande_cours_livraison': commande_cours_livraison,
+            'commandes_livrees': commandes_livrees,
         }
 
         return Response(response_data, status=status.HTTP_200_OK)

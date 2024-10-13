@@ -2,8 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { ZoneLivraison } from '../../models/zone-livraison';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Commande } from '../../models/commande';
-import { StatutCommande } from '../../models/StatutCommande';
+
+export interface statCommande{
+  total_commandes: number,
+  commande_cours_livraison: number,
+  commandes_livrees: number
+}
 
 @Injectable({
   providedIn: 'root'
@@ -114,14 +118,9 @@ export class CommandeService {
   }
 
   
-  getStatsCommande():Observable<any>{
+  getStatsCommande():Observable<statCommande>{
     const url=`${this.baseUrl}apiProduit/stats-commandes/`
-    return this.http.get(url,{ withCredentials: true })
-  }
-
-  getHistoriquesCommande():Observable<any>{
-    const url=`${this.baseUrl}apiProduit/historique-commandes/`
-    return this.http.get(url,{ withCredentials: true })
+    return this.http.get<statCommande>(url,{ withCredentials: true })
   }
 
 }
