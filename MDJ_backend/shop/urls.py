@@ -32,7 +32,8 @@ urlpatterns = [
     path('commandes/<int:commande_id>/annuler/', commande_views.annuler_commande, name='annuler_commande'),
     path('commandes/<int:commande_id>/delete/', commande_views.deleteCommande, name='supprimer_commande'),
     path('commandes/<int:id_commande>/update/', commande_views.CommandeUpdateView.as_view(), name='update_commande'),
-    path('historique-commandes/', commande_views.HistoriqueCommandes.as_view(), name='historique_commande'),
+    path('historique-commandes/', commande_views.liste_commandes_historiques, name='historique_commande'),
+    path('commandes-en-cours/', commande_views.liste_commandes_en_cours, name='commandes-en-cours'),
     path('stats-commandes/', commande_views.StatsCommandes.as_view(), name='stats_commande'),
     
 ]

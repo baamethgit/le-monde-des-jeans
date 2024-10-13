@@ -85,8 +85,12 @@ export class CommandeService {
     return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
   }
 
-  getListeCommandesByStatut(statut:StatutCommande): Observable<any> {
-    return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{'statut':statut},{withCredentials: true });
+  getListeCommandesEnCours(): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/commandes-en-cours/`,{withCredentials: true });
+  }
+
+  getListeCommandesHistorique(): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/historique-commandes/`,{withCredentials: true });
   }
 
   validerCommande(commandeId: number): Observable<any> {

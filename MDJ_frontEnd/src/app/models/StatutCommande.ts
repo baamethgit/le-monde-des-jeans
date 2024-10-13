@@ -1,13 +1,13 @@
 export enum StatutCommande {
-    EN_ATTENTE = 'En attente de paiement',
+    EN_ATTENTE = 'EN_ATTENTE',
   
     PAYEE = 'PAYEE',
   
-    EN_PREPARATION = 'En préparation',
+    EN_PREPARATION = 'EN_PREPARATION',
 
     EN_COURS_LIVRAISON = 'En cours de Livraison',
 
-    LIVREE = 'Livrée',
+    LIVREE = 'LIVREE',
     
-    ANNULEE = 'Annulée',
+    ANNULEE = 'ANNULEE',
   }

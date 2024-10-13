@@ -159,7 +159,5 @@ MEDIA_URL = "/media/" # L' url qu'on va voir au niveau du navigateur
 MEDIA_ROOT = BASE_DIR / "media" # Dossier de stockage des uploded files
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-
-WAVE_PUBLIC_KEY = 'votre_cle_publique'
-WAVE_SECRET_KEY = 'votre_cle_secrete'
-WAVE_API_ENDPOINT = 'https://api.wave.com/v1/checkout/sessions'
+# settings.py
+APPEND_SLASH = False
