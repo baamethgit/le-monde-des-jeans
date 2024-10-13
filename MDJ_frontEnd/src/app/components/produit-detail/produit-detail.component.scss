@@ -8,6 +8,8 @@
 .produit_detail {
     .produit_detail_main {
       width: 80%;
+      position: relative;
+      z-index: 5;
         
         margin: auto;
       .produit_img {
@@ -145,3 +147,8 @@
       display: none;
   }
  }
+
+ .bg_home{
+  position: absolute;
+  opacity: 0.1;
+}

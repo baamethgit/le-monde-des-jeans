@@ -1,179 +1,200 @@
-<section class="Accueil_Intro  ms-sm-5 position-relative">
-    <div class="accueil_main m-auto row flex-column-reverse flex-sm-row  ">
-        <div class="text_accueil text-center px-5 text-sm-start p-sm-0 col-12 col-sm-4 justify-content-around">
-            <h1 class="titre_accueil">Faites vous Plaisir</h1>
-            <p class="py-4">
-                Découvrez notre sélection de vêtements et accessoires tendance à prix mini.
-                Explorez notre collection et trouvez votre prochain coup de cœur !
-            </p>
-            <button [routerLink]="['/produits']" class="bg-black bt_accueil">Achetez Maintenant</button>
-        </div>
-        <div class="img_accueil col-12 col-sm-8">
-            <img ngSrc="../../assets/img/incendiary-fantastically-beautiful-girl-coat-eco-fur-moves-fun-picture-lovely-lady-pink-clothes-removebg-preview 1.png" fill priority alt="" srcset="">
-        </div>
-    </div>
-    <div class="accueil_networks text-center py-5">
-        <h2 class="pb-2">Nous suivre sur les reseaux</h2>
-        <div>
-            <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
-            <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
-            <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
-        </div>
-    </div>
-    <img id="first_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (1).png" alt="" srcset="">
-    <img id="second_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (9).png" alt="" srcset="">
-    <img id="third_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com.png" alt="" srcset="">
-    <img id="fourth_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (10).png" alt="" srcset="">
-
-</section>
-<section class="Marques">
-    <h2 class="text-center">Les meilleures marques</h2>
-    <div class="brand_list d-flex justify-content-around overflow-x-scroll py-4">
-        <img src="../../assets/img/pngegg (10).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (9).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (8).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (13).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (12).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (11).png" alt="" srcset="">
-    </div>
-</section>
-<section class="Derniers_articles d-flex flex-column my-5">
-    <div class="last_uploads_head my-3">
-        <h1 class="last_uploads_title text-center">Nouveautes</h1>
-    </div>
-    <div class="d-flex justify-content-end">
-        <div class="last_uploads_content d-flex overflow-x-scroll">
-            @for (item of products_list.slice(-limit_prod); track $index) {
-                <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-                    <div class="last_content_item_img container">
-                        <div class="position-relative">
-                            <div class="last_content_item_img_new">NEW</div>
-                            <img class="bg-info " ngSrc="{{item.images[0].image}}" fill alt="">
-                        </div>
-                    </div>
-                    <div class="last_content_item_infos">
-                        <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
-                        <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
-                    </div>
-                 </div>
-            }
-           
-       </div>
-    </div>
-    <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>
-        
-    
-</section>
-<section class="Derniers_articles d-flex flex-column my-5">
-    <div class="last_uploads_head my-3">
-        <h1 class="last_uploads_title text-center">Derniers articles</h1>
-    </div>
-    <div class="d-flex justify-content-end">
-        <div class="last_uploads_content d-flex overflow-x-scroll">
-            @for (item of products_list.slice(-limit_prod); track $index) {
-                <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-                    <div class="last_content_item_img container">
-                        <div class="position-relative">
-                            <div class="last_content_item_img_new">NEW</div>
-                            <img class="bg-info " ngSrc="{{item.images[0].image}}" fill alt="">
-                        </div>
-                    </div>
-                    <div class="last_content_item_infos">
-                        <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
-                        <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
-                    </div>
-                 </div>
-            }
-           
-       </div>
-    </div>
-    <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>
-        
-    
-</section>
-<section class="Categorie text-center">
-    <div class="category_head">
-        <h1 class="category_title">Categories</h1>
-    </div>
-    <div class="category_list mt-5 d-flex flex-wrap justify-content-center">
-        @for (item of catagorie_list; track $index) {
-            <a [routerLink]="['/produits/categorie', item.slug]">
-                <div class="category_item text-center my-2 mx-4">
-                    <div class="Category_img mb-3">
-                        <img class="rounded-circle" ngSrc='{{item.image}}' fill alt="" srcset="">
-                    </div>
-                    <div class="category_name">{{item.nom}}</div>
-                </div>
-            </a>
-        }
-        
-    </div>
-</section>
-<section class="Contacts pb-5 pt-3">
-    <div class="contact_head my-5">
-        <h1 class="contact_title text-center">Contacts</h1>
-        <p class="text-center mx-3">
-            Vous pouvez nous joindre via les moyens suivants.
-            N'hésitez pas à nous contacter.
-        </p>
-    </div>
-    <div class="contact_box_main text-center row w-75 m-auto justify-content-between">
-        <div class="contact_box my-2 py-3 col-12 col-md-3 ">
-            <div>RESEAUX</div>
-            <div class="contact_box_networks">
-                <img class="mx-lg-auto" ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
-                <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
-                <img class="mx-lg-auto" ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
+<section class="overflow-hidden position-relative">
+    <img src="../../../assets/img/6445.jpg" class="bg_home" alt="" srcset="">
+    <section class="Accueil_Intro  ms-sm-5 position-relative">
+        <div class="accueil_main m-auto row flex-column-reverse flex-sm-row  ">
+            <div class="text_accueil text-center px-5 text-sm-start p-sm-0 col-12 col-sm-4 justify-content-around">
+                <h1 class="titre_accueil">Faites vous Plaisir</h1>
+                <p class="py-4">
+                    Découvrez notre sélection de vêtements et accessoires tendance à prix mini.
+                    Explorez notre collection et trouvez votre prochain coup de cœur !
+                </p>
+                <button [routerLink]="['/produits']" class="bg-black bt_accueil">Achetez Maintenant</button>
+            </div>
+            <div class="img_accueil col-12 col-sm-8">
+                <img ngSrc="../../assets/img/incendiary-fantastically-beautiful-girl-coat-eco-fur-moves-fun-picture-lovely-lady-pink-clothes-removebg-preview 1.png" fill priority alt="" srcset="">
             </div>
         </div>
-        <div class="contact_box  my-2 py-3 col-12 col-md-3">
-            <div><img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="" srcset=""></div>
-            <div>+221 78 434 60 17</div>
+        <div class="accueil_networks text-center py-5">
+            <h2 class="pb-2">Nous suivre sur les reseaux</h2>
+            <div>
+                <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
+                <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
+                <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
+            </div>
         </div>
-        <div class="contact_box my-2 py-3 col-12 col-md-3">
-            <div><img class="mx-lg-auto" ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="50" height="50" alt="" srcset=""></div>
-            <div>A...&#64;gmail.com </div>
-        </div>
-    </div>
-</section>
-
-<section class="temoignage py-5">
-    <div class="tem_head mb-5">
-        <h1 class="tem_title text-center">Témoignages</h1>
-        <p class="text-center mx-3">Voici ce que nos clients partagent à propos de leurs achats chez nous. Chaque expérience est unique, et leurs avis nous aident à nous améliorer.</p>
-    </div>
-     @for (item of avis_list.slice(-3); track $index) { <!--essayer d'utiliser une api pour gerer ca apres maybe -->
-     <div class="user_tem w-75 m-auto">
-        <div class="username_tem">{{item.Avis_author.nom_complet}}</div>
-        <div class="text_tem">{{item.Texte_avis}}</div>
-        <hr class="tem_hr">
-    </div>
-    }
+        <img id="first_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (1).png" alt="" srcset="">
+        <img id="second_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (9).png" alt="" srcset="">
+        <img id="third_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com.png" alt="" srcset="">
+        <img id="fourth_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (10).png" alt="" srcset="">
     
-    <div  class="d-flex mt-5"><button class="tem_button m-auto px-3 py-1">voir plus</button></div>
-</section>
-
-<section class="Infos py-5">
-    <div class="row  justify-content-center m-auto">
-        <div class="info_box col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/delivery_truck.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Livraison Fiable</h2>
-            <p>Nous livrons à Dakar ,par zone et dans les régions</p>
+    </section>
+    <section class="Marques">
+        <h2 class="text-center">Les meilleures marques</h2>
+        <div class="brand_list d-flex justify-content-around py-4">
+            <img class="mx-5" src="../../assets/img/pngegg (10).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (9).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (8).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (13).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (12).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (11).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (10).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (9).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (8).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (13).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (12).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (11).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (10).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (9).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (8).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (13).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (12).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (11).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (10).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (9).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (8).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (13).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (12).png" alt="" srcset="">
+            <img class="mx-5" src="../../assets/img/pngegg (11).png" alt="" srcset="">
         </div>
-        <div class="info_box col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/8665523_layer_group_icon.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Groupage d'articles</h2>
-            <p>Vous pouvez faire groupage de 5 à 6 articles pour vous facilitez la livraison </p>
+    </section>
+    <section class="Derniers_articles d-flex flex-column my-5">
+        <div class="last_uploads_head my-3">
+            <h1 class="last_uploads_title text-center">Nouveautes</h1>
         </div>
-        <div class="info_box  col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/8665889_shirt_clothes_icon.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Arrivage du Lundi au Samedi</h2>
-            <p>On poste les articles à 19h  les jours de la semaine et 18h les samedis</p>
+        <div class="d-flex justify-content-end">
+            <div class="last_uploads_content d-flex overflow-x-scroll">
+                @for (item of products_list.slice(-limit_prod); track $index) {
+                    <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
+                        <div class="last_content_item_img container">
+                            <div class="position-relative">
+                                <div class="last_content_item_img_new">NEW</div>
+                                <img class="bg-info " ngSrc="{{item.images[0].image}}" fill alt="">
+                            </div>
+                        </div>
+                        <div class="last_content_item_infos">
+                            <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
+                            <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
+                        </div>
+                     </div>
+                }
+               
+           </div>
         </div>
-        <div class="info_box  col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Disponible de 11h à 19h 7j/7</h2>
-            <p> récupérer vos articles tous les jours</p>
+        <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>
+            
+        
+    </section>
+    <section class="Derniers_articles d-flex flex-column my-5">
+        <div class="last_uploads_head my-3">
+            <h1 class="last_uploads_title text-center">Derniers articles</h1>
         </div>
-    </div>
+        <div class="d-flex justify-content-end">
+            <div class="last_uploads_content d-flex overflow-x-scroll">
+                @for (item of products_list.slice(-limit_prod); track $index) {
+                    <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
+                        <div class="last_content_item_img container">
+                            <div class="position-relative">
+                                <div class="last_content_item_img_new">NEW</div>
+                                <img class="bg-info " ngSrc="{{item.images[0].image}}" fill alt="">
+                            </div>
+                        </div>
+                        <div class="last_content_item_infos">
+                            <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
+                            <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
+                        </div>
+                     </div>
+                }
+               
+           </div>
+        </div>
+        <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>
+            
+        
+    </section>
+    <section class="Categorie text-center">
+        <div class="category_head">
+            <h1 class="category_title">Categories</h1>
+        </div>
+        <div class="category_list mt-5 d-flex flex-wrap justify-content-center">
+            @for (item of catagorie_list; track $index) {
+                <a [routerLink]="['/produits/categorie', item.slug]">
+                    <div class="category_item text-center my-2 mx-4">
+                        <div class="Category_img mb-3">
+                            <img class="rounded-circle" ngSrc='{{item.image}}' fill alt="" srcset="">
+                        </div>
+                        <div class="category_name">{{item.nom}}</div>
+                    </div>
+                </a>
+            }
+            
+        </div>
+    </section>
+    <section class="Contacts pb-5 pt-3">
+        <div class="contact_head my-5">
+            <h1 class="contact_title text-center">Contacts</h1>
+            <p class="text-center mx-3">
+                Vous pouvez nous joindre via les moyens suivants.
+                N'hésitez pas à nous contacter.
+            </p>
+        </div>
+        <div class="contact_box_main text-center row w-75 m-auto justify-content-between">
+            <div class="contact_box my-2 py-3 col-12 col-md-3 ">
+                <div>RESEAUX</div>
+                <div class="contact_box_networks">
+                    <img class="mx-lg-auto" ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
+                    <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
+                    <img class="mx-lg-auto" ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
+                </div>
+            </div>
+            <div class="contact_box  my-2 py-3 col-12 col-md-3">
+                <div><img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="" srcset=""></div>
+                <div>+221 78 434 60 17</div>
+            </div>
+            <div class="contact_box my-2 py-3 col-12 col-md-3">
+                <div><img class="mx-lg-auto" ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="50" height="50" alt="" srcset=""></div>
+                <div>A...&#64;gmail.com </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="temoignage py-5">
+        <div class="tem_head mb-5">
+            <h1 class="tem_title text-center">Témoignages</h1>
+            <p class="text-center mx-3">Voici ce que nos clients partagent à propos de leurs achats chez nous. Chaque expérience est unique, et leurs avis nous aident à nous améliorer.</p>
+        </div>
+         @for (item of avis_list.slice(-3); track $index) { <!--essayer d'utiliser une api pour gerer ca apres maybe -->
+         <div class="user_tem w-75 m-auto">
+            <div class="username_tem">{{item.Avis_author.nom_complet}}</div>
+            <div class="text_tem">{{item.Texte_avis}}</div>
+            <hr class="tem_hr">
+        </div>
+        }
+        
+        <div  class="d-flex mt-5"><button class="tem_button m-auto px-3 py-1">voir plus</button></div>
+    </section>
+    
+    <section class="Infos py-5">
+        <div class="row  justify-content-center m-auto">
+            <div class="info_box col-6 col-lg-2 px-3">
+                <img class="mx-lg-auto" ngSrc="../../assets/img/delivery_truck.png" width="50" height="50" alt="" srcset="">
+                <h2 class="info_box_title">Livraison Fiable</h2>
+                <p>Nous livrons à Dakar ,par zone et dans les régions</p>
+            </div>
+            <div class="info_box col-6 col-lg-2 px-3">
+                <img class="mx-lg-auto" ngSrc="../../assets/img/8665523_layer_group_icon.png" width="50" height="50" alt="" srcset="">
+                <h2 class="info_box_title">Groupage d'articles</h2>
+                <p>Vous pouvez faire groupage de 5 à 6 articles pour vous facilitez la livraison </p>
+            </div>
+            <div class="info_box  col-6 col-lg-2 px-3">
+                <img class="mx-lg-auto" ngSrc="../../assets/img/8665889_shirt_clothes_icon.png" width="50" height="50" alt="" srcset="">
+                <h2 class="info_box_title">Arrivage du Lundi au Samedi</h2>
+                <p>On poste les articles à 19h  les jours de la semaine et 18h les samedis</p>
+            </div>
+            <div class="info_box  col-6 col-lg-2 px-3">
+                <img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="50" height="50" alt="" srcset="">
+                <h2 class="info_box_title">Disponible de 11h à 19h 7j/7</h2>
+                <p> récupérer vos articles tous les jours</p>
+            </div>
+        </div>
+    </section>
 </section>

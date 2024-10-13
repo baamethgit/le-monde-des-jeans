@@ -4,8 +4,12 @@ $blue_color: #377DFF;
     padding: 0;
     text-decoration: none;
 }
-
+.bg_home{
+    position: absolute;
+    opacity: 0.1;
+}
 .Infos{
+    
     .info_box{
         display: flex;
         flex-direction: column;
@@ -23,6 +27,8 @@ $blue_color: #377DFF;
     }
 }
 .temoignage{
+    position: relative;
+    z-index: 5;
     background-color: #E8ECEF;
     .tem_title{
         color: $blue_color;
@@ -44,6 +50,8 @@ $blue_color: #377DFF;
     }
 }
 .Contacts{
+    position: relative;
+    z-index: 5;
     .contact_title{
         color: $blue_color;
     }
@@ -51,7 +59,7 @@ $blue_color: #377DFF;
 
         .contact_box{
             background-color: #F3F5F7;
-
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
         
 
         }
@@ -131,14 +139,42 @@ $blue_color: #377DFF;
 }
 
 .Marques{
+    position: relative;
+    z-index: 5;
     background-color: $blue_color;
+    @keyframes scrollimg {
+        from {
+          transform: translateX(0%);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+      
     h2{
         color: white;
     }
+    
     .brand_list{
+        white-space: nowrap;
+        animation: scrollimg 30s linear infinite;
         img{
             width: 150px;
             opacity: 0.7;
+        }
+        
+    }
+    @media(max-width:580px){
+        @keyframes scrollimg2 {
+            from {
+              transform: translateX(0%);
+            }
+            to {
+              transform: translateX(-150%);
+            }
+          }
+        .brand_list{
+            animation: scrollimg2 5s linear infinite;
         }
     }
         ::-webkit-scrollbar{

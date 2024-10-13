@@ -1,25 +1,24 @@
-<div class="product_list row">
-  <h4 class="my-5">Tous Les Produits</h4>
-  @for (item of produits; track item) {
-    <div class="product_item col-6 col-xl-3 col-lg-3 p-1 p-sm-2">
-      <a [routerLink]="['/produits', item.slug]" class="">
-        <div class="product_item_img">
-          <div class="image-container">
+<div class="product-grid">
+  <h2 class="product-grid__title">Tous les produits</h2>
+  <div class="product-grid__container">
+    @for (item of produits || produits; track item) {
+      <div class="product-item">
+        <a [routerLink]="['/produits', item.slug]" class="product-item__link">
+          <div class="product-item__img-container">
             <img 
-              ngSrc="{{ item.images[0].image }}" 
-              [width]="720" 
-              [height]="900"
+              [ngSrc]="item.images[0].image" 
+              [width]="300" 
+              [height]="400"
               [alt]="item.nom"
-              sizes="(max-width: 576px) 50vw, (max-width: 992px) 33vw, 25vw"
-              class="responsive-product-image"
+              class="product-item__img"
             >
           </div>
-        </div>
-        <div class="product_item_infos">
-          <div class="product_item_name">{{ item.nom }}</div>
-          <div class="product_item_price">{{ item.prix }}</div>
-        </div>
-      </a>
-    </div>
-  }
+          <div class="product-item__info">
+            <div class="product-item__name">{{ item.nom }}</div>
+            <div class="product-item__price">{{ item.prix }} FCFA</div>
+          </div>
+        </a>
+      </div>
+    }
+  </div>
 </div>
