@@ -16,54 +16,85 @@
             <a href="#" class="btn btn-outline-primary">Shop Now →</a>
         </div>
     </div>
-    <section class="Contacts pb-5 pt-3">
-        <div class="contact_head my-5">
-            <h1 class="contact_title text-center">Contacts</h1>
-            <p class="text-center mx-3">
-                Vous pouvez nous joindre via les moyens suivants.
-                N'hésitez pas à nous contacter.
+    <section class="contacts">
+        <div class="container">
+          <div class="contacts-header">
+            <h2 class="contacts-title">Contacts</h2>
+            <p class="contacts-description">
+              Vous pouvez nous joindre via les moyens suivants.
+              N'hésitez pas à nous contacter.
             </p>
-        </div>
-        <div class="contact_box_main text-center row w-75 m-auto justify-content-between">
-            <div class="contact_box my-2 py-3 col-12 col-md-3 ">
-                <div>RESEAUX</div>
-                <div class="contact_box_networks">
-                    <img class="mx-lg-auto" ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
-                    <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
-                    <img class="mx-lg-auto" ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
-                </div>
+          </div>
+          <div class="contact-boxes">
+            <div class="contact-box">
+              <h3 class="box-title">Réseaux sociaux</h3>
+              <div class="social-icons">
+                <a href="#" aria-label="Facebook">
+                  <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="Facebook">
+                </a>
+                <a href="#" aria-label="Instagram">
+                  <img ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="Instagram">
+                </a>
+                <a href="#" aria-label="WhatsApp">
+                  <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="WhatsApp">
+                </a>
+              </div>
             </div>
-            <div class="contact_box  my-2 py-3 col-12 col-md-3">
-                <div><img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="" srcset=""></div>
-                <div>+221 78 434 60 17</div>
+            <div class="contact-box">
+              <h3 class="box-title">Téléphone</h3>
+              <div class="contact-info">
+                <img ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="Téléphone">
+                <a href="tel:+22178434617">+221 78 434 60 17</a>
+              </div>
             </div>
-            <div class="contact_box my-2 py-3 col-12 col-md-3">
-                <div><img class="mx-lg-auto" ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="50" height="50" alt="" srcset=""></div>
-                <div>A...&#64;gmail.com </div>
+            <div class="contact-box">
+              <h3 class="box-title">Email</h3>
+              <div class="contact-info">
+                <img ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="40" height="40" alt="Email">
+                <a href="mailto:A...@gmail.com">A...&#64;gmail.com</a>
+              </div>
             </div>
+          </div>
         </div>
     </section>
  
 
-    <div class="row mt-4 justify-content-between mb-5">
-        <div class="col-md-5 mb-3">
-            <form>
-                <div class="">
-                    <label for="nameInput">Nom complet :</label>
-                    <input id="nameInput" type="text" class="form-control px-3" placeholder="Nom complet">
-                </div>
-                <div class="my-4">
-                    <label for="emailInput">Adresse Mail :</label>
-                    <input id="emailInput" type="email" class="form-control px-3" placeholder="exemple@exemple.com">
+    <section class="contact-section py-5">
+        <div class="container">
+          <div class="row g-4 justify-content-between">
+            <div class="col-lg-4">
+              <h2 class="mb-4">Contactez-nous</h2>
+              <form class="contact-form">
+                <div class="mb-3">
+                  <label for="nameInput" class="form-label">Nom complet</label>
+                  <input type="text" class="form-control" id="nameInput" placeholder="Votre nom complet" required>
                 </div>
                 <div class="mb-3">
-                    <textarea class="form-control p-2" rows="8" placeholder="Votre message"></textarea>
+                  <label for="emailInput" class="form-label">Adresse e-mail</label>
+                  <input type="email" class="form-control" id="emailInput" placeholder="exemple@exemple.com" required>
                 </div>
-                <button type="submit" class="btn btn-primary p-1">Envoyer</button>
-            </form>
+                <div class="mb-3">
+                  <label for="messageInput" class="form-label">Votre message</label>
+                  <textarea class="form-control" id="messageInput" rows="5" placeholder="Votre message ici" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer le message</button>
+              </form>
+            </div>
+            <div class="col-lg-7">
+              <h2 class="mb-4">Notre localisation</h2>
+              <div class="map-container">
+                <iframe
+                  src="https://maps.google.com/maps?q=yeumbeul&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="400"
+                  style="border:0;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- <div class="col-md-5 mb-3">
-            <div class="mapouter"><div class="gmap_canvas"><iframe class="gmap_iframe" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=700&amp;height=500&amp;hl=en&amp;q=yeumbeul&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe></div><style>.mapouter{position:relative;text-align:right;width:100%;height:100%;}.gmap_canvas {overflow:hidden;background:none!important;width:100%;height:100%;}.gmap_iframe {height:100%!important;}</style></div>
-        </div> -->
-    </div>
+      </section>
 </div>
