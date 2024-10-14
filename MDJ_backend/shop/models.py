@@ -52,6 +52,7 @@ class Produit(models.Model):
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
     description=models.TextField(null=True, blank=True),
     taille = models.CharField(max_length=128, choices=TAILLES, blank=True, null=True)
+    pointure=models.PositiveIntegerField(blank=True, null=True)
     composition = models.CharField(max_length=128, choices=COMPO, blank=True, null=True)
     couleur = models.CharField(max_length=128, choices=COULEUR, blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True, null=True)

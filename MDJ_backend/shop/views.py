@@ -70,6 +70,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             'prix': request.data.get('prix'),
             'categorie': request.data.get('categorie'),
             'taille': request.data.get('taille'),
+            'pointure':request.data.get('pointure'),
             'composition': request.data.get('composition'),
             'couleur': request.data.get('couleur'),
             'special':request.data.get('special'),

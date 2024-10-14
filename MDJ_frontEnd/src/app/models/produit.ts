@@ -8,6 +8,7 @@ export interface Produit {
     prix: number;
     categorie_detail: categorie;
     taille?: string;
+    pointure?:number;
     composition?: string;
     couleur?: string;
     slug: string;

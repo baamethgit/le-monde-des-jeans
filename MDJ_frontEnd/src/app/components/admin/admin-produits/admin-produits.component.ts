@@ -84,6 +84,7 @@ ngOnInit():void{
       categorySelect:['',[Validators.required]],
       nom_produit:[''],
       taille:[''],
+      pointure:[''],
       couleur:[''],
       composition:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
@@ -99,6 +100,7 @@ ngOnInit():void{
       categorySelect:['',[Validators.required]],
       nom_produit:[''],
       taille:[''],
+      pointure:['', [Validators.pattern("^[0-9]*$")]],
       couleur:[''],
       composition:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
@@ -152,6 +154,7 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
     prix_produit: product.prix,
     categorySelect: product.categorie_detail.id,
     taille: product.taille,
+    pointure:product.pointure,
     couleur: product.couleur,
     composition: product.composition,
     stock_produit: product.QuantiteStock,
@@ -279,6 +282,7 @@ createProduct() {
 
     const nom = this.AddProductForm.get('nom_produit')?.value;
     const taille = this.AddProductForm.get('taille')?.value;
+    const pointure = this.AddProductForm.get('pointure')?.value;
     const couleur = this.AddProductForm.get('couleur')?.value;
     const composition = this.AddProductForm.get('composition')?.value;
     const desc = this.AddProductForm.get('desc_produit')?.value;
@@ -287,6 +291,7 @@ createProduct() {
 
     if (nom) formData.append('nom', nom);
     if (taille) formData.append('taille', taille);
+    if(pointure) formData.append('pointure', pointure);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
     if (desc) formData.append('description', desc);
@@ -319,6 +324,7 @@ UpdateProduct(id:number) {
 
     const nom = this.UpdateProductForm.get('nom_produit')?.value;
     const taille = this.UpdateProductForm.get('taille')?.value;
+    const pointure = this.AddProductForm.get('pointure')?.value;
     const couleur = this.UpdateProductForm.get('couleur')?.value;
     const composition = this.UpdateProductForm.get('composition')?.value;
     const desc = this.UpdateProductForm.get('desc_produit')?.value;
@@ -327,6 +333,7 @@ UpdateProduct(id:number) {
 
     if (nom) formData.append('nom', nom);
     if (taille) formData.append('taille', taille);
+    if (pointure) formData.append('pointure', pointure);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
     if (desc) formData.append('description', desc);
