@@ -114,7 +114,7 @@ class Panier(models.Model):
     @property
     def quantitePanier(self):
         cartitems = self.produits.all()
-        return cartitems.length()
+        return cartitems.count()
     
     def nettoyer_produits_expires(self):
         for panier_produit in self.panierproduit_set.all():

@@ -105,8 +105,6 @@ class CommandeListView(ListAPIView):
                 Q(client__nom_complet__icontains=search_term) | 
                 Q(ref_code__icontains=search_term) 
             )
-        
-       
         return queryset
 
 @api_view(['GET'])
