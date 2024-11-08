@@ -1,12 +1,19 @@
-<section class="Temoignages_page">
-    <div class="Temoignages_page_head w-75 m-auto">
-        <div class="nbr_temoignage">{{Avis.length}} témoignages</div>
-        
+<section class="testimonials-section">
+    <div class="container">
+      <header class="testimonials-header">
+        <h2 class="testimonials-count">{{Avis.length}} témoignages</h2>
+      </header>
+      <div class="testimonials-list">
+        @for (item of Avis; track $index) {
+          <article class="testimonial-card">
+            <div class="testimonial-content">
+              <p class="testimonial-text">{{item.Texte_avis}}</p>
+              <footer class="testimonial-author">
+                <strong>{{item.Avis_author.nom_complet}}</strong>
+              </footer>
+            </div>
+          </article>
+        }
+      </div>
     </div>
-    @for (item of Avis; track $index) {
-        <div class="user_tem w-75 m-auto my-5">
-            <div class="username_tem mb-3">{{item.Avis_author.nom_complet}}</div>
-            <div class="text_tem">{{item.Texte_avis}}</div>
-        </div>
-    }
-</section>
+  </section>

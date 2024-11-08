@@ -1,109 +1,108 @@
-<section class="Accueil_Intro  ms-sm-5 position-relative">
-    <div class="accueil_main m-auto row flex-column-reverse flex-sm-row  ">
-        <div class="text_accueil text-center px-5 text-sm-start p-sm-0 col-12 col-sm-4 justify-content-around">
-            <h1 class="titre_accueil">Faites vous Plaisir</h1>
-            <p class="py-4">
-                Découvrez notre sélection de vêtements et accessoires tendance à prix mini.
-                Explorez notre collection et trouvez votre prochain coup de cœur !
-            </p>
-            <button [routerLink]="['/produits']" class="bg-black bt_accueil">Achetez Maintenant</button>
-        </div>
-        <div class="img_accueil col-12 col-sm-8">
-            <img ngSrc="../../assets/img/incendiary-fantastically-beautiful-girl-coat-eco-fur-moves-fun-picture-lovely-lady-pink-clothes-removebg-preview 1.png" fill priority alt="" srcset="">
-        </div>
-    </div>
-    <div class="accueil_networks text-center py-5">
-        <h2 class="pb-2">Nous suivre sur les reseaux</h2>
-        <div>
-            <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
-            <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
-            <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
-        </div>
-    </div>
-    <img id="first_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (1).png" alt="" srcset="">
-    <img id="second_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (9).png" alt="" srcset="">
-    <img id="third_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com.png" alt="" srcset="">
-    <img id="fourth_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (10).png" alt="" srcset="">
+<section class="overflow-hidden position-relative">
 
-</section>
-<section class="Marques">
-    <h2 class="text-center">Les meilleures marques</h2>
-    <div class="brand_list d-flex justify-content-around overflow-x-scroll py-4">
-        <img src="../../assets/img/pngegg (10).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (9).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (8).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (13).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (12).png" alt="" srcset="">
-        <img src="../../assets/img/pngegg (11).png" alt="" srcset="">
-    </div>
-</section>
-<section class="Derniers_articles d-flex flex-column my-5">
-    <div class="last_uploads_head my-3">
-        <h1 class="last_uploads_title text-center">Nouveautes</h1>
-    </div>
-    <div class="d-flex justify-content-end">
-        <div class="last_uploads_content d-flex overflow-x-scroll">
-            @for (item of products_list.slice(-limit_prod); track $index) {
-                <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-                    <div class="last_content_item_img container">
-                        <div class="position-relative">
-                            <div class="last_content_item_img_new">NEW</div>
-                            <img class="bg-info " ngSrc="{{item.images[0].image}}" fill alt="">
-                        </div>
-                    </div>
-                    <div class="last_content_item_infos">
-                        <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
-                        <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
-                    </div>
-                 </div>
-            }
-           
-       </div>
-    </div>
-    <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>
-        
+    <section class="Accueil_Intro  ms-sm-5 position-relative">
+        <div class="accueil_main m-auto row flex-column-reverse flex-sm-row  ">
+            <div class="text_accueil text-center px-5 text-sm-start p-sm-0 col-12 col-sm-4 justify-content-around">
+                <h1 class="titre_accueil">Faites vous Plaisir</h1>
+                <p class="py-4">
+                    Découvrez notre sélection de vêtements et accessoires tendance à prix mini.
+                    Explorez notre collection et trouvez votre prochain coup de cœur !
+                </p>
+                <button [routerLink]="['/produits']" class="bg-black bt_accueil">Achetez Maintenant</button>
+            </div>
+            <div class="img_accueil col-12 col-sm-8">
+                <img ngSrc="../../assets/img/incendiary-fantastically-beautiful-girl-coat-eco-fur-moves-fun-picture-lovely-lady-pink-clothes-removebg-preview 1.png" fill priority alt="" srcset="">
+            </div>
+        </div>
+        <div class="accueil_networks text-center py-5">
+            <h2 class="pb-2">Nous suivre sur les reseaux</h2>
+            <div>
+                <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="" srcset="">
+                <img class="mx-3" ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="" srcset="">
+                <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="" srcset="">
+            </div>
+        </div>
+        <img id="first_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (1).png" alt="" srcset="">
+        <img id="second_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (9).png" alt="" srcset="">
+        <img id="third_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com.png" alt="" srcset="">
+        <img id="fourth_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (10).png" alt="" srcset="">
     
-</section>
-<section class="Derniers_articles d-flex flex-column my-5">
-    <div class="last_uploads_head my-3">
-        <h1 class="last_uploads_title text-center">Derniers articles</h1>
-    </div>
-    <div class="d-flex justify-content-end">
-        <div class="last_uploads_content d-flex overflow-x-scroll">
+    </section>
+    <section class="marques">
+        <div class="w-100">
+          <h2 class="text-center">Les meilleures marques</h2>
+          <div class="brand-slider">
+            <div class="brand-track">
+              <img src="../../assets/img/pngegg (10).png" alt="Marque 1" loading="lazy">
+              <img src="../../assets/img/pngegg (9).png" alt="Marque 2" loading="lazy">
+              <img src="../../assets/img/pngegg (8).png" alt="Marque 3" loading="lazy">
+              <img src="../../assets/img/pngegg (13).png" alt="Marque 4" loading="lazy">
+              <img src="../../assets/img/pngegg (12).png" alt="Marque 5" loading="lazy">
+              <img src="../../assets/img/pngegg (11).png" alt="Marque 6" loading="lazy">
+              <!-- Répétition des images -->
+              <img src="../../assets/img/pngegg (10).png" alt="Marque 1" loading="lazy">
+              <img src="../../assets/img/pngegg (9).png" alt="Marque 2" loading="lazy">
+              <img src="../../assets/img/pngegg (8).png" alt="Marque 3" loading="lazy">
+              <img src="../../assets/img/pngegg (13).png" alt="Marque 4" loading="lazy">
+              <img src="../../assets/img/pngegg (12).png" alt="Marque 5" loading="lazy">
+              <img src="../../assets/img/pngegg (11).png" alt="Marque 6" loading="lazy">
+              <img src="../../assets/img/pngegg (10).png" alt="Marque 1" loading="lazy">
+              <img src="../../assets/img/pngegg (9).png" alt="Marque 2" loading="lazy">
+              <img src="../../assets/img/pngegg (8).png" alt="Marque 3" loading="lazy">
+              <img src="../../assets/img/pngegg (13).png" alt="Marque 4" loading="lazy">
+              <img src="../../assets/img/pngegg (12).png" alt="Marque 5" loading="lazy">
+              <img src="../../assets/img/pngegg (11).png" alt="Marque 6" loading="lazy">
+              <img src="../../assets/img/pngegg (10).png" alt="Marque 1" loading="lazy">
+              <img src="../../assets/img/pngegg (9).png" alt="Marque 2" loading="lazy">
+              <img src="../../assets/img/pngegg (8).png" alt="Marque 3" loading="lazy">
+              <img src="../../assets/img/pngegg (13).png" alt="Marque 4" loading="lazy">
+              <img src="../../assets/img/pngegg (12).png" alt="Marque 5" loading="lazy">
+              <img src="../../assets/img/pngegg (11).png" alt="Marque 6" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </section>
+    <section class="nouveautes my-5">
+        <h2 class="nouveautes__title text-center mb-4">Nouveautés</h2>
+        <div class="nouveautes__container">
+          <div class="nouveautes__list">
             @for (item of products_list.slice(-limit_prod); track $index) {
-                <div class="last_content_item me-2"> <!--Boucler sur la classe last_content_item pour les produits -->
-                    <div class="last_content_item_img container">
-                        <div class="position-relative">
-                            <div class="last_content_item_img_new">NEW</div>
-                            <img class="bg-info " ngSrc="{{item.images[0].image}}" fill alt="">
-                        </div>
-                    </div>
-                    <div class="last_content_item_infos">
-                        <div class="last_content_item_title fw-semibold opacity-75">{{item.nom}}</div>
-                        <div class="last_content_item_price fw-semibold">{{item.prix}} FCFA</div>
-                    </div>
-                 </div>
-            }
-           
-       </div>
-    </div>
-    <div  class="d-flex mt-5"><button class="last_uploads_button m-auto px-3 py-1">voir plus</button></div>
-        
-    
-</section>
-<section class="Categorie text-center">
-    <div class="category_head">
-        <h1 class="category_title">Categories</h1>
-    </div>
-    <div class="category_list mt-5 d-flex flex-wrap justify-content-center">
-        @for (item of catagorie_list; track $index) {
-            <a [routerLink]="['/produits/categorie', item.slug]">
-                <div class="category_item text-center my-2 mx-4">
-                    <div class="Category_img mb-3">
-                        <img class="rounded-circle" ngSrc='{{item.image}}' fill alt="" srcset="">
-                    </div>
-                    <div class="category_name">{{item.nom}}</div>
+              <a [routerLink]="['/produits', item.slug]" class="product-card">
+                <div class="product-card__image-container">
+                  <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
+                  <span class="product-card__badge">NEW</span>
                 </div>
+                <div class="product-card__info">
+                  <h3 class="product-card__title">{{item.nom}}</h3>
+                  <p class="product-card__price">{{item.prix}} FCFA</p>
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <button class="nouveautes__button">Voir plus</button>
+        </div>
+    </section>
+    <section class="nouveautes my-5">
+        <h2 class="nouveautes__title text-center mb-4">Derniers articles</h2>
+        <div class="nouveautes__container">
+          <div class="nouveautes__list">
+            @for (item of products_list.slice(-limit_prod); track $index) {
+              <a [routerLink]="['/produits', item.slug]" class="product-card">
+                <div class="product-card__image-container">
+                  <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
+                  <span class="product-card__badge">NEW</span>
+                </div>
+
+                <div class="product-card__info">
+                  <h3 class="product-card__title">{{item.nom}}</h3>
+                  <p class="product-card__price">{{item.prix}} FCFA</p>
+                </div>
+              </a>
+            }
+          </div>
+
             </a>
         }
         
@@ -130,11 +129,27 @@
             <div><img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="" srcset=""></div>
             <div>
                 <a style="color: inherit;" class="text-decoration-none" href="tel:+221784346017">+221 78 434 60 17</a></div>
+
         </div>
-        <div class="contact_box my-2 py-3 col-12 col-md-3">
-            <div><img class="mx-lg-auto" ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="50" height="50" alt="" srcset=""></div>
-            <div>A...&#64;gmail.com </div>
+        <div class="text-center mt-4">
+          <button class="nouveautes__button">Voir plus</button>
         </div>
+
+    </section>
+    <section class="categories">
+        <div class="">
+          <h2 class="categories-title">Catégories</h2>
+          <div class="categories-list">
+            @for (item of catagorie_list; track $index) {
+              <a [routerLink]="['/produits/categorie', item.slug]" class="category-item">
+                <div class="category-image">
+                  <img [ngSrc]="item.image" alt="{{item.nom}}" width="150" height="150" class="rounded-circle">
+                </div>
+                <div class="category-name">{{item.nom}}</div>
+              </a>
+            }
+          </div>
+
     </div>
 </section>
 
@@ -160,21 +175,107 @@
             <img class="mx-lg-auto" ngSrc="../../assets/img/delivery_truck.png" width="50" height="50" alt="" srcset="">
             <h2 class="info_box_title">Livraison Fiable</h2>
             <p>Nous livrons à Dakar ,par zone et dans les régions</p>
+
         </div>
-        <div class="info_box col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/8665523_layer_group_icon.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Groupage d'articles</h2>
-            <p>Vous pouvez faire groupage de 5 à 6 articles pour vous facilitez la livraison </p>
+    </section>
+    <section class="contacts">
+        <div class="container">
+          <div class="contacts-header">
+            <h2 class="contacts-title">Contacts</h2>
+            <p class="contacts-description">
+              Vous pouvez nous joindre via les moyens suivants.
+              N'hésitez pas à nous contacter.
+            </p>
+          </div>
+          <div class="contact-boxes">
+            <div class="contact-box">
+              <h3 class="box-title">Réseaux sociaux</h3>
+              <div class="social-icons">
+                <a href="#" aria-label="Facebook">
+                  <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="Facebook">
+                </a>
+                <a href="#" aria-label="Instagram">
+                  <img ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="Instagram">
+                </a>
+                <a href="#" aria-label="WhatsApp">
+                  <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="WhatsApp">
+                </a>
+              </div>
+            </div>
+            <div class="contact-box">
+              <h3 class="box-title">Téléphone</h3>
+              <div class="contact-info">
+                <img ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="Téléphone">
+                <a href="tel:+22178434617">+221 78 434 60 17</a>
+              </div>
+            </div>
+            <div class="contact-box">
+              <h3 class="box-title">Email</h3>
+              <div class="contact-info">
+                <img ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="40" height="40" alt="Email">
+                <a href="mailto:A...@gmail.com">A...&#64;gmail.com</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="info_box  col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/8665889_shirt_clothes_icon.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Arrivage du Lundi au Samedi</h2>
-            <p>On poste les articles à 19h  les jours de la semaine et 18h les samedis</p>
+    </section>
+    
+    <section class="testimonials">
+        <div class="container">
+          <div class="testimonials-header">
+            <h2 class="testimonials-title">Témoignages</h2>
+            <p class="testimonials-description">Voici ce que nos clients partagent à propos de leurs achats chez nous. Chaque expérience est unique, et leurs avis nous aident à nous améliorer.</p>
+          </div>
+          <div class="testimonials-list">
+            @for (item of avis_list.slice(-3); track $index) {
+              <div class="testimonial-item">
+                <div class="testimonial-content">
+                  <p class="testimonial-text">"{{item.Texte_avis}}"</p>
+                </div>
+                <div class="testimonial-author">
+                  <span class="author-name">{{item.Avis_author.nom_complet}}</span>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="testimonials-action">
+            <button [routerLink]="['/avis']" class="btn-more">Voir plus</button>
+          </div>
         </div>
-        <div class="info_box  col-6 col-lg-2 px-3">
-            <img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="50" height="50" alt="" srcset="">
-            <h2 class="info_box_title">Disponible de 11h à 19h 7j/7</h2>
-            <p> récupérer vos articles tous les jours</p>
+    </section>
+    
+    <section class="info-section">
+        <div class="container">
+          <div class="info-grid">
+            <div class="info-box">
+              <div class="info-icon">
+                <img ngSrc="../../assets/img/delivery_truck.png" width="50" height="50" alt="Livraison">
+              </div>
+              <h3 class="info-title">Livraison Fiable</h3>
+              <p class="info-description">Nous livrons à Dakar, par zone et dans les régions</p>
+            </div>
+            <div class="info-box">
+              <div class="info-icon">
+                <img ngSrc="../../assets/img/8665523_layer_group_icon.png" width="50" height="50" alt="Groupage">
+              </div>
+              <h3 class="info-title">Groupage d'articles</h3>
+              <p class="info-description">Vous pouvez faire groupage de 5 à 6 articles pour vous faciliter la livraison</p>
+            </div>
+            <div class="info-box">
+              <div class="info-icon">
+                <img ngSrc="../../assets/img/8665889_shirt_clothes_icon.png" width="50" height="50" alt="Arrivage">
+              </div>
+              <h3 class="info-title">Arrivage du Lundi au Samedi</h3>
+              <p class="info-description">On poste les articles à 19h les jours de la semaine et 18h les samedis</p>
+            </div>
+            <div class="info-box">
+              <div class="info-icon">
+                <img ngSrc="../../assets/img/9110984_call_phone_icon.png" width="50" height="50" alt="Disponibilité">
+              </div>
+              <h3 class="info-title">Disponible de 11h à 19h 7j/7</h3>
+              <p class="info-description">Récupérez vos articles tous les jours</p>
+            </div>
+          </div>
         </div>
-    </div>
+      </section>
 </section>

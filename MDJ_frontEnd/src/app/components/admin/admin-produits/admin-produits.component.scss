@@ -1,0 +1,149 @@
+$blue_color: #377DFF;
+.actions-header,
+.actions-cell {
+  position: sticky;
+  right: 0;
+  background-color: #fff; /* Ou la couleur de fond de votre choix */
+  z-index: 20;
+}
+
+.actions-header {
+  box-shadow: -5px 0 5px -5px rgba(0,0,0,0.1);
+}
+
+.actions-cell {
+  box-shadow: -5px 0 5px -5px rgba(0,0,0,0.1);
+}
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .orders-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f2f2f2; /* Assurez-vous que cela correspond à votre style existant */
+    font-weight: bold;
+  }
+  .preview_image{
+    position: absolute;
+    object-fit: fill;
+    position: absolute; width: 100%; height: 100%; inset: 0;
+    border: 2px solid rgb(95, 182, 197);
+    border-radius: 15px;
+  }
+  .image-preview{
+    width: 200px;
+    height: 200px;
+    position: relative;
+  }
+  .delete_preview{
+    position: absolute;
+    z-index: 3;
+
+  }
+
+  .coolinput {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    position: static;
+    max-width: 240px;
+  }
+  
+  .coolinput label.text {
+    font-size: 0.75rem;
+    color: $blue_color;
+    font-weight: 700;
+    position: relative;
+    top: 0.5rem;
+    margin: 0 0 0 7px;
+    padding: 0 3px;
+    background-color: #fff;
+    width: fit-content;
+  }
+  
+  .coolinput input[type=text].input {
+    padding: 11px 10px;
+    font-size: 0.75rem;
+    border: 2px $blue_color solid;
+    border-radius: 5px;
+  }
+  
+  .coolinput input[type=text].input:focus {
+    outline: none;
+  }
+select{
+  width: 200px;
+  
+  border: 2px $blue_color solid;
+}
+
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox:checked ~ .checkmark {
+  background-color: #2196F3;
+  box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+@keyframes checkAnim {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 10px;
+  }
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  animation: checkAnim 0.2s forwards;
+}
+

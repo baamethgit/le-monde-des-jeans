@@ -1,7 +1,14 @@
 <div class="reviews-container">
+    <h2 class="reviews-title">Avis Clients</h2>
     <div class="review-card" *ngFor="let review of paginatedCommentaires">
-        <button class="delete-btn border" (click)="deleteReview(review.id)">×</button>
+        <button class="delete-btn" (click)="deleteReview(review.id)" aria-label="Supprimer l'avis">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
         <div class="review-header">
+
             <span class="client-name">{{ review.Avis_author.nom_complet }}, {{ review.Avis_author.phone_number }}</span>
             <span class="review-date">{{ review.temoigne_le | date : 'dd MMMM YYYY' }}</span>
         </div>
@@ -9,6 +16,7 @@
             {{ '★'.repeat(review.nbre_etoiles) }}{{ '☆'.repeat(5 - review.nbre_etoiles) }}
         </div>
         <p class="review-content">{{ review.Texte_avis }}</p>
+
     </div>
 </div>
 <div class="d-flex justify-content-center">

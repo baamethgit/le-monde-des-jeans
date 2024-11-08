@@ -6,12 +6,14 @@ export interface Produit {
     id: number;
     nom: string;
     prix: number;
-    categorie: categorie;
+    categorie_detail: categorie;
     taille?: string;
+    pointure?:number;
     composition?: string;
     couleur?: string;
     slug: string;
     QuantiteStock: number;
+    Description:Text
     reserve: boolean;
     special: boolean;
     images: ProduitImage[];  // Change this to array of objects with 'image' property

@@ -29,6 +29,7 @@
     "express": "^4.18.2",
     "html2canvas": "^1.4.1",
     "mdj-front-end": "file:",
+    "ngx-file-drop": "^16.0.0",
     "primeng": "^17.18.10",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

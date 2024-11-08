@@ -48,6 +48,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
 
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Produit.objects.all()
     serializer_class = serializers.ProductSerializer
@@ -58,6 +59,51 @@ class ProductViewSet(viewsets.ModelViewSet):
         produit = get_object_or_404(models.Produit, slug=slug)
         serializer = self.get_serializer(produit)
         return Response(serializer.data)
+    
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)  # Toujours partiel
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if 'image' in request.FILES:
+            # Gérer les mises à jour d'images comme avant
+            instance.images.all().delete()
+            images = request.FILES.getlist('image')
+            for image in images:
+                models.ImageProduit.objects.create(produit=instance, image=image)
+
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+    
+    def create(self, request, *args, **kwargs):
+        produit_data = {
+            'nom': request.data.get('nom'),
+            'prix': request.data.get('prix'),
+            'categorie': request.data.get('categorie'),
+            'taille': request.data.get('taille'),
+            'pointure':request.data.get('pointure'),
+            'composition': request.data.get('composition'),
+            'couleur': request.data.get('couleur'),
+            'special':request.data.get('special'),
+            'description':request.data.get('description'),
+            'QuantiteStock':request.data.get('QuantiteStock')
+        }
+        produit_serializer = self.get_serializer(data=produit_data)
+        if produit_serializer.is_valid():
+            produit = produit_serializer.save()
+            
+            # Gérer les images
+            images = request.FILES.getlist('image')
+            for image in images:
+                models.ImageProduit.objects.create(produit=produit, image=image)
+            
+            return Response(produit_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(produit_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         queryset = super().get_queryset()

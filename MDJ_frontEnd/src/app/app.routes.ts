@@ -26,10 +26,14 @@ import { ProduitService } from './services/produits/produit.service';
 import { inject } from '@angular/core';
 import { AdminListeCommandesComponent } from './components/admin/admin-liste-commandes/admin-liste-commandes.component';
 import { AdminDetailCommandeComponent } from './components/admin/admin-detail-commande/admin-detail-commande.component';
+
+import { AdminProduitsComponent } from './components/admin/admin-produits/admin-produits.component';
+
 import { MesCommandesComponent } from './components/user/mes-commandes/mes-commandes.component';
 import { ListeZonesComponent } from './components/admin/liste-zones/liste-zones.component';
 import { UpdateZoneComponent } from './components/admin/update-zone/update-zone.component';
 import { CreateZoneComponent } from './components/admin/create-zone/create-zone.component';
+
 
 export const routes: Routes = [
     {path: '', component: HomeComponent,
@@ -39,6 +43,7 @@ export const routes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
+    {path:'produits', component: ProduitsComponent, children:[
     {path: 'commande-validee', component:CommandeValideeComponent,
         canActivate: [userGuard]},
     {path: 'profile', component: ProfilComponent,
@@ -50,6 +55,7 @@ export const routes: Routes = [
     {path: 'mes-commandes', component: MesCommandesComponent,
         canActivate: [userGuard]},
     {path:'produits', component: AllProductsComponent, children:[
+
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
@@ -63,8 +69,10 @@ export const routes: Routes = [
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
+
         {path:'zones-livraison', component: ListeZonesComponent, pathMatch:'full'},
         {path:'zone/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
         {path:'creer-zone', component: CreateZoneComponent , pathMatch:'full'},
+
     ]},
 ];

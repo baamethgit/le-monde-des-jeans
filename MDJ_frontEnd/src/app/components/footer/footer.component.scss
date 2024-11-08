@@ -1,56 +1,69 @@
 $dark-color: #141718;
-$blue_color: #377DFF;
-*{
-    list-style: none;
-    box-sizing: border-box;
-    text-decoration: none;
-    padding: 0;
-    margin: 0;
-}
-.footer{
+$blue-color: #377DFF;
+$transition: all 0.3s ease;
+
+.footer {
     background-color: $dark-color;
     color: white;
-    width: 100%;
+    font-family: 'Poppins', sans-serif;
 
-    .title_section_footer{
-        font-size: 1.5em;
-        font-family: Poppins;
-        font-weight: 100;
-    }
-    #footer-title{
-        font-family: princess;
-    }
-    ul
-    {
-        li
-        {
-            a{
-                color:#ffffff;
-            }
-            a:hover{
-                color: $blue_color;
-            }
-            padding-top: 5px;
-        }
-    }
-    .footer-top{
-        img{
-            margin: 5px;
-        }
-    }
-    .footer-bottom{
-        width: max-content;
-        div{
-            // margin: 0px 15px;
-        }
-        .vr{
-            background-color: rgba(255, 255, 255, 0.603);
+    a {
+        color: #ffffff;
+        text-decoration: none;
+        transition: $transition;
+
+        &:hover {
+            color: $blue-color;
         }
     }
 
-    hr{
-        background-color: rgba(255, 255, 255, 0.603);
-        
+    #footer-title {
+        font-family: 'Princess', cursive;
+        font-weight: 300;
     }
-    
+
+    .footer-links {
+        li {
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    .social-icons {
+        a {
+            display: inline-block;
+            transition: $transition;
+
+            &:hover {
+                transform: translateY(-3px);
+            }
+        }
+
+        .social-icon {
+            filter: brightness(0) invert(1);
+            transition: $transition;
+
+            &:hover {
+                filter: none;
+            }
+        }
+    }
+
+    hr {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    address {
+        font-style: normal;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer {
+        text-align: center;
+
+        .social-icons {
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+    }
 }
