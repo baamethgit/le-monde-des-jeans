@@ -11,7 +11,7 @@ export interface Commande {
     date_commande : Date;
     date_livraison : Date ;
     statut : StatutCommande;
-    zone_livraison : ZoneLivraison;
+    zone_livraison? : ZoneLivraison;
     recupere_magasin : boolean;
-    total : number
+    montant : number
 }

@@ -27,17 +27,15 @@ class ProductSerializer(serializers.ModelSerializer):
         model = models.Produit
         fields = ['id', 'nom', 'prix', 'categorie', 'taille', 'composition', 'couleur', 'slug', 'QuantiteStock', 'reserve', 'special', 'images']
 
-class AvisSerializer(serializers.ModelSerializer):
-
-    Avis_author=accountserializer.UserSerializer()
-    
-    class Meta:
-        model=accountModel.Avis
-        fields=['Texte_avis', 'Avis_author']
 
 class ZoneSerializer(ModelSerializer):
     class Meta:
         model = ZoneLivraison
+        fields = "__all__"
+
+class PaiementSerializer(ModelSerializer):
+    class Meta:
+        model = models.Paiement
         fields = "__all__"
 
 class PanierProduitSerializer(serializers.ModelSerializer):
@@ -45,7 +43,7 @@ class PanierProduitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.PanierProduit
-        fields = ['id', 'produit', 'date_ajout']
+        fields = ['id', 'produit', 'date_ajout','quantite']
 
 class PanierSerializer(ModelSerializer):
     client = UserSerializer()
@@ -64,8 +62,25 @@ class CommandeSerializer(ModelSerializer):
     client = UserSerializer()
     produits = ProductSerializer(many=True)
     zone_livraison = ZoneSerializer()
+    montant = FloatField()
+    
+    class Meta:
+        model = Commande
+        fields = ['id','client','produits','zone_livraison','ref_code','date_commande','date_livraison','statut','recupere_magasin','montant']
+        read_only_fields = ['ref_code', 'client']
+
+
+class CommandeUpdateSerializer(ModelSerializer):
     class Meta:
         model = Commande
         fields = '__all__'
         read_only_fields = ['ref_code', 'client']
 
+class CommandeHistoriqueSerializer(ModelSerializer):
+    produits = ProductSerializer(many=True)
+    zone_livraison = ZoneSerializer()
+    montant = FloatField()
+    class Meta:
+        model = Commande
+        fields = ['id','produits','zone_livraison','ref_code','date_commande','date_livraison','statut','recupere_magasin','montant']
+        read_only_fields = ['ref_code', 'client']

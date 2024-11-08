@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Commande } from '../../../models/commande';
 import { CommandeService } from '../../../services/commandes/commande.service';
 import { StatutCommande } from '../../../models/StatutCommande';
-import { Router } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, tap } from 'rxjs';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-admin-detail-commande',
   standalone: true,
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './admin-detail-commande.component.html',
   styleUrl: './admin-detail-commande.component.scss'
 })
-export class AdminDetailCommandeComponent {
+export class AdminDetailCommandeComponent implements OnInit {
   textStatut : string = '';
   statutCommande!: StatutCommande;
   commande! : Commande;
@@ -19,7 +20,34 @@ export class AdminDetailCommandeComponent {
   protected readonly StatutCommande = StatutCommande;
 
 
-  constructor(private router:Router){}
+  constructor(private router:Router,private route : ActivatedRoute){}
+
+  ngOnInit(): void {
+      const refCode = this.route.snapshot.params['ref-code'];
+      // this.route.paramMap
+      //   .pipe(map(params => params.get('id')), tap(id => (this.id = +id)))
+      //   .subscribe(id => {});
+      this.commandeService.getCommandeByRefCode(refCode).subscribe(
+        {
+          next:(value)=> {
+            this.commande = value;
+              console.log(this.commande);
+          },
+        }
+      )
+      
+  }
+  downloadOrderDetails() {
+    const element = document.getElementById('order-details-box');
+    
+    html2canvas(element as HTMLElement).then((canvas) => {
+      const imageData = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = imageData;
+      link.download = 'order-details.png';
+      link.click();
+    });
+  }
 
   changeStatut(statut: StatutCommande){
       this.commandeService.updateCommande(this.commande.id,{'statut':statut.toString()}).subscribe({

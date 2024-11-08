@@ -2,13 +2,13 @@
     <div class="review-card" *ngFor="let review of paginatedCommentaires">
         <button class="delete-btn border" (click)="deleteReview(review.id)">×</button>
         <div class="review-header">
-            <span class="client-name">{{ review.clientName }}</span>
-            <span class="review-date">{{ review.date.toDateString() | date : 'dd MMMM YYYY' }}</span>
+            <span class="client-name">{{ review.Avis_author.nom_complet }}, {{ review.Avis_author.phone_number }}</span>
+            <span class="review-date">{{ review.temoigne_le | date : 'dd MMMM YYYY' }}</span>
         </div>
         <div class="review-rating">
-            {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+            {{ '★'.repeat(review.nbre_etoiles) }}{{ '☆'.repeat(5 - review.nbre_etoiles) }}
         </div>
-        <p class="review-content">{{ review.content }}</p>
+        <p class="review-content">{{ review.Texte_avis }}</p>
     </div>
 </div>
 <div class="d-flex justify-content-center">

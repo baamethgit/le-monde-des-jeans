@@ -8,8 +8,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
 import { Commande } from '../../../models/commande';
-import { PaymentMethod } from '../../../models/PaymentMethod';
 import { Paiement } from '../../../models/paiement';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -20,7 +20,7 @@ import { Paiement } from '../../../models/paiement';
   styleUrl: './detail-commande.component.scss'
 })
 export class DetailCommandeComponent implements OnInit{
-  methodePaiement = 'PAIEMENT_LIVRAISON';
+  methodePaiement = 'WAVE';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   @Input() a_livrer : boolean = true;
   commande : Commande | undefined;
@@ -32,11 +32,14 @@ export class DetailCommandeComponent implements OnInit{
   client! : User;
   commandeService = inject(CommandeService);
   userService = inject(UserService);
-  modelOpen = false;
   isLoading = false;
   paiement! : Paiement;
+  selectedOption: string = 'livraison';
 
-  constructor(private router : Router){}
+
+  protected modalService = inject(NgbModal);
+
+  constructor(private readonly router : Router){}
 
   ngOnInit(): void {
         this.commandeService.getDeliveryZones().subscribe({
@@ -51,41 +54,63 @@ export class DetailCommandeComponent implements OnInit{
         this.loadData();
   }
 
-  payerCommande(id_commande:number){
-      this.openPaymentOverlay(this.methodePaiement);
+  openModal(modalname: any): void {
+    this.modalService.open(modalname, { size: 'lg', centered: true });
   }
 
-  openPaymentOverlay(operateur : string){
-    this.modelOpen = true;
-  }
+  payerCommande(id_commande:number) : void{
+      let newData: { [key: string]: any } = {}; 
 
-  validerCommande(operateur : string){
+      newData['recupere_magasin'] = this.selectedOption === 'recuperation';
+      if (this.selectedOption === 'livraison') { 
+          newData['zone_livraison'] = this.selectedZone?.id;
+      }
+    
+        this.commandeService.updateCommande(id_commande,newData).subscribe(
+          {
+            next(value) {
+                console.log('update valide',value);
+            },
+            error(err) {
+                console.log("erreur lors de la maj")
+            },
+          }
+        )
+    }
 
-  }
 
   loadData(){
     this.commandeService.getCurrentCommande().subscribe({
       next:(data)=>{
         this.commande = data;
+        this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
+        this.selectedZone = this.commande?.recupere_magasin ? undefined : this.commande?.zone_livraison;
       },
       error:(error)=>{
-        this.message = ''
+        this.message = '';
+        this.router.navigate(['/panier']);
       }
     })
   }
 
-  marquerCommePayee(){
-    
-  }
 
-  get totalCommande(){
-    return this.prixLivraison + 0;
-  }
   
   onZoneChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedZoneNumber = parseInt(selectElement.value, 10);
     this.loadZone(selectedZoneNumber);
+    // @ts-ignore
+    // this.commandeService.updateCommande(this.commande?.id,{'recupere_magasin':false,'zone_livraison':this.selectedZone?.id}).subscribe(
+    //   {
+    //     next(value) {
+    //         console.log('update valide',value);
+    //     },
+    //     error(err) {
+    //         console.log("erreur lors de la maj")
+    //     },
+    //   }
+    // )
+    // this.loadData();
   }
 
   loadZone(n:number){
@@ -121,4 +146,6 @@ export class DetailCommandeComponent implements OnInit{
       }
     })
 }
+
+
 }

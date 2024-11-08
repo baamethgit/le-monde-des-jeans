@@ -128,7 +128,8 @@
         </div>
         <div class="contact_box  my-2 py-3 col-12 col-md-3">
             <div><img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="" srcset=""></div>
-            <div>+221 78 434 60 17</div>
+            <div>
+                <a style="color: inherit;" class="text-decoration-none" href="tel:+221784346017">+221 78 434 60 17</a></div>
         </div>
         <div class="contact_box my-2 py-3 col-12 col-md-3">
             <div><img class="mx-lg-auto" ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="50" height="50" alt="" srcset=""></div>
@@ -142,7 +143,7 @@
         <h1 class="tem_title text-center">Témoignages</h1>
         <p class="text-center mx-3">Voici ce que nos clients partagent à propos de leurs achats chez nous. Chaque expérience est unique, et leurs avis nous aident à nous améliorer.</p>
     </div>
-     @for (item of avis_list.slice(-3); track $index) { <!--essayer d'utiliser une api pour gerer ca apres maybe -->
+     @for (item of avis_list; track item.id) { <!--essayer d'utiliser une api pour gerer ca apres maybe -->
      <div class="user_tem w-75 m-auto">
         <div class="username_tem">{{item.Avis_author.nom_complet}}</div>
         <div class="text_tem">{{item.Texte_avis}}</div>

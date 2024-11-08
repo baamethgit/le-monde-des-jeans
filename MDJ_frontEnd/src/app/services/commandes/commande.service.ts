@@ -2,7 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { ZoneLivraison } from '../../models/zone-livraison';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Commande } from '../../models/commande';
+
+export interface statCommande{
+  total_commandes: number,
+  commande_cours_livraison: number,
+  commandes_livrees: number
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +28,20 @@ export class CommandeService {
     return this.http.get<ZoneLivraison>(url); 
   }
 
+  createZone(newZone : ZoneLivraison):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/creer-zone/`;
+    return this.http.post<ZoneLivraison>(url,newZone, { withCredentials: true });
+  }
+
+  updateZone(newZone : ZoneLivraison, idZone : number):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/zone/${idZone}/update/`;
+    return this.http.put<any>(url,newZone, { withCredentials: true });
+  }
+
+  deleteZone(idZone : number):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/zone/${idZone}/delete/`;
+    return this.http.delete<any>(url, { withCredentials: true });
+  }
 
   getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
         let params = new HttpParams()
@@ -57,12 +76,25 @@ export class CommandeService {
     return this.http.get(`${this.baseUrl}apiProduit/detail-commande/${commandeId}/`,{withCredentials: true  });
   }
 
+  getCommandeByRefCode(commandeRefCode: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/detail-commande-ref/${commandeRefCode}/`,{withCredentials: true  });
+  }
+
+
   getCurrentCommande(): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/commandes-en-attente/`,{withCredentials: true  });
   }
 
   getListeCommandes(): Observable<any> {
-    return this.http.get(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
+    return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
+  }
+
+  getListeCommandesEnCours(): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/commandes-en-cours/`,{withCredentials: true });
+  }
+
+  getListeCommandesHistorique(): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/historique-commandes/`,{withCredentials: true });
   }
 
   validerCommande(commandeId: number): Observable<any> {
@@ -84,4 +116,11 @@ export class CommandeService {
   updateCommande(id: number, newData: any){
     return this.http.patch(`${this.baseUrl}apiProduit/commandes/${id}/update/`, newData,{withCredentials: true  });
   }
+
+  
+  getStatsCommande():Observable<statCommande>{
+    const url=`${this.baseUrl}apiProduit/stats-commandes/`
+    return this.http.get<statCommande>(url,{ withCredentials: true })
+  }
+
 }

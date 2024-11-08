@@ -27,40 +27,44 @@ import { inject } from '@angular/core';
 import { AdminListeCommandesComponent } from './components/admin/admin-liste-commandes/admin-liste-commandes.component';
 import { AdminDetailCommandeComponent } from './components/admin/admin-detail-commande/admin-detail-commande.component';
 import { MesCommandesComponent } from './components/user/mes-commandes/mes-commandes.component';
+import { ListeZonesComponent } from './components/admin/liste-zones/liste-zones.component';
+import { UpdateZoneComponent } from './components/admin/update-zone/update-zone.component';
+import { CreateZoneComponent } from './components/admin/create-zone/create-zone.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent,
-        resolve: {
-            produits: () => inject(ProduitService).getProducts()
-          },
-          canActivate: [userGuard]},
-
+          canActivate: [userGuard]}
+        ,
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
-    {path: 'commande-validee', component:CommandeValideeComponent},
-    {path: 'profile', component: ProfilComponent},
-    {path: 'profile/edit', component: ProfilUpdateComponent},
-    {path: 'detail-commande', component: DetailCommandeComponent},
-    {path: 'mes-commandes', component: MesCommandesComponent},
+    {path: 'commande-validee', component:CommandeValideeComponent,
+        canActivate: [userGuard]},
+    {path: 'profile', component: ProfilComponent,
+        canActivate: [userGuard]},
+    {path: 'profile/edit', component: ProfilUpdateComponent,
+        canActivate: [userGuard]},
+    {path: 'detail-commande', component: DetailCommandeComponent,
+        canActivate: [userGuard]},
+    {path: 'mes-commandes', component: MesCommandesComponent,
+        canActivate: [userGuard]},
     {path:'produits', component: AllProductsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
-    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full',
-        // resolve : {
-        //     product_selected : detailProduitResolver
-        // }
-    },
+    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'contacts', component:ContactsComponent, pathMatch:'full'},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
-        {path: 'commande/:ref', component: AdminDetailCommandeComponent},
+        {path: 'commande/:ref-code', component: AdminDetailCommandeComponent},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
+        {path:'zones-livraison', component: ListeZonesComponent, pathMatch:'full'},
+        {path:'zone/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
+        {path:'creer-zone', component: CreateZoneComponent , pathMatch:'full'},
     ]},
 ];

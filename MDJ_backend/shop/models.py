@@ -4,7 +4,9 @@ from MDJ_backend.settings import AUTH_USER_MODEL
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from datetime import timedelta
-
+from django.db import IntegrityError
+import random
+from django.db import transaction
 # Utilisez select_related et prefetch_related dans vos vues pour optimiser les requêtes liées aux produits et commandes.
 
 class Categorie(models.Model):
@@ -85,6 +87,7 @@ class PanierProduit(models.Model):
     panier = models.ForeignKey('Panier', on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     date_ajout = models.DateTimeField(auto_now_add=True)
+    quantite = models.PositiveIntegerField(default=1)
 
     def est_expire(self):
         return timezone.now() > self.date_ajout + timedelta(minutes=10)
@@ -111,20 +114,23 @@ class Panier(models.Model):
     @property
     def quantitePanier(self):
         cartitems = self.produits.all()
-        return 12
+        return cartitems.count()
     
     def nettoyer_produits_expires(self):
         for panier_produit in self.panierproduit_set.all():
             if panier_produit.est_expire():
                 produit = panier_produit.produit
-                produit.reserve = False
+                # produit.reserve = False
+                produit.QuantiteStock += 1
                 produit.save()
                 panier_produit.delete()
 
-    def ajouter_produit(self, produit):
-        if not produit.reserve:
+    def ajouter_produit(self, produit : Produit):
+        # if not produit.reserve:
+        if produit.QuantiteStock:
             PanierProduit.objects.create(panier=self, produit=produit)
-            produit.reserve = True
+            # produit.reserve = True
+            produit.QuantiteStock -= 1
             produit.save()
             return True
         return False
@@ -159,13 +165,38 @@ class Commande(models.Model):
     zone_livraison = models.ForeignKey(ZoneLivraison, on_delete=models.SET_NULL, null=True, blank=True)
     recupere_magasin = models.BooleanField(default=False)
     
+    @classmethod
+    def generate_ref_code(cls):
+        timestamp = int(timezone.now().timestamp())
+        random_num = random.randint(1000, 9999)  # Ajoute un nombre aléatoire
+        return f"{timestamp:x}{random_num}"  # Combine le timestamp et un numéro aléatoire
+
+    def save(self, *args, **kwargs):
+        if not self.ref_code:
+            attempts = 0
+            max_attempts = 3
+            while attempts < max_attempts:
+                self.ref_code = self.generate_ref_code()
+                try:
+                    with transaction.atomic():
+                        super().save(*args, **kwargs)
+                        break
+                except IntegrityError:  # En cas de collision
+                    attempts += 1
+                    if attempts == max_attempts:
+                        raise
+        else:
+            super().save(*args, **kwargs)
+        
+        
     def est_expire(self):
         return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'
     
     def liberer_produits_apres_delais(self):
-        if self.est_expire():
+        if self.est_expire() and self.id:
             for produit in self.produits.all():
-                produit.reserve = False
+                # produit.reserve = False
+                produit.QuantiteStock -= 1
                 produit.save()
             self.delete()
 
@@ -173,7 +204,7 @@ class Commande(models.Model):
         return f"Commande {self.ref_code} par {self.client.nom_complet}"
     
     @property
-    def get_total(self):
+    def montant(self):
         total = sum(prod.prix for prod in self.produits.all())
         if self.zone_livraison and not self.recupere_magasin:
             total += self.zone_livraison.prix_livraison
@@ -202,7 +233,7 @@ class Commande(models.Model):
     def annuler(self):
         if self.statut != 'LIVREE':
             for produit in self.produits.all():
-                produit.reserve = False
+                produit.QuantiteStock += 1
                 produit.save()
             self.statut = 'ANNULEE'
             self.save()
@@ -210,15 +241,16 @@ class Commande(models.Model):
 
 class Paiement(models.Model):
     METHODE_PAIEMENT_CHOICES = (
-        ('OM', 'Orange Money'),
-        ('WV', 'Wave'),
+        ('ORANGE_MONEY', 'Orange Money'),
+        ('WAVE', 'Wave'),
         ('CC', 'Carte de crédit'),
     )
 
     commande = models.OneToOneField(Commande, on_delete=models.CASCADE)
     montant = models.DecimalField(max_digits=10, decimal_places=2)
-    methode_paiement = models.CharField(max_length=2, choices=METHODE_PAIEMENT_CHOICES)
+    methode_paiement = models.CharField(max_length=20, choices=METHODE_PAIEMENT_CHOICES)
     date_paiement = models.DateTimeField(auto_now_add=True)
+    id_transaction = models.CharField(max_length=50)
 
     def __str__(self):
         return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"
