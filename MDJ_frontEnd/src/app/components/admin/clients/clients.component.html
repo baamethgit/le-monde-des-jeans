@@ -47,14 +47,6 @@
 	<div *ngIf="users.length" class="d-flex justify-content-between p-2">
 		<ngb-pagination (pageChange)="loadUsers()" [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize">
 		</ngb-pagination>
-
-		<!-- <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="pageSize">
-			<option [ngValue]="5">5 Clients par page</option>
-            <option [ngValue]="10">10 Clients par page</option>
-            <option [ngValue]="25">25 Clients par page</option>
-			<option [ngValue]="50">50 Clients par page</option>
-			<option [ngValue]="100">100 Clients par page</option>
-		</select> -->
         <p>{{totalItems}} clients au total</p>
 	</div>
 </form>

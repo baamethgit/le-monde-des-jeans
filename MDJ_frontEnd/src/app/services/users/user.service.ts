@@ -1,25 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, retry, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../../models/user';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Avis } from '../../models/temoignage';
-import { Panier } from '../../models/panier';
-
-
-
-
-
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Avis, AvisCreationData } from '../../models/Avis';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://127.0.0.1:8000/user/';
+  private readonly baseUrl = 'http://127.0.0.1:8000/user/';
 
-  private jwtKey = 'jwt';
+  private readonly jwtKey = 'jwt';
+  
   loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   private hasToken(): boolean {
     return !!this.getToken();
@@ -105,10 +100,18 @@ export class UserService {
   }
 
   getAllAvis():Observable<Avis[]>{
+    const url=`${this.baseUrl}avis/`
+    return this.http.get<Avis[]>(url,{ withCredentials: true })
+  }
 
-    const url=`${this.baseUrl}API/Avis`
+  deleteAvis(id:number):Observable<any>{
+    const url=`${this.baseUrl}avis/${id}`
+    return this.http.delete(url,{ withCredentials: true })
+  }
 
-    return this.http.get<Avis[]>(url)
+  addAvis(data : AvisCreationData):Observable<AvisCreationData>{
+    const url=`${this.baseUrl}avis/`
+    return this.http.post<AvisCreationData>(url,data,{ withCredentials: true })
   }
 
    // Étape 1 : Envoyer les informations d'inscription et recevoir l'OTP
@@ -119,18 +122,6 @@ export class UserService {
   // Étape 2 : Vérifier l'OTP et finaliser l'inscription
   verifyOTP(phone_number: string,otpCode: string): Observable<any> {
     return this.http.post(`${this.baseUrl}verify-otp/`, { phone_number: phone_number,otp_code: otpCode }, { withCredentials: true });
-  }
-
-
-  getUserCart(userPhone:string):Observable<Panier>{
-    const url=`${this.baseUrl}API/paniers/${userPhone}`
-    console.log('user id: ', userPhone)
-    return this.http.get<Panier>(url)
-  }
-
-  delProductFromCart(id_product_to_delete: number):Observable<any>{
-    const url=`${this.baseUrl}API/panier-produits/${id_product_to_delete}`
-    return this.http.delete<any>(url)
   }
 
 }

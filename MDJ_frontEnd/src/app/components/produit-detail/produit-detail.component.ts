@@ -17,6 +17,7 @@ import { PanierService } from '../../services/panier.service';
   styleUrl: './produit-detail.component.scss'
 })
 export class ProduitDetailComponent {
+
   list_p: any[] = [];
   product_selected: Produit | undefined;
   must_like_product: Produit[] = [];
@@ -25,6 +26,7 @@ export class ProduitDetailComponent {
   userService = inject(UserService);
   responsiveOptions: any[] = [
     {
+
       breakpoint: '576px',
       numVisible: 1,
       numScroll: 1,
@@ -54,6 +56,18 @@ export class ProduitDetailComponent {
         this.product_selected = data;
         this.list_p = this.product_selected.images;
         this.loadSimilarProducts();
+
+acheterDirectement(productSlug : string | undefined){
+  if(productSlug != undefined){
+    this.commandeService.creerCommande(false,productSlug).subscribe({
+      next:(data)=>{
+        this.router.navigate(['/detail-commande']);
+        this.errorMessage = '';
+      },
+      error : (error)=>{
+        if(error.error.message_erreur)
+          this.errorMessage = error.error.message_erreur;
+
       },
       error: (error) => {
         console.log('Erreur lors de l\'affichage du produit :', error.error.detail);
@@ -76,6 +90,17 @@ export class ProduitDetailComponent {
       console.log('Aucun slug de catégorie disponible pour ce produit.');
     }
   }
+addToCart(){
+  this.panierService.ajouterProduit(this.product_selected?.slug || '').subscribe({
+    next:(data)=>{
+      this.router.navigate(['/panier']);
+    },
+    error : (error)=>{
+      if(error.error.message_erreur)
+        this.errorMessage = error.error.message_erreur;
+    },
+  })
+}
 
   acheterDirectement(productSlug: string | undefined): void {
     if (productSlug) {

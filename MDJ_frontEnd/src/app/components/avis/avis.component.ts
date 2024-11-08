@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Avis } from '../../models/temoignage';
 import { UserService } from '../../services/users/user.service';
+import { Avis } from '../../models/Avis';
 
 @Component({
   selector: 'app-avis',
@@ -12,7 +12,7 @@ import { UserService } from '../../services/users/user.service';
 export class AvisComponent {
 Avis:Avis[]=[];
 
-  constructor(private userService:UserService){}
+  constructor(private readonly userService:UserService){}
 
 ngOnInit():void{
   this.userService.getAllAvis().subscribe({

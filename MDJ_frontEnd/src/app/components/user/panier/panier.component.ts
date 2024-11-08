@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 
 import { Router, RouterLink } from '@angular/router';
-import { User } from '../../../models/user';
-import { UserService } from '../../../services/users/user.service';
 import { PanierService } from '../../../services/panier.service';
 import { IcontenuPanier, Ipanier } from './panier.model';
-import { interval, startWith, Subscription, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { CommandeService } from '../../../services/commandes/commande.service';
 
@@ -22,20 +20,19 @@ import { CommandeService } from '../../../services/commandes/commande.service';
   styleUrl: './panier.component.scss'
 })
 export class PanierComponent implements OnInit ,OnDestroy{
-  selectedOption: string = 'livraison';
   CheckoutStep : CheckoutStep = CheckoutStep.Panier;
-  currentUser: User | undefined = undefined;
-  contenupanier : IcontenuPanier[] = [];
-  message : string = '';
-  private panierService = inject(PanierService);
-  private commandeService = inject(CommandeService);
 
   panier:Omit<Ipanier,'produits'>|undefined;
+  contenupanier : IcontenuPanier[] = [];
+  errorMessage : string = '';
+  private readonly panierService = inject(PanierService);
+  private readonly commandeService = inject(CommandeService);
+
   tempsRestant: { [key: number]: { minutes: number, seconds: number } } = {};
-  private timerSubscription! : Subscription;
+  private readonly timerSubscription! : Subscription;
 
 
-  constructor(private router : Router){}
+  constructor(private readonly router : Router){}
 
   ngOnInit() {
     this.loadData();
@@ -51,10 +48,11 @@ export class PanierComponent implements OnInit ,OnDestroy{
   commander(){
     this.commandeService.creerCommande(true).subscribe({
       next:(data)=>{
-        this.router.navigate(['/panier-valider']);
+        this.router.navigate(['/detail-commande']);
       },
       error : (error)=>{
-          
+        if(error.error.message_erreur)
+          this.errorMessage = error.error.message_erreur;
       },
     })
   }
@@ -74,9 +72,10 @@ export class PanierComponent implements OnInit ,OnDestroy{
     this.panierService.viderPanier().subscribe({
       next: (data) => {
           this.loadData();
-          this.message = 'Votre Panier est vidé !'
+          // this.message = 'Votre Panier est vidé !'
       },
       error: (error) => {
+        
       }
     });
   }
@@ -93,6 +92,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
     this.panierService.getContenuPanier().subscribe({
       next: (data) => {
         this.contenupanier = data;
+        
     },
     error: (error) => {
     }

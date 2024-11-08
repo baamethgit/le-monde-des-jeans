@@ -2,7 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { ZoneLivraison } from '../../models/zone-livraison';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Commande } from '../../models/commande';
+
+export interface statCommande{
+  total_commandes: number,
+  commande_cours_livraison: number,
+  commandes_livrees: number
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,18 +28,38 @@ export class CommandeService {
     return this.http.get<ZoneLivraison>(url); 
   }
 
+  createZone(newZone : ZoneLivraison):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/creer-zone/`;
+    return this.http.post<ZoneLivraison>(url,newZone, { withCredentials: true });
+  }
 
-  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = '',dateFilter : Date): Observable<Commande[]> {
+  updateZone(newZone : ZoneLivraison, idZone : number):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/zone/${idZone}/update/`;
+    return this.http.put<any>(url,newZone, { withCredentials: true });
+  }
+
+  deleteZone(idZone : number):Observable<any>{
+    const url = `${this.baseUrl}apiProduit/zone/${idZone}/delete/`;
+    return this.http.delete<any>(url, { withCredentials: true });
+  }
+
+  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
         let params = new HttpParams()
           .set('page', page.toString())
-          .set('page_size', pageSize.toString())
-          .set('date_filtre', dateFilter.toString());
+          .set('page_size', pageSize.toString());
         
         if (searchTerm) {
           params = params.set('search', searchTerm);
         }
+        // if (dateFilter) {
+        //   params = params.set('date_filtre', dateFilter.toString());
+        // }
 
-        return this.http.get<Commande[]>(`${this.baseUrl}commandes/`, { params });
+        // if (statut) {
+        //   params = params.set('statut', statut);
+        // }
+
+        return this.http.get(`${this.baseUrl}apiProduit/list-commandes/`, { params });
   }
 
   creerCommande(fromPanier: boolean = false, produitSlug?: string): Observable<any> {
@@ -51,12 +76,25 @@ export class CommandeService {
     return this.http.get(`${this.baseUrl}apiProduit/detail-commande/${commandeId}/`,{withCredentials: true  });
   }
 
+  getCommandeByRefCode(commandeRefCode: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/detail-commande-ref/${commandeRefCode}/`,{withCredentials: true  });
+  }
+
+
   getCurrentCommande(): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/commandes-en-attente/`,{withCredentials: true  });
   }
 
   getListeCommandes(): Observable<any> {
-    return this.http.get(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
+    return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
+  }
+
+  getListeCommandesEnCours(): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/commandes-en-cours/`,{withCredentials: true });
+  }
+
+  getListeCommandesHistorique(): Observable<any> {
+    return this.http.get(`${this.baseUrl}apiProduit/historique-commandes/`,{withCredentials: true });
   }
 
   validerCommande(commandeId: number): Observable<any> {
@@ -70,4 +108,19 @@ export class CommandeService {
   supprimerCommande(commandeId: number): Observable<any> {
       return this.http.delete(`${this.baseUrl}apiProduit/commandes/${commandeId}/delete/`,{withCredentials: true  });
   }
+
+  getCommandesByStatus(commandeStatus: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}apiProduit/commandes/${commandeStatus}/filtrer/`, {},{withCredentials: true  });
+  }
+
+  updateCommande(id: number, newData: any){
+    return this.http.patch(`${this.baseUrl}apiProduit/commandes/${id}/update/`, newData,{withCredentials: true  });
+  }
+
+  
+  getStatsCommande():Observable<statCommande>{
+    const url=`${this.baseUrl}apiProduit/stats-commandes/`
+    return this.http.get<statCommande>(url,{ withCredentials: true })
+  }
+
 }
