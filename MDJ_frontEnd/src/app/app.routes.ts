@@ -35,7 +35,7 @@ export const routes: Routes = [
           },
           canActivate: [userGuard]},
 
-    {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
+    {path: 'resetpwd', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
