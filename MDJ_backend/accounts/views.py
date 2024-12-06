@@ -1,8 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
-from accounts.models import CustomUser,CodeOTP, CodeOTPResetPassword
+from .serializers import UserSerializer, AvisSerializer,AvisCreationSerializer
+from accounts.models import CustomUser,CodeOTP,Avis, CodeOTPResetPassword
+
 import jwt
 from .utils import verifier_user,send_otp_via_email
 from rest_framework.exceptions import ValidationError
@@ -10,19 +12,15 @@ from MDJ_backend.settings import SECRET_KEY
 import random
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.conf import settings
 from django.contrib.auth import authenticate
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.contrib.auth.hashers import check_password
 from rest_framework.exceptions import ValidationError
-from django.contrib.auth.hashers import make_password, check_password
-import time
+from django.contrib.auth.hashers import make_password
 
 class RegisterView(APIView):
     def post(self, request):
@@ -253,3 +251,22 @@ class getUserBySlug(RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'slug'
+    
+class AvisView(APIView):
+    def get(self,request):
+        list_avis = Avis.objects.all()
+        serializer = AvisSerializer(list_avis,many=True)
+        return Response(serializer.data)
+    
+    def post(self,request):
+        verifier_user(request)
+        serializer = AvisCreationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request,id_avis):
+        avis = get_object_or_404(Avis, pk=id_avis)
+        avis.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

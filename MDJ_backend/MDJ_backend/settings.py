@@ -167,3 +167,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'falldioumamane@gmail.com'
 EMAIL_HOST_PASSWORD = 'ngut vqob rxpt nqef'
 DEFAULT_FROM_EMAIL = 'falldioumamane@gmail.com'
+
+APPEND_SLASH = False
+

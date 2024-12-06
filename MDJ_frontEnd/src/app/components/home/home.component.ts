@@ -1,14 +1,13 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { CategorieService } from '../../services/categories/categorie.service';
-import { error } from 'console';
 import { RouterLink } from '@angular/router';
 import { Produit } from '../../models/produit';
 import { categorie } from '../../models/categorie';
 import { ProduitService } from '../../services/produits/produit.service';
-import { Avis } from '../../models/temoignage';
 import { UserService } from '../../services/users/user.service';
+import { Avis, AvisCreationData } from '../../models/Avis';
 
 
 @Component({
@@ -19,12 +18,11 @@ import { UserService } from '../../services/users/user.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  produits = input<Produit[]>
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
   avis_list:Avis[]=[];
   limit_prod=10;
-  constructor(private categorieService:CategorieService, private productService:ProduitService, private avisService: UserService){}
+  constructor(private readonly categorieService:CategorieService, private readonly productService:ProduitService, private readonly avisService: UserService){}
 
   ngOnInit(){
     this.categorieService.getAllCategories().subscribe({
@@ -45,5 +43,13 @@ export class HomeComponent {
       next:(data)=>{this.avis_list=data}
     })
 
+  }
+
+  createAvis(newAvis:AvisCreationData){
+    this.avisService.addAvis(newAvis).subscribe({
+      next:(data)=>{
+        console.log('avis ajouté avec succés');
+      }
+    })
   }
 }

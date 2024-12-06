@@ -6,5 +6,3 @@ export interface User {
     password?: string;
     slug:string;
 }
-
-// export type IcontenuPanier = Pick<Ipanier, 'client' | 'montant'>;

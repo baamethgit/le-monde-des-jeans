@@ -1,4 +1,4 @@
-import { AsyncPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DecimalPipe, JsonPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,7 +11,7 @@ import { CommandeService } from '../../../services/commandes/commande.service';
 @Component({
   selector: 'app-admin-liste-commandes',
   standalone: true,
-  imports: [DecimalPipe,RouterLink, FormsModule, AsyncPipe, NgbHighlight, CommandesDirective, NgbPaginationModule],
+  imports: [DecimalPipe,RouterLink, FormsModule, AsyncPipe, NgbHighlight, CommandesDirective, NgbPaginationModule,JsonPipe,CommonModule],
   templateUrl: './admin-liste-commandes.component.html',
   styleUrl: './admin-liste-commandes.component.scss'
 })
@@ -22,12 +22,10 @@ export class AdminListeCommandesComponent implements OnInit{
   totalItems = 0;
   totalPage = 10;
   isLoading : boolean = false;
-  dateFiltre! : Date;
   statutFiltre : string = '';
   commandes : Commande[] = [];
   filteredcommandes: Commande[] = [];
-  statusFilter: string = '';
-  dateFilter!: Date;
+  dateFilter!: string;
   sanitizer = inject(DomSanitizer);
 
 
@@ -49,12 +47,17 @@ export class AdminListeCommandesComponent implements OnInit{
   onSearch(){
     this.page = 1;
     this.loadCommandes();
+    console.log(this.searchTerm);
   }
 
   loadCommandes() : void{
-    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm, this.dateFilter).subscribe({
+    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm).subscribe({
       next:(response)=>{
-        this.commandes = [];
+        this.commandes = response.results;
+        this.totalItems = response.count;
+      },
+      error:(error)=>{
+        console.log(error);
       }
     })
   }
@@ -71,17 +74,12 @@ export class AdminListeCommandesComponent implements OnInit{
 		// this.service.sortDirection = direction;
 	}
 
-  onSearchChange() {
-    this.loadCommandes();
-  }
-
   onStatusFilterChange(event: Event) {
-    this.statusFilter = (event.target as HTMLSelectElement).value;
+    this.statutFiltre = (event.target as HTMLSelectElement).value;
     this.loadCommandes();
   }
 
   onDateFilterChange(event: Event) {
-    // this.dateFilter = (event.target as HTMLInputElement).value;
     this.loadCommandes();
   }
 

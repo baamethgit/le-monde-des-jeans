@@ -4,11 +4,11 @@ import { Produit } from '../../../models/produit';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { categorie } from '../../../models/categorie';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { spec } from 'node:test/reporters';
 import { RouterLink } from '@angular/router';
+import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 
 export const TAILLES = [
   { value: 'S', label: 'S' },
@@ -43,9 +43,9 @@ export const COULEUR = [
 @Component({
   selector: 'app-admin-produits',
   standalone: true,
-  imports: [NgbPaginationModule, CommonModule, FormsModule, NgxFileDropModule, ReactiveFormsModule, RouterLink],
+  imports: [NgbPaginationModule, CommonModule, FormsModule,NgxFileDropModule, ReactiveFormsModule, RouterLink],
   templateUrl: './admin-produits.component.html',
-  styleUrl: './admin-produits.component.scss'
+  styleUrl: './admin-produits.component.scss',
 })
 
 

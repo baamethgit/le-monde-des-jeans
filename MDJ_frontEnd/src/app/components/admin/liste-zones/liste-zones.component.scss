@@ -1,0 +1,42 @@
+.zone-card {
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+  }
+  
+  .zone-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .zone-card .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  }
+  
+  .price-tag {
+    display: inline-block;
+    background-color: #e9ecef;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+  }
+  
+  .price {
+    font-weight: bold;
+    color: #0d6efd;
+  }
+  
+  .add-zone-card {
+    border: 2px dashed #dee2e6;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .add-zone-card:hover {
+    border-color: #0d6efd;
+    background-color: #e9ecef;
+  }
+  
+  .card-text {
+    color: #6c757d;
+  }

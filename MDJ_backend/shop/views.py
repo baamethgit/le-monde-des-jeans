@@ -4,9 +4,8 @@ from . import serializers
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
 from accounts import models as accountModel
-from rest_framework.generics import ListAPIView,RetrieveAPIView
+from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
 from .models import ZoneLivraison,Commande
 from django.db.models import Q
@@ -17,7 +16,6 @@ from rest_framework import status
 from .models import Panier, Produit, PanierProduit
 from .serializers import PanierSerializer, PanierProduitSerializer
 from django.shortcuts import get_object_or_404
-from . import views
 from accounts.utils import verifier_user
 
 class getDeliveryZones(ListAPIView):
@@ -27,8 +25,25 @@ class getDeliveryZones(ListAPIView):
 class getDeliveryZoneByNum(RetrieveAPIView):
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
-    lookup_field = 'numero'
+    lookup_field = 'id'
 
+class CreateZone(CreateAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    
+class DeleteZoneView(DestroyAPIView):
+    queryset = ZoneLivraison.objects.all()
+    serializer_class = ZoneSerializer
+    lookup_field = 'id'  
+     
+class UpdateZoneView(APIView):
+    def put(self, request,id):
+        zone = models.ZoneLivraison.objects.filter(pk = id).first()
+        serializer = ZoneSerializer(instance = zone, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
@@ -116,46 +131,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-class AvisViewSet(viewsets.ModelViewSet):
-    queryset=accountModel.Avis.objects.all()
-    serializer_class=serializers.AvisSerializer
-
-class PanierProduitViewSet(viewsets.ModelViewSet):
-    queryset = models.PanierProduit.objects.all()
-    serializer_class = serializers.PanierProduitSerializer
-
-    def create(self, request, *args, **kwargs):
-        # Custom logic to add a product to the cart
-        produit_id = request.data.get('produit')
-        panier_id = request.data.get('panier')
-        panier = get_object_or_404(models.Panier, id=panier_id)
-        produit = get_object_or_404(models.Produit, id=produit_id)
-        
-        # Call the `ajouter_produit` method from the Panier model
-        success = panier.ajouter_produit(produit)
-
-        if success:
-            return Response({"detail": "Produit ajouté avec succès"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"detail": "Le produit est déjà réservé ou dans un autre panier"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    def destroy(self, request, *args, **kwargs):
-        # Logique pour supprimer un produit du panier
-        panier_produit_id = kwargs.get('pk')  # pk pour identifier l'instance à supprimer
-        panier_produit = get_object_or_404(models.PanierProduit, id=panier_produit_id)
-
-        produit = panier_produit.produit
-        panier = panier_produit.panier
-
-        # Suppression du produit du panier
-        panier_produit.delete()
-
-        # Libérer la réservation du produit
-        produit.reserve = False
-        produit.save()
-
-        return Response({"detail": "Produit supprimé avec succès"}, status=status.HTTP_204_NO_CONTENT)    
-
 class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
@@ -169,54 +144,14 @@ class CommandeListView(ListAPIView):
         queryset = Commande.objects.all()
         search_term = self.request.query_params.get('search', None)
         
+        
         if search_term:
             queryset = queryset.filter(
                 Q(client__phone_number__icontains=search_term) |
                 Q(client__nom_complet__icontains=search_term) | 
-                Q(ref_code__icontains=search_term)
+                Q(ref_code__icontains=search_term) 
             )
         return queryset
-    
-class CommandeViewSet(viewsets.ModelViewSet):
-    queryset = Commande.objects.all()
-    serializer_class = CommandeSerializer
-
-    def perform_create(self, serializer):
-        # Générer un ref_code unique ici
-        import uuid
-        ref_code = uuid.uuid4().hex[:20].upper()
-        serializer.save(client=self.request.user, ref_code=ref_code)
-
-    @action(detail=True, methods=['post'])
-    def changer_statut(self, request, pk=None):
-        commande = self.get_object()
-        nouveau_statut = request.data.get('statut')
-        if nouveau_statut not in dict(Commande.STATUT_CHOICES):
-            return Response({'erreur': 'Statut invalide'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Appeler la méthode appropriée en fonction du nouveau statut
-        statut_methods = {
-            'PAYEE': commande.marquer_comme_payee,
-            'EN_PREPARATION': commande.commencer_preparation,
-            'EXPEDIEE': commande.marquer_comme_expediee,
-            'LIVREE': commande.marquer_comme_livree,
-            'ANNULEE': commande.annuler
-        }
-        
-        method = statut_methods.get(nouveau_statut)
-        if method:
-            method()
-            return Response({'statut': commande.statut})
-        else:
-            return Response({'erreur': 'Changement de statut non autorisé'}, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['get'])
-    def total(self, request, pk=None):
-        commande = self.get_object()
-        return Response({'total': commande.get_total()})
-    
-    
-
 
 @api_view(['GET'])
 def panier_detail(request):
@@ -224,8 +159,8 @@ def panier_detail(request):
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    panier, created = Panier.objects.get_or_create(client=user)
-    panier.nettoyer_produits_expires()
+    panier, _ = Panier.objects.get_or_create(client=user)
+    # panier.nettoyer_produits_expires()
     serializer = PanierSerializer(panier)
     return Response(serializer.data)
 
@@ -242,7 +177,7 @@ def ajouter_produit(request):
     if panier.ajouter_produit(produit):
         return Response({"message": "Produit ajouté au panier"}, status=status.HTTP_200_OK)
     else:
-        return Response({"error": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message_erreur": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def retirer_produit(request):
@@ -250,12 +185,12 @@ def retirer_produit(request):
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    panier = Panier.objects.get(client=user)
+    panier = get_object_or_404(Panier, client=user)
     produit_slug = request.data.get('produit_slug')
     produit = get_object_or_404(Produit, slug=produit_slug)
     panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
-    
-    produit.reserve = False
+
+    produit.QuantiteStock += 1
     produit.save()
     panier_produit.delete()
     
@@ -282,7 +217,8 @@ def vider_panier(request):
     panier = Panier.objects.get(client=user)
     for panier_produit in PanierProduit.objects.filter(panier=panier):
         produit = panier_produit.produit
-        produit.reserve = False
+        # produit.reserve = False
+        produit.QuantiteStock += 1
         produit.save()
         panier_produit.delete()
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)

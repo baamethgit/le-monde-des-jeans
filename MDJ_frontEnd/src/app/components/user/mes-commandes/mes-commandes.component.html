@@ -1,0 +1,115 @@
+<div class="container-commandes">
+    <h1>Mes Commandes</h1>
+    
+    <div class="tabs">
+      <div class="tab-buttons">
+        <button [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'">
+            <i class="bi bi-box-seam"></i> En cours
+        </button>
+        <button [class.active]="activeTab === 'completed'" (click)="activeTab = 'completed'">
+            <i class="bi bi-check-circle"></i> Historique
+        </button>
+      </div>
+      
+      <div class="tab-content" *ngIf="activeTab === 'pending'">
+        @for (order of mesCommandesEnCours; track order.id) {
+          <div class="order-card">
+          <div class="order-header">
+              <p class="fs-4">Commande N° <span class="fw-bold fs-3">{{order.ref_code}}</span></p>
+              <span class="status-badge status-{{ order.statut.toString() }}">
+                {{order.statut}}
+              </span>
+            </div>
+            <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
+            <div class="order-details">
+              <div class="items">
+                <strong>Articles:</strong>
+                <ul>
+                  <li *ngFor="let item of order.produits">{{item.nom}}</li>
+                </ul>
+              </div>
+              <div class="delivery-info">
+                @if (!order.recupere_magasin) {
+                  <p>
+                    <i class="bi bi-truck"></i> Zone {{order.zone_livraison?.numero}} : {{order.zone_livraison?.nom}}
+                  </p>
+                }@else {
+                  <p>
+                    <i class="bi bi-shop"></i> Récupéré au magasin
+                  </p>
+                }
+                  
+              </div>
+              <div class="delivery-time" *ngIf="order.date_livraison">
+                  <i class="bi bi-clock"></i>
+                  @if (!order.recupere_magasin) {
+                    Livrée
+                }@else {
+                  Récupéré
+                } le
+                {{order.date_livraison | date : 'dd MMMM YYYY HH:mm'}}
+              </div>
+              <div class="order-total">
+                Total: {{order.montant}} FCFA
+              </div>
+            </div>
+      </div>}
+      @empty {
+          <p class="no-orders">
+            Aucune commande en cours
+          </p>
+      }
+      </div>
+      
+      <div class="tab-content" *ngIf="activeTab === 'completed'"> 
+        @for (order of mesCommandesLivrees; track order.id) {
+          <div class="order-card">
+              <div class="order-header">
+                  <p class="fs-4">Commande N° <span class="fw-bold fs-3">{{order.ref_code}}</span></p>
+                  <span class="status-badge status-{{ order.statut.toString() }}">
+                    {{order.statut}}
+                  </span>
+                </div>
+                <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
+                <div class="order-details">
+                  <div class="items">
+                    <strong>Articles:</strong>
+                    <ul>
+                      <li *ngFor="let item of order.produits">{{item.nom}}</li>
+                    </ul>
+                  </div>
+                  <div class="delivery-info">
+                    @if (!order.recupere_magasin) {
+                      <p>
+                        <i class="bi bi-truck"></i> Zone {{order.zone_livraison?.numero}} : {{order.zone_livraison?.nom}}
+                      </p>
+                    }@else {
+                      <p>
+                        <i class="bi bi-shop"></i> Récupéré au magasin
+                      </p>
+                    }
+                  </div>
+                  <div class="delivery-time" *ngIf="order.date_livraison">
+                    
+                      <i class="bi bi-clock"></i>
+                      @if (!order.recupere_magasin) {
+                        Livrée
+                    }@else {
+                      Récupéré
+                    } le
+                       {{order.date_livraison | date : 'dd MMMM YYYY, hh:mm'}}
+                  </div>
+                  <div class="order-total">
+                    Total: {{order.montant}} FCFA
+                  </div>
+                </div>
+          </div>
+        }
+        @empty {
+          <p class="no-orders">
+            Aucun historique de commande
+          </p>
+        }
+      </div>
+    </div>
+  </div>

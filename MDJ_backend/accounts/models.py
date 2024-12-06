@@ -94,8 +94,9 @@ class Avis(models.Model):
     class Meta:
         verbose_name_plural = 'Avis'
     Avis_author=models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='avis')
-    Texte_avis=models.TextField()
+    Texte_avis=models.TextField(max_length=2000)
     temoigne_le = models.DateField(auto_now_add=True)
+    nbre_etoiles = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return str(self.Avis_author)

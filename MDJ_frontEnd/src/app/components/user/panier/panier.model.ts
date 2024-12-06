@@ -1,4 +1,3 @@
-import { PanierProduit } from "../../../models/panier-produit";
 import { Produit } from "../../../models/produit";
 import { User } from "../../../models/user";
 

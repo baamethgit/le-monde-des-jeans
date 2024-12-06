@@ -6,66 +6,67 @@
       <div class="row">
         <div class="col-sm-12 col-md-8">
           <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-secondary">
+            <button (click)="supprimerCommande()" class="btn btn-secondary" >
               <i class="fa-solid fa-trash me-2 mb-1"></i>Supprimer de l'historique
             </button>
-            <button class="btn btn-secondary ms-1">
+            <button class="btn btn-secondary ms-1" (click)="downloadOrderDetails()">
               <i class="fa-solid fa-download me-1 mb-1"></i>Télécharger la facture
             </button>
-            <!--<button class="btn btn-secondary ms-1"><i class="fa-solid fa-bars me-1 mb-1"></i>Changer de statut</button>-->
           </div>
-          <h5 class="fw-bold mt-3 text-center">Détail sur la Commande</h5>
+          <div id="order-details-box">
+          <h5 class="fw-bold mt-3 text-center">Détail de la Commande</h5>
           <div class="row mx-3 p-3 border">
             <div class="col-sm-12 col-md-6 mb-2">
               <div class="">
                 <div class="text-black-50">N° Commande:</div>
-                <div class="">24JFU24S</div>
+                <div class="">{{commande.ref_code}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 mb-2">
               <div class="">
                 <div class="text-black-50"> Nom Client:</div>
-                <div class="">Dupont</div>
+                <div class="">{{commande.client.nom_complet}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 mb-2">
               <div class="">
                 <div class="text-black-50">Livré le:</div>
-                <div class="">20 SEPT 2023</div>
+                <div class="">{{commande.date_livraison}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 mb-2">
               <div class="">
                 <div class="text-black-50">Numéro du client:</div>
-                <div class="">+221770234424</div>
+                <div class="">{{commande.client.phone_number}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 mb-2">
               <div class="">
                 <div class="text-black-50">Zone de livraison</div>
-                <div class="">ZONE 3</div>
+                <div class="">ZONE {{commande.zone_livraison?.numero}} : {{commande.zone_livraison?.nom}}</div>
               </div>
             </div>
           </div>
         </div>
+        </div>
   
-        <div class="col-sm-12 col-md-4 border-start">
+        <div class="d-flex justify-content-center col-sm-12 col-md-4 border-start">
           <div class="d-flex align-items-center">
             <p class="me-2 mt-2">Changer le statut</p>
             <div class="dropdown">
-              <button class="btn btn- dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ textStatut }} Livrée
+              <button  class="btn btn- dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ textStatut }} {{commande.statut}}
               </button>
               <ul class="dropdown-menu">
                 <li>
                   <button class="dropdown-item" type="button">Livré</button>
                 </li>
                 <li>
-                  <button  class="dropdown-item" type="button">
-                    En attente de Livraison
+                  <button  (click)="changeStatut(StatutCommande.EN_COURS_LIVRAISON)" class="dropdown-item" type="button">
+                    En cours de Livraison
                   </button>
                 </li>
-                <li><button class="dropdown-item" type="button">Valider Think</button></li>
+                <li><button (click)="changeStatut(StatutCommande.ANNULEE)" class="dropdown-item" type="button">Annuler</button></li>
               </ul>
             </div>
           </div>
