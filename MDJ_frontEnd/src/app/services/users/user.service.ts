@@ -55,6 +55,19 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}change_password/`, {mdp_actuel : currentPassword,nouveau_mdp:newPassword}, {withCredentials: true  });
   }
 
+  sendPasswordResetOTP(addresse_mail: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}send-otp/`, { addresse_mail });
+  }
+
+  verifyPasswordResetOTP(addresse_mail: string, otp: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}verify-reset-otp/`, { addresse_mail, otp });
+  }
+  
+  resetPassword(addresse_mail: string, newPassWord: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}reset-password/`, {
+      addresse_mail,newPassWord
+    });
+  }
 
   login(phone_number: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}login/`, { phone_number, password })
@@ -115,13 +128,13 @@ export class UserService {
   }
 
    // Étape 1 : Envoyer les informations d'inscription et recevoir l'OTP
-  register(signupData: { phone_number: string, password: string, nom_complet: string }): Observable<any> {
+  register(signupData: { phone_number: string,addresse_mail:string, password: string, nom_complet: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}register/`, signupData);
   }
 
   // Étape 2 : Vérifier l'OTP et finaliser l'inscription
-  verifyOTP(phone_number: string,otpCode: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}verify-otp/`, { phone_number: phone_number,otp_code: otpCode }, { withCredentials: true });
+  verifyOTP(addresse_mail: string,otpCode: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}verify-otp/`, { addresse_mail: addresse_mail,otp_code: otpCode }, { withCredentials: true });
   }
 
 }

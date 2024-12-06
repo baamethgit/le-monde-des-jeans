@@ -31,6 +31,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Client'
     nom_complet = models.CharField(max_length=255)
     phone_number = PhoneNumberField(region='SN',unique=True)
+    addresse_mail = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -60,7 +61,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 #         return timezone.now() < expiration_time
 
 class CodeOTP(models.Model):
-    phone_number = PhoneNumberField(region='SN',unique=True)
+    addresse_mail = models.EmailField(max_length=255, unique=True)
+    phone_number = PhoneNumberField(region='SN', unique=True)
     otp_code = models.CharField(max_length=6) 
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
@@ -72,8 +74,22 @@ class CodeOTP(models.Model):
         return timezone.now() < self.expires_at
 
     def __str__(self):
-        return f"OTP for {self.phone_number}"
-    
+        return f"OTP for {self.addresse_mail}"
+
+class CodeOTPResetPassword(models.Model):
+    addresse_mail = models.EmailField(max_length=255, unique=True)
+    otp_code = models.CharField(max_length=6) 
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    def is_valid(self):
+        """ Vérifier si l'OTP est toujours valide (non expiré) """
+        return timezone.now() < self.expires_at
+
+    def __str__(self):
+        return f"OTP for {self.addresse_mail}"
+
+
 class Avis(models.Model):
     class Meta:
         verbose_name_plural = 'Avis'

@@ -1,74 +1,109 @@
+// reset-password.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import Validation from '../../shared/my-validators';
 import { UserService } from '../../services/users/user.service';
-import { User } from '../../models/user';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
 })
-export class ResetPasswordComponent implements OnInit{
-  step: 'phone' | 'otp' | 'new-password' = 'new-password';
-  phone_number : string = '';
-  otp : string = '';
-  passwordForm! : FormGroup;
-  fb = inject(FormBuilder);
-  userService = inject(UserService);
-  user! : User;
+export class ResetPasswordComponent implements OnInit {
+  step: 'email' | 'otp' | 'new-password' = 'email';
+  email: string = '';
+  otp: string = '';
+  showPassword: boolean = false;
+  isLoading: boolean = false;
+  emailError: string = '';
+  otpError: string = '';
+  passwordForm!: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.userService.getUser().subscribe({
-      next: (data) => {
-          this.user = data;
+    this.initPasswordForm();
+  }
+
+  private initPasswordForm() {
+    this.passwordForm = this.fb.group({
+      newPassword: ['', [
+        Validators.required
+      ]],
+      passwordConfirm: ['', Validators.required]
+    }, {
+      validators: [Validation.match('newPassword', 'passwordConfirm')]
+    });
+  }
+
+  onEmailSubmitted() {
+    if (!this.email) {
+      this.emailError = "L'adresse email est requise";
+      return;
+    }
+    
+    this.isLoading = true;
+    this.emailError = '';
+
+    // Appel au service pour envoyer l'OTP par email
+    this.userService.sendPasswordResetOTP(this.email).subscribe({
+      next: () => {
+        this.step = 'otp';
+        this.isLoading = false;
       },
       error: (error) => {
+        this.emailError = error.error.message || "Une erreur est survenue";
+        this.isLoading = false;
       }
-    })
-    this.passwordForm = this.fb.group(
-      {
-        newPassword: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$')]],
-        passwordConfirm: ['', [Validators.required]],
-      },
-      {
-        validators: [Validation.match('newPassword', 'passwordConfirm')]
-      }
-    );
+    });
   }
 
-  togglePassword(input: HTMLInputElement) {
-    if (input.type === 'password') {
-      input.type = 'text';
-    } else {
-      input.type = 'password';
+  onOtpSubmitted() {
+    if (!this.otp) {
+      this.otpError = "Le code de vérification est requis";
+      return;
     }
-  }
 
-  
+    this.isLoading = true;
+    this.otpError = '';
 
-  onPhoneSubmitted(phone: string) {
-    // Logique pour envoyer l'OTP
-    this.step = 'otp';
-  }
-
-  onOtpSubmitted(otp: string) {
-    // Logique pour vérifier l'OTP
-    this.step = 'new-password';
+    this.userService.verifyPasswordResetOTP(this.email, this.otp).subscribe({
+      next: () => {
+        this.step = 'new-password';
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.otpError = error.error.message || "Code invalide";
+        this.isLoading = false;
+      }
+    });
   }
 
   onPasswordChanged() {
-    this.userService.updateUser(this.user).subscribe({
-      next: (data) => {
-        console.log("Mot de passe Réinitialisé");
+    if (this.passwordForm.invalid) return;
+
+    this.isLoading = true;
+    const { newPassword } = this.passwordForm.value;
+
+    this.userService.resetPassword(this.email, newPassword).subscribe({
+      next: () => {
+        // Rediriger vers la page de connexion avec un message de succès
+        this.router.navigate(['/login'], {
+          queryParams: { message: 'Mot de passe réinitialisé avec succès' }
+        });
       },
       error: (error) => {
-        console.log("Réinitialisation échoué");
+        console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+        this.isLoading = false;
       }
-    })
+    });
   }
-  
 }
