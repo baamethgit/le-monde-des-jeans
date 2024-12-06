@@ -1,5 +1,5 @@
 
-from .views import PasswordChangeView, RegisterView,UserDetailView,deleteUserView, LoginView,VerifyOTPView,UserListView,UserCreateView,getUserBySlug
+from .views import PasswordChangeView,ResetPasswordView, RegisterView,UserDetailView,deleteUserView, LoginView,VerifyOTPView,UserListView,UserCreateView,getUserBySlug, VerifyOTPResetView, SendPasswordResetOTP
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from shop import views as shopView
@@ -18,6 +18,9 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('get-user/', UserDetailView.as_view()),
     path('change_password/', PasswordChangeView.as_view()),
+    path('send-otp/', SendPasswordResetOTP.as_view()),
+    path('verify-reset-otp/', VerifyOTPResetView.as_view()),
+    path('reset-password/', ResetPasswordView.as_view()),
     path('admin_users_list/',UserListView.as_view()),
     path("creer-client/",UserCreateView.as_view()),
     path("API/", include(router.urls)),

@@ -3,6 +3,8 @@ from accounts.models import CustomUser
 import jwt
 from MDJ_backend.settings import SECRET_KEY
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
+from django.conf import settings
 
 def verifier_user(request):
         auth_header = request.headers.get('Authorization', None)
@@ -41,3 +43,11 @@ def send_otp_via_sms(phone_number, otp_code):
     )
 
     return message.sid  
+
+def send_otp_via_email(email, otp_code):
+    subject = 'Votre code de validation'
+    message = f'Votre code de validation est : {otp_code}'
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [email]
+    
+    send_mail(subject, message, from_email, recipient_list)

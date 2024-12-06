@@ -2,9 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
-from accounts.models import CustomUser,CodeOTP
+from accounts.models import CustomUser,CodeOTP, CodeOTPResetPassword
 import jwt
-from .utils import verifier_user,send_otp_via_sms
+from .utils import verifier_user,send_otp_via_email
 from rest_framework.exceptions import ValidationError
 from MDJ_backend.settings import SECRET_KEY
 import random
@@ -27,6 +27,7 @@ import time
 class RegisterView(APIView):
     def post(self, request):
         phone_number = request.data.get("phone_number")
+        addresse_mail = request.data.get("addresse_mail")
         password = request.data.get("password")
         nom_complet = request.data.get("nom_complet")
 
@@ -34,34 +35,41 @@ class RegisterView(APIView):
         if CustomUser.objects.filter(phone_number=phone_number).exists():
             return Response({"error": "Un compte avec ce numéro de téléphone existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
 
+        if CustomUser.objects.filter(addresse_mail=addresse_mail).exists():
+            return Response({"error": "Un compte avec cet addresse mail existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
+        
         # Générer un code OTP
         otp_code = random.randint(100000, 999999)
 
-        # Envoyer le code OTP par SMS
-        send_otp_via_sms(phone_number, otp_code)
+        # Envoyer le code OTP par email
+        send_otp_via_email(addresse_mail, otp_code)
 
         expires_at = timezone.now() + timezone.timedelta(minutes=10)
 
         # Créer une instance de CodeOTP
         CodeOTP.objects.create(
+            addresse_mail=addresse_mail,
             phone_number=phone_number,
             otp_code=str(otp_code),
             expires_at=expires_at,
             nom_complet=nom_complet,
-            hashed_password=make_password(password)  # Hasher le mot de passe
+            hashed_password=make_password(password)
         )
 
         return Response({"message": "Code OTP envoyé", "expires_in": 600}, status=status.HTTP_200_OK)
+
+
  
 class VerifyOTPView(APIView):
     def post(self, request):
-        phone_number = request.data.get('phone_number')
+        addresse_mail = request.data.get('addresse_mail')
         submitted_otp = request.data.get("otp_code")
-
+        
         try:
-            otp_record = CodeOTP.objects.get(phone_number=phone_number)
+            otp_record = CodeOTP.objects.get(addresse_mail=addresse_mail)
+            print('OTP SEND : ', otp_record.otp_code)
         except CodeOTP.DoesNotExist:
-            return Response({"error": "OTP non trouvé pour ce numéro"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "OTP non trouvé pour cet email"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Vérifier si l'OTP est toujours valide
         if not otp_record.is_valid():
@@ -73,13 +81,17 @@ class VerifyOTPView(APIView):
             return Response({"error": "Code OTP invalide"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Vérifier si l'utilisateur n'existe pas déjà
-        if CustomUser.objects.filter(phone_number=phone_number).exists():
+        if CustomUser.objects.filter(addresse_mail=addresse_mail).exists():
             otp_record.delete()
-            return Response({"error": "Un compte avec ce numéro de téléphone existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Un compte avec cet email existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Créer l'utilisateur
         try:
-            user = CustomUser(phone_number=otp_record.phone_number,nom_complet=otp_record.nom_complet)
+            user = CustomUser(
+                phone_number=otp_record.phone_number,
+                addresse_mail=otp_record.addresse_mail,
+                nom_complet=otp_record.nom_complet
+            )
             user.save()
             user.password = otp_record.hashed_password
             user.save(update_fields=['password'])
@@ -111,7 +123,69 @@ class LoginView(APIView):
         return Response({"error": "Identifiants invalides"}, status=status.HTTP_401_UNAUTHORIZED)
     
     
+class SendPasswordResetOTP(APIView):
+    def post(self, request):
+        addresse_mail = request.data.get('addresse_mail')
 
+        if CustomUser.objects.filter(addresse_mail=addresse_mail).exists():
+             # Générer un code OTP
+            otp_code = random.randint(100000, 999999)
+
+            # Envoyer le code OTP par email
+            send_otp_via_email(addresse_mail, otp_code)
+
+            expires_at = timezone.now() + timezone.timedelta(minutes=10)
+
+            # Créer une instance de CodeOTP
+            CodeOTPResetPassword.objects.create(
+                addresse_mail=addresse_mail,
+                otp_code=str(otp_code),
+                expires_at=expires_at,
+            )
+
+            return Response({"message": "Code OTP envoyé", "expires_in": 600}, status=status.HTTP_200_OK)
+        return Response({"error": "Ce compte n'existe pas !!"}, status=status.HTTP_400_BAD_REQUEST)
+        
+       
+
+class VerifyOTPResetView(APIView):
+    def post(self, request):
+        addresse_mail = request.data.get('addresse_mail')
+        submitted_otp = request.data.get("otp")
+        
+        try:
+            otp_record = CodeOTPResetPassword.objects.get(addresse_mail=addresse_mail)
+            print('OTP SEND : ', otp_record.otp_code)
+        except CodeOTP.DoesNotExist:
+            return Response({"error": "OTP non trouvé pour cet email"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Vérifier si l'OTP est toujours valide
+        if not otp_record.is_valid():
+            otp_record.delete()
+            return Response({"error": "Le code OTP a expiré"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if submitted_otp != otp_record.otp_code:
+            otp_record.delete()
+            return Response({"error": "Code OTP invalide"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # # Vérifier si l'utilisateur n'existe pas déjà
+        # if CustomUser.objects.filter(addresse_mail=addresse_mail).exists():
+        #     user = CustomUser.objects.get(addresse_mail=addresse_mail)
+        #     user.set_password(newMdp)
+        #     otp_record.delete()
+        #     return Response({"message": "Mot de passe changee avec succes"})
+
+
+        return Response({"message": "otp valide"})
+
+class ResetPasswordView(APIView):
+    def post(self, request):
+       addresse_mail = request.data['addresse_mail']
+       password = request.data['newPassWord']
+       user = CustomUser.objects.get(addresse_mail=addresse_mail)
+       user.set_password(password)
+       user.save()
+       return Response({"message": "Mot de passe mise a jour !!"})
 
 class PasswordChangeView(APIView):
     def post(self,request):

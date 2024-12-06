@@ -158,3 +158,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/" # L' url qu'on va voir au niveau du navigateur
 MEDIA_ROOT = BASE_DIR / "media" # Dossier de stockage des uploded files
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # or your SMTP port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'falldioumamane@gmail.com'
+EMAIL_HOST_PASSWORD = 'ngut vqob rxpt nqef'
+DEFAULT_FROM_EMAIL = 'falldioumamane@gmail.com'
