@@ -24,6 +24,7 @@ export class ProduitDetailComponent {
   commandeService = inject(CommandeService);
   panierService = inject(PanierService);
   userService = inject(UserService);
+  errorMessage = '';
   responsiveOptions: any[] = [
     {
 
@@ -56,6 +57,11 @@ export class ProduitDetailComponent {
         this.product_selected = data;
         this.list_p = this.product_selected.images;
         this.loadSimilarProducts();
+      }
+      
+      
+      })
+    }
 
 acheterDirectement(productSlug : string | undefined){
   if(productSlug != undefined){
@@ -67,13 +73,9 @@ acheterDirectement(productSlug : string | undefined){
       error : (error)=>{
         if(error.error.message_erreur)
           this.errorMessage = error.error.message_erreur;
-
-      },
-      error: (error) => {
-        console.log('Erreur lors de l\'affichage du produit :', error.error.detail);
       }
     });
-  }
+  }}
 
   loadSimilarProducts(): void {
     if (this.product_selected?.categorie_detail?.slug) {
@@ -90,30 +92,31 @@ acheterDirectement(productSlug : string | undefined){
       console.log('Aucun slug de catégorie disponible pour ce produit.');
     }
   }
-addToCart(){
-  this.panierService.ajouterProduit(this.product_selected?.slug || '').subscribe({
-    next:(data)=>{
-      this.router.navigate(['/panier']);
-    },
-    error : (error)=>{
-      if(error.error.message_erreur)
-        this.errorMessage = error.error.message_erreur;
-    },
-  })
-}
 
-  acheterDirectement(productSlug: string | undefined): void {
-    if (productSlug) {
-      this.commandeService.creerCommande(false, productSlug).subscribe({
-        next: (data) => {
-          // Handle successful order creation
-        },
-        error: (error) => {
-          console.log('Erreur lors de la création de la commande :', error.error.detail);
-        },
-      });
-    }
-  }
+// addToCart(){
+//   this.panierService.ajouterProduit(this.product_selected?.slug || '').subscribe({
+//     next:(data)=>{
+//       this.router.navigate(['/panier']);
+//     },
+//     error : (error)=>{
+//       if(error.error.message_erreur)
+//         this.errorMessage = error.error.message_erreur;
+//     },
+//   })
+// }
+
+  // acheterDirectement(productSlug: string | undefined): void {
+  //   if (productSlug) {
+  //     this.commandeService.creerCommande(false, productSlug).subscribe({
+  //       next: (data) => {
+  //         // Handle successful order creation
+  //       },
+  //       error: (error) => {
+  //         console.log('Erreur lors de la création de la commande :', error.error.detail);
+  //       },
+  //     });
+  //   }
+  // }
 
   addToCart(): void {
     if (this.product_selected?.slug) {
