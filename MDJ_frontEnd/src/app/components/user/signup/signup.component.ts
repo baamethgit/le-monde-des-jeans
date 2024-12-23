@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit{
   user : User = {
     phone_number : "",
     nom_complet : "",
+    addresse_mail:"",
     slug : "",
   };
 
@@ -37,6 +38,7 @@ export class SignupComponent implements OnInit{
       {
         nom_complet: ['', [Validators.required]],
         phone_number: ['', [Validators.required]],
+        addresse_mail:['',[Validators.required, Validators.email]],
         password: ['', [Validators.required]],
         password_confirm: ['', [Validators.required]],
       },
@@ -65,7 +67,8 @@ export class SignupComponent implements OnInit{
       }
       const nom_complet = this.SignupForm.getRawValue().nom_complet || '';
       const password = this.SignupForm.getRawValue().password || '';
-      this.userService.register({nom_complet:nom_complet,phone_number:phone_number,password:password}).subscribe({
+      const addresse_mail = this.SignupForm.getRawValue().addresse_mail || '';
+      this.userService.register({nom_complet:nom_complet,phone_number:phone_number,password:password,addresse_mail:addresse_mail}).subscribe({
         next: (data) => {
           this.otpSent = true;
           this.isloading = false;
@@ -82,12 +85,8 @@ export class SignupComponent implements OnInit{
   }
  
   onVerifyOTP() {
-    let phone_number = this.SignupForm.getRawValue().phone_number || '';
-      phone_number = phone_number.trim();
-      if (!phone_number.startsWith('+221')) {
-        phone_number = '+221' + phone_number;
-      }
-    this.userService.verifyOTP(phone_number,this.otpCode).subscribe({
+    let addresse_mail = this.SignupForm.getRawValue().addresse_mail || '';
+    this.userService.verifyOTP(addresse_mail,this.otpCode).subscribe({
       next:(data)=>{
         this.router.navigate(['/login']);
       },

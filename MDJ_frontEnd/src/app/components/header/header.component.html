@@ -63,7 +63,7 @@
               <img class="user_icon_header" src="../../assets/img/285645_user_icon.png" alt="">
               <div class="dropdown border-0 bg-transparent" *ngIf="is_authenticated">
                 <button class="btn text-dark border-0 shadow-none dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{currentUser?.nom_complet?.substring(0,10)}}
+                  {{currentUser?.nom_complet?.substring(0,15)}}
                 </button>
                 <ul class="dropdown-menu p-2 ms-0">
                   <li><a class="dropdown-item" routerLink="/profile">Voir Profil</a></li>
