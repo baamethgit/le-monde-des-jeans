@@ -16,37 +16,41 @@ import { CommonModule } from '@angular/common';
 export class ProfilUpdateComponent {
   user!: User;
   error: string = '';
+  updateError: string = '';
+  changePasswordError: string = '';
   message: string = '';
   userForm ! : FormGroup;
   passwordForm! : FormGroup;
 
+
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
+    this.userForm = this.formBuilder.group(
+      {
+        nom_complet: ['', [Validators.required,Validators.minLength(5)]],
+        phone_number: ['', [Validators.required]],
+      },
+      {
+        validators: [Validation.phoneNumberValidation('phone_number')]
+      }
+
+    );
     this.userService.getUser().subscribe({
       next: (data) => {
         if (data !== null) {
           this.user = data;
           this.initiazeForm();
         } else {
-          // this.user = undefined;
+          this.router.navigate(['login']);
         }
       },
       error: (error) => {
-        console.log(error.error.detail);
+        this.router.navigate(['login']);
       }
     });
 
-    this.userForm = this.formBuilder.group(
-      {
-        nom_complet: ['', [Validators.required,Validators.minLength(5)]],
-        phone_number: ['', [Validators.required]],
-      },
-      // {
-      //   validators: [Validation.phoneNumberValidation('phone_number')]
-      // }
-
-    );
+   
 
     this.passwordForm = this.formBuilder.group(
       {
@@ -84,9 +88,10 @@ export class ProfilUpdateComponent {
       this.userService.updateUser(this.user).subscribe({
         next: (data) => {
           this.router.navigate(['/profile']);
+          this.updateError = "";
         },
         error: (error) => {
-          console.log('Erreur lors de la maj du user :', error.error.detail);
+          this.updateError = "Erreur lors de la maj du user";
         }
       });
     }
@@ -103,11 +108,13 @@ export class ProfilUpdateComponent {
         next: (data) => {
           this.passwordForm.reset();
           this.message = "Le mot de passe est modifié avec succès";
+          this.changePasswordError = '';
         },
         error: (error) => {
           this.error = error.error[0]
           this.passwordForm.markAllAsTouched();
-          this.message = ''
+          this.message = '';
+          this.changePasswordError = "Erreur lors du changement de mot de passe";
         }
       })
     } else {
@@ -116,4 +123,11 @@ export class ProfilUpdateComponent {
     }
   }
 
+  resetProfileForm():void{
+    this.initiazeForm();
+  }
+
+  resetPasswordForm():void{
+    this.passwordForm.reset();
+  }
 }

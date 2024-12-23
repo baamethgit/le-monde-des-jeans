@@ -1,28 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../../../services/users/user.service';
 import { User } from '../../../models/user';
 import { CommonModule } from '@angular/common';
 import { UpdateUserComponent } from '../update-user/update-user.component';
 import { RouterLink } from '@angular/router';
-import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbHighlight, NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { DetailClientComponent } from '../detail-client/detail-client.component';
 import { LoaderComponent } from '../../loader/loader.component';
+import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [CommonModule,FormsModule,UpdateUserComponent,RouterLink, NgbHighlight, NgbPaginationModule,DetailClientComponent,LoaderComponent],
+  imports: [CommonModule,FormsModule,RouterLink, NgbHighlight, NgbPaginationModule,DetailClientComponent,LoaderComponent],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss'
 })
 export class ClientsComponent implements OnInit {
   users: User[] = [];
   page = 1;
-  pageSize = 5;
+  pageSize = 20;
   searchTerm = '';
   totalItems = 0;
-
+  modalService = inject(NgbModal);
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
@@ -45,10 +46,11 @@ export class ClientsComponent implements OnInit {
     this.page = 1;
     this.loadUsers();
   }
-  // onPageSizeChange() {
-  //   this.page = 1; // Réinitialiser à la première page lors du changement de taille de page
-  //   this.loadUsers();
-  // }
+
+  onPageSizeChange() {
+    this.page = 1;
+    this.loadUsers();
+  }
 
   viewOrders(customer_phone:string){
 
@@ -57,15 +59,9 @@ export class ClientsComponent implements OnInit {
 
   }
   deleteUser(slug:string){
-    this.userService.deleteUser(slug).subscribe({
-      next: (data) => {
-        console.log('user supprimé avec succés');
-        this.loadUsers();
-      },
-      error: (error) => {
-        console.log(error.error);
-      }
-    });
+    const modalRef = this.modalService.open(DeleteModalComponent, { size: 'lg',centered:true, backdrop: 'static' });
+    modalRef.componentInstance.slug = slug;
+    this.loadUsers();
   }
 
 }

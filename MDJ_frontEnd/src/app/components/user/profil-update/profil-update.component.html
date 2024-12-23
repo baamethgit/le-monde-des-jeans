@@ -3,6 +3,8 @@
       <p class='w-100 mb-0 px-4 py-3 border-bottom fw-bold' style="text-transform: uppercase;">PARAMETRE DU COMPTE</p>
       <p class="text-center">Modifier les infos de votre compte</p>
       <div class='d-flex p-3 maj_info'>
+      <h4 class="bg-danger text-center py-1 text-light w-100" *ngIf="updateError">{{ updateError }}</h4>
+
         <form method="post" class="row " [formGroup]="userForm" (ngSubmit)="updateUser()">
           <p class="col-12 col-sm-6">
             <label for="">Nom Complet</label><br>
@@ -18,12 +20,13 @@
           <p class="col-12 col-sm-6">
             <label for="">Numéro de téléphone</label><br>
             <input class="px-2 py-1 border" type="text" formControlName="phone_number">
-            <!-- <ng-container *ngIf="userForm.controls['phone_number'].invalid && (userForm.controls['phone_number'].dirty || userForm.controls['phone_number'].touched)">
+            <ng-container *ngIf="userForm.controls['phone_number'].invalid && (userForm.controls['phone_number'].dirty || userForm.controls['phone_number'].touched)">
               <small class="text-danger">Veuillez saisir un numéro sénégalais valide</small>
-            </ng-container> -->
+            </ng-container>
           </p>
-          <p class="submit_btn col-4 d-block ms-3" style="width: auto;">
-            <input type="submit" value="Sauvegarder les modifications" class='py-2 fw-bold' name="param_compte">
+          <p class="col-12 mt-4 flex-wrap d-flex justify-content-around align-items-center w-100">
+            <button type="button" (click)="resetProfileForm()" class="btn btn-dark text-white rounded-2 px-2 py-1">Annuler</button>
+            <input type="submit" value="Sauvegarder les modifications" class='py-2 fw-bold' name="param_compte" style="width: min-content;">
           </p>
         </form>
       </div>
@@ -75,8 +78,9 @@
             </small>
             <small class="text-danger" *ngIf="passwordForm.controls['passwordConfirm'].hasError('required')">La confirmation de mot de passe est obligatoire..</small>
           </div>
-          <p class="submit_btn d-block mx-auto ms-3 mt-4 col-4 ">
-            <input type="submit" value="Changer le mot de passe" class='py-2 fw-bold ' name='modifier_mot_de_passe'>
+          <p class="col-12  mt-4 d-flex justify-content-around align-items-center w-100">
+            <button type="button" (click)="resetPasswordForm()" class="flex-wrap btn btn-dark text-white rounded-2 px-2 py-1">Annuler</button>
+            <input type="submit" value="Changer le mot de passe" class='py-2 fw-bold' name='modifier_mot_de_passe' style="width: min-content;">
           </p>
         </form>
       </div>

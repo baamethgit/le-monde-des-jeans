@@ -3,7 +3,7 @@
 	<div class="filters">
 	  <input type="text" [(ngModel)]="searchTerm" 
 	  placeholder="Rechercher par numéro ou client" 
-	  class="search-input " style="width:auto;"
+	  class="search-input " style="width:auto;min-width: 280px;"
 	  (input)="onSearch()"
 	  >
 	  <div class="d-flex align-items-center ">
@@ -58,6 +58,9 @@
 		</tr>
 </tbody>
 	</table>
+	<p class="alert alert-warning" *ngIf="!commandes.length && isLoading === false">
+		Aucune commande trouvée.
+	</p>
 </div>
 	<div class="pagination">
 	  <button class="page-btn me-2">&lt;</button>

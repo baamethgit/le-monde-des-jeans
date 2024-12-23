@@ -5,28 +5,32 @@ import { CommandeService } from '../../../services/commandes/commande.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateZoneComponent } from '../create-zone/create-zone.component';
 import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-liste-zones',
   standalone: true,
-  imports: [CommonModule,CreateZoneComponent,RouterLink],
+  imports: [CommonModule,RouterLink],
   templateUrl: './liste-zones.component.html',
   styleUrl: './liste-zones.component.scss'
 })
 export class ListeZonesComponent implements OnInit{
   zones: ZoneLivraison[] = [];
   commandeService = inject(CommandeService);
-  open = false;
-  action : 'add' | 'update' = 'add';
   alertMessage = "";
-  private modalService = inject(NgbModal);
+  isLoading : boolean = true;
+
   constructor(){}
   ngOnInit(): void {
       this.loadZones();
   }
 
   loadZones(){
-  this.commandeService.getDeliveryZones().subscribe({
+  this.commandeService.getDeliveryZones().pipe(
+    finalize(()=>{
+      this.isLoading = false;
+    })
+  ).subscribe({
     next:(data)=>{
       this.zones = data;
     },
@@ -47,4 +51,5 @@ export class ListeZonesComponent implements OnInit{
         },
       })
   }
+  
 }

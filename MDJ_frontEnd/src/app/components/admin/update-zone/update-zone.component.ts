@@ -52,7 +52,7 @@ updateZone(newZone : ZoneLivraison){
   this.commandeService.updateZone(newZone,newZone.id).subscribe({
     next:(response)=>{
         this.alertMessage = "La zone est mis à jour";
-        this.router.navigate(['mdj_admin/zones-livraison']);
+        this.router.navigate(['/mdj_admin/zones-livraison']);
     },
     error : (error) => {
         console.log(error.error);
@@ -61,7 +61,7 @@ updateZone(newZone : ZoneLivraison){
 }
 
   resetForm(){
-    this.zoneUpdateForm.reset();
+    history.back();
   }
 
   initializeForm(){

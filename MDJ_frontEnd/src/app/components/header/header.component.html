@@ -16,7 +16,7 @@
             <img class="header_whatsapp" src="../../assets/img/6929232_logo_whatsapp_icon.png" alt="whatsapp">
           </a>
         </ul>
-        <div class="justify-content-between left_nav_sec d-flex text-center align-items-center">
+        <div class="justify-content-center gap-1 justify-content-md-between left_nav_sec d-flex text-center flex-wrap align-items-center">
           <div class="user_profile_header me-5">
             <button class="border text-nowrap d-flex align-items-center">
               <img class="user_icon_header" src="../../assets/img/285645_user_icon.png" alt="">
@@ -30,6 +30,14 @@
                 </ul>
               </div>
               <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span> 
+            </button>
+          </div>
+          <div class="user_profile_cart">
+            <button class="border d-flex bt_card">
+              <div class="cart_header">
+                <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
+              </div>
+              <span class="text-nowrap" ><a href="/mes-commandes">Mes Commandes</a></span>
             </button>
           </div>
           <div class="user_profile_cart">
@@ -49,8 +57,8 @@
           <a [routerLink]="['/contacts']"><li>Contacts</li></a>
           <a class="whatsapp_link_header text-nowrap" href="">Notre Groupe Whatsapp <img class="header_whatsapp" src="../../assets/img/6929232_logo_whatsapp_icon.png"></a>
         </ul>
-        <div class="d-flex justify-content-between left_nav_sec">
-          <div class="user_profile_header me-5">
+        <div class="d-flex justify-content-between gap-2 left_nav_sec align-items-center">
+          <div class="user_profile_header ">
             <button class="border text-nowrap d-flex align-items-center">
               <img class="user_icon_header" src="../../assets/img/285645_user_icon.png" alt="">
               <div class="dropdown border-0 bg-transparent" *ngIf="is_authenticated">
@@ -71,6 +79,15 @@
                 <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
               </div>
               <span class="text-nowrap" ><a href="/panier">Mon panier</a></span>
+            </button>
+            
+          </div>
+          <div class="user_profile_cart">
+            <button class="border d-flex bt_card">
+              <div class="cart_header">
+                <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
+              </div>
+              <span class="text-nowrap" ><a href="/mes-commandes">Mes Commandes</a></span>
             </button>
           </div>
         </div>

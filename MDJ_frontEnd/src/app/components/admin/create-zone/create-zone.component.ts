@@ -3,6 +3,7 @@ import { CommandeService } from '../../../services/commandes/commande.service';
 import { ZoneLivraison } from '../../../models/zone-livraison';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-zone',
@@ -16,6 +17,7 @@ export class CreateZoneComponent implements OnInit{
   alertMessage : string = '';
   zoneCreationForm! : FormGroup;
   fb = inject(FormBuilder);
+  router = inject(Router);
 
   ngOnInit(): void {
      this.zoneCreationForm = this.fb.group({
@@ -35,6 +37,7 @@ export class CreateZoneComponent implements OnInit{
         info : this.zoneCreationForm.getRawValue().info
       } as ZoneLivraison;
       this.createZone(zone);
+      this.router.navigate(['/mdj_admin/zones-livraison']);
     }else{
       this.zoneCreationForm.markAllAsTouched();
     }
@@ -53,6 +56,6 @@ export class CreateZoneComponent implements OnInit{
   }
 
   resetForm(){
-    this.zoneCreationForm.reset();
+    history.back();
   }
 }

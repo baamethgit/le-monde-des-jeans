@@ -54,17 +54,9 @@
 
 .review-rating {
     margin-bottom: 15px;
+    font-size: 25px;
 }
 
-.star {
-    font-size: 24px;
-    color: #d5d5d5;
-    transition: color 0.2s ease;
-}
-
-.star.filled {
-    color: #f1c40f;
-}
 
 .delete-btn {
     position: absolute;

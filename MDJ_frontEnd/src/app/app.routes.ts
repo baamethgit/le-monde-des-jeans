@@ -33,12 +33,13 @@ import { MesCommandesComponent } from './components/user/mes-commandes/mes-comma
 import { ListeZonesComponent } from './components/admin/liste-zones/liste-zones.component';
 import { UpdateZoneComponent } from './components/admin/update-zone/update-zone.component';
 import { CreateZoneComponent } from './components/admin/create-zone/create-zone.component';
+import { NotFoundComponent } from './components/shared/not-found/not-found.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 
 export const routes: Routes = [
-    {path: '', component: HomeComponent,
-          canActivate: [userGuard]}
-        ,
+    {path: '', component: LayoutComponent,children:[
+    {path: '', component: HomeComponent,canActivate: [userGuard]},
     {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
@@ -61,7 +62,8 @@ export const routes: Routes = [
     ]},
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
-    {path:'contacts', component:ContactsComponent, pathMatch:'full'},
+    {path:'contacts', component:ContactsComponent, pathMatch:'full'},]}
+    ,
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
@@ -72,8 +74,10 @@ export const routes: Routes = [
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
 
         {path:'zones-livraison', component: ListeZonesComponent, pathMatch:'full'},
-        {path:'zone/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
-        {path:'creer-zone', component: CreateZoneComponent , pathMatch:'full'},
+        {path:'zones-livraison/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
+        {path:'zones-livraison/creer', component: CreateZoneComponent , pathMatch:'full'},
 
     ]},
+
+    { path: '**', component: NotFoundComponent, data: { breadcrumb: 'Page not found' } },
 ]

@@ -20,6 +20,7 @@ export class UpdateUserComponent {
   message: string = '';
   userForm ! : FormGroup;
   passwordForm! : FormGroup;
+
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
@@ -46,6 +47,7 @@ export class UpdateUserComponent {
         if (data !== null) {
           this.user = data;
           this.initiazeForm();
+          
         } else {
         }
       },
