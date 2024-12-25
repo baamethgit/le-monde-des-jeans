@@ -60,6 +60,7 @@
     gap: 10px;
     margin-bottom: 20px;
     justify-content: space-around;
+    flex-wrap: wrap;
   }
   
   .search-input, .filter-select, .date-input {
@@ -140,3 +141,8 @@
     color: yellow;
     font-weight: bold;
   }
+
+button:disabled{
+    opacity: 0.5 !important;
+    cursor: auto !important;
+}

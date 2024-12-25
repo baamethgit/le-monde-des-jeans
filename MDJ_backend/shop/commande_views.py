@@ -9,6 +9,7 @@ from accounts.utils import verifier_user
 from django.db.models import Count,Q
 
 
+"""
 @api_view(['POST'])
 def creer_paiement(request):
     user = verifier_user(request)
@@ -19,7 +20,7 @@ def creer_paiement(request):
     commande_existante = Commande.objects.filter(client=user, statut='EN_ATTENTE').first()
     commande_existante.statut = 'EN_PREPARATION'
     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+"""
 @api_view(['POST'])
 def creer_commande(request):
     user = verifier_user(request)
@@ -73,7 +74,7 @@ def detail_commande_by_refcode(request, ref_code):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande, ref_code=ref_code, client=user)
-    commande.liberer_produits_apres_delais()
+    #commande.liberer_produits_apres_delais()
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
@@ -140,7 +141,7 @@ def valider_commande(request, commande_id):
     
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
-
+"""
 @api_view(['POST'])
 def annuler_commande(request, commande_id):
     user = verifier_user(request)
@@ -152,7 +153,7 @@ def annuler_commande(request, commande_id):
     
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
-
+"""
 @api_view(['delete'])
 def deleteCommande(request,commande_id):
     user = verifier_user(request)
@@ -188,10 +189,17 @@ class CommandeUpdateView(APIView):
             return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
         
         commande = get_object_or_404(Commande, id=id_commande, client=user)
-        serializer = CommandeUpdateSerializer(commande, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        new_status = request.data.get('statut')
+        if not new_status:
+            return Response({"error":"aucun statut fourni"},status=status.HTTP_400_BAD_REQUEST)
+        if new_status == 'PAYEE':
+            commande.marquer_comme_payee()
+        if new_status == 'LIVREE':
+            commande.marquer_comme_livree()
+        if new_status == 'EN_COURS_LIVRAISON':
+            commande.commencer_livraison()
+
+        return Response(status=status.HTTP_200_OK)
     
     
 

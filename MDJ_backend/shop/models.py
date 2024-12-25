@@ -159,14 +159,12 @@ class Commande(models.Model):
     STATUT_CHOICES = (
         ('EN_ATTENTE', 'En attente de paiement'),
         ('PAYEE', 'Payée'),
-        ('EN_PREPARATION', 'En préparation'),
         ('EN_COURS_LIVRAISON', 'En cours de Livraison'),
         ('LIVREE', 'Livrée'),
-        ('ANNULEE', 'Annulée'),
     )
 
     client = models.ForeignKey(AUTH_USER_MODEL,on_delete = models.CASCADE)
-    ref_code = models.CharField(max_length=20, unique=True) # a générer
+    ref_code = models.CharField(max_length=20, unique=True)
     produits = models.ManyToManyField(Produit)
     date_commande = models.DateTimeField(auto_now_add=True)
     date_livraison = models.DateTimeField(null=True, blank=True)
@@ -196,11 +194,10 @@ class Commande(models.Model):
                         raise
         else:
             super().save(*args, **kwargs)
-        
-        
+
     def est_expire(self):
         return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'
-    
+    """
     def liberer_produits_apres_delais(self):
         if self.est_expire() and self.id:
             for produit in self.produits.all():
@@ -208,7 +205,7 @@ class Commande(models.Model):
                 produit.QuantiteStock -= 1
                 produit.save()
             self.delete()
-
+"""
     def __str__(self):
         return f"Commande {self.ref_code} par {self.client.nom_complet}"
     
@@ -224,27 +221,14 @@ class Commande(models.Model):
             self.statut = 'PAYEE'
             self.save()
 
-    def commencer_preparation(self):
+    def commencer_livraison(self):
         if self.statut == 'PAYEE':
-            self.statut = 'EN_PREPARATION'
-            self.save()
-
-    def marquer_comme_expediee(self):
-        if self.statut == 'EN_PREPARATION':
-            self.statut = 'EXPEDIEE'
+            self.statut = 'EN_COURS_LIVRAISON'
             self.save()
 
     def marquer_comme_livree(self):
-        if self.statut == 'EXPEDIEE':
+        if self.statut == 'PAYEE' or self.statut == 'EN_COURS_LIVRAISON':
             self.statut = 'LIVREE'
-            self.save()
-
-    def annuler(self):
-        if self.statut != 'LIVREE':
-            for produit in self.produits.all():
-                produit.QuantiteStock += 1
-                produit.save()
-            self.statut = 'ANNULEE'
             self.save()
     
 

@@ -1,4 +1,4 @@
-<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed': ''">
+<div class="sidenav bg-dark" [ngClass]="collapsed ? 'sidenav-collapsed': ''">
   <div class="logo-container">
     <button class="logo" (click)="toggleCollapse()">
       <i class="bi bi-list"></i>
@@ -14,7 +14,7 @@
   <ul class="sidenav-nav">
     <li class="sidenav-nav-item" *ngFor="let data of navData">
       <a class="sidenav-nav-link" [routerLink]="[data.routeLink]" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: true}">
+        >
         <i class="sidenav-link-icon" [class]="data.icon"></i>
         <span class="sidenav-link-text" *ngIf="collapsed">
           {{data.label}}

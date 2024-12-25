@@ -43,7 +43,7 @@ export class CommandeService {
     return this.http.delete<any>(url, { withCredentials: true });
   }
 
-  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
+  getCommandes(page: number = 1, pageSize: number = 10, searchTerm: string = '',statut?:string,startDate?: Date, endDate?: Date): Observable<any> {
         let params = new HttpParams()
           .set('page', page.toString())
           .set('page_size', pageSize.toString());
@@ -51,13 +51,17 @@ export class CommandeService {
         if (searchTerm) {
           params = params.set('search', searchTerm);
         }
-        // if (dateFilter) {
-        //   params = params.set('date_filtre', dateFilter.toString());
-        // }
 
-        // if (statut) {
-        //   params = params.set('statut', statut);
-        // }
+        if (startDate) {
+          params = params.set('start_date', startDate.toString());
+        }
+        if (endDate) {
+          params = params.set('end_date', endDate.toString());
+        }
+
+        if (statut) {
+          params = params.set('statut', statut);
+        }
 
         return this.http.get(`${this.baseUrl}apiProduit/list-commandes/`, { params });
   }
@@ -121,6 +125,10 @@ export class CommandeService {
   getStatsCommande():Observable<statCommande>{
     const url=`${this.baseUrl}apiProduit/stats-commandes/`
     return this.http.get<statCommande>(url,{ withCredentials: true })
+  }
+
+  CreateTemoignage(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}user/avis/`, data,{withCredentials: true  });
   }
 
 }

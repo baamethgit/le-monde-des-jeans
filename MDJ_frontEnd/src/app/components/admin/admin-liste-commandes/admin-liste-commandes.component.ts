@@ -7,6 +7,7 @@ import { Commande } from '../../../models/commande';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { CommandeService } from '../../../services/commandes/commande.service';
+import { StatutCommande } from '../../../models/StatutCommande';
 
 @Component({
   selector: 'app-admin-liste-commandes',
@@ -19,6 +20,7 @@ export class AdminListeCommandesComponent implements OnInit{
   page = 1;
   pageSize = 5;
   searchTerm = '';
+  protected readonly StatutCommande = StatutCommande;
   totalItems = 0;
   totalPage = 10;
   isLoading : boolean = false;
@@ -27,8 +29,8 @@ export class AdminListeCommandesComponent implements OnInit{
   filteredcommandes: Commande[] = [];
   dateFilter!: string;
   sanitizer = inject(DomSanitizer);
-
-
+  startDate! : Date;
+  endDate! : Date;
   commandeService = inject(CommandeService);
 
   ngOnInit(): void {
@@ -47,11 +49,10 @@ export class AdminListeCommandesComponent implements OnInit{
   onSearch(){
     this.page = 1;
     this.loadCommandes();
-    console.log(this.searchTerm);
   }
 
   loadCommandes() : void{
-    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm).subscribe({
+    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm,this.statutFiltre,this.startDate,this.endDate).subscribe({
       next:(response)=>{
         this.commandes = response.results;
         this.totalItems = response.count;
@@ -63,15 +64,7 @@ export class AdminListeCommandesComponent implements OnInit{
   }
 
   onSort({ column, direction }: SortEvent) {
-		// resetting other headers
-		// this.headers.forEach((header) => {
-		// 	if (header.sortable !== column) {
-		// 		header.direction = '';
-		// 	}
-		// });
-
-		// this.service.sortColumn = column;
-		// this.service.sortDirection = direction;
+		
 	}
 
   onStatusFilterChange(event: Event) {
@@ -82,14 +75,8 @@ export class AdminListeCommandesComponent implements OnInit{
   onDateFilterChange(event: Event) {
     this.loadCommandes();
   }
-
-  viewOrder(orderId: string) {
-    console.log(`Viewing order ${orderId}`);
-    // Implémentez la logique pour afficher les détails de la commande
-  }
-
-  editOrder(orderId: string) {
-    console.log(`Editing order ${orderId}`);
-    // Implémentez la logique pour éditer la commande
+  
+  openDeleteCommandeModal(){
+    alert("delete");
   }
 }

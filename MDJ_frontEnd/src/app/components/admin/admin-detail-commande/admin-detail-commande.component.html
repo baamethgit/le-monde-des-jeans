@@ -1,78 +1,109 @@
+@if (notCommandFound) {
+  <p class="alert alert-warning">Aucune commande avec cette référence.</p>
+}@else {
 <div class="card border-0 my-3">
     <div class="card-header bg-white">
       <!-- <h5 class="texte-title">Commande: {{ commande()!.title }}</h5> -->
     </div>
     <div class="card-body">
-      <div class="row">
+      <div class="row d-flex p-2 flex-wrap-reverse">
         <div class="col-sm-12 col-md-8">
           <div class="d-flex justify-content-center align-items-center">
-            <button (click)="supprimerCommande()" class="btn btn-secondary" >
+            <button (click)="supprimerCommande()" class="btn btn-dark" >
               <i class="fa-solid fa-trash me-2 mb-1"></i>Supprimer de l'historique
             </button>
-            <button class="btn btn-secondary ms-1" (click)="downloadOrderDetails()">
+            <button class="btn btn-dark ms-1" (click)="downloadOrderDetails()">
               <i class="fa-solid fa-download me-1 mb-1"></i>Télécharger la facture
             </button>
           </div>
-          <div id="order-details-box">
+          <div class="" id="order-details-box">
           <h5 class="fw-bold mt-3 text-center">Détail de la Commande</h5>
+          
           <div class="row mx-3 p-3 border">
-            <div class="col-sm-12 col-md-6 mb-2">
+            <button type="" class="px-2 mx-auto my-2 py-1 rounded-3 rounded border-0 fw-bold btn btn-{{commande.statut |lowercase}}">{{commande.statut}}</button>
+
+            <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50">N° Commande:</div>
-                <div class="">{{commande.ref_code}}</div>
+                <div class="fw-bold">{{commande.ref_code}}</div>
               </div>
             </div>
-            <div class="col-sm-12 col-md-6 mb-2">
+            <div class="col-sm-12 col-md-6 my-3">
               <div class="">
-                <div class="text-black-50"> Nom Client:</div>
+                <div class="text-black-50"> Nom du Client:</div>
                 <div class="">{{commande.client.nom_complet}}</div>
               </div>
             </div>
-            <div class="col-sm-12 col-md-6 mb-2">
+            <div class="col-sm-12 col-md-6 my-3">
               <div class="">
-                <div class="text-black-50">Livré le:</div>
-                <div class="">{{commande.date_livraison}}</div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6 mb-2">
-              <div class="">
-                <div class="text-black-50">Numéro du client:</div>
+                <div class="text-black-50"><i class="fa-solid fa-phone me-1"></i>Numéro du client:</div>
                 <div class="">{{commande.client.phone_number}}</div>
               </div>
             </div>
-            <div class="col-sm-12 col-md-6 mb-2">
+            <div class="col-sm-12 col-md-6 my-3">
               <div class="">
-                <div class="text-black-50">Zone de livraison</div>
-                <div class="">ZONE {{commande.zone_livraison?.numero}} : {{commande.zone_livraison?.nom}}</div>
+                <div class="text-black-50"><i class="fa-solid fa-calendar-days me-1"></i> Commandé le:</div>
+                <div class="">{{commande.date_commande | date:'dd MMM yyyy'}}</div>
               </div>
+            </div>
+            <div class="col-sm-12 col-md-6 my-3">
+              <div class="">
+                <div class="text-black-50"><i class="fa-solid fa-calendar-days me-1"></i>Livré le:</div>
+                <div class="">{{commande.date_livraison | date:'dd MMM yyyy'}}</div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 my-3">
+              <div class="">
+                <div class="text-black-50"><i class="fa-solid fa-location-dot me-1"></i> Zone de livraison</div>
+                <div class="" *ngIf="commande.zone_livraison">ZONE {{commande.zone_livraison.numero}} : {{commande.zone_livraison.nom}}</div>
+              </div>
+            </div>
+            <div class="col-12 my-3">
+              <div class="d-flex">
+                <div class="text-black-50 me-3"><i class="fa-solid fa-basket-shopping me-2"></i> Produits</div>
+                <hr class="flex-grow-1">
+              </div>
+              <ul class="list-unstyled">
+                <li *ngFor="let item of commande.produits">
+                    <img src="{{item.images[0].image}}" width="30" alt="">
+                    {{item.nom}}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
         </div>
   
-        <div class="d-flex justify-content-center col-sm-12 col-md-4 border-start">
-          <div class="d-flex align-items-center">
+        <div class="d-flex justify-content-center align-items-center col-sm-12 col-md-4 border-start">
+          <div>
+            <div class="d-flex align-items-center">
             <p class="me-2 mt-2">Changer le statut</p>
             <div class="dropdown">
-              <button  class="btn btn- dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button  class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ textStatut }} {{commande.statut}}
               </button>
               <ul class="dropdown-menu">
-                <li>
-                  <button class="dropdown-item" type="button">Livré</button>
+                <li *ngIf="commande.statut===StatutCommande.EN_ATTENTE" >
+                  <button (click)="changeStatut(StatutCommande.PAYEE)" class="dropdown-item btn-secondary btn" type="button">
+                    Payée
+                  </button>
                 </li>
-                <li>
-                  <button  (click)="changeStatut(StatutCommande.EN_COURS_LIVRAISON)" class="dropdown-item" type="button">
+                <li *ngIf="commande.statut===StatutCommande.PAYEE" >
+                  <button   (click)="changeStatut(StatutCommande.EN_COURS_LIVRAISON)" class="dropdown-item btn-secondary btn" type="button">
                     En cours de Livraison
                   </button>
                 </li>
-                <li><button (click)="changeStatut(StatutCommande.ANNULEE)" class="dropdown-item" type="button">Annuler</button></li>
+                <li *ngIf="commande.statut === StatutCommande.PAYEE || commande.statut === StatutCommande.EN_COURS_LIVRAISON">
+                  <button  (click)="changeStatut(StatutCommande.LIVREE)" class="dropdown-item btn-secondary btn" type="button">
+                    Livrée
+                  </button>
+                </li>
               </ul>
-            </div>
+            </div></div>
           </div>
         
       </div>
     </div>
   </div>
 </div>
- 
+}

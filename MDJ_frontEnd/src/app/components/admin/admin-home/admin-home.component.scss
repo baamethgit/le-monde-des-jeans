@@ -8,18 +8,21 @@
     display: flex;
     flex-grow: 1;
     justify-content: space-between;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
   }
   
   app-admin-header {
-    height: auto; /* Hauteur du header */
+    height: auto;
     position:sticky;
     top:0px;
+    z-index: 1000;
   }
   
   app-admin-sidebar {
     width: auto;
     min-height: 100vh;
-
   }
   
   .content {

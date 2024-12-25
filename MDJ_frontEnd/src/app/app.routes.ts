@@ -35,14 +35,14 @@ import { UpdateZoneComponent } from './components/admin/update-zone/update-zone.
 import { CreateZoneComponent } from './components/admin/create-zone/create-zone.component';
 import { NotFoundComponent } from './components/shared/not-found/not-found.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { PaiementComponent } from './components/user/paiement/paiement.component';
+import { PaymentComponent } from './components/admin/payment/payment.component';
 
 
 export const routes: Routes = [
     {path: '', component: LayoutComponent,children:[
     {path: '', component: HomeComponent,canActivate: [userGuard]},
-    {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
-    {path: 'login', component: LoginComponent},
-    {path: 'inscription', component: SignupComponent},
+    
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
     {path:'produits', component: ProduitsComponent},
     {path: 'commande-validee', component:CommandeValideeComponent,
@@ -67,17 +67,21 @@ export const routes: Routes = [
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
+        {path:'paiements', component: PaymentComponent, pathMatch:'full'},
         {path:'produits', component: AdminProduitsComponent, pathMatch:'full'},
-        {path: 'commande/:ref-code', component: AdminDetailCommandeComponent},
+        {path: 'commandes/:ref-code', component: AdminDetailCommandeComponent},
         {path:'clients', component: ClientsComponent, pathMatch:'full'},
         {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
         {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
-
         {path:'zones-livraison', component: ListeZonesComponent, pathMatch:'full'},
         {path:'zones-livraison/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
         {path:'zones-livraison/creer', component: CreateZoneComponent , pathMatch:'full'},
 
     ]},
+
+    {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
+    {path: 'login', component: LoginComponent},
+    {path: 'inscription', component: SignupComponent},
 
     { path: '**', component: NotFoundComponent, data: { breadcrumb: 'Page not found' } },
 ]

@@ -16,6 +16,11 @@ export const navbarData = [
       label: 'Commandes'
     },
     {
+      routeLink: 'paiements',
+      icon: 'fa-solid fa-sack-dollar',
+      label: 'Paiements'
+    },
+    {
       routeLink: 'clients',
       icon: 'fa fa-list-ul',
       label: 'Mes Clients'

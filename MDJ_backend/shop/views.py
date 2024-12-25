@@ -3,7 +3,7 @@ from . import  models
 from . import serializers
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from accounts import models as accountModel
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
@@ -17,6 +17,7 @@ from .models import Panier, Produit, PanierProduit
 from .serializers import PanierSerializer, PanierProduitSerializer
 from django.shortcuts import get_object_or_404
 from accounts.utils import verifier_user
+from django.utils.dateparse import parse_date
 
 class getDeliveryZones(ListAPIView):
     queryset = ZoneLivraison.objects.all()
@@ -142,15 +143,28 @@ class CommandeListView(ListAPIView):
 
     def get_queryset(self):
         queryset = Commande.objects.all()
+
         search_term = self.request.query_params.get('search', None)
-        
+        start_date = self.request.query_params.get('start_date')
+        end_date = self.request.query_params.get('end_date')
+        statut = self.request.query_params.get('statut')
+
+        if statut:
+            queryset = queryset.filter(statut=statut)
+
+        if start_date:
+            start_date = parse_date(start_date)
+            queryset = queryset.filter(date_commande__gte=start_date)
+        if end_date:
+            end_date = parse_date(end_date)
+            queryset = queryset.filter(date_commande__lte=end_date)
         
         if search_term:
             queryset = queryset.filter(
                 Q(client__phone_number__icontains=search_term) |
                 Q(client__nom_complet__icontains=search_term) | 
                 Q(ref_code__icontains=search_term) 
-            )
+            ).order_by('-date_commande')
         return queryset
 
 @api_view(['GET'])
@@ -223,5 +237,12 @@ def vider_panier(request):
         panier_produit.delete()
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)
 
+
+def DashboardKpiView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request, *args, **kwargs):
+        response_data = {
+
+        }
 
     

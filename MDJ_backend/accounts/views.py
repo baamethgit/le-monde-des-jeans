@@ -259,12 +259,17 @@ class AvisView(APIView):
         return Response(serializer.data)
     
     def post(self,request):
-        verifier_user(request)
-        serializer = AvisCreationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user = verifier_user(request)
+        data = request.data
+        try:
+            avis = Avis.objects.create(Avis_author=user)
+            avis.Texte_avis = data['Texte_avis']
+            avis.nbre_etoiles = data['nbre_etoiles']
+            avis.save()
+            return Response(AvisSerializer(avis).data, status=status.HTTP_201_CREATED)
+        except:
+            return Response({"error":"erreur rencontré lors de la création du témoignage"}, status=status.HTTP_400_BAD_REQUEST)
+
     
     def delete(self, request,id_avis):
         avis = get_object_or_404(Avis, pk=id_avis)

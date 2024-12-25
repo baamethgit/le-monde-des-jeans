@@ -1,7 +1,21 @@
-.btn {
-    // border: none;
-    background-color: black;
-    color: white;
-    font-weight: bold;
-    outline: none;
-  }
+
+
+.btn-livree{
+  background-color: blue;
+  color:white;
+}
+
+.btn-payee{
+  background-color: green;
+  color:white;
+}
+
+.btn-en_attente{
+  background-color: black;
+  color:white;
+}
+
+.btn-en_cours_livraison{
+  background-color: yellow;
+  color:black;
+}

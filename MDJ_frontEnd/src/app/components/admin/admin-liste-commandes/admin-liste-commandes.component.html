@@ -1,5 +1,8 @@
-<div class="admin-orders">
-	<h1>Commandes</h1>
+<div class="admin-orders my-0 pt-0">
+	<h2 class="d-flex align-items-center gap-2 my-0 py-0">
+		<img src="/assets/img/image_order.svg" alt="Illustration livraison" class="text-primary img-fluid mb-3 " style="max-height: 150px;">
+		<span class="reviews-title ">Commandes</span>
+	</h2>
 	<div class="filters">
 	  <input type="text" [(ngModel)]="searchTerm" 
 	  placeholder="Rechercher par numéro ou client" 
@@ -17,8 +20,10 @@
 		</select>
 	</div>
 	<div class="d-flex align-items-center">
-		<span class="d-inline-block me-3 ">Choisir une date</span>
-		<input [(ngModel)]="dateFilter" type="date" class="date-input" style="cursor:pointer"(ngModelChange)="onDateFilterChange($event)">
+		<span class="d-inline-block me-3 ">Commandé entre </span>
+		<input [(ngModel)]="startDate" type="date" class="date-input" style="cursor:pointer"(ngModelChange)="onDateFilterChange($event)">
+		<span class="d-inline-block mx-1 ">et</span>
+		<input [(ngModel)]="endDate" type="date" class="date-input" style="cursor:pointer"(ngModelChange)="onDateFilterChange($event)">
 	</div>
 	</div>
 	<div class="table-container">
@@ -37,13 +42,13 @@
 	  </thead>
 	  <tbody>
 		<tr *ngFor="let commande of commandes">
-		  <td [innerHTML]="highlightText(commande.ref_code)"></td>
+		  <td class="fw-bold" [innerHTML]="highlightText(commande.ref_code)"></td>
 		  <td>
 			<span [innerHTML]="highlightText(commande.client.nom_complet)"></span><br>
 			<span class="text-center" [innerHTML]="highlightText(commande.client.phone_number)"></span>
 		  </td>
 		  <td>{{commande.date_commande | date : 'dd MMMM YYYY'}}</td>
-		  <td class="text-center text-primary fw-bold">{{ commande.montant }} frcs</td>
+		  <td class="text-center text-primary fw-bold">{{ commande.montant }}</td>
 		  <td *ngIf="commande.zone_livraison">Zone {{commande.zone_livraison.numero}} : {{commande.zone_livraison.nom}}</td>
 		  <td *ngIf="!commande.zone_livraison">Récupéré au magasin</td>
 		  <td><span class="status pending">{{commande.statut.toString()}}</span></td>
@@ -51,9 +56,10 @@
 		  <td *ngIf="!commande.date_livraison" class="text-center">---</td>
 		  <td class="actions-cell">
 			<button class="action-btn view" >
-				<a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/commande',commande.ref_code]">Voir</a>
+				<a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/commandes',commande.ref_code]">Voir</a>
 			</button>
-			<button class="action-btn edit" >Modifier</button>
+			<!-- <button class="action-btn edit" >Modifier</button> -->
+			<button (click)="openDeleteCommandeModal()" class="action-btn delete bg-danger text-white" [disabled]="commande.statut!=StatutCommande.LIVREE">Supprimer</button>
 		  </td>
 		</tr>
 </tbody>

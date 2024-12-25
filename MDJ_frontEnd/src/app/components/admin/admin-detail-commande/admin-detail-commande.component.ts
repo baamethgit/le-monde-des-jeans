@@ -5,10 +5,12 @@ import { StatutCommande } from '../../../models/StatutCommande';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs';
 import html2canvas from 'html2canvas';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-admin-detail-commande',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,FormsModule],
   templateUrl: './admin-detail-commande.component.html',
   styleUrl: './admin-detail-commande.component.scss'
 })
@@ -16,6 +18,7 @@ export class AdminDetailCommandeComponent implements OnInit {
   textStatut : string = '';
   statutCommande!: StatutCommande;
   commande! : Commande;
+  notCommandFound : boolean = false;
   commandeService = inject(CommandeService);
   protected readonly StatutCommande = StatutCommande;
 
@@ -33,6 +36,9 @@ export class AdminDetailCommandeComponent implements OnInit {
             this.commande = value;
               console.log(this.commande);
           },
+          error:(error)=> {
+            this.notCommandFound = true;
+          },
         }
       )
       
@@ -48,6 +54,7 @@ export class AdminDetailCommandeComponent implements OnInit {
       link.click();
     });
   }
+  
 
   changeStatut(statut: StatutCommande){
       this.commandeService.updateCommande(this.commande.id,{'statut':statut.toString()}).subscribe({

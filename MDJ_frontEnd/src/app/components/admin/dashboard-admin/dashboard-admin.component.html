@@ -1,55 +1,188 @@
-<div class="dashboard-container">
-    <h1 class="ms-5 text-primary">Dashboard</h1>
-    
-    <div class="quick-stats row mx-auto justify-content-center">
-      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
-        <h5>Ventes Totales ces 5 derniers jours</h5>
-        <p>{{ totalSales}}</p>
-      </div>
-      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
-        <a href="#" style="color:inherit;text-decoration:none;">
-            <h5>Commandes en Attente de livraison</h5>
-            <p>{{ pendingOrders }}</p>
-        </a>
-      </div>
-      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
-        <h5>Nouveaux Clients</h5>
-        <p>{{ newCustomers }}</p>
-      </div>
-      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
-        <h5>Nouveaux Clients</h5>
-        <p>{{ newCustomers }}</p>
-      </div>
-      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
-        <h5>Nouveaux Clients</h5>
-        <p>{{ newCustomers }}</p>
-      </div>
-      <div class="stat-card col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 m-1">
-        <h5>Nouveaux Clients</h5>
-        <p>{{ newCustomers }}</p>
+  <div class="container-fluid p-4">
+    <div class="card mb-4 bg-primary text-white">
+      <div class="card-body p-4">
+        <h1 class="display-6">Tableau de Bord</h1>
+        <p class="lead mb-0">{{ currentDate }}</p>
       </div>
     </div>
-    <div class="recent-orders px-2">
-      <h5 class="text-success text-center mt-5 mb-2">Commandes Récentes</h5>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Client</th>
-            <th>Montant</th>
-            <th>Statut</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (order of recentOrders; track order.id) {
-            <tr>
-              <td>{{ order.id }}</td>
-              <td>{{ order.client }}</td>
-              <td>{{ order.amount}}</td>
-              <td>{{ order.status }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+
+    <div class="row g-4 mb-4">
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 bg-primary bg-opacity-10 p-3 rounded">
+                <i class="bi bi-currency-dollar fs-2 text-primary"></i>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <h6 class="text-muted mb-1">Ventes Totales</h6>
+                <h3 class="mb-0">2.45M FCFA</h3>
+                <span class="badge bg-success">+15%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 bg-success bg-opacity-10 p-3 rounded">
+                <i class="bi bi-box fs-2 text-success"></i>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <h6 class="text-muted mb-1">Commandes</h6>
+                <h3 class="mb-0">156</h3>
+                <span class="badge bg-success">45 cette semaine</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 bg-info bg-opacity-10 p-3 rounded">
+                <i class="bi bi-people fs-2 text-info"></i>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <h6 class="text-muted mb-1">Clients</h6>
+                <h3 class="mb-0">1,245</h3>
+                <span class="badge bg-success">+23 nouveaux</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 bg-warning bg-opacity-10 p-3 rounded">
+                <i class="bi bi-tag fs-2 text-warning"></i>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <h6 class="text-muted mb-1">Produits</h6>
+                <h3 class="mb-0">89</h3>
+                <span class="badge bg-danger">5 en rupture</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mb-4">
+      <div class="col-12 col-xl-8">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-0">
+            <h5 class="card-title mb-0">Ventes des 7 derniers jours</h5>
+          </div>
+          <div class="card-body">
+            <div class="chart-container" style="height: 300px;">
+              <div class="d-flex h-100 align-items-end">
+                @for(day of salesData; track day) {
+                  <div class="flex-grow-1 mx-1">
+                    <div class="position-relative">
+                      <div class="progress bg-primary bg-opacity-10" style="height: 200px;">
+                        <div 
+                          class="progress-bar bg-primary" 
+                          role="progressbar" 
+                          [style.height.%]="day.percentage"
+                          [style.transform]="'translateY(' + (100 - day.percentage) + '%)'"
+                        >
+                          <div class="position-absolute top-0 start-50 translate-middle-x opacity-0 bg-dark text-white px-2 py-1 rounded chart-tooltip">
+                            {{ day.amount }} FCFA
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-center mt-2">{{ day.label }}</div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-xl-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-transparent border-0">
+            <h5 class="card-title mb-0">État des Commandes</h5>
+          </div>
+          <div class="card-body">
+            @for(status of orderStatus; track status) {
+              <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>{{ status.label }}</span>
+                  <span>{{ status.count }}</span>
+                </div>
+                <div class="progress" style="height: 10px">
+                  <div 
+                    class="progress-bar" 
+                    [class]="status.colorClass"
+                    role="progressbar" 
+                    [style.width.%]="status.percentage">
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-transparent border-0">
+        <h5 class="card-title mb-0">Produits Populaires</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>État</th>
+                <th>Ventes</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(product of topProducts; track product) {
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="bg-light p-2 rounded me-3">{{ product.emoji }}</div>
+                      <span>{{ product.name }}</span>
+                    </div>
+                  </td>
+                  <td>{{ product.price }} FCFA</td>
+                  <td>
+                    <span 
+                      class="badge" 
+                      [class.bg-success]="product.stockStatus === 'En stock'"
+                      [class.bg-danger]="product.stockStatus === 'Rupture'"
+                    >
+                      {{ product.stockStatus }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="progress" style="height: 5px; width: 100px">
+                      <div 
+                        class="progress-bar bg-success" 
+                        role="progressbar" 
+                        [style.width.%]="product.salesPercentage || 75">
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
