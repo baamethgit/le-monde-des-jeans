@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Commande, Produit, Panier,Paiement
+from .models import Commande, Produit, Panier
 from .serializers import CommandeSerializer, CommandeUpdateSerializer, PaiementSerializer,CommandeHistoriqueSerializer
 from accounts.utils import verifier_user
 from django.db.models import Count,Q

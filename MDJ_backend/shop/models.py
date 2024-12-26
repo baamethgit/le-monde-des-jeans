@@ -232,19 +232,20 @@ class Commande(models.Model):
             self.save()
     
 
-class Paiement(models.Model):
+class Payment(models.Model):
     METHODE_PAIEMENT_CHOICES = (
         ('ORANGE_MONEY', 'Orange Money'),
         ('WAVE', 'Wave'),
         ('CC', 'Carte de crédit'),
     )
 
-    commande = models.OneToOneField(Commande, on_delete=models.CASCADE)
+    #commande = models.OneToOneField(Commande, on_delete=models.CASCADE)
+    ref_commande = models.CharField(max_length=50,unique=True)
     montant = models.DecimalField(max_digits=10, decimal_places=2)
     methode_paiement = models.CharField(max_length=20, choices=METHODE_PAIEMENT_CHOICES)
     date_paiement = models.DateTimeField(auto_now_add=True)
     id_transaction = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"
+        return f"Paiement pour la commande {self.ref_commande} via {self.get_methode_paiement_display()}"
     
