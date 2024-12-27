@@ -147,3 +147,55 @@ select{
   animation: checkAnim 0.2s forwards;
 }
 
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Espacement entre les images */
+  justify-content: center;
+}
+
+.image-preview {
+  position: relative;
+  width: 150px; /* Ajustez selon vos besoins */
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.image-preview:hover {
+  transform: scale(1.05); /* Effet d'agrandissement au survol */
+}
+
+.preview_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delete_preview {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.delete_preview i {
+  font-size: 16px;
+}
+
+.delete_preview:hover {
+  background-color: rgba(255, 0, 0, 1);
+}

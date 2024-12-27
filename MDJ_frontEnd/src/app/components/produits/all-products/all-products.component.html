@@ -2,23 +2,26 @@
   <h2 class="product-grid__title">Tous les produits</h2>
   <div class="product-grid__container">
     @for (item of produits || produits; track item) {
-      <div class="product-item">
-        <a [routerLink]="['/produits', item.slug]" class="product-item__link">
-          <div class="product-item__img-container">
-            <img 
-              [ngSrc]="item.images[0].image" 
-              [width]="300" 
-              [height]="400"
-              [alt]="item.nom"
-              class="product-item__img"
-            >
-          </div>
-          <div class="product-item__info">
-            <div class="product-item__name">{{ item.nom }}</div>
-            <div class="product-item__price">{{ item.prix }} FCFA</div>
-          </div>
-        </a>
-      </div>
+      @if (item.QuantiteStock > 0) {
+        <div class="product-item">
+          <a [routerLink]="['/produits', item.slug]" class="product-item__link">
+            <div class="product-item__img-container">
+              <img 
+                [ngSrc]="item.images[0].image" 
+                [width]="300" 
+                [height]="400"
+                [alt]="item.nom"
+                class="product-item__img"
+                loading="lazy"
+              >
+            </div>
+            <div class="product-item__info">
+              <div class="product-item__name">{{ item.nom }}</div>
+              <div class="product-item__price">{{ item.prix }} FCFA</div>
+            </div>
+          </a>
+        </div>
+      }
     }
   </div>
 </div>
