@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "phonenumber_field",
 "whitenoise.runserver_nostatic",
+    "paiement"
 ]
 
 MIDDLEWARE = [

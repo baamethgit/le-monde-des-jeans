@@ -1,4 +1,6 @@
 from rest_framework.serializers import ModelSerializer,FloatField,IntegerField
+
+from paiement.models import Payment
 # from rest_framework import serializers
 
 from .models import ZoneLivraison,Commande,Panier
@@ -20,11 +22,6 @@ class ImageProduitSerializer(serializers.ModelSerializer):
         model = models.ImageProduit
         fields = ['image']
 
-# class ProductSerializer(serializers.ModelSerializer):
-#     images = ImageProduitSerializer(many=True, read_only=True)  # Nested serializer
-#     class Meta:
-#         model = models.Produit
-#         fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
     categorie = serializers.PrimaryKeyRelatedField(queryset=models.Categorie.objects.all(), write_only=True)
@@ -43,10 +40,7 @@ class ZoneSerializer(ModelSerializer):
         model = ZoneLivraison
         fields = "__all__"
 
-class PaiementSerializer(ModelSerializer):
-    class Meta:
-        model = models.Payment
-        fields = "__all__"
+
 
 class PanierProduitSerializer(serializers.ModelSerializer):
     produit = ProductSerializer(read_only=True) 

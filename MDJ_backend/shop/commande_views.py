@@ -4,23 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Commande, Produit, Panier
-from .serializers import CommandeSerializer, CommandeUpdateSerializer, PaiementSerializer,CommandeHistoriqueSerializer
+from .serializers import CommandeSerializer,CommandeHistoriqueSerializer
 from accounts.utils import verifier_user
-from django.db.models import Count,Q
 
 
-"""
-@api_view(['POST'])
-def creer_paiement(request):
-    user = verifier_user(request)
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-    paiement = Paiement.objects.create()
-    serializer = PaiementSerializer(paiement)
-    commande_existante = Commande.objects.filter(client=user, statut='EN_ATTENTE').first()
-    commande_existante.statut = 'EN_PREPARATION'
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
-"""
 @api_view(['POST'])
 def creer_commande(request):
     user = verifier_user(request)

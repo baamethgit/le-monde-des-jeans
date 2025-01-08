@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser
+from paiement.models import Payment
 from . import  models
 from . import serializers
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ from rest_framework import viewsets, status, permissions
 from accounts import models as accountModel
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
-from .models import ZoneLivraison, Commande, Payment
+from .models import ZoneLivraison, Commande
 from django.db.models import Q, Count
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
