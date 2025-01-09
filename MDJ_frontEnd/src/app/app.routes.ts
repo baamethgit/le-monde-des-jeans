@@ -37,6 +37,8 @@ import { NotFoundComponent } from './components/shared/not-found/not-found.compo
 import { LayoutComponent } from './components/layout/layout.component';
 import { PaiementComponent } from './components/user/paiement/paiement.component';
 import { PaymentComponent } from './components/admin/payment/payment.component';
+import { PaiementSuccessComponent } from './components/paiement-success/paiement-success.component';
+import { PaiementFailedComponent } from './components/paiement-failed/paiement-failed.component';
 
 
 export const routes: Routes = [
@@ -56,14 +58,16 @@ export const routes: Routes = [
     {path: 'mes-commandes', component: MesCommandesComponent,
         canActivate: [userGuard]},
     {path:'produits', component: AllProductsComponent, children:[
-
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
-    {path:'contacts', component:ContactsComponent, pathMatch:'full'},]}
-    ,
+    {path:'contacts', component:ContactsComponent, pathMatch:'full'},
+    {path:'success', component:PaiementSuccessComponent, pathMatch:'full'},
+    {path:'failed', component:PaiementFailedComponent, pathMatch:'full'},
+
+]},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},

@@ -121,7 +121,10 @@ export class CommandeService {
     return this.http.patch(`${this.baseUrl}apiProduit/commandes/${id}/update/`, newData,{withCredentials: true  });
   }
 
-  
+  updateCommandeStatus(id: number, newData: any){
+    return this.http.patch(`${this.baseUrl}apiProduit/commandes/${id}/updatestatus/`, newData,{withCredentials: true  });
+  }
+
   getStatsCommande():Observable<statCommande>{
     const url=`${this.baseUrl}apiProduit/stats-commandes/`
     return this.http.get<statCommande>(url,{ withCredentials: true })

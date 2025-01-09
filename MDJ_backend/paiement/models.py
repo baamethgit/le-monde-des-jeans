@@ -1,5 +1,8 @@
 from django.db import models
 
+from shop.models import Commande
+
+
 # Create your models here.
 class Payment(models.Model):
     METHODE_PAIEMENT_CHOICES = (
@@ -18,3 +21,10 @@ class Payment(models.Model):
     def __str__(self):
         return f"Paiement pour la commande {self.ref_commande} via {self.get_methode_paiement_display()}"
 
+class WaveCheckoutSession(models.Model):
+    order = models.ForeignKey(Commande, on_delete=models.CASCADE)
+    session_id = models.CharField(max_length=100)
+    wave_launch_url = models.URLField()
+    status = models.CharField(max_length=20, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

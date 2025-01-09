@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Commande, Produit, Panier
-from .serializers import CommandeSerializer,CommandeHistoriqueSerializer
+from .serializers import CommandeSerializer, CommandeHistoriqueSerializer, CommandeUpdateSerializer
 from accounts.utils import verifier_user
 
 
@@ -49,7 +49,7 @@ def detail_commande(request, commande_id):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande, id=commande_id, client=user)
-    commande.liberer_produits_apres_delais()
+
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
@@ -72,7 +72,7 @@ def detail_commande_courante(request):
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande = get_object_or_404(Commande,client=user,statut = 'EN_ATTENTE')
-    commande.liberer_produits_apres_delais()
+
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
@@ -169,7 +169,7 @@ def changerStatutCommande(request,commande_id):
 
 
 
-class CommandeUpdateView(APIView):
+class CommandeUpdateStatusView(APIView):
     def patch(self, request,id_commande):
         user = verifier_user(request)
         if not user:
@@ -187,7 +187,19 @@ class CommandeUpdateView(APIView):
             commande.commencer_livraison()
 
         return Response(status=status.HTTP_200_OK)
-    
+
+class CommandeUpdateView(APIView):
+    def patch(self, request,id_commande):
+        user = verifier_user(request)
+        if not user:
+            return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        commande = get_object_or_404(Commande, id=id_commande, client=user)
+        serializer = CommandeUpdateSerializer(instance=commande,data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data,status=status.HTTP_200_OK)
     
 
 class StatsCommandes(APIView):
