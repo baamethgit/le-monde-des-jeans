@@ -46,7 +46,7 @@ export const routes: Routes = [
     {path: '', component: HomeComponent,canActivate: [userGuard]},
     
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
-    {path:'produits', component: ProduitsComponent},
+    // {path:'produits', component: ProduitsComponent},
     {path: 'commande-validee', component:CommandeValideeComponent,
         canActivate: [userGuard]},
     {path: 'profile', component: ProfilComponent,
@@ -57,7 +57,7 @@ export const routes: Routes = [
         canActivate: [userGuard]},
     {path: 'mes-commandes', component: MesCommandesComponent,
         canActivate: [userGuard]},
-    {path:'produits', component: AllProductsComponent, children:[
+    {path:'produits', component: ProduitsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
