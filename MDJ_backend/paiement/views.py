@@ -29,7 +29,7 @@ class InitiateWavePaymentView(APIView):
         order = Commande.objects.get(id=request.data['order_id'])
 
         checkout_data = {
-            'amount': order.total_amount,
+            'amount': str(order.montant),
             'currency': 'XOF',  # Ou votre devise
             'client_reference': str(order.ref_code),
             'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
@@ -39,8 +39,10 @@ class InitiateWavePaymentView(APIView):
         response = requests.post(
             'https://api.wave.com/v1/checkout/sessions',
             json=checkout_data,
-            headers={'Authorization': f'Bearer {WAVE_API_KEY}'}
+            headers={'Authorization': f'Bearer {WAVE_API_KEY},Content-Type: application/json'}
         )
+
+        print(response)
 
         session = WaveCheckoutSession.objects.create(
             order=order,
@@ -50,7 +52,7 @@ class InitiateWavePaymentView(APIView):
 
         return Response({'wave_launch_url': session.wave_launch_url})
 
-
+"""
 class WaveWebhookView(APIView):
     def post(self, request):
         event = request.data
@@ -71,6 +73,68 @@ class WaveWebhookView(APIView):
                 session.save()
 
         return Response({'status': 'success'})
+"""
+
+
+from rest_framework import status
+from django.db import transaction
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class WaveWebhookView(APIView):
+
+    @transaction.atomic  # Assure que toutes les opérations DB sont atomiques
+    def post(self, request):
+        try:
+            event = request.data
+            logger.info(f'Received Wave webhook: {event["type"]}')
+
+            # Vérification du type d'événement
+            if event['type'] == 'checkout.session.completed':
+                try:
+                    session = WaveCheckoutSession.objects.select_for_update().get(
+                        session_id=event['data']['id']
+                    )
+                except WaveCheckoutSession.DoesNotExist:
+                    logger.error(f'Session not found: {event["data"]["id"]}')
+                    return Response(
+                        {'error': 'Session not found'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+
+                # Évite le traitement multiple du même événement
+                if session.status == 'completed':
+                    return Response({'status': 'Already processed'})
+
+                payment_status = event['data']['payment_status']
+
+                if payment_status == 'succeeded':
+                    session.status = 'completed'
+                    session.save()
+
+                    # Met à jour la commande
+                    order = session.order
+                    order.marquer_comme_payee()
+                    order.save()
+
+                elif payment_status == 'failed':
+                    session.status = 'failed'
+                    session.save()
+
+                return Response({'status': 'success'})
+
+            else:
+                logger.warning(f'Unhandled event type: {event["type"]}')
+                return Response({'status': 'Ignored event type'})
+
+        except Exception as e:
+            logger.error(f'Error processing webhook: {str(e)}')
+            return Response(
+                {'error': 'Internal server error'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class CheckPaymentStatusView(APIView):
