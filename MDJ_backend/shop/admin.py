@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Produit, Commande, ZoneLivraison, ImageProduit, Categorie, Panier, PanierProduit, Payment
+from .models import Produit, Commande, ZoneLivraison, ImageProduit, Categorie, Panier, PanierProduit
 
 
 # Register your models here.
@@ -10,7 +10,6 @@ class CategorySlug(admin.ModelAdmin):
 # class ProduitSlug(admin.ModelAdmin):
 #     prepopulated_fields={"slug":("nom","id")}
 
-admin.site.register(Payment)
 admin.site.register(Produit)
 admin.site.register(Commande)
 admin.site.register(ZoneLivraison)

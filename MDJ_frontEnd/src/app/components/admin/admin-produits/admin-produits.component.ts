@@ -4,11 +4,11 @@ import { Produit } from '../../../models/produit';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { categorie } from '../../../models/categorie';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { spec } from 'node:test/reporters';
 import { RouterLink } from '@angular/router';
-import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 
 export const TAILLES = [
   { value: 'S', label: 'S' },
@@ -43,9 +43,9 @@ export const COULEUR = [
 @Component({
   selector: 'app-admin-produits',
   standalone: true,
-  imports: [NgbPaginationModule, CommonModule, FormsModule,NgxFileDropModule, ReactiveFormsModule, RouterLink],
+  imports: [NgbPaginationModule, CommonModule, FormsModule, NgxFileDropModule, ReactiveFormsModule, RouterLink],
   templateUrl: './admin-produits.component.html',
-  styleUrl: './admin-produits.component.scss',
+  styleUrl: './admin-produits.component.scss'
 })
 
 
@@ -80,11 +80,11 @@ ngOnInit():void{
   this.AddProductForm=this.formBuilder.group(
     {
       prix_produit:['',[Validators.required,Validators.pattern("^[0-9]*$"),]],
+      pointure_produit: ['', [Validators.pattern("^[0-9]+(\\.[0-9]{1,2})?$")]],
       stock_produit:['1',[Validators.pattern("^[0-9]*$"),]],
-      categorySelect:['',[Validators.required]],
+      categorySelect:[''],
       nom_produit:[''],
       taille:[''],
-      pointure:[''],
       couleur:[''],
       composition:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
@@ -95,12 +95,12 @@ ngOnInit():void{
 
   this.UpdateProductForm=this.formBuilder.group(
     {
-      prix_produit:['',[Validators.required,Validators.pattern("^[0-9]*$"),]],
+      prix_produit: ['', [Validators.required, Validators.pattern("^[0-9]+(\\.[0-9]{1,2})?$")]],
+      pointure_produit: ['', [Validators.pattern("^[0-9]+(\\.[0-9]{1,2})?$")]],
       stock_produit:['1',[Validators.pattern("^[0-9]*$"),]],
       categorySelect:['',[Validators.required]],
       nom_produit:[''],
       taille:[''],
-      pointure:['', [Validators.pattern("^[0-9]*$")]],
       couleur:[''],
       composition:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
@@ -111,14 +111,14 @@ ngOnInit():void{
 
   this.AddCategoryForm=this.formBuilder.group(
     {
-      nom_categorie:['', [Validators.required, Validators.pattern("^[a-zA-Z]+$"),]],
+      nom_categorie: ['', [Validators.required, Validators.pattern("^[a-zA-Z_-]+$")]],
       desc_categorie:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
     }
   )
   this.UpdateCategoryForm=this.formBuilder.group(
     {
-      nom_categorie:['', [Validators.required, Validators.pattern("^[a-zA-Z]+$"),]],
+      nom_categorie:['', [Validators.required, Validators.pattern("^[a-zA-Z_-]+$"),]],
       desc_categorie:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
     }
@@ -144,17 +144,40 @@ loadCategories(){
 openSm(content: TemplateRef<any>) {
   this.modalService.open(content, { size: 'sm',centered: true });
 }
-openWindowCustomClass(content: TemplateRef<any>) {
+openWindowCustomClass(content: TemplateRef<any>, categorie:categorie) {
+  this.UpdateCategoryForm.patchValue({
+    nom_categorie: categorie.nom,
+    desc_categorie: categorie.description,
+    image: categorie.image
+  });
+  // Réinitialiser les images
+  this.imagesProdUpdateFormArray.clear();
+  this.previewUrls = [];
+  this.files = [];
+
+  // Charger les images existantes
+  if (categorie.image) {
+      // Convertir l'URL de l'image en File via fetch
+      fetch(categorie.image)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+          this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
+          this.previewUrls.push(categorie.image);
+           console.log('Image chargée :', categorie.image)
+        }).catch(err => console.error('Erreur lors du chargement de l\'image :', err));
+  }
   this.modalService.open(content, { windowClass: 'dark-modal', centered:true });
 }
 
 openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
+  // Patcher les valeurs du formulaire
   this.UpdateProductForm.patchValue({
     nom_produit: product.nom,
     prix_produit: product.prix,
+    pointure_produit: product.pointure,
     categorySelect: product.categorie_detail.id,
     taille: product.taille,
-    pointure:product.pointure,
     couleur: product.couleur,
     composition: product.composition,
     stock_produit: product.QuantiteStock,
@@ -165,11 +188,22 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
   // Réinitialiser les images
   this.imagesProdUpdateFormArray.clear();
   this.previewUrls = [];
+  this.files = [];
 
-  // Afficher les images existantes si nécessaire
-  // product.images.forEach(image => {
-  //   this.previewUrls.push(image.url);
-  // });
+  // Charger les images existantes
+  if (product.images && product.images.length > 0) {
+    product.images.forEach(img => {
+      // Convertir l'URL de l'image en File via fetch
+      fetch(img.image)
+        .then(res => res.blob())
+        .then(blob => {
+          const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+          this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
+          this.previewUrls.push(img.image);
+           console.log('Image chargée :', img.image)
+        });
+    });
+  }
 
   this.modalService.open(content, { size: 'lg', centered: true });
 }
@@ -282,7 +316,6 @@ createProduct() {
 
     const nom = this.AddProductForm.get('nom_produit')?.value;
     const taille = this.AddProductForm.get('taille')?.value;
-    const pointure = this.AddProductForm.get('pointure')?.value;
     const couleur = this.AddProductForm.get('couleur')?.value;
     const composition = this.AddProductForm.get('composition')?.value;
     const desc = this.AddProductForm.get('desc_produit')?.value;
@@ -291,7 +324,6 @@ createProduct() {
 
     if (nom) formData.append('nom', nom);
     if (taille) formData.append('taille', taille);
-    if(pointure) formData.append('pointure', pointure);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
     if (desc) formData.append('description', desc);
@@ -307,6 +339,7 @@ createProduct() {
         console.log('Enregistrement réussi !!! :', data);
         this.resetFormProd();
         this.loadProducts()
+        
       },
       error: (error) => { console.log('Erreur lors de l\'enregistrement : ', error); }
     });
@@ -324,7 +357,6 @@ UpdateProduct(id:number) {
 
     const nom = this.UpdateProductForm.get('nom_produit')?.value;
     const taille = this.UpdateProductForm.get('taille')?.value;
-    const pointure = this.AddProductForm.get('pointure')?.value;
     const couleur = this.UpdateProductForm.get('couleur')?.value;
     const composition = this.UpdateProductForm.get('composition')?.value;
     const desc = this.UpdateProductForm.get('desc_produit')?.value;
@@ -333,7 +365,6 @@ UpdateProduct(id:number) {
 
     if (nom) formData.append('nom', nom);
     if (taille) formData.append('taille', taille);
-    if (pointure) formData.append('pointure', pointure);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
     if (desc) formData.append('description', desc);

@@ -31,11 +31,13 @@
                     </div>
                   </ng-template>
                 </ngx-file-drop>
-                <div *ngIf="files.length > 0">
-                  <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                <div  *ngIf="files.length > 0">
+                  <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
                     <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
                       <img class="preview_image" [src]="url" alt="Preview">
-                      <button type="button" class="delete_preview" (click)="removeImageProd(i)">Supprimer</button>
+                      <button type="button" class="delete_preview" (click)="removeImageProd(i)">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -61,6 +63,19 @@
                               <small class="text-danger" *ngIf="AddProductForm.controls['prix_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
                   </ng-container>
                 </div>
+
+                <div class="d-flex flex-column">
+                  <div class="coolinput">
+                    <label for="pointure_produit"  class="text">Pointure : </label>
+                    <input formControlName="pointure_produit" type="text" class="input" name="input">
+                  </div>
+                  <ng-container
+                          *ngIf="UpdateProductForm.controls['pointure_produit'].invalid && (UpdateProductForm.controls['pointure_produit'].dirty || UpdateProductForm.controls['prix_produit'].touched)">
+                          <small class="text-danger" *ngIf="UpdateProductForm.controls['pointure_produit'].hasError('required')">Ce champ est
+                              obligatoire.</small>
+                              <small class="text-danger" *ngIf="UpdateProductForm.controls['pointure_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
+                  </ng-container>
+                </div>
               </div>
               
               <div class="d-flex justify-content-between my-2">
@@ -78,6 +93,18 @@
                   </ng-container>
                 </div>
           
+          
+                <select class="form-select" formControlName="taille">
+                  <option value="" disabled selected>Taille</option>
+                  @for (item of tailles; track $index) {
+                    <option value="{{item.value}}">{{item.label}}</option>
+                  }
+                </select>
+              </div>
+              
+              
+        
+              <div class="d-flex justify-content-between">
                 <select class="form-select" formControlName="couleur" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <option value="" disabled selected>Couleur</option>
                   @for (item of couleur; track $index) {
@@ -85,19 +112,6 @@
                   }
                 </select>
                 
-              </div>
-              
-              
-        
-              <div class="d-flex justify-content-between">
-                
-                <select class="form-select" formControlName="taille">
-                  <option value="" disabled selected>Taille</option>
-                  @for (item of tailles; track $index) {
-                    <option value="{{item.value}}">{{item.label}}</option>
-                  }
-                </select>
-
                 <select class="form-select"  formControlName="composition">
                   <option value="" disabled selected>Composition</option>
                   @for (item of compo; track $index) {
@@ -116,26 +130,14 @@
                             <small class="text-danger" *ngIf="AddProductForm.controls['stock_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
                 </ng-container>
 
-                <div class="d-flex flex-column">
-                  <div class="coolinput">
-                    <label for="pointure"  class="text">Pointure : </label>
-                    <input formControlName="pointure" type="text" class="input" name="input" placeholder="Pointure chaussure">
-                  </div>
-                  <ng-container
-                          *ngIf="AddProductForm.controls['pointure'].invalid && (AddProductForm.controls['pointure'].dirty || AddProductForm.controls['pointure'].touched)">
-                          
-                              <small class="text-danger" *ngIf="AddProductForm.controls['pointure'].hasError('pattern')">Seul les chiffres sont autorises</small>
-                  </ng-container>
-                </div>
                 
-              </div>
-
-              <div class="d-flex flex-column align-items-center">
-                <span>Special</span>
-                <label class="checkbox-container">
-                  <input formControlName="special_checkbox" class="custom-checkbox" type="checkbox">
-                  <span class="checkmark"></span>
-                </label>
+                <div class="d-flex flex-column align-items-center">
+                  <span>Special</span>
+                  <label class="checkbox-container">
+                    <input formControlName="special_checkbox" class="custom-checkbox" type="checkbox">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
               </div>
 
               <div>
@@ -173,11 +175,13 @@
                     </div>
                   </ng-template>
                 </ngx-file-drop>
-                <div *ngIf="files.length > 0">
-                  <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                <div  *ngIf="files.length > 0">
+                  <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
                     <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
                       <img class="preview_image" [src]="url" alt="Preview">
-                      <button type="button" class="delete_preview" (click)="removeImageCat(i)">Supprimer</button>
+                      <button type="button" class="delete_preview" (click)="removeImageCat(i)">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -276,14 +280,18 @@
                                 </div>
                               </ng-template>
                             </ngx-file-drop>
-                            <div *ngIf="files.length > 0">
-                              <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                            <div>
+                              <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
                                 <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
                                   <img class="preview_image" [src]="url" alt="Preview">
-                                  <button type="button" class="delete_preview" (click)="removeImageProdUpdate(i)">Supprimer</button>
+                                  <button type="button" class="delete_preview" (click)="removeImageProdUpdate(i)">
+                                    <i class="fas fa-trash-alt"></i>
+                                  </button>
                                 </div>
                               </div>
                             </div>
+                            
+                            
                             <div *ngIf="UpdateProductForm.get('images')?.hasError('required') && UpdateProductForm.get('images')?.touched" class="text-danger">
                               Au moins une image est requise.
                             </div>
@@ -306,6 +314,18 @@
                                           <small class="text-danger" *ngIf="UpdateProductForm.controls['prix_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
                               </ng-container>
                             </div>
+                            <div class="d-flex flex-column">
+                              <div class="coolinput">
+                                <label for="pointure_produit"  class="text">Pointure : </label>
+                                <input formControlName="pointure_produit" type="text" class="input" name="input" placeholder="{{item.pointure}}">
+                              </div>
+                              <ng-container
+                                      *ngIf="UpdateProductForm.controls['pointure_produit'].invalid && (UpdateProductForm.controls['pointure_produit'].dirty || UpdateProductForm.controls['prix_produit'].touched)">
+                                      <small class="text-danger" *ngIf="UpdateProductForm.controls['pointure_produit'].hasError('required')">Ce champ est
+                                          obligatoire.</small>
+                                          <small class="text-danger" *ngIf="UpdateProductForm.controls['pointure_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
+                              </ng-container>
+                            </div>
                           </div>
                           
                           <div class="d-flex justify-content-between my-2">
@@ -323,22 +343,21 @@
                               </ng-container>
                             </div>
                       
-                            <select class="form-select" formControlName="couleur" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
-                              <option value="" disabled selected>Couleur</option>
-                              @for (item of couleur; track $index) {
+                      
+                            <select class="form-select" formControlName="taille">
+                              <option value="" disabled selected>Taille</option>
+                              @for (item of tailles; track $index) {
                                 <option value="{{item.value}}">{{item.label}}</option>
                               }
                             </select>
-                            
                           </div>
                           
                           
                     
                           <div class="d-flex justify-content-between">
-                            
-                            <select class="form-select" formControlName="taille">
-                              <option value="" disabled selected>Taille</option>
-                              @for (item of tailles; track $index) {
+                            <select class="form-select" formControlName="couleur" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                              <option value="" disabled selected>Couleur</option>
+                              @for (item of couleur; track $index) {
                                 <option value="{{item.value}}">{{item.label}}</option>
                               }
                             </select>
@@ -361,26 +380,14 @@
                                         <small class="text-danger" *ngIf="UpdateProductForm.controls['stock_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
                             </ng-container>
             
-                            <div class="d-flex flex-column">
-                              <div class="coolinput">
-                                <label for="pointure"  class="text">Pointure : </label>
-                                <input formControlName="pointure" type="text" class="input" name="input">
-                              </div>
-                              <ng-container
-                                      *ngIf="AddProductForm.controls['pointure'].invalid && (AddProductForm.controls['pointure'].dirty || AddProductForm.controls['pointure'].touched)">
-                                      
-                                          <small class="text-danger" *ngIf="AddProductForm.controls['pointure'].hasError('pattern')">Seul les chiffres sont autorises</small>
-                              </ng-container>
-                            </div>
                             
-                          </div>
-
-                          <div class="d-flex flex-column align-items-center">
-                            <span>Special</span>
-                            <label class="checkbox-container">
-                              <input formControlName="special_checkbox" class="custom-checkbox" type="checkbox">
-                              <span class="checkmark"></span>
-                            </label>
+                            <div class="d-flex flex-column align-items-center">
+                              <span>Special</span>
+                              <label class="checkbox-container">
+                                <input formControlName="special_checkbox" class="custom-checkbox" type="checkbox">
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
                           </div>
             
                           <div>
@@ -432,7 +439,7 @@
                     {{item.nom}}
                 </td>
                 <td class="actions-cell text-center">
-                    <button (click)="openWindowCustomClass(updateCategory)" class="action-btn edit mx-1" style="background-color: rgb(32, 149, 228); border: none;" ><i class="fas fa-edit    "></i></button>
+                    <button (click)="openWindowCustomClass(updateCategory, item)" class="action-btn edit mx-1" style="background-color: rgb(32, 149, 228); border: none;" ><i class="fas fa-edit    "></i></button>
                     <button (click)="openSm(content)" type="button" style="background-color: red; border: none;"><i class="fa fa-trash" aria-hidden="true"></i></button>
                     <ng-template #content let-modal>
                       <div class="modal-header">
@@ -463,11 +470,13 @@
                                   </div>
                                 </ng-template>
                               </ngx-file-drop>
-                              <div *ngIf="files.length > 0">
-                                <div class="image-preview-container d-flex my-3" *ngIf="previewUrls.length > 0">
+                              <div>
+                                <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
                                   <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
                                     <img class="preview_image" [src]="url" alt="Preview">
-                                    <button type="button" class="delete_preview" (click)="removeImageCat(i)">Supprimer</button>
+                                    <button type="button" class="delete_preview" (click)="removeImageProdUpdate(i)">
+                                      <i class="fas fa-trash-alt"></i>
+                                    </button>
                                   </div>
                                 </div>
                               </div>
