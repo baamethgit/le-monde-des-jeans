@@ -1,4 +1,4 @@
-import { Component, inject, NgModule, TemplateRef } from '@angular/core';
+import { Component, inject, NgModule, numberAttribute, TemplateRef } from '@angular/core';
 import { ProduitService } from '../../../services/produits/produit.service';
 import { Produit } from '../../../models/produit';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -71,7 +71,8 @@ UpdateCategoryForm!:FormGroup;
 formBuilder=inject(FormBuilder)
 files: NgxFileDropEntry[] = [];
 acceptedFilesType: string = '.png,.jpg,.jpeg';
-previewUrls: string[] = [];
+previewUrlsProd: string[] = [];
+previewUrlsCat: string[] = [];
 
 ngOnInit():void{
   this.loadProducts()
@@ -89,6 +90,7 @@ ngOnInit():void{
       composition:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
       special_checkbox:[],
+      neuf_checkbox:[],
       desc_produit:[],
     }
   );
@@ -105,6 +107,7 @@ ngOnInit():void{
       composition:[''],
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
       special_checkbox:[],
+      neuf_checkbox:[],
       desc_produit:[],
     }
   );
@@ -152,7 +155,7 @@ openWindowCustomClass(content: TemplateRef<any>, categorie:categorie) {
   });
   // Réinitialiser les images
   this.imagesProdUpdateFormArray.clear();
-  this.previewUrls = [];
+  this.previewUrlsProd = [];
   this.files = [];
 
   // Charger les images existantes
@@ -163,7 +166,7 @@ openWindowCustomClass(content: TemplateRef<any>, categorie:categorie) {
         .then(blob => {
           const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
           this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
-          this.previewUrls.push(categorie.image);
+          this.previewUrlsProd.push(categorie.image);
            console.log('Image chargée :', categorie.image)
         }).catch(err => console.error('Erreur lors du chargement de l\'image :', err));
   }
@@ -182,12 +185,13 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
     composition: product.composition,
     stock_produit: product.QuantiteStock,
     special_checkbox: product.special,
-    desc_produit: product.Description
+    neuf_checkbox: product.neuf,
+    desc_produit: product.description
   });
 
   // Réinitialiser les images
   this.imagesProdUpdateFormArray.clear();
-  this.previewUrls = [];
+  this.previewUrlsProd = [];
   this.files = [];
 
   // Charger les images existantes
@@ -199,7 +203,7 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
         .then(blob => {
           const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
           this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
-          this.previewUrls.push(img.image);
+          this.previewUrlsProd.push(img.image);
            console.log('Image chargée :', img.image)
         });
     });
@@ -237,7 +241,7 @@ droppedProd(files: NgxFileDropEntry[]) {
       const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
         this.imagesProdFormArray.push(this.formBuilder.control(file));
-        this.previewFile(file);
+        this.previewFileProd(file);
       });
     }
   }
@@ -250,7 +254,7 @@ droppedCat(files: NgxFileDropEntry[]) {
       const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
         this.imagesCategoryFormArray.push(this.formBuilder.control(file));
-        this.previewFile(file);
+        this.previewFileCat(file);
       });
     }
   }
@@ -263,7 +267,7 @@ droppedCatUpdate(files: NgxFileDropEntry[]) {
       const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
         this.imagesCategoryUpdateFormArray.push(this.formBuilder.control(file));
-        this.previewFile(file);
+        this.previewFileCat(file);
       });
     }
   }
@@ -275,36 +279,45 @@ droppedProdUpdate(files: NgxFileDropEntry[]) {
       const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
       fileEntry.file((file: File) => {
         this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
-        this.previewFile(file);
+        this.previewFileProd(file);
       });
     }
   }
 }
 
-previewFile(file: File) {
+previewFileProd(file: File) {
   const reader = new FileReader();
   reader.onload = () => {
-    this.previewUrls.push(reader.result as string);
+    this.previewUrlsProd.push(reader.result as string);
   };
   reader.readAsDataURL(file);
 }
 
+previewFileCat(file: File) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.previewUrlsCat.push(reader.result as string);
+  };
+  reader.readAsDataURL(file);
+}
+
+
 removeImageProd(index: number) {
   this.imagesProdFormArray.removeAt(index);
-  this.previewUrls.splice(index, 1);
+  this.previewUrlsProd.splice(index, 1);
 }
 
 removeImageCat(index: number) {
   this.imagesCategoryFormArray.removeAt(index);
-  this.previewUrls.splice(index, 1);
+  this.previewUrlsCat.splice(index, 1);
 }
 removeImageCatUpdate(index: number) {
   this.imagesCategoryFormArray.removeAt(index);
-  this.previewUrls.splice(index, 1);
+  this.previewUrlsCat.splice(index, 1);
 }
 removeImageProdUpdate(index: number) {
   this.imagesProdUpdateFormArray.removeAt(index);
-  this.previewUrls.splice(index, 1);
+  this.previewUrlsProd.splice(index, 1);
 }
 
 createProduct() {
@@ -321,6 +334,7 @@ createProduct() {
     const desc = this.AddProductForm.get('desc_produit')?.value;
     const stock = this.AddProductForm.get('stock_produit')?.value;
     const special = this.AddProductForm.get('special_checkbox')?.value ? 'true' : 'false';
+    const neuf = this.AddProductForm.get('neuf_checkbox')?.value ? 'true' : 'false';
 
     if (nom) formData.append('nom', nom);
     if (taille) formData.append('taille', taille);
@@ -329,6 +343,7 @@ createProduct() {
     if (desc) formData.append('description', desc);
     if (stock) formData.append('QuantiteStock', stock);
     formData.append('special', special);
+    formData.append('neuf', neuf);
 
     this.imagesProdFormArray.controls.forEach((control) => {
       formData.append('image', control.value);
@@ -362,6 +377,7 @@ UpdateProduct(id:number) {
     const desc = this.UpdateProductForm.get('desc_produit')?.value;
     const stock = this.UpdateProductForm.get('stock_produit')?.value;
     const special = this.UpdateProductForm.get('special_checkbox')?.value ? 'true' : 'false';
+    const neuf = this.UpdateProductForm.get('neuf_checkbox')?.value ? 'true' : 'false';
 
     if (nom) formData.append('nom', nom);
     if (taille) formData.append('taille', taille);
@@ -370,6 +386,7 @@ UpdateProduct(id:number) {
     if (desc) formData.append('description', desc);
     if (stock) formData.append('QuantiteStock', stock);
     formData.append('special', special);
+    formData.append('neuf', neuf);
 
     this.imagesProdUpdateFormArray.controls.forEach((control) => {
       formData.append('image', control.value);
@@ -419,30 +436,64 @@ createCategory() {
 
 
 resetFormProd() {
-  this.AddProductForm.reset();
+  // Reset form while preserving defaults
+  this.AddProductForm.reset({
+    prix_produit: '',
+    pointure_produit: '',
+    stock_produit: '1',
+    categorySelect: '',
+    nom_produit: '',
+    taille: '',
+    couleur: '',
+    composition: '',
+    special_checkbox: false,
+    desc_produit: ''
+  });
   this.files = [];
   this.imagesProdFormArray.clear();
-  this.previewUrls=[];
+  this.previewUrlsProd = [];
+  this.AddProductForm.markAsUntouched();
 }
+
 resetFormProdUpdate() {
-  this.AddProductForm.reset();
+  this.UpdateProductForm.reset({
+    prix_produit: '',
+    pointure_produit: '',
+    stock_produit: '1',
+    categorySelect: '',
+    nom_produit: '',
+    taille: '',
+    couleur: '',
+    composition: '',
+    special_checkbox: false,
+    desc_produit: ''
+  });
   this.files = [];
-  this.imagesProdFormArray.clear();
-  this.previewUrls=[];
+  this.imagesProdUpdateFormArray.clear();
+  this.previewUrlsProd = [];
+  this.UpdateProductForm.markAsUntouched();
 }
 
 resetFormCat() {
-  this.AddCategoryForm.reset();
+  this.AddCategoryForm.reset({
+    nom_categorie: '',
+    desc_categorie: ''
+  });
   this.files = [];
   this.imagesCategoryFormArray.clear();
-  this.previewUrls=[];
+  this.previewUrlsCat = [];
+  this.AddCategoryForm.markAsUntouched();
 }
 
 resetFormUpdateCat() {
-  this.UpdateCategoryForm.reset();
+  this.UpdateCategoryForm.reset({
+    nom_categorie: '',
+    desc_categorie: ''
+  });
   this.files = [];
   this.imagesCategoryUpdateFormArray.clear();
-  this.previewUrls=[];
+  this.previewUrlsCat = [];
+  this.UpdateCategoryForm.markAsUntouched();
 }
 
 deleteProd(id:number){

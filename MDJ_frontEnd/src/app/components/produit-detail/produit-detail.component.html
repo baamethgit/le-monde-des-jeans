@@ -3,7 +3,7 @@
   <div class="produit_detail_main row justify-content-between">
       <div class="produit_img d-none d-sm-flex col-md-6 row col-12 d-flex flex-column flex-sm-row">
           @for (item of product_selected?.images; track item) {
-              <div class="p-2 col-6">
+              <div class="p-2 col-12">
                   <img class="" src={{item.image}} alt="" srcset="">
               </div>
           }
@@ -36,6 +36,13 @@
                     <div class="produit_size">Pointure : {{product_selected?.pointure}}</div>
                   }
                   <div class="produit_comp">Composition : {{product_selected?.composition}}</div>
+                  <div>Stock : {{product_selected?.QuantiteStock}}</div>
+                  @if (product_selected?.neuf) {
+                    <div class="produit_neuf">Neuf</div>
+                  }
+                  @else {
+                    <div class="">Occasion</div>
+                  }
               </div>
           </div>
           <div class="buy_order mb-5">

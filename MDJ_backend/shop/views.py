@@ -90,6 +90,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             'composition': request.data.get('composition'),
             'couleur': request.data.get('couleur'),
             'special':request.data.get('special'),
+            'neuf':request.data.get('neuf'),
             'description':request.data.get('description'),
             'QuantiteStock':request.data.get('QuantiteStock')
         }
