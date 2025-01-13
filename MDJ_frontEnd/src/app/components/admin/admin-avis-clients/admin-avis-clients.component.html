@@ -30,7 +30,7 @@
     [boundaryLinks]="true"
 	[maxSize]="5"
     [rotate]="true"
-	(pageChange)="selectPage($event)">
+	(pageChange)="selectPage($event)" *ngIf="paginatedCommentaires.length">
 >
 	<ng-template ngbPaginationPages let-page>
 		@if (totalPages > 0) {
