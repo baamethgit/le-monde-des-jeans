@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const router = inject(Router);
   const token = authService.getAccessToken();
 
-  if(request.url.includes('login') || request.url.includes('register')){
+  if(request.url.includes('login') || request.url.includes('inscription') || request.url.includes('resetpwd')){
     return next(request);
   }
   

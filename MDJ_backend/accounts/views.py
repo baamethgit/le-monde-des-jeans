@@ -69,7 +69,7 @@ class RegisterView(APIView):
             return Response({"message": "Utilisateur créé avec succès"}, status=status.HTTP_201_CREATED)
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
- 
+
 class VerifyOTPView(APIView):
     def post(self, request):
         addresse_mail = request.data.get('addresse_mail')
