@@ -70,8 +70,9 @@ export class SignupComponent implements OnInit{
       const addresse_mail = this.SignupForm.getRawValue().addresse_mail || '';
       this.userService.register({nom_complet:nom_complet,phone_number:phone_number,password:password,addresse_mail:addresse_mail}).subscribe({
         next: (data) => {
-          this.otpSent = true;
-          this.isloading = false;
+          // this.otpSent = true;
+          // this.isloading = false;
+          this.router.navigate(['login']);
         },
         error: (error) => {
           this.SignupError = error.error;

@@ -37,7 +37,7 @@ class RegisterView(APIView):
 
         if CustomUser.objects.filter(addresse_mail=addresse_mail).exists():
             return Response({"error": "Un compte avec cet addresse mail existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
-        
+        """
         # Générer un code OTP
         otp_code = random.randint(100000, 999999)
 
@@ -55,8 +55,20 @@ class RegisterView(APIView):
             nom_complet=nom_complet,
             hashed_password=make_password(password)
         )
-
         return Response({"message": "Code OTP envoyé", "expires_in": 600}, status=status.HTTP_200_OK)
+        
+"""
+        try:
+            user = CustomUser(
+                phone_number=phone_number,
+                addresse_mail=addresse_mail,
+                nom_complet=nom_complet
+            )
+            user.set_password(password)
+            user.save()
+            return Response({"message": "Utilisateur créé avec succès"}, status=status.HTTP_201_CREATED)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
  
 class VerifyOTPView(APIView):
     def post(self, request):
