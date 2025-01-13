@@ -64,8 +64,8 @@ export const routes: Routes = [
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'contacts', component:ContactsComponent, pathMatch:'full'},
-    {path:'success', component:PaiementSuccessComponent, pathMatch:'full'},
-    {path:'failed', component:PaiementFailedComponent, pathMatch:'full'},
+    {path:'payment-success/:id', component:PaiementSuccessComponent, pathMatch:'full'},
+    {path:'payment-error/:id', component:PaiementFailedComponent, pathMatch:'full'},
 
 ]},
     {path:'mdj_admin', component: AdminHomeComponent, children:[

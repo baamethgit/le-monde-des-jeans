@@ -1,11 +1,18 @@
+from os import environ
+
 from django.shortcuts import render
 from rest_framework.response import Response
 
 from paiement.models import WaveCheckoutSession
 from shop.models import Commande
+import environ
 
-WAVE_API_KEY = ""
-FRONTEND_URL = "localhost:4200"
+env = environ.Env()
+environ.Env.read_env()
+
+WAVE_API_KEY = env("WAVE_API_KEY")
+FRONTEND_URL = env("FRONTEND_URL")
+
 # Create your views here.
 """
 @api_view(['POST'])
@@ -26,24 +33,34 @@ import requests
 
 class InitiateWavePaymentView(APIView):
     def post(self, request):
-        order = Commande.objects.get(id=request.data['order_id'])
+        try:
+            order = Commande.objects.get(id=request.data['order_id'])
+        except:
+            return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)
 
         checkout_data = {
             'amount': str(order.montant),
             'currency': 'XOF',  # Ou votre devise
             'client_reference': str(order.ref_code),
-            'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
-            'error_url': f'{FRONTEND_URL}/payment-error/{order.id}'
+            #'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
+            'success_url': 'https://www.google.sn/',
+            #'error_url': f'{FRONTEND_URL}/payment-error/{order.id}'
+            'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
         }
 
+        # Dans ta vue
+        """logger.debug(f"Headers envoyés : {headers}")
+        logger.debug(f"URL appelée : {url}")
+        logger.debug(f"Réponse : {response.text}")
+"""
         response = requests.post(
             'https://api.wave.com/v1/checkout/sessions',
             json=checkout_data,
-            headers={'Authorization': f'Bearer {WAVE_API_KEY},Content-Type: application/json'}
+            headers={'Authorization': f'Token {WAVE_API_KEY},Content-Type: application/json'}
         )
-
+        print(50*"=")
         print(response)
-
+        print(50*"=")
         session = WaveCheckoutSession.objects.create(
             order=order,
             session_id=response.json()['id'],
@@ -84,14 +101,12 @@ logger = logging.getLogger(__name__)
 
 
 class WaveWebhookView(APIView):
-
-    @transaction.atomic  # Assure que toutes les opérations DB sont atomiques
+    @transaction.atomic
     def post(self, request):
         try:
             event = request.data
             logger.info(f'Received Wave webhook: {event["type"]}')
 
-            # Vérification du type d'événement
             if event['type'] == 'checkout.session.completed':
                 try:
                     session = WaveCheckoutSession.objects.select_for_update().get(
@@ -104,7 +119,7 @@ class WaveWebhookView(APIView):
                         status=status.HTTP_404_NOT_FOUND
                     )
 
-                # Évite le traitement multiple du même événement
+
                 if session.status == 'completed':
                     return Response({'status': 'Already processed'})
 
@@ -114,7 +129,6 @@ class WaveWebhookView(APIView):
                     session.status = 'completed'
                     session.save()
 
-                    # Met à jour la commande
                     order = session.order
                     order.marquer_comme_payee()
                     order.save()
