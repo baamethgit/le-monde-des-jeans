@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 import { RouterLink } from '@angular/router';
+import { PaiementService } from '../../../services/paiement.service';
 
 @Component({
   selector: 'app-commande-validee',
@@ -9,6 +10,16 @@ import { RouterLink } from '@angular/router';
   templateUrl: './commande-validee.component.html',
   styleUrl: './commande-validee.component.scss'
 })
-export class CommandeValideeComponent {
+export class CommandeValideeComponent implements OnInit{
   CheckoutStep : CheckoutStep = CheckoutStep.FinaliserCommande;
+
+  private paiementService = inject(PaiementService);
+  ngOnInit(): void {
+    
+  }
+
+     verifierStatut(){
+      // this.paiementService.:
+    }
+
 }

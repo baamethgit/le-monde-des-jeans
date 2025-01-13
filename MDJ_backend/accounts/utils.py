@@ -5,7 +5,7 @@ from MDJ_backend.settings import SECRET_KEY
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.conf import settings
-
+"""
 def verifier_user(request):
         auth_header = request.headers.get('Authorization', None)
         if not auth_header:
@@ -24,7 +24,7 @@ def verifier_user(request):
         except ObjectDoesNotExist:
             raise AuthenticationFailed('User not found.')
         return user
-
+"""
 # utils.py
 from twilio.rest import Client
 

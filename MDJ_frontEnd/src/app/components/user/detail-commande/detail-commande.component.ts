@@ -154,7 +154,7 @@ export class DetailCommandeComponent implements OnInit{
   }
 
   supprimerCommande(id:number){
-      this.commandeService.supprimerCommande(id).subscribe({
+      this.commandeService.supprimerMaCommande(id).subscribe({
         next:(data)=>{
           // this.alertMessage = 'Votre commande est supprimé'
           this.router.navigate(['/'])

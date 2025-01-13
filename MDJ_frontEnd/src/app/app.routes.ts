@@ -13,7 +13,6 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { PanierComponent } from './components/user/panier/panier.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { SignupComponent } from './components/user/signup/signup.component';
-import { userGuard } from './utils/user.guard';
 import { ProfilComponent } from './components/user/profil/profil.component';
 import { ProfilUpdateComponent } from './components/user/profil-update/profil-update.component';
 import { DetailClientComponent } from './components/admin/detail-client/detail-client.component';
@@ -43,20 +42,20 @@ import { PaiementFailedComponent } from './components/paiement-failed/paiement-f
 
 export const routes: Routes = [
     {path: '', component: LayoutComponent,children:[
-    {path: '', component: HomeComponent,canActivate: [userGuard]},
+    {path: '', component: HomeComponent},
     
-    {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
+    {path: 'panier', component: PanierComponent},
     // {path:'produits', component: ProduitsComponent},
     {path: 'commande-validee', component:CommandeValideeComponent,
-        canActivate: [userGuard]},
+        },
     {path: 'profile', component: ProfilComponent,
-        canActivate: [userGuard]},
+        },
     {path: 'profile/edit', component: ProfilUpdateComponent,
-        canActivate: [userGuard]},
+        },
     {path: 'detail-commande', component: DetailCommandeComponent,
-        canActivate: [userGuard]},
+        },
     {path: 'mes-commandes', component: MesCommandesComponent,
-        canActivate: [userGuard]},
+        },
     {path:'produits', component: ProduitsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
@@ -64,7 +63,7 @@ export const routes: Routes = [
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
     {path:'contacts', component:ContactsComponent, pathMatch:'full'},
-    {path:'payment-success/:id', component:PaiementSuccessComponent, pathMatch:'full'},
+    {path:'payment-success/:id', component:CommandeValideeComponent, pathMatch:'full'},
     {path:'payment-error/:id', component:PaiementFailedComponent, pathMatch:'full'},
 
 ]},
@@ -83,9 +82,10 @@ export const routes: Routes = [
 
     ]},
 
-    {path: 'resetpwd', component: ResetPasswordComponent,canActivate: [userGuard]},
+    {path: 'resetpwd', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent},
     {path: 'inscription', component: SignupComponent},
+    {path: 'sdfsdfsd/suf_creer_/superuser/uI90', component: SignupComponent},
 
     { path: '**', component: NotFoundComponent, data: { breadcrumb: 'Page not found' } },
 ]

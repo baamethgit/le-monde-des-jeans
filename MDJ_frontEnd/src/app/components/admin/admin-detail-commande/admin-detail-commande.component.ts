@@ -68,7 +68,7 @@ export class AdminDetailCommandeComponent implements OnInit {
   }
 
   supprimerCommande(){
-    this.commandeService.supprimerCommande(this.commande.id).subscribe({
+    this.commandeService.supprimerCommandeParAdmin(this.commande.id).subscribe({
       next:(data)=>{
         this.router.navigate(['/mdj_admin/commandes/'])
       },

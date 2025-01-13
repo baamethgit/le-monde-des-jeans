@@ -14,5 +14,9 @@ export class PaiementService {
   initiateWavePayment(orderId: number) {
     return this.http.post(`${this.apiUrl}/api/wave/initiate`, { order_id: orderId });
   }
+
+  verifyPaymentStatus(sessionId: number) {
+    return this.http.post(`${this.apiUrl}/api/wave/session`, { session_id: sessionId });
+  }
   
 }

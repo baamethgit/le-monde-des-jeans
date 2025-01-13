@@ -1,16 +1,10 @@
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView, \
-    VerifyOTPView, UserListView, UserCreateView, getUserBySlug, VerifyOTPResetView, SendPasswordResetOTP, AvisView
-from django.urls import path,include
+    VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout
 from rest_framework.routers import DefaultRouter
-from shop import views as shopView
 
 router = DefaultRouter()
-# router.register(r'users', vie.UserViewSet)
-#router.register(r'Avis', AvisView, basename='avis')
-# router.register(r'panier-produits', shopView.PanierProduitViewSet)  # Ajout des routes pour PanierProduit
-# router.register(r'paniers', shopView.PanierViewSet)  # Ajout des routes pour Panier
 
 
 from django.urls import path
@@ -27,8 +21,13 @@ urlpatterns = [
     path('admin_users_list/',UserListView.as_view()),
     path("creer-client/",UserCreateView.as_view()),
     path("client/",UserDetailView.as_view()),  
-    path("user/<str:slug>/",getUserBySlug.as_view()),
+    #path("user/<str:slug>/",getUserBySlug.as_view()),
     path("delete-user/<str:slug>/",deleteUserView.as_view()),
     path('avis/',AvisView.as_view()),
     path('avis/<int:id_avis>',AvisView.as_view()),
+
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('logout/', Logout.as_view(), name='logout_view'),
+
 ]

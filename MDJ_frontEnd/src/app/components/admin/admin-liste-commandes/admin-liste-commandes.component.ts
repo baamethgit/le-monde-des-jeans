@@ -76,7 +76,15 @@ export class AdminListeCommandesComponent implements OnInit{
     this.loadCommandes();
   }
   
-  openDeleteCommandeModal(){
-    alert("delete");
-  }
+  openDeleteCommandeModal(id:number){
+    alert("étes vous sur de vouloir supprimer");
+    this.commandeService.supprimerCommandeParAdmin(id).subscribe({
+      next:(data)=>{
+        // this.alertMessage = 'Votre commande est supprimé'
+      },
+      error:(error)=>{
+
+      }
+    })
+  } 
 }

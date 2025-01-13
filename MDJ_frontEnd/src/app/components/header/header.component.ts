@@ -31,7 +31,11 @@ export class HeaderComponent implements OnInit{
   }
 
   logout(): void {
-    this.userService.logout();
+    this.userService.logout().subscribe(
+      (response) => {
     window.location.reload();
+
+      }
+    );
   }
 }

@@ -60,8 +60,12 @@ export class ClientsComponent implements OnInit {
   }
   deleteUser(slug:string){
     const modalRef = this.modalService.open(DeleteModalComponent, { size: 'lg',centered:true, backdrop: 'static' });
+    
     modalRef.componentInstance.slug = slug;
-    this.loadUsers();
+    modalRef.result.then(
+      () => this.loadUsers(),
+      () => {}
+    );
   }
 
 }

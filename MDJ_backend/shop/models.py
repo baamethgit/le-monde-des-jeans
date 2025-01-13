@@ -62,7 +62,6 @@ class Produit(models.Model):
     couleur = models.CharField(max_length=128, choices=COULEUR, blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
     QuantiteStock = models.PositiveBigIntegerField(default=1, null=False, blank=False)
-    reserve = models.BooleanField(default=False)
     special = models.BooleanField(default=False)
     isDeletable=models.BooleanField(default=False)
 

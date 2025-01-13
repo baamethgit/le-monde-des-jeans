@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { User } from '../../models/user';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Avis, AvisCreationData } from '../../models/Avis';
+import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,33 +16,72 @@ export class UserService {
   
   loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
-  constructor(private readonly http: HttpClient) { }
+  private isBrowser: boolean;
+
+  constructor(
+    private http: HttpClient,
+    private router : Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
 
   private hasToken(): boolean {
-    return !!this.getToken();
+    return !!this.getAccessToken();
   }
 
   isLoggedIn(): Observable<boolean> {
     return this.loggedIn.asObservable();
   }
 
-  setToken(token: string) {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    localStorage.setItem(this.jwtKey, token);
-  }
-  }
-
-  getToken(): string | null {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    return localStorage.getItem(this.jwtKey);
+  getAccessToken(): string | null {
+    if (this.isBrowser) {
+      return localStorage.getItem('access_token');
     }
-  return null}
+    return null;
+  }
 
-  removeToken() {
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    localStorage.removeItem(this.jwtKey);
+  setAccessToken(token : string): void {
+    if (this.isBrowser) {
+      localStorage.setItem('access_token',token);
+    }
   }
+
+  removeAccessToken(): void {
+    if (this.isBrowser) {
+      localStorage.removeItem('access_token');
+    }
   }
+
+
+  getRefreshToken(): string | null {
+    if (this.isBrowser) {
+      return localStorage.getItem('refresh_token');
+    }
+    return null;
+  }
+
+  setRefreshToken(token : string): void {
+    if (this.isBrowser) {
+      localStorage.setItem('refresh_token',token);
+    }
+  }
+
+  removeRefreshToken(): void {
+    if (this.isBrowser) {
+      localStorage.removeItem('refresh_token');
+    }
+  }
+  refreshToken() {
+    const refresh = localStorage.getItem('refresh_token');
+    return this.http.post<any>(`${this.baseUrl}/token/refresh/`, { refresh }).pipe(
+        tap(response => {
+            this.setAccessToken(response.access);
+        })
+    );
+}
+
 
   getUser(): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}get-user/`, { withCredentials: true });
@@ -73,20 +114,29 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}login/`, { phone_number, password })
       .pipe(
         tap(response => {
-          if (response.jwt) {
-            this.setToken(response.jwt);
+          if (response) {
+            this.setAccessToken(response.access);
+            this.setRefreshToken(response.refresh);
             this.loggedIn.next(true);
           } else {
-            console.log('pas de token');
+            // console.log('pas de token');
           }
         })
       );
   }
 
-  logout(): void {
-    this.removeToken();
-    this.loggedIn.next(false);
+  logout(): Observable<any> {
+    return this.http.post(`${this.baseUrl}logout/`, {})
+      .pipe(
+        tap(() => {
+          this.removeAccessToken();this.removeRefreshToken();
+          this.loggedIn.next(false);
+          this.router.navigate(['login']);
+        })
+      );
   }
+
+
 
   getUsers(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
     let params = new HttpParams()

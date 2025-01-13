@@ -1,47 +1,50 @@
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser
 from paiement.models import Payment
 from . import  models
 from . import serializers
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, permissions
-from accounts import models as accountModel
+from rest_framework import viewsets
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
 from .models import ZoneLivraison, Commande
 from django.db.models import Q, Count
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Panier, Produit, PanierProduit
 from .serializers import PanierSerializer, PanierProduitSerializer
 from django.shortcuts import get_object_or_404
-from accounts.utils import verifier_user
 from django.utils.dateparse import parse_date
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils.timezone import now
+
 class getDeliveryZones(ListAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
 
 class getDeliveryZoneByNum(RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
     lookup_field = 'id'
 
 class CreateZone(CreateAPIView):
+    permission_classes = (IsAuthenticated,IsAdminUser)
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
     
 class DeleteZoneView(DestroyAPIView):
+    permission_classes = (IsAuthenticated,IsAdminUser)
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
     lookup_field = 'id'  
      
 class UpdateZoneView(APIView):
+    permission_classes = (IsAuthenticated,IsAdminUser)
     def put(self, request,id):
         zone = models.ZoneLivraison.objects.filter(pk = id).first()
         serializer = ZoneSerializer(instance = zone, data=request.data, partial=True)
@@ -50,14 +53,14 @@ class UpdateZoneView(APIView):
         return Response(serializer.data)
     
 class CategoryViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
-
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Produit.objects.all()
     serializer_class = serializers.ProductSerializer
-
+    permission_classes = [IsAuthenticated,IsAdminUser]
     def retrieve(self, request, *args, **kwargs):
         # Récupérer le produit par le slug au lieu de l'id
         slug = kwargs.get('pk')  # 'pk' est l'argument par défaut utilisé pour l'identifiant
@@ -144,6 +147,7 @@ class CustomPagination(PageNumberPagination):
 class CommandeListView(ListAPIView):
     serializer_class = CommandeSerializer
     pagination_class = CustomPagination
+    permission_classes = [IsAuthenticated,IsAdminUser]
 
     def get_queryset(self):
         queryset = Commande.objects.all()
@@ -172,8 +176,9 @@ class CommandeListView(ListAPIView):
         return queryset
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def panier_detail(request):
-    user = verifier_user(request)
+    user = request.user
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -183,8 +188,9 @@ def panier_detail(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def ajouter_produit(request):
-    user = verifier_user(request)
+    user = request.user
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -198,8 +204,9 @@ def ajouter_produit(request):
         return Response({"message_erreur": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def retirer_produit(request):
-    user = verifier_user(request)
+    user = request.user
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -215,8 +222,9 @@ def retirer_produit(request):
     return Response({"message": "Produit retiré du panier"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def contenu_panier(request):
-    user = verifier_user(request)
+    user = request.user
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -227,15 +235,15 @@ def contenu_panier(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def vider_panier(request):
-    user = verifier_user(request)
+    user = request.user
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     panier = Panier.objects.get(client=user)
     for panier_produit in PanierProduit.objects.filter(panier=panier):
         produit = panier_produit.produit
-        # produit.reserve = False
         produit.QuantiteStock += 1
         produit.save()
         panier_produit.delete()
@@ -244,7 +252,7 @@ def vider_panier(request):
 from django.db.models import Sum
 
 class DashboardKpiView(APIView):
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (IsAuthenticated,IsAdminUser)
     def get(self, request):
         nombre_produits = Produit.objects.all().count()
         nombre_produits_en_rupture_de_stock = Produit.objects.filter(QuantiteStock=0).count()

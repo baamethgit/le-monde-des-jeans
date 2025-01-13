@@ -109,9 +109,13 @@ export class CommandeService {
     return this.http.post(`${this.baseUrl}apiProduit/commandes/${commandeId}/annuler/`, {},{withCredentials: true  });
   }
 
-  supprimerCommande(commandeId: number): Observable<any> {
-      return this.http.delete(`${this.baseUrl}apiProduit/commandes/${commandeId}/delete/`,{withCredentials: true  });
+  supprimerMaCommande(commandeId: number): Observable<any> {
+      return this.http.delete(`${this.baseUrl}apiProduit/commandes/${commandeId}/delete_by_user/`,{withCredentials: true  });
   }
+
+  supprimerCommandeParAdmin(commandeId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}apiProduit/commandes/${commandeId}/delete_by_admin/`,{withCredentials: true  });
+}
 
   getCommandesByStatus(commandeStatus: string): Observable<any> {
     return this.http.post(`${this.baseUrl}apiProduit/commandes/${commandeStatus}/filtrer/`, {},{withCredentials: true  });

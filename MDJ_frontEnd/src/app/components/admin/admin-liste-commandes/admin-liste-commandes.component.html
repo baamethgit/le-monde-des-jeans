@@ -59,7 +59,7 @@
 				<a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/commandes',commande.ref_code]">Voir</a>
 			</button>
 			<!-- <button class="action-btn edit" >Modifier</button> -->
-			<button (click)="openDeleteCommandeModal()" class="action-btn delete bg-danger text-white" [disabled]="commande.statut!=StatutCommande.LIVREE">Supprimer</button>
+			<button (click)="openDeleteCommandeModal(commande.id)" class="action-btn delete bg-danger text-white" [disabled]="commande.statut!=StatutCommande.LIVREE">Supprimer</button>
 		  </td>
 		</tr>
 </tbody>
