@@ -106,12 +106,12 @@ $blue_color: #377DFF;
 
 .product-grid__container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
 }
 @media (max-width: 768px) {
   .product-grid__container {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
 }
 

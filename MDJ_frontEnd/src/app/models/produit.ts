@@ -13,9 +13,10 @@ export interface Produit {
     couleur?: string;
     slug: string;
     QuantiteStock: number;
-    Description:Text
+    description:string;
     reserve: boolean;
     special: boolean;
+    neuf: boolean;
     images: ProduitImage[];  // Change this to array of objects with 'image' property
   }
 
