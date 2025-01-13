@@ -17,8 +17,7 @@ from datetime import timedelta
 env = environ.Env()
 environ.Env.read_env()
 
-# Your secret key
-SECRET_KEY = "django-insecure-@4auoqe$vcb&kapw2%ol_v7i*&-qht#rv&j=!1-9%(jv%2de"
+SECRET_KEY = env('SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,13 +29,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -50,7 +47,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "phonenumber_field",
-"whitenoise.runserver_nostatic",
     "paiement"
 ]
 
@@ -65,14 +61,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 "django.middleware.security.SecurityMiddleware",
- "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 # SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+"""SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_COOKIE_SECURE = True  # Assure que les cookies de session ne sont envoyés que via HTTPS
 SESSION_COOKIE_HTTPONLY = True
+"""
 
 ROOT_URLCONF = "MDJ_backend.urls"
 
@@ -163,15 +159,10 @@ MEDIA_URL = "/media/" # L' url qu'on va voir au niveau du navigateur
 MEDIA_ROOT = BASE_DIR / "media" # Dossier de stockage des uploded files
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587  # or your SMTP port
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'falldioumamane@gmail.com'
-EMAIL_HOST_PASSWORD = 'ngut vqob rxpt nqef'
-DEFAULT_FROM_EMAIL = 'falldioumamane@gmail.com'
-
-APPEND_SLASH = False
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
