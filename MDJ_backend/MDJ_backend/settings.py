@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "phonenumber_field",
+"whitenoise.runserver_nostatic",
+    "paiement"
 ]
 
 MIDDLEWARE = [
@@ -62,6 +64,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+"django.middleware.security.SecurityMiddleware",
+ "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 # SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -93,7 +97,7 @@ WSGI_APPLICATION = "MDJ_backend.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-"""
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -111,7 +115,7 @@ DATABASES = {
          'PORT': env("DB_PORT"),
      }
 }
-
+"""
 
 
 # Password validation
@@ -147,9 +151,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
+import os
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -170,3 +174,4 @@ DEFAULT_FROM_EMAIL = 'falldioumamane@gmail.com'
 
 APPEND_SLASH = False
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

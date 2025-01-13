@@ -1,4 +1,7 @@
 from rest_framework.views import APIView
+
+from accounts.models import CustomUser
+from paiement.models import Payment
 from . import  models
 from . import serializers
 from rest_framework.response import Response
@@ -7,8 +10,8 @@ from rest_framework import viewsets, status, permissions
 from accounts import models as accountModel
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
 from .serializers import ZoneSerializer,CommandeSerializer
-from .models import ZoneLivraison,Commande
-from django.db.models import Q
+from .models import ZoneLivraison, Commande
+from django.db.models import Q, Count
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -18,7 +21,8 @@ from .serializers import PanierSerializer, PanierProduitSerializer
 from django.shortcuts import get_object_or_404
 from accounts.utils import verifier_user
 from django.utils.dateparse import parse_date
-
+from datetime import datetime, timedelta
+from django.utils.timezone import now
 class getDeliveryZones(ListAPIView):
     queryset = ZoneLivraison.objects.all()
     serializer_class = ZoneSerializer
@@ -237,12 +241,48 @@ def vider_panier(request):
         panier_produit.delete()
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)
 
+from django.db.models import Sum
 
-def DashboardKpiView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    def get(self, request, *args, **kwargs):
+class DashboardKpiView(APIView):
+    #permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request):
+        nombre_produits = Produit.objects.all().count()
+        nombre_produits_en_rupture_de_stock = Produit.objects.filter(QuantiteStock=0).count()
+
+        nombre_clients = CustomUser.objects.all().count()
+        today = now().date()
+        start_of_week = today - timedelta(days=today.weekday())
+        nombre_nouveau_clients = CustomUser.objects.filter(date_joined__date__gte=start_of_week).count()
+
+        nombre_commandes = Commande.objects.all().count()
+        nombre_nouvelles_commandes = Commande.objects.filter(date_commande__date__gte=start_of_week).count()
+
+        ventes_totales = Payment.objects.aggregate(total=Sum('montant'))['total'] or 0
+
+        ventes_par_methode = (
+            Payment.objects
+            .values('methode_paiement')
+            .annotate(total=Sum('montant'))
+        )
+
+        commandes_par_statut = (
+            Commande.objects
+            .values('statut')
+            .annotate(nombre=Count('id'))
+        )
+
         response_data = {
-
+            'nombre_produits':nombre_produits,
+            'nombre_produits_en_rupture_de_stock':nombre_produits_en_rupture_de_stock,
+            'nombre_clients':nombre_clients,
+            'nombre_nouveau_clients':nombre_nouveau_clients,
+            'nombre_commandes':nombre_commandes,
+            'nombre_nouvelles_commandes':nombre_nouvelles_commandes,
+            'ventes_totales': ventes_totales,
+            'ventes_par_methode': {item['methode_paiement']: item['total'] for item in ventes_par_methode},
+            "commandes_par_statut":commandes_par_statut
         }
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
     

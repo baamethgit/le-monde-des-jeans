@@ -228,23 +228,7 @@ class Commande(models.Model):
 
     def marquer_comme_livree(self):
         if self.statut == 'PAYEE' or self.statut == 'EN_COURS_LIVRAISON':
+            self.date_livraison = timezone.now
             self.statut = 'LIVREE'
             self.save()
-    
 
-class Paiement(models.Model):
-    METHODE_PAIEMENT_CHOICES = (
-        ('ORANGE_MONEY', 'Orange Money'),
-        ('WAVE', 'Wave'),
-        ('CC', 'Carte de crédit'),
-    )
-
-    commande = models.OneToOneField(Commande, on_delete=models.CASCADE)
-    montant = models.DecimalField(max_digits=10, decimal_places=2)
-    methode_paiement = models.CharField(max_length=20, choices=METHODE_PAIEMENT_CHOICES)
-    date_paiement = models.DateTimeField(auto_now_add=True)
-    id_transaction = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"Paiement pour la commande {self.commande.ref_code} via {self.get_methode_paiement_display()}"
-    

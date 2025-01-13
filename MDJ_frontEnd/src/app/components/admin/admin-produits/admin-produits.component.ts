@@ -82,7 +82,7 @@ ngOnInit():void{
       prix_produit:['',[Validators.required,Validators.pattern("^[0-9]*$"),]],
       pointure_produit: ['', [Validators.pattern("^[0-9]+(\\.[0-9]{1,2})?$")]],
       stock_produit:['1',[Validators.pattern("^[0-9]*$"),]],
-      categorySelect:['',[Validators.required]],
+      categorySelect:[''],
       nom_produit:[''],
       taille:[''],
       couleur:[''],

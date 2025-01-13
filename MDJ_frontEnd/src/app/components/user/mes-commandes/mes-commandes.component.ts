@@ -56,7 +56,7 @@ export class MesCommandesComponent implements OnInit {
   }
 
   MarquerColisRecu(id_commande:number):void{
-    this.commandeService.updateCommande(id_commande,{'statut':'LIVREE'}).subscribe({
+    this.commandeService.updateCommandeStatus(id_commande,{'statut':'LIVREE'}).subscribe({
       next:(data)=>{
         this.loadData();
         this.openModal();

@@ -1,7 +1,8 @@
 from django.urls import path, include
 from . import views,commande_views
 from rest_framework.routers import DefaultRouter
-from .views import getDeliveryZones,getDeliveryZoneByNum,CommandeListView,CreateZone,DeleteZoneView,UpdateZoneView
+from .views import getDeliveryZones, getDeliveryZoneByNum, CommandeListView, CreateZone, DeleteZoneView, UpdateZoneView, \
+    DashboardKpiView
 from django.urls import path
  
 
@@ -29,9 +30,10 @@ urlpatterns = [
     path('commandes-en-attente/', commande_views.detail_commande_courante, name='commande_courante'),
     path('commandes/<int:commande_id>/valider/', commande_views.valider_commande, name='valider_commande'),
     path('commandes/<int:commande_id>/delete/', commande_views.deleteCommande, name='supprimer_commande'),
+    path('commandes/<int:id_commande>/updatestatus/', commande_views.CommandeUpdateStatusView.as_view(), name='update_commande_status'),
     path('commandes/<int:id_commande>/update/', commande_views.CommandeUpdateView.as_view(), name='update_commande'),
     path('historique-commandes/', commande_views.liste_commandes_historiques, name='historique_commande'),
     path('commandes-en-cours/', commande_views.liste_commandes_en_cours, name='commandes-en-cours'),
     path('stats-commandes/', commande_views.StatsCommandes.as_view(), name='stats_commande'),
-
+    path('kpi/', DashboardKpiView.as_view()),
 ]

@@ -10,6 +10,7 @@ import { User } from '../../../models/user';
 import { Commande } from '../../../models/commande';
 import { Paiement } from '../../../models/paiement';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PaiementService } from '../../../services/paiement.service';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './detail-commande.component.scss'
 })
 export class DetailCommandeComponent implements OnInit{
-  methodePaiement = 'WAVE';
+  methodePaiement : string = 'WAVE';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   @Input() a_livrer : boolean = true;
   commande : Commande | undefined;
@@ -31,9 +32,9 @@ export class DetailCommandeComponent implements OnInit{
   numZone = 1;
   client! : User;
   commandeService = inject(CommandeService);
+  paymentService = inject(PaiementService);
   userService = inject(UserService);
   isLoading = false;
-  paiement! : Paiement;
   selectedOption: string = 'livraison';
 
 
@@ -45,7 +46,7 @@ export class DetailCommandeComponent implements OnInit{
         this.commandeService.getDeliveryZones().subscribe({
           next:(data)=>{
             this.zones = data;
-            this.selectedZone = this.zones[1];
+           
           },
           error:(error)=>{
 
@@ -58,7 +59,8 @@ export class DetailCommandeComponent implements OnInit{
     this.modalService.open(modalname, { size: 'lg', centered: true });
   }
 
-  payerCommande(id_commande:number) : void{
+  payerCommande() : void{
+    if(this.commande){
       let newData: { [key: string]: any } = {}; 
 
       newData['recupere_magasin'] = this.selectedOption === 'recuperation';
@@ -66,18 +68,35 @@ export class DetailCommandeComponent implements OnInit{
           newData['zone_livraison'] = this.selectedZone?.id;
       }
     
-        this.commandeService.updateCommande(id_commande,newData).subscribe(
+        this.commandeService.updateCommande(this.commande.id,newData).subscribe(
           {
             next(value) {
-                console.log('update valide',value);
             },
             error(err) {
-                console.log("erreur lors de la maj")
+                
             },
           }
         )
+       if(this.methodePaiement === 'WAVE'){
+        this.payWithWave();
+       }
+      }
     }
 
+    payWithWave() {
+      if(this.commande?.id){
+        this.paymentService.initiateWavePayment(this.commande.id).subscribe({
+          next:(response: any) => {
+            window.location.href = response.wave_launch_url;
+          },
+          error:(erreur: any) => {
+            console.log("erreur")
+          }
+        }
+          
+        );
+      }
+    }
 
   loadData(){
     this.commandeService.getCurrentCommande().subscribe({
@@ -85,6 +104,10 @@ export class DetailCommandeComponent implements OnInit{
         this.commande = data;
         this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
         this.selectedZone = this.commande?.recupere_magasin ? undefined : this.commande?.zone_livraison;
+        if(!this.commande?.zone_livraison && this.zones.length){
+
+          this.selectedZone = this.zones[0];
+        }
       },
       error:(error)=>{
         this.message = '';
@@ -98,6 +121,7 @@ export class DetailCommandeComponent implements OnInit{
   onZoneChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedZoneNumber = parseInt(selectElement.value, 10);
+
     this.loadZone(selectedZoneNumber);
     // @ts-ignore
     // this.commandeService.updateCommande(this.commande?.id,{'recupere_magasin':false,'zone_livraison':this.selectedZone?.id}).subscribe(
@@ -116,10 +140,15 @@ export class DetailCommandeComponent implements OnInit{
   loadZone(n:number){
     this.commandeService.getDeliveryZoneByNumber(n).subscribe({
       next:(data)=>{
-        this.selectedZone = data;
+        try{
+          this.selectedZone = data;
+        }catch{
+          this.selectedZone = undefined;
+        }
       },
       error:(error)=>{
-
+        this.selectedZone = undefined;
+        
       }
     })
   }
@@ -136,16 +165,16 @@ export class DetailCommandeComponent implements OnInit{
       })
   }
 
-  annulerCommande(id:number){
-    this.commandeService.updateCommande(id,{statut:'ANNULEE'}).subscribe({
-      next:(data)=>{
-        this.router.navigate(['/mdj_admin/commandes/'])
-      },
-      error:(error)=>{
+//   annulerCommande(id:number){
+//     this.commandeService.updateCommande(id,{statut:'ANNULEE'}).subscribe({
+//       next:(data)=>{
+//         this.router.navigate(['/mdj_admin/commandes/'])
+//       },
+//       error:(error)=>{
 
-      }
-    })
-}
+//       }
+//     })
+// }
 
 
 }

@@ -37,6 +37,8 @@ import { NotFoundComponent } from './components/shared/not-found/not-found.compo
 import { LayoutComponent } from './components/layout/layout.component';
 import { PaiementComponent } from './components/user/paiement/paiement.component';
 import { PaymentComponent } from './components/admin/payment/payment.component';
+import { PaiementSuccessComponent } from './components/paiement-success/paiement-success.component';
+import { PaiementFailedComponent } from './components/paiement-failed/paiement-failed.component';
 
 
 export const routes: Routes = [
@@ -44,7 +46,7 @@ export const routes: Routes = [
     {path: '', component: HomeComponent,canActivate: [userGuard]},
     
     {path: 'panier', component: PanierComponent, canActivate: [userGuard]},
-    {path:'produits', component: ProduitsComponent},
+    // {path:'produits', component: ProduitsComponent},
     {path: 'commande-validee', component:CommandeValideeComponent,
         canActivate: [userGuard]},
     {path: 'profile', component: ProfilComponent,
@@ -55,15 +57,17 @@ export const routes: Routes = [
         canActivate: [userGuard]},
     {path: 'mes-commandes', component: MesCommandesComponent,
         canActivate: [userGuard]},
-    {path:'produits', component: AllProductsComponent, children:[
-
+    {path:'produits', component: ProduitsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
     ]},
     {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
     {path:'avis', component:AvisComponent, pathMatch:'full'},
-    {path:'contacts', component:ContactsComponent, pathMatch:'full'},]}
-    ,
+    {path:'contacts', component:ContactsComponent, pathMatch:'full'},
+    {path:'payment-success/:id', component:PaiementSuccessComponent, pathMatch:'full'},
+    {path:'payment-error/:id', component:PaiementFailedComponent, pathMatch:'full'},
+
+]},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
         {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
         {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
