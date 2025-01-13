@@ -32,8 +32,8 @@
                   </ng-template>
                 </ngx-file-drop>
                 <div  *ngIf="files.length > 0">
-                  <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
-                    <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                  <div class="image-preview-container my-3" *ngIf="previewUrlsProd.length > 0">
+                    <div class="image-preview" *ngFor="let url of previewUrlsProd; let i = index">
                       <img class="preview_image" [src]="url" alt="Preview">
                       <button type="button" class="delete_preview" (click)="removeImageProd(i)">
                         <i class="fas fa-trash-alt"></i>
@@ -138,6 +138,14 @@
                     <span class="checkmark"></span>
                   </label>
                 </div>
+
+                <div class="d-flex flex-column align-items-center">
+                  <span>Neuf</span>
+                  <label class="checkbox-container">
+                    <input formControlName="neuf_checkbox" class="custom-checkbox" type="checkbox">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
               </div>
 
               <div>
@@ -176,8 +184,8 @@
                   </ng-template>
                 </ngx-file-drop>
                 <div  *ngIf="files.length > 0">
-                  <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
-                    <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                  <div class="image-preview-container my-3" *ngIf="previewUrlsCat.length > 0">
+                    <div class="image-preview" *ngFor="let url of previewUrlsCat; let i = index">
                       <img class="preview_image" [src]="url" alt="Preview">
                       <button type="button" class="delete_preview" (click)="removeImageCat(i)">
                         <i class="fas fa-trash-alt"></i>
@@ -281,8 +289,8 @@
                               </ng-template>
                             </ngx-file-drop>
                             <div>
-                              <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
-                                <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                              <div class="image-preview-container my-3" *ngIf="previewUrlsProd.length > 0">
+                                <div class="image-preview" *ngFor="let url of previewUrlsProd; let i = index">
                                   <img class="preview_image" [src]="url" alt="Preview">
                                   <button type="button" class="delete_preview" (click)="removeImageProdUpdate(i)">
                                     <i class="fas fa-trash-alt"></i>
@@ -388,11 +396,19 @@
                                 <span class="checkmark"></span>
                               </label>
                             </div>
+
+                            <div class="d-flex flex-column align-items-center">
+                              <span>Neuf</span>
+                              <label class="checkbox-container">
+                                <input formControlName="neuf_checkbox" class="custom-checkbox" type="checkbox">
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
                           </div>
             
                           <div>
                             <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
-                            <textarea formArrayName="desc_produit" class="form-control" id="exampleFormControlTextarea1" rows="3">{{item.Description}}</textarea>
+                            <textarea formControlName="desc_produit" class="form-control" id="exampleFormControlTextarea1" rows="3">{{item.description}}</textarea>
                           </div>
                           <div class="modal-footer">
                             <button type="submit" (click)="modal.close('Close click')" class="btn rounded-1 my-2 btn-danger">Mettre a jour</button>
@@ -471,8 +487,8 @@
                                 </ng-template>
                               </ngx-file-drop>
                               <div>
-                                <div class="image-preview-container my-3" *ngIf="previewUrls.length > 0">
-                                  <div class="image-preview" *ngFor="let url of previewUrls; let i = index">
+                                <div class="image-preview-container my-3" *ngIf="previewUrlsCat.length > 0">
+                                  <div class="image-preview" *ngFor="let url of previewUrlsCat; let i = index">
                                     <img class="preview_image" [src]="url" alt="Preview">
                                     <button type="button" class="delete_preview" (click)="removeImageProdUpdate(i)">
                                       <i class="fas fa-trash-alt"></i>
