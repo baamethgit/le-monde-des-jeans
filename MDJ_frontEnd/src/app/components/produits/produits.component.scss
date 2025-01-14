@@ -200,3 +200,51 @@ a{
   text-decoration: underline;
   font-weight: bold;
 }
+.product-item {
+  position: relative; // Pour le positionnement absolu de la banderole
+  overflow: visible; // Pour permettre à la banderole de déborder
+}
+
+.product-item__new-badge {
+  position: absolute;
+  top: 20px;
+  right: -10px;
+  background-color: #3cff00;
+  color: white;
+  padding: 3px 15px;
+  font-size: 12px;
+  font-weight: bold;
+  transform: rotate(45deg);
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  text-align: center;
+  
+  // Effet de ruban
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background-color: darken(#7ee734, 15%);
+  }
+  
+  &::before {
+    left: 0;
+  }
+  
+  &::after {
+    right: 0;
+  }
+}
+
+// Modification de l'animation au survol
+.product-item:hover .product-item__new-badge {
+  transform: rotate(45deg) scale(1.05);
+}
+
+// Pour s'assurer que la banderole soit bien visible au-dessus de l'image
+.product-item__img-container {
+  overflow: hidden; // Garde uniquement l'overflow hidden pour l'image
+}

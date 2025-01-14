@@ -6,6 +6,9 @@
         <div class="product-item">
           <a [routerLink]="['/produits', item.slug]" class="product-item__link">
             <div class="product-item__img-container">
+              @if (item.neuf) {
+                <div class="product-item__new-badge">NEUF</div>
+              }
               <img 
                 [ngSrc]="item.images[0].image" 
                 [width]="300" 
