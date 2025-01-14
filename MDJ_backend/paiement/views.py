@@ -1,5 +1,6 @@
 from django.utils import timezone
 from os import environ
+from datetime import timedelta
 
 from django.shortcuts import render
 from rest_framework.response import Response
@@ -43,10 +44,10 @@ class InitiateWavePaymentView(APIView):
             'amount': str(order.montant),
             'currency': 'XOF',  # Ou votre devise
             'client_reference': str(order.ref_code),
-            #'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
-            'success_url': 'https://www.google.sn/',
-            #'error_url': f'{FRONTEND_URL}/payment-error/{order.id}'
-            'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
+            'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
+            #'success_url': 'https://www.google.sn/',
+            'error_url': f'{FRONTEND_URL}/payment-error/{order.id}'
+            #'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
         }
 
         # Dans ta vue
@@ -71,7 +72,7 @@ class InitiateWavePaymentView(APIView):
         ).first()
 
         if existing_session:
-            if (timezone.now - existing_session.created_at).total_seconds() < 3600:
+            if timezone.now() < existing_session.created_at + timedelta(minutes=60):
                 return Response({'wave_launch_url': existing_session.wave_launch_url})
             else:
                 existing_session.status = 'expired'

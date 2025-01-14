@@ -46,7 +46,7 @@ export class DetailCommandeComponent implements OnInit{
         this.commandeService.getDeliveryZones().subscribe({
           next:(data)=>{
             this.zones = data;
-           
+
           },
           error:(error)=>{
 
@@ -61,19 +61,19 @@ export class DetailCommandeComponent implements OnInit{
 
   payerCommande() : void{
     if(this.commande){
-      let newData: { [key: string]: any } = {}; 
+      let newData: { [key: string]: any } = {};
 
       newData['recupere_magasin'] = this.selectedOption === 'recuperation';
-      if (this.selectedOption === 'livraison') { 
+      if (this.selectedOption === 'livraison') {
           newData['zone_livraison'] = this.selectedZone?.id;
       }
-    
+
         this.commandeService.updateCommande(this.commande.id,newData).subscribe(
           {
             next(value) {
             },
             error(err) {
-                
+
             },
           }
         )
@@ -88,12 +88,13 @@ export class DetailCommandeComponent implements OnInit{
         this.paymentService.initiateWavePayment(this.commande.id).subscribe({
           next:(response: any) => {
             window.location.href = response.wave_launch_url;
+            console.log(response)
           },
           error:(erreur: any) => {
-            console.log("erreur")
+            console.log("erreur",erreur)
           }
         }
-          
+
         );
       }
     }
@@ -117,7 +118,7 @@ export class DetailCommandeComponent implements OnInit{
   }
 
 
-  
+
   onZoneChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedZoneNumber = parseInt(selectElement.value, 10);
@@ -148,7 +149,7 @@ export class DetailCommandeComponent implements OnInit{
       },
       error:(error)=>{
         this.selectedZone = undefined;
-        
+
       }
     })
   }
@@ -160,7 +161,7 @@ export class DetailCommandeComponent implements OnInit{
           this.router.navigate(['/'])
         },
         error:(error)=>{
-  
+
         }
       })
   }
