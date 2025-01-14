@@ -13,7 +13,7 @@ export class UserService {
   private readonly baseUrl = 'http://127.0.0.1:8000/user/';
 
   private readonly jwtKey = 'jwt';
-  
+
   loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   private isBrowser: boolean;
@@ -75,7 +75,7 @@ export class UserService {
   }
   refreshToken() {
     const refresh = localStorage.getItem('refresh_token');
-    return this.http.post<any>(`${this.baseUrl}/token/refresh/`, { refresh }).pipe(
+    return this.http.post<any>(`${this.baseUrl}token/refresh/`, { refresh }).pipe(
         tap(response => {
             this.setAccessToken(response.access);
         })
@@ -103,7 +103,7 @@ export class UserService {
   verifyPasswordResetOTP(addresse_mail: string, otp: string): Observable<any> {
     return this.http.post(`${this.baseUrl}verify-reset-otp/`, { addresse_mail, otp });
   }
-  
+
   resetPassword(addresse_mail: string, newPassWord: string): Observable<any> {
     return this.http.post(`${this.baseUrl}reset-password/`, {
       addresse_mail,newPassWord
@@ -142,7 +142,7 @@ export class UserService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
-    
+
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }
@@ -155,7 +155,7 @@ export class UserService {
     return this.http.get<User>(url);
   }
 
-  
+
 
   deleteUser(slug:string):Observable<any>{
     const url = `${this.baseUrl}delete-user/${slug}/`;

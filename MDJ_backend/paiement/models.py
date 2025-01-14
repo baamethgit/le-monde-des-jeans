@@ -1,5 +1,6 @@
 from django.db import models
 
+from accounts.models import CustomUser
 from shop.models import Commande
 
 
@@ -10,8 +11,13 @@ class Payment(models.Model):
         ('WAVE', 'Wave'),
         ('CC', 'Carte de crédit'),
     )
-
-    ref_commande = models.CharField(max_length=50, unique=True)
+    client = models.ForeignKey(
+        CustomUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='payments'
+    )
+    ref_commande = models.CharField(max_length=50)
     montant = models.DecimalField(max_digits=10, decimal_places=2)
     methode_paiement = models.CharField(max_length=20, choices=METHODE_PAIEMENT_CHOICES)
     date_paiement = models.DateTimeField(auto_now_add=True)
@@ -20,6 +26,14 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Paiement pour la commande {self.ref_commande} via {self.get_methode_paiement_display()}"
+
+    class Meta:
+        ordering = ['-date_paiement']
+        indexes = [
+            models.Index(fields=['date_paiement']),
+            models.Index(fields=['statut']),
+            models.Index(fields=['methode_paiement']),
+        ]
 
 class WaveCheckoutSession(models.Model):
     order = models.ForeignKey(Commande, on_delete=models.CASCADE)

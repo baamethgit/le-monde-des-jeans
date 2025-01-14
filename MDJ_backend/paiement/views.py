@@ -1,3 +1,4 @@
+from django.utils import timezone
 from os import environ
 
 from django.shortcuts import render
@@ -53,14 +54,34 @@ class InitiateWavePaymentView(APIView):
         logger.debug(f"URL appelée : {url}")
         logger.debug(f"Réponse : {response.text}")
 """
+        headers = {
+            'Authorization': f'Bearer {WAVE_API_KEY}',
+            'Content-Type': 'application/json'
+        }
+
         response = requests.post(
             'https://api.wave.com/v1/checkout/sessions',
             json=checkout_data,
-            headers={'Authorization': f'Token {WAVE_API_KEY},Content-Type: application/json'}
+            headers=headers
         )
-        print(50*"=")
-        print(response)
-        print(50*"=")
+
+        existing_session = WaveCheckoutSession.objects.filter(
+            order=order,
+            status='pending'
+        ).first()
+
+        if existing_session:
+            if (timezone.now - existing_session.created_at).total_seconds() < 3600:
+                return Response({'wave_launch_url': existing_session.wave_launch_url})
+            else:
+                existing_session.status = 'expired'
+                existing_session.save()
+
+        WaveCheckoutSession.objects.filter(
+            order=order,
+            status='pending'
+        ).update(status='expired')
+
         session = WaveCheckoutSession.objects.create(
             order=order,
             session_id=response.json()['id'],
@@ -153,6 +174,7 @@ class WaveWebhookView(APIView):
 
 class CheckPaymentStatusView(APIView):
     def get(self, request, order_id):
+
         session = WaveCheckoutSession.objects.get(order_id=order_id)
 
         if session.status != 'completed':
