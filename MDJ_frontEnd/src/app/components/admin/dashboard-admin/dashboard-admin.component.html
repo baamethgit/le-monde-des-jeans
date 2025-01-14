@@ -1,6 +1,6 @@
-  <div class="container-fluid p-4">
+  <div class="container-fluid px-4 py-1">
     <div class="card mb-4 bg-primary text-white">
-      <div class="card-body p-4">
+      <div class="card-body px-4 py-1">
         <h1 class="display-6">Tableau de Bord</h1>
         <p class="lead mb-0">{{ currentDate }}</p>
       </div>
@@ -16,7 +16,7 @@
               </div>
               <div class="flex-grow-1 ms-3">
                 <h6 class="text-muted mb-1">Ventes Totales</h6>
-                <h3 class="mb-0">2.45M FCFA</h3>
+                <h3 class="mb-0">{{kpi.ventes_totales}} FCFA</h3>
                 <span class="badge bg-success">+15%</span>
               </div>
             </div>
@@ -33,8 +33,8 @@
               </div>
               <div class="flex-grow-1 ms-3">
                 <h6 class="text-muted mb-1">Commandes</h6>
-                <h3 class="mb-0">156</h3>
-                <span class="badge bg-success">45 cette semaine</span>
+                <h3 class="mb-0">{{kpi.nombre_commandes}}</h3>
+                <span class="badge bg-success">{{kpi.nombre_nouvelles_commandes}} cette semaine</span>
               </div>
             </div>
           </div>
@@ -50,8 +50,8 @@
               </div>
               <div class="flex-grow-1 ms-3">
                 <h6 class="text-muted mb-1">Clients</h6>
-                <h3 class="mb-0">1,245</h3>
-                <span class="badge bg-success">+23 nouveaux</span>
+                <h3 class="mb-0">{{kpi.nombre_clients}}</h3>
+                <span class="badge bg-success">+{{kpi.nombre_nouveau_clients}} nouveaux</span>
               </div>
             </div>
           </div>
@@ -67,8 +67,8 @@
               </div>
               <div class="flex-grow-1 ms-3">
                 <h6 class="text-muted mb-1">Produits</h6>
-                <h3 class="mb-0">89</h3>
-                <span class="badge bg-danger">5 en rupture</span>
+                <h3 class="mb-0">{{kpi.nombre_produits}}</h3>
+                <span class="badge bg-danger">{{kpi.nombre_produits_en_rupture_de_stock}} en rupture</span>
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@
         </div>
       </div>
     </div>
-    <div class="card border-0 shadow-sm">
+    <!-- <div class="card border-0 shadow-sm">
       <div class="card-header bg-transparent border-0">
         <h5 class="card-title mb-0">Produits Populaires</h5>
       </div>
@@ -184,5 +184,5 @@
           </table>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>

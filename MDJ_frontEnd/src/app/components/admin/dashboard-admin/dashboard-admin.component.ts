@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { KpiService } from '../../../services/kpi.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -9,27 +11,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './dashboard-admin.component.scss'
 })
 export class DashboardAdminComponent implements OnInit {
+  kpiService = inject(KpiService);
+  erreur_kpi : boolean = false;
+  isLoading : boolean = true;
+
+  kpi = {
+    "nombre_produits": 1,
+    "nombre_produits_en_rupture_de_stock": 0,
+    "nombre_clients": 1,
+    "nombre_nouveau_clients": 1,
+    "nombre_commandes": 0,
+    "nombre_nouvelles_commandes": 0,
+    "ventes_totales": 0,
+    "ventes_par_methode": {},
+    "commandes_par_statut": []
+  }
   totalSales: number = 15789;
   pendingOrders: number = 23;
   newCustomers: number = 45;
 
-  salesChartData: any[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Ventes' }
-  ];
-  salesChartLabels: string[] = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-  chartOptions: any = {
-    responsive: true,
-  };
-
-  recentOrders = [
-    { id: 1, client: 'Jean Dupont', amount: 120.50, status: 'En attente' },
-    { id: 2, client: 'Marie Martin', amount: 85.75, status: 'Expédiée' },
-    { id: 3, client: 'Pierre Durand', amount: 200.00, status: 'Livrée' },
-  ];
-
   ngOnInit() {
-    // Ici, vous pouvez ajouter la logique pour charger les données réelles
-    // par exemple, en appelant un service qui communique avec votre backend
+    this.getKpi();
   }
 
 
@@ -52,15 +54,24 @@ export class DashboardAdminComponent implements OnInit {
   orderStatus = [
     { label: 'En attente', count: 45, percentage: 30, colorClass: 'bg-warning' },
     { label: 'Payée', count: 32, percentage: 20, colorClass: 'bg-success' },
-    { label: 'En préparation', count: 28, percentage: 15, colorClass: 'bg-info' },
-    { label: 'En livraison', count: 24, percentage: 12, colorClass: 'bg-primary' },
+    { label: 'EN_COURS_LIVRAISON', count: 28, percentage: 15, colorClass: 'bg-info' },
     { label: 'Livrée', count: 16, percentage: 8, colorClass: 'bg-secondary' }
   ];
 
-  topProducts = [
-    { name: 'T-Shirt Premium', price: 15000, stockStatus: 'En stock', emoji: '👕', salesPercentage: 85 },
-    { name: 'Sneakers Air', price: 45000, stockStatus: 'En stock', emoji: '👟', salesPercentage: 75 },
-    { name: 'Jeans Classic', price: 25000, stockStatus: 'Rupture', emoji: '👖', salesPercentage: 45 },
-    { name: 'Casquette Sport', price: 12000, stockStatus: 'En stock', emoji: '🧢', salesPercentage: 60 }
-  ];
+
+  
+  getKpi():void{
+    this.kpiService.getDashboardKpi().pipe(
+      finalize(()=>{
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next:(response_data)=>{
+        this.kpi = response_data;
+      },
+      error : (error) => {
+        this.erreur_kpi = true;
+      },
+    })
+  }
 }
