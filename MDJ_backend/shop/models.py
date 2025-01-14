@@ -55,7 +55,7 @@ class Produit(models.Model):
     nom = models.CharField(max_length=200)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
-    description=models.CharField(null=True, blank=True)
+    description=models.CharField(null=True, blank=True,max_length=1500)
     taille = models.CharField(max_length=128, choices=TAILLES, blank=True, null=True)
     pointure=models.PositiveIntegerField(blank=True, null=True)
     composition = models.CharField(max_length=128, choices=COMPO, blank=True, null=True)
