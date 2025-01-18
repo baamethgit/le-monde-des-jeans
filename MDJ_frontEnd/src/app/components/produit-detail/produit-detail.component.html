@@ -59,6 +59,36 @@
             </div>
           </div>
 
+          <div class="product-info__quantity">
+            <label for="quantity-input" class="quantity-label">Quantité:</label>
+            <div class="quantity-control">
+              <button type="button" 
+                      id="decrement-button" 
+                      (click)="decrementQuantity()"
+                      class="quantity-btn quantity-btn--left">
+                <svg class="quantity-btn__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
+                </svg>
+              </button>
+              <input type="text" 
+                     id="quantity-input" 
+                     class="quantity-input" 
+                     [(ngModel)]="quantity"
+                     min="1"
+                     [max]="product_selected?.QuantiteStock"
+                     required
+                     readonly />
+              <button type="button" 
+                      id="increment-button" 
+                      (click)="incrementQuantity()"
+                      class="quantity-btn quantity-btn--right">
+                <svg class="quantity-btn__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <div class="product-info__actions">
             <button class="btn btn--secondary" (click)="addToCart()">
               Ajouter au panier
