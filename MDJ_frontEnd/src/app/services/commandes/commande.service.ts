@@ -14,18 +14,18 @@ export interface statCommande{
 })
 export class CommandeService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://127.0.0.1:8000/';
+  private baseUrl = '/api/';
 
   constructor() { }
 
   getDeliveryZones():Observable<ZoneLivraison[]>{
     const url = `${this.baseUrl}apiProduit/zones/`;
-    return this.http.get<ZoneLivraison[]>(url); 
+    return this.http.get<ZoneLivraison[]>(url);
   }
 
   getDeliveryZoneByNumber(num:number):Observable<ZoneLivraison>{
     const url = `${this.baseUrl}apiProduit/zone/${num}/`;
-    return this.http.get<ZoneLivraison>(url); 
+    return this.http.get<ZoneLivraison>(url);
   }
 
   createZone(newZone : ZoneLivraison):Observable<any>{
@@ -47,7 +47,7 @@ export class CommandeService {
         let params = new HttpParams()
           .set('page', page.toString())
           .set('page_size', pageSize.toString());
-        
+
         if (searchTerm) {
           params = params.set('search', searchTerm);
         }

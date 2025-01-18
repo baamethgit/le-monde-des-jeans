@@ -9,7 +9,7 @@ import { User } from '../../models/user';
   providedIn: 'root'
 })
 export class ProduitService {
-  private apiUrl="http://127.0.0.1:8000/apiProduit/products/"
+  private apiUrl="/api/apiProduit/products/"
 
   constructor(private http:HttpClient) { }
 
@@ -22,7 +22,7 @@ export class ProduitService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
-    
+
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }
@@ -33,12 +33,12 @@ export class ProduitService {
 
 
   getProductBySlug(slug:string): Observable<Produit> {
-    const url = `${this.apiUrl}${slug}/`; 
+    const url = `${this.apiUrl}${slug}/`;
     return this.http.get<Produit>(url);
   }
 
 
-  
+
   getProductByCategory(categorie:string):Observable<Produit[]>{
     return this.http.get<Produit[]>(`${this.apiUrl}?categorie=${categorie}`)
   }

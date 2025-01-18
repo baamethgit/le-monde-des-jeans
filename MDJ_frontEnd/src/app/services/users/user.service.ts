@@ -10,9 +10,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl = 'http://127.0.0.1:8000/user/';
-
-  private readonly jwtKey = 'jwt';
+  private readonly baseUrl = '/api/user/';
 
   loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
