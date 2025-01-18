@@ -1,79 +1,106 @@
-<section class="produit_detail my-4 position-relative overflow-hidden">
-    <img src="../../../assets/img/6445.jpg" class="bg_home" alt="" srcset="">
-  <div class="produit_detail_main row justify-content-between">
-      <div class="produit_img d-none d-sm-flex col-md-6 row col-12 d-flex flex-column flex-sm-row">
-          @for (item of product_selected?.images; track item) {
-              <div class="p-2 col-12">
-                  <img class="" src={{item.image}} alt="" srcset="">
-              </div>
-          }
+<section class="product-detail">
+  <div class="container">
+    <div class="product-detail__grid">
+      <!-- Gallery Section -->
+      <div class="product-detail__gallery">
+        <p-galleria [value]="list_p" 
+                    [responsiveOptions]="responsiveOptions" 
+                    [numVisible]="7" 
+                    [circular]="true"
+                    class="product-gallery">
+          <ng-template pTemplate="item" let-item>
+            <div class="product-gallery__main">
+              <img [src]="item.image" alt="Product image"/>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+            <div class="product-gallery__thumb">
+              <img [src]="item.image" alt="Product thumbnail"/>
+            </div>
+          </ng-template>
+        </p-galleria>
       </div>
-        <p-carousel 
-  [value]="list_p"
-  [circular]="true" 
-  [showIndicators]="false"
-  [responsiveOptions]="responsiveOptions"
-   class="pcaroussel d-flex d-sm-none">
-      <ng-template let-item pTemplate="item">
-              <div class="d-flex">
-                  <img class="w-100" src={{item.image}} alt="" srcset="">
+
+      <!-- Product Info Section -->
+      <div class="product-detail__info">
+        <div class="product-info">
+          <h6 class="product-info__error" *ngIf="errorMessage">{{errorMessage}}</h6>
+          <h1 class="product-info__title">{{product_selected?.nom}}</h1>
+          <p class="product-info__price">{{product_selected?.prix}} FCFA</p>
+
+          <div class="product-info__specs">
+            @if (product_selected?.taille) {
+              <div class="spec-item">
+                <span class="spec-item__label">Taille:</span>
+                <span class="spec-item__value">{{product_selected?.taille}}</span>
               </div>
-          <img class="w-100" src={{item.previewImageSrc}} alt="" srcset="">
-      </ng-template>
-</p-carousel>
-      <div class="produit_detail_specs col-md-5 col-12 d-flex flex-column justify-content-start my-5">
-          <div class="specs_box mb-5">
-              <div class="name_price_box">
-                <h6 class="text-danger fst-italic">{{errorMessage}}</h6>
-                  <div class="produit_name">{{product_selected?.nom}}</div>
-                  <div class="produit_price">{{product_selected?.prix}} FCFA</div>
+            } @else {
+              <div class="spec-item">
+                <span class="spec-item__label">Pointure:</span>
+                <span class="spec-item__value">{{product_selected?.pointure}}</span>
               </div>
-              <div class="size_comp_box d-flex justify-content-between">
-                  @if (product_selected?.taille) {
-                    <div class="produit_size">Taille : {{product_selected?.taille}}</div>
-                  }
-                  @else {
-                    <div class="produit_size">Pointure : {{product_selected?.pointure}}</div>
-                  }
-                  <div class="produit_comp">Composition : {{product_selected?.composition}}</div>
-                  <div>Stock : {{product_selected?.QuantiteStock}}</div>
-                  @if (product_selected?.neuf) {
-                    <div class="produit_neuf">Neuf</div>
-                  }
-                  @else {
-                    <div class="">Occasion</div>
-                  }
-              </div>
+            }
+
+            <div class="spec-item">
+              <span class="spec-item__label">Composition:</span>
+              <span class="spec-item__value">{{product_selected?.composition}}</span>
+            </div>
+
+            <div class="spec-item">
+              <span class="spec-item__label">Stock:</span>
+              <span class="spec-item__value">{{product_selected?.QuantiteStock}}</span>
+            </div>
+
+            <div class="spec-item">
+              <span class="spec-item__label">État:</span>
+              <span class="spec-item__value badge" [class.badge--new]="product_selected?.neuf">
+                {{product_selected?.neuf ? 'Neuf' : 'Occasion'}}
+              </span>
+            </div>
           </div>
-          <div class="buy_order mb-5">
-              <div class="d-flex justify-content-around">
-                  <button class="add_cart_bt text-nowrap mb-3 mb-xl-0" (click)="addToCart()">Ajouter au panier</button>
-                  <button class="buy_now_bt text-nowrap" (click)="acheterDirectement(product_selected?.slug)">Acheter directement</button>
-              </div>
+
+          <div class="product-info__actions">
+            <button class="btn btn--secondary" (click)="addToCart()">
+              Ajouter au panier
+            </button>
+            <button class="btn btn--primary" (click)="acheterDirectement(product_selected?.slug)">
+              Acheter directement
+            </button>
           </div>
-          <div class="produit_categorie">CATEGORIE : {{product_selected?.categorie_detail?.nom}}</div>
+
+          <div class="product-info__category">
+            <span class="category-label">Catégorie:</span>
+            <span class="category-value">{{product_selected?.categorie_detail?.nom}}</span>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </section>
-<section class="nouveautes my-5">
-    <h3 class="last_uploads_title text-center">Vous pourrez aussi aimer : </h3>
-    <div class="nouveautes__container">
-      <div class="nouveautes__list">
-        @for (item of must_like_product; track $index) {
-          <a [routerLink]="['/produits', item.slug]" class="product-card">
-            <div class="product-card__image-container">
-              <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
-              <span class="product-card__badge">NEW</span>
-            </div>
-            <div class="product-card__info">
-              <h3 class="product-card__title">{{item.nom}}</h3>
-              <p class="product-card__price">{{item.prix}} FCFA</p>
-            </div>
-          </a>
-        }
-      </div>
+
+<!-- Related Products Section -->
+<section class="related-products">
+  <div class="container">
+    <h2 class="related-products__title">Vous pourrez aussi aimer</h2>
+    
+    <div class="products-grid">
+      @for (item of must_like_product; track $index) {
+        <a [routerLink]="['/produits', item.slug]" class="product-card">
+          <div class="product-card__image">
+            <img [ngSrc]="item.images[0].image" fill [alt]="item.nom">
+            <span class="product-card__badge">NEW</span>
+          </div>
+          
+          <div class="product-card__content">
+            <h3 class="product-card__title">{{item.nom}}</h3>
+            <p class="product-card__price">{{item.prix}} FCFA</p>
+          </div>
+        </a>
+      }
     </div>
-    <div class="text-center mt-4">
-      <button class="nouveautes__button">Voir plus</button>
+
+    <div class="related-products__action">
+      <button class="btn btn--outline">Voir plus</button>
     </div>
+  </div>
 </section>

@@ -209,7 +209,7 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
     });
   }
 
-  this.modalService.open(content, { size: 'lg', centered: true });
+  this.modalService.open(content, { windowClass : "myCustomModalClass"});
 }
 
 getProductsPagination(){
