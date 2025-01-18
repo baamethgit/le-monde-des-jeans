@@ -6,7 +6,7 @@ import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progr
 import { Router, RouterLink } from '@angular/router';
 import { PanierService } from '../../../services/panier.service';
 import { IcontenuPanier, Ipanier } from './panier.model';
-import { Subscription } from 'rxjs';
+import {interval, Subscription} from 'rxjs';
 
 import { CommandeService } from '../../../services/commandes/commande.service';
 
@@ -29,7 +29,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
   private readonly commandeService = inject(CommandeService);
 
   tempsRestant: { [key: number]: { minutes: number, seconds: number } } = {};
-  private readonly timerSubscription! : Subscription;
+  private timerSubscription! : Subscription;
 
 
   constructor(private readonly router : Router){}
@@ -37,6 +37,10 @@ export class PanierComponent implements OnInit ,OnDestroy{
   ngOnInit() {
     this.loadData();
     // this.demarrerTimer();
+    this.timerSubscription = interval(1000).subscribe(() => {
+      // Force le rendu du template pour mettre à jour les compteurs
+      this.contenupanier = [...this.contenupanier];
+    });
   }
 
   ngOnDestroy() {
@@ -44,7 +48,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
       this.timerSubscription.unsubscribe();
     }
   }
-  
+
   commander(){
     this.commandeService.creerCommande(true).subscribe({
       next:(data)=>{
@@ -65,7 +69,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
     },
     error: (error) => {
     }
-    })    
+    })
   }
 
   viderPanier(){
@@ -75,7 +79,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
           // this.message = 'Votre Panier est vidé !'
       },
       error: (error) => {
-        
+
       }
     });
   }
@@ -92,7 +96,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
     this.panierService.getContenuPanier().subscribe({
       next: (data) => {
         this.contenupanier = data;
-        
+
     },
     error: (error) => {
     }
@@ -109,35 +113,35 @@ export class PanierComponent implements OnInit ,OnDestroy{
     }
   }
 
-  demarrerTimer() {
-    // this.timerSubscription = interval(1000).pipe(
-    //   startWith(0),
-    //   switchMap(() => this.panierService.getPanier())
-    // ).subscribe({
-    //   next:(data)=>{
-    //     // this.panier = data;
-    //     // this.mettreAJourTempsRestant();
-    //     // this.verifierExpirations();
-    //   },
-    //   error:(error)=>{
-    //     console.error('Erreur lors de la mise à jour du panier', error)
-    //   }
-    // }
-    // );
+  getTempsRestant(dateAjout: string): string {
+    const dateAjoutMs = new Date(dateAjout).getTime();
+    const maintenant = new Date().getTime();
+    const tempsEcoule = maintenant - dateAjoutMs;
+    const tempsRestantMs = (5 * 60 * 1000) - tempsEcoule; // 5 minutes en millisecondes
+
+    if (tempsRestantMs <= 0) {
+      return 'Expiré';
+    }
+
+    // Convertir en minutes et secondes
+    const minutes = Math.floor(tempsRestantMs / (60 * 1000));
+    const secondes = Math.floor((tempsRestantMs % (60 * 1000)) / 1000);
+
+    return `${minutes}min ${secondes}s`;
   }
 
+  getTimeColor(dateAjout: string): string {
+    const dateAjoutMs = new Date(dateAjout).getTime();
+    const maintenant = new Date().getTime();
+    const tempsEcoule = maintenant - dateAjoutMs;
+    const tempsRestantMs = (5 * 60 * 1000) - tempsEcoule;
 
-  verifierExpirations() {
-    let produitExpire = false;
-    Object.keys(this.tempsRestant).forEach(id => {
-      if (this.tempsRestant[Number(id)].minutes === 0 && this.tempsRestant[Number(id)].seconds === 0) {
-        produitExpire = true;
-      }
-    });
-
-    if (produitExpire) {
-      this.loadData();
+    if (tempsRestantMs <= 60000) { // Dernière minute
+      return 'red';
+    } else if (tempsRestantMs <= 120000) { // 2 dernières minutes
+      return 'orange';
     }
+    return 'green';
   }
 
 }

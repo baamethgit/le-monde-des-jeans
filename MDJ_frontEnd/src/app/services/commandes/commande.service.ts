@@ -14,7 +14,7 @@ export interface statCommande{
 })
 export class CommandeService {
   private http = inject(HttpClient);
-  private baseUrl = '/api/';
+  private baseUrl = 'http://127.0.0.1:8000/';
 
   constructor() { }
 

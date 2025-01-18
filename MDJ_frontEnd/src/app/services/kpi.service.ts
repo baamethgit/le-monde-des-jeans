@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class KpiService {
 
- private apiUrl = '/api/apiProduit';
+ private apiUrl = 'http://127.0.0.1:8000/apiProduit';
 
   constructor(private http: HttpClient) { }
 

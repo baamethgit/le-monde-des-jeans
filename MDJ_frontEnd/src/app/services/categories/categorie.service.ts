@@ -11,7 +11,7 @@ import { categorie } from '../../models/categorie';
   providedIn: 'root'
 })
 export class CategorieService {
-  private apiUrl="/api/apiProduit/categories/"
+  private apiUrl="http://127.0.0.1:8000/apiProduit/categories/"
   constructor(private http:HttpClient) { }
 
 
