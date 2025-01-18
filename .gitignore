@@ -7,3 +7,4 @@ __pycache__/
 *.mdj
 .idea/
 MDJ_backend/MDJ_backend/.env
+MDJ_backend/staticfiles/

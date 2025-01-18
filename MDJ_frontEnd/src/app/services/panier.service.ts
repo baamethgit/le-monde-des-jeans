@@ -9,7 +9,7 @@ import * as duration from 'dayjs/plugin/duration';
   providedIn: 'root'
 })
 export class PanierService {
-  private apiUrl = 'http://127.0.0.1:8000/apiProduit';
+  private apiUrl = '/api/apiProduit';
 
   constructor(private http: HttpClient) { }
 
