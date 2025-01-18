@@ -222,7 +222,7 @@ $blue_color: #377DFF;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 30px;
+      gap: 50px;
     }
   
     .contact-box {
@@ -464,7 +464,7 @@ $blue_color: #377DFF;
   
   .product-card__image-container {
     position: relative;
-    padding-top: 133.33%; /* 4:3 Aspect Ratio */
+    padding-top: 100%; /* 4:3 Aspect Ratio */
     overflow: hidden;
   }
   

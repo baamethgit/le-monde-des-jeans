@@ -7,12 +7,15 @@ import { CommandeService } from '../../services/commandes/commande.service';
 import { UserService } from '../../services/users/user.service';
 import { Produit } from '../../models/produit';
 import { PanierService } from '../../services/panier.service';
+import { GalleriaModule } from 'primeng/galleria';
+import { RadioButton } from 'primeng/radiobutton';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-  imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet],
+  imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
@@ -27,14 +30,14 @@ export class ProduitDetailComponent {
   errorMessage = '';
   responsiveOptions: any[] = [
     {
-
-      breakpoint: '576px',
-      numVisible: 1,
-      numScroll: 1,
-      circular: true,
-      showIndicators: false
+        breakpoint: '1300px',
+        numVisible: 4
+    },
+    {
+        breakpoint: '575px',
+        numVisible: 1
     }
-  ];
+];
 
   constructor(
     private route: ActivatedRoute,
@@ -50,18 +53,19 @@ export class ProduitDetailComponent {
       }
     });
   }
-
+  
   loadProduct(slug: string): void {
     this.produitService.getProductBySlug(slug).subscribe({
       next: (data: Produit) => {
         this.product_selected = data;
-        this.list_p = this.product_selected.images;
+        this.list_p = data.images;
         this.loadSimilarProducts();
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement du produit:', error);
       }
-      
-      
-      })
-    }
+    });
+}
 
 acheterDirectement(productSlug : string | undefined){
   if(productSlug != undefined){

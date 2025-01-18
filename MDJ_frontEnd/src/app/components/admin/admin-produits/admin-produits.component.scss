@@ -199,3 +199,6 @@ select{
 .delete_preview:hover {
   background-color: rgba(255, 0, 0, 1);
 }
+.myCustomModalClass .modal-dialog {
+  max-width: 565px;
+}
