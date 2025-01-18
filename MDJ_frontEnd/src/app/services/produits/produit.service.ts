@@ -43,6 +43,10 @@ export class ProduitService {
     return this.http.get<Produit[]>(`${this.apiUrl}?categorie=${categorie}`)
   }
 
+  getProductBySpecial():Observable<Produit[]>{
+    return this.http.get<Produit[]>(`${this.apiUrl}?special=True`)
+  }
+
   CreateProduct(formData: FormData): Observable<any> {
     return this.http.post<Produit>(this.apiUrl, formData);
   }

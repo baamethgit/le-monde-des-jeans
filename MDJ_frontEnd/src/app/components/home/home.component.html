@@ -61,16 +61,50 @@
               </div>
             </div>
           </section>
-        <section class="nouveautes my-5">
-            <h2 class="nouveautes__title text-center mb-4">Nouveautés</h2>
+          <section class="nouveautes my-5">
+            <h2 class="nouveautes__title text-center mb-4">Decouvrez nos Articles</h2>
             <div class="nouveautes__container">
+              @if (products_list.length > 0) {
+                <div class="nouveautes__list">
+                  @for (item of products_list.slice(-limit_prod); track $index) {
+                    <a [routerLink]="['/produits', item.slug]" class="product-card">
+                      <div class="product-card__image-container">
+                        <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
+                        <span class="product-card__badge">NEW</span>
+                      </div>
+          
+                      <div class="product-card__info">
+                        <h3 class="product-card__title">{{item.nom}}</h3>
+                        <p class="product-card__price">{{item.prix}} FCFA</p>
+                      </div>
+                    </a>
+                  }
+                </div>
+              } @else {
+                <div class="empty-state">
+                  <div class="empty-state__content">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="empty-state__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 5H3v14h18V5zM3 9h18M9 5v14"/>
+                    </svg>
+                    <p class="empty-state__message">Aucun produit disponible pour le moment</p>
+                    <p class="empty-state__sub-message">Revenez plus tard pour découvrir nos offres</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        <section class="nouveautes my-5">
+          <h2 class="nouveautes__title text-center mb-4">Produits speciaux</h2>
+          <div class="nouveautes__container">
+            @if (special_list.length > 0) {
               <div class="nouveautes__list">
-                @for (item of products_list.slice(-limit_prod); track $index) {
+                @for (item of special_list.slice(-limit_prod); track $index) {
                   <a [routerLink]="['/produits', item.slug]" class="product-card">
                     <div class="product-card__image-container">
                       <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
                       <span class="product-card__badge">NEW</span>
                     </div>
+        
                     <div class="product-card__info">
                       <h3 class="product-card__title">{{item.nom}}</h3>
                       <p class="product-card__price">{{item.prix}} FCFA</p>
@@ -78,34 +112,19 @@
                   </a>
                 }
               </div>
-            </div>
-            <div class="text-center mt-4">
-              <button class="nouveautes__button">Voir plus</button>
-            </div>
+            } @else {
+              <div class="empty-state">
+                <div class="empty-state__content">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="empty-state__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 5H3v14h18V5zM3 9h18M9 5v14"/>
+                  </svg>
+                  <p class="empty-state__message">Aucun produit spécial disponible pour le moment</p>
+                  <p class="empty-state__sub-message">Revenez plus tard pour découvrir nos offres spéciales</p>
+                </div>
+              </div>
+            }
+          </div>
         </section>
-        <section class="nouveautes my-5">
-            <h2 class="nouveautes__title text-center mb-4">Derniers articles</h2>
-            <div class="nouveautes__container">
-              <div class="nouveautes__list">
-                @for (item of products_list.slice(-limit_prod); track $index) {
-                  <a [routerLink]="['/produits', item.slug]" class="product-card">
-                    <div class="product-card__image-container">
-                      <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
-                      <span class="product-card__badge">NEW</span>
-                    </div>
-    
-                    <div class="product-card__info">
-                      <h3 class="product-card__title">{{item.nom}}</h3>
-                      <p class="product-card__price">{{item.prix}} FCFA</p>
-                    </div>
-                  </a>
-                }
-              </div>
-    
-            
-            
-        </div>
-    </section>
     <!-- <section class="Contacts pb-5 pt-3">
         <div class="contact_head my-5">
             <h1 class="contact_title text-center">Contacts</h1>

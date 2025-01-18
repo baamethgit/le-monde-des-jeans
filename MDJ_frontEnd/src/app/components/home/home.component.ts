@@ -20,6 +20,7 @@ import { Avis, AvisCreationData } from '../../models/Avis';
 export class HomeComponent {
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
+  special_list:Produit[]=[];
   avis_list:Avis[]=[];
   limit_prod=10;
   constructor(private readonly categorieService:CategorieService, private readonly productService:ProduitService, private readonly avisService: UserService){}
@@ -38,11 +39,19 @@ export class HomeComponent {
       error:(error)=>{console.log('Erreur lors de l\'affichage des produits :', error.error.detail)}
     })
 
+    this.loadSpecials();
+
 
     this.avisService.getAllAvis().subscribe({
       next:(data)=>{this.avis_list=data}
     })
 
+  }
+
+  loadSpecials(){
+    this.productService.getProductBySpecial().subscribe({
+      next:(data)=>{this.special_list=data}
+    })
   }
 
   createAvis(newAvis:AvisCreationData){
