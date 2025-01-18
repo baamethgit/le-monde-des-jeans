@@ -1,7 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { CarouselModule} from 'primeng/carousel';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { NgOptimizedImage, SlicePipe } from '@angular/common';
+import { CommonModule, NgOptimizedImage, SlicePipe } from '@angular/common';
 import { ProduitService } from '../../services/produits/produit.service';
 import { CommandeService } from '../../services/commandes/commande.service';
 import { UserService } from '../../services/users/user.service';
@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-  imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule],
+  imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule,FormsModule],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
@@ -28,6 +28,7 @@ export class ProduitDetailComponent {
   panierService = inject(PanierService);
   userService = inject(UserService);
   errorMessage = '';
+  quantity: number = 1;
   responsiveOptions: any[] = [
     {
         breakpoint: '1300px',
@@ -65,6 +66,18 @@ export class ProduitDetailComponent {
         console.error('Erreur lors du chargement du produit:', error);
       }
     });
+}
+
+incrementQuantity() {
+  if (this.product_selected && this.quantity < this.product_selected.QuantiteStock) {
+    this.quantity++;
+  }
+}
+
+decrementQuantity() {
+  if (this.quantity > 1) {
+    this.quantity--;
+  }
 }
 
 acheterDirectement(productSlug : string | undefined){

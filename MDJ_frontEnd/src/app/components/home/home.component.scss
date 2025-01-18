@@ -777,3 +777,35 @@ $blue_color: #377DFF;
         display: none;
     }
    }
+   .empty-state {
+    padding: 3rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    min-height: 200px;
+  }
+  
+  .empty-state__content {
+    text-align: center;
+  }
+  
+  .empty-state__icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    color: #9ca3af;
+  }
+  
+  .empty-state__message {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+  
+  .empty-state__sub-message {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
