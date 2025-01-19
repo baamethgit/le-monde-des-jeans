@@ -1,11 +1,11 @@
 from django.utils import timezone
-from os import environ
 from datetime import timedelta
-
-from django.shortcuts import render
+from django.db.models import Q,Sum
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
-from paiement.models import WaveCheckoutSession
+from paiement.models import WaveCheckoutSession, Payment
+from paiement.serializers import PaiementSerializer
 from shop.models import Commande
 import environ
 
@@ -42,7 +42,7 @@ class InitiateWavePaymentView(APIView):
 
         checkout_data = {
             'amount': str(order.montant),
-            'currency': 'XOF',  # Ou votre devise
+            'currency': 'XOF',
             'client_reference': str(order.ref_code),
             'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
             #'success_url': 'https://www.google.sn/',
@@ -192,3 +192,72 @@ class CheckPaymentStatusView(APIView):
                 session.order.save()
 
         return Response({'status': session.status})
+
+
+class PaymentFilterView(APIView):
+    permission_classes = (IsAuthenticated,IsAdminUser)
+
+    def get(self, request):
+        # Récupérer les paramètres de requête
+        methode_paiement = request.query_params.get('methode_paiement', None)
+        start_date = request.query_params.get('start_date', None)
+        end_date = request.query_params.get('end_date', None)
+        min_amount = request.query_params.get('min_amount', None)
+
+        # Filtrer les paiements
+        filters = Q()
+
+        if methode_paiement:
+            filters &= Q(methode_paiement=methode_paiement)
+        if start_date:
+            filters &= Q(date_paiement__date__gte=start_date)
+        if end_date:
+            filters &= Q(date_paiement__date__lte=end_date)
+        if min_amount:
+            filters &= Q(montant__gte=min_amount)
+
+        payments = Payment.objects.filter(filters)
+
+        # Sérialisation des résultats
+        serializer = PaiementSerializer(payments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PaymentSummaryView(APIView):
+    permission_classes = (IsAuthenticated,IsAdminUser)
+    def get(self, request):
+        # Récupération des filtres de la requête
+        methode_paiement = request.query_params.get('methode_paiement')  # 'WAVE', 'ORANGE_MONEY', 'CC'
+        start_date = request.query_params.get('start_date')  # Format attendu : 'YYYY-MM-DD'
+        end_date = request.query_params.get('end_date')  # Format attendu : 'YYYY-MM-DD'
+        min_montant = request.query_params.get('min_montant')  # Montant minimal (float)
+
+        # Filtrage des paiements
+        filters = Q()
+        if methode_paiement:
+            filters &= Q(methode_paiement=methode_paiement)
+        if start_date:
+            filters &= Q(date_paiement__gte=start_date)
+        if end_date:
+            filters &= Q(date_paiement__lte=end_date)
+        if min_montant:
+            filters &= Q(montant__gte=min_montant)
+
+        # Application des filtres
+        filtered_payments = Payment.objects.filter(filters)
+
+        # Calcul des totaux
+        total_paiement = filtered_payments.aggregate(total=Sum('montant'))['total'] or 0
+        paiement_par_wave = filtered_payments.filter(methode_paiement='WAVE').aggregate(total=Sum('montant'))['total'] or 0
+        paiement_par_om = filtered_payments.filter(methode_paiement='ORANGE_MONEY').aggregate(total=Sum('montant'))[
+                              'total'] or 0
+        paiement_par_cb = filtered_payments.filter(methode_paiement='CC').aggregate(total=Sum('montant'))['total'] or 0
+
+        # Construction de la réponse
+        response_data = {
+            'total_paiement': total_paiement,
+            'paiement_par_wave': paiement_par_wave,
+            'paiement_par_om': paiement_par_om,
+            'paiement_par_cb': paiement_par_cb,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)

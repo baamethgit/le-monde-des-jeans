@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class UserService {
-  // private readonly baseUrl = '/api/user/';
   private readonly baseUrl = 'http://127.0.0.1:8000/user/';
+
   loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
   private isBrowser: boolean;

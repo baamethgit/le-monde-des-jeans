@@ -3,7 +3,18 @@
 	<img src="/assets/img/avis-clients-illustration.svg" alt="Illustration livraison" class="img-fluid mb-3 " style="max-height: 150px;">
 	<span class="reviews-title ">Avis Clients</span>
 </h2>
-    <div class="review-card" *ngFor="let review of paginatedCommentaires">
+  @if (isLoading) {
+    <tr>
+      <td colspan="4" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </td>
+    </tr>
+  } @else {
+    @if (paginatedCommentaires.length) {
+      @for (review of paginatedCommentaires; track review.id) {
+    <div class="review-card">
         <button class="delete-btn" title="supprimer l'avis" (click)="deleteReview(review.id)" aria-label="Supprimer l'avis">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -21,12 +32,19 @@
         <p class="review-content">{{ review.Texte_avis }}</p>
 
     </div>
+      }
+    } @else {
+      <tr>
+        <td colspan="4" class="bg-warning" style="text-align: center">Aucun avis trouvé.</td>
+      </tr>
+    }
+  }
 </div>
 <div class="d-flex justify-content-center">
-<ngb-pagination 
+<ngb-pagination
     [(page)]="page"
     [pageSize]="pageSize"
-    [collectionSize]="reviews.length" 
+    [collectionSize]="reviews.length"
     [boundaryLinks]="true"
 	[maxSize]="5"
     [rotate]="true"

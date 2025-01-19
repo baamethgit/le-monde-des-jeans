@@ -9,21 +9,10 @@
         </button>
       </div> -->
     </div>
-  
+
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    
+
       <div class="col">
-        <!-- <div class="card h-100 add-zone-card">
-            <a class="add-zone-card card h-100 w-100 text-decoration-none" [routerLink]="['/mdj_admin/zones-livraison/creer']">
-          <div class="card-body d-flex justify-content-center align-items-center">
-            <button class="btn btn-link text-primary" style="text-decoration: none;">
-              <i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
-              <h5 class="mt-2">
-                Ajouter une zone</h5>
-            </button>
-          </div>
-        </a>
-        </div> -->
         <div class="card h-100 add-zone-card">
           <a class="add-zone-card h-100 w-100 text-decoration-none" [routerLink]="['/mdj_admin/zones-livraison/creer']">
             <div class="card-body text-center">
@@ -36,37 +25,54 @@
           </a>
         </div>
       </div>
-      
-      <div class="col" *ngFor="let zone of zones">
-        <div class="card h-100 zone-card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Zone {{ zone.numero }}</h5>
-            <div class="btn-group ">
-              <button class="mx-1 p-0 btn btn-sm btn-outline-primary" >
-                <a style="color:inherit;" [routerLink]="['/mdj_admin/zones-livraison/',zone.id,'modifier']" class="w-100 h-100 text-decoration-none p-2">
-                  <i class="bi bi-pencil"></i>
-                </a>
-              </button>
-              <button (click)="deleteZone(zone.id)" class="mx-1 btn btn-sm btn-outline-danger" >
-                <i class="bi bi-trash"></i>
-              </button>
+      @if (isLoading) {
+        <tr>
+          <td colspan="8" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </td>
+        </tr>
+      } @else {
+        @if (zones.length){
+          @for (zone of zones;track zone.id){
+          <div class="col">
+            <div class="card h-100 zone-card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Zone {{ zone.numero }}</h5>
+                <div class="btn-group ">
+                  <button class="mx-1 p-0 btn btn-sm btn-outline-primary" >
+                    <a style="color:inherit;" [routerLink]="['/mdj_admin/zones-livraison/',zone.id,'modifier']" class="w-100 h-100 text-decoration-none p-2">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                  </button>
+                  <button (click)="deleteZone(zone.id)" class="mx-1 btn btn-sm btn-outline-danger" >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <h6 class="card-title">{{ zone.nom }}</h6>
+                <div class="price-tag my-3">
+                  <span class="price">{{ zone.prix_livraison }} FCFA</span>
+                </div>
+                <p class="card-text">
+                  <i class="bi bi-info-circle me-2"></i>
+                  <span class="fw-bold">Détails</span><br>
+                  {{ zone.info }}
+                </p>
+              </div>
             </div>
           </div>
-          <div class="card-body">
-            <h6 class="card-title">{{ zone.nom }}</h6>
-            <div class="price-tag my-3">
-              <span class="price">{{ zone.prix_livraison }} FCFA</span>
-            </div>
-            <p class="card-text">
-              <i class="bi bi-info-circle me-2"></i>
-              <span class="fw-bold">Détails</span><br>
-              {{ zone.info }}
-            </p>
+        }
+        } @else {
+          <div class="text-center px-3 w-100 py-2 my-3 alert alert-warning">
+            Aucune Zone enregistrée
           </div>
-        </div>
-      </div>
+        }
+      }
     </div>
-  
+
     <div *ngIf="zones.length === 0 && isLoading === false" class="alert alert-info mt-4" role="alert">
       <i class="bi bi-info-circle me-2"></i>
       Aucune zone de livraison n'a été enregistrée.

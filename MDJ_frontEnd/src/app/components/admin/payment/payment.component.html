@@ -5,6 +5,9 @@
         <span class="reviews-title ">Gestion des Paiements</span>
     </h2>
 
+    <div class="d-flex align-items-center justify-content-end px-4">
+      <button class="btn btn-dark px-3 py-2 text-white" (click)="loadPaymentKPI();loadPayment()">Filtrer</button>
+    </div>
     <div class="card border-0 shadow-sm mb-4">
       <div class="card-body">
         <div class="row g-3">
@@ -29,20 +32,28 @@
             <label class="form-label">Montant minimum</label>
             <input type="number" class="form-control" [(ngModel)]="minAmount">
           </div>
+
         </div>
       </div>
     </div>
 
     <!-- Stats Cards -->
+  @if (isKpiLoading) {
+    <tr>
+      <td colspan="8" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </td>
+    </tr>
+  } @else {
     <div class="row g-4 mb-4">
       <div class="col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
             <h6 class="text-muted">Total Paiements</h6>
-            <h3 class="mb-0">15.4M FCFA</h3>
-            <div class="text-success fw-bold mt-2">
-              <i class="bi bi-arrow-up"></i> +12.5%
-            </div>
+            <h3 class="mb-0">{{ formatAmount(kpi.total_paiement) }} FCFA</h3>
+
           </div>
         </div>
       </div>
@@ -52,7 +63,7 @@
             <h6 class="text-muted d-flex justify-content-center align-items-center my-0 py-0">
                 <img src="/assets/img/orange-money.jpg" alt="Illustration transaction" class="img-fluid mb-3 " style="max-height: 50px;max-width: 50px;">
             </h6>
-            <h3 class="mb-0">8.2M FCFA</h3>
+            <h3 class="mb-0">{{ formatAmount(kpi.paiement_par_om) }} FCFA</h3>
             <div class="progress mt-2" style="height: 5px">
               <div class="progress-bar bg-om" style="width: 55%"></div>
             </div>
@@ -65,7 +76,7 @@
             <h6 class="text-muted d-flex justify-content-center align-items-center my-0 py-0">
                 <img src="/assets/img/wave.png" alt="Illustration transaction" class="img-fluid mb-3 " style="max-height: 50px;max-width: 50px;">
             </h6>
-            <h3 class="mb-0">5.1M FCFA</h3>
+            <h3 class="mb-0">{{ formatAmount(kpi.paiement_par_wave) }} FCFA</h3>
             <div class="progress mt-2" style="height: 5px">
               <div class="progress-bar bg-info" style="width: 35%"></div>
             </div>
@@ -79,7 +90,7 @@
             <h6 class="text-muted d-flex justify-content-center align-items-center my-0 py-0">
                 <img src="/assets/img/credit-card.jpeg" alt="Illustration transaction" class="img-fluid mb-3 " style="max-height: 50px;max-width: 50px;">
             </h6>
-            <h3 class="mb-0">2.1M FCFA</h3>
+            <h3 class="mb-0">{{formatAmount(kpi.paiement_par_cb)}} FCFA</h3>
             <div class="progress mt-2" style="height: 5px">
               <div class="progress-bar bg-success" style="width: 15%"></div>
             </div>
@@ -87,7 +98,7 @@
         </div>
       </div>
     </div>
-
+  }
     <!-- Payments Table -->
     <div class="card border-0 shadow-sm">
       <div class="card-body">
@@ -102,44 +113,61 @@
                 <th>Méthode</th>
                 <th>Date</th>
                 <th>État</th>
-                <th>Actions</th>
+
               </tr>
             </thead>
             <tbody>
-              @for(payment of filteredPayments; track payment) {
+              @if (isPLoading) {
                 <tr>
-                  <td>{{ payment.id_transaction }}</td>
-                  <td>
-                    <a [routerLink]="['/mdj_admin/commandes',payment.commande_ref]"  class="text-decoration-none">{{ payment.commande_ref }}</a>
-                  </td>
-                  <td>{{ payment.client }}</td>
-                  <td>{{ payment.montant }} FCFA</td>
-                  <td>
-                    <span [class]="getMethodeBadgeClass(payment.methode_paiement)">
-                      {{ getMethodeLabel(payment.methode_paiement) }}
-                    </span>
-                  </td>
-                  <td>{{ payment.date_paiement | date:'dd/MM/yyyy HH:mm' }}</td>
-                  <td>
-                    <span class="badge bg-success">Confirmé</span>
-                  </td>
-                  <td>
-                    <div class="btn-group">
-                      <button class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-secondary">
-                        <i class="bi bi-printer"></i>
-                      </button>
+                  <td colspan="8" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Chargement...</span>
                     </div>
                   </td>
                 </tr>
+              } @else {
+                @if (payments.length) {
+                  @for(payment of payments; track payment) {
+                    <tr>
+                      <td>{{ payment.id_transaction }}</td>
+                      <td>
+                        {{ payment.ref_commande }}
+                      </td>
+                      <td>{{ payment.client || '---' }}</td>
+                      <td>{{ payment.montant }} FCFA</td>
+                      <td>
+                    <span [class]="getMethodeBadgeClass(payment.methode_paiement)">
+                      {{ getMethodeLabel(payment.methode_paiement) }}
+                    </span>
+                      </td>
+                      <td>{{ payment.date_paiement | date:'dd/MM/yyyy HH:mm' }}</td>
+                      <td>
+                        <span>{{ payment.statut }}</span>
+                      </td>
+                      <!--    <td>
+                        <div class="btn-group">
+                          <button class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-printer"></i>
+                          </button>
+                        </div>
+                      </td>-->
+                    </tr>
+                  }
+                } @else {
+                    <div class="text-center px-3 w-100 py-2 my-3 alert alert-warning">
+                      Aucun Paiement pour cette période
+                    </div>
+                }
               }
+
             </tbody>
           </table>
         </div>
 
-        <!-- Pagination -->
+        <!-- Pagination
         <nav class="mt-4">
           <ul class="pagination justify-content-center">
             <li class="page-item"><a class="page-link" href="#">Précédent</a></li>
@@ -149,6 +177,7 @@
             <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
           </ul>
         </nav>
+        -->
       </div>
     </div>
-  </div>
+</div>

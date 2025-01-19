@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ProduitService } from '../../../services/produits/produit.service';
 import {  CategorieService } from '../../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
@@ -13,7 +13,7 @@ import { CommonModule ,NgOptimizedImage} from '@angular/common';
   templateUrl: './all-products.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
-export class AllProductsComponent {
+export class AllProductsComponent implements OnInit{
   produits:Produit[]=[];
   list_categorie:categorie[]=[];
 
@@ -49,6 +49,6 @@ export class AllProductsComponent {
     }
     return 300; // Hauteur par défaut si les dimensions ne sont pas disponibles
   }
-  
+
 }
 

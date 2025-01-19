@@ -9,7 +9,6 @@ import { User } from '../../models/user';
   providedIn: 'root'
 })
 export class ProduitService {
-  // private apiUrl="/api/apiProduit/products/"
   private apiUrl="http://127.0.0.1:8000/apiProduit/products/"
 
   constructor(private http:HttpClient) { }
@@ -53,7 +52,7 @@ export class ProduitService {
   }
 
   deleteProduct(id:number):Observable<any>{
-    return this.http.delete<Produit>(`${this.apiUrl}${id}`)
+    return this.http.delete<Produit>(`${this.apiUrl}${id}/`)
   }
 
   updateProduct(id:number, data:FormData):Observable<Produit>{

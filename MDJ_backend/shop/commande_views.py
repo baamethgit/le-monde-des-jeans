@@ -62,8 +62,7 @@ def detail_commande_by_refcode(request, ref_code):
     if not user:
         return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    commande = get_object_or_404(Commande, ref_code=ref_code, client=user)
-    #commande.liberer_produits_apres_delais()
+    commande = get_object_or_404(Commande, ref_code=ref_code)
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 

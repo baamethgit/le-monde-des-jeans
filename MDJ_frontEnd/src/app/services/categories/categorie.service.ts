@@ -11,7 +11,6 @@ import { categorie } from '../../models/categorie';
   providedIn: 'root'
 })
 export class CategorieService {
-  // private apiUrl="/api/apiProduit/categories/"
   private apiUrl="http://127.0.0.1:8000/apiProduit/categories/"
   constructor(private http:HttpClient) { }
 
@@ -25,7 +24,7 @@ export class CategorieService {
   }
 
   deleteCategory(id:number):Observable<any>{
-    return this.http.delete<categorie>(`${this.apiUrl}${id}`)
+    return this.http.delete<categorie>(`${this.apiUrl}${id}/`)
   }
   updateCategory(id:number, data:FormData):Observable<categorie>{
     return this.http.put<categorie>(`${this.apiUrl}${id}/`, data)
