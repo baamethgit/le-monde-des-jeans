@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import UserSerializer, AvisSerializer,AvisCreationSerializer
+from .serializers import UserSerializer, AvisSerializer, AvisCreationSerializer, SuperUserCreateSerializer
 from accounts.models import CustomUser,CodeOTP,Avis, CodeOTPResetPassword
 
 import jwt
@@ -306,3 +306,38 @@ class Logout(APIView):
                 {'error': 'Erreur lors de la déconnexion.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+# views.py
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.conf import settings
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def create_superuser(request):
+    serializer = SuperUserCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        # Vérification supplémentaire de sécurité
+        if not settings.DEBUG and not request.user.is_superuser:
+            return Response(
+                {"error": "Seul un superuser peut créer d'autres superusers en production"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        try:
+            serializer.save()
+            return Response(
+                {"message": "Superuser créé avec succès"},
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

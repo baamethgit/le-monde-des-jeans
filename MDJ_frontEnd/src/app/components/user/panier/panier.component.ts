@@ -6,7 +6,7 @@ import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progr
 import { Router, RouterLink } from '@angular/router';
 import { PanierService } from '../../../services/panier.service';
 import { IcontenuPanier, Ipanier } from './panier.model';
-import {interval, Subscription} from 'rxjs';
+import {finalize, interval, Subscription} from 'rxjs';
 
 import { CommandeService } from '../../../services/commandes/commande.service';
 
@@ -21,6 +21,7 @@ import { CommandeService } from '../../../services/commandes/commande.service';
 })
 export class PanierComponent implements OnInit ,OnDestroy{
   CheckoutStep : CheckoutStep = CheckoutStep.Panier;
+  isLoading = false;
 
   panier:Omit<Ipanier,'produits'>|undefined;
   contenupanier : IcontenuPanier[] = [];
@@ -85,8 +86,13 @@ export class PanierComponent implements OnInit ,OnDestroy{
   }
 
 
-  loadData(){
-    this.panierService.getPanier().subscribe({
+  loadData():void{
+    this.isLoading = true;
+    this.panierService.getPanier().pipe(
+      finalize(()=>{
+        this.isLoading = false;
+      })
+    ).subscribe({
       next: (data) => {
           this.panier = data;
       },
@@ -113,13 +119,14 @@ export class PanierComponent implements OnInit ,OnDestroy{
     }
   }
 
-  getTempsRestant(dateAjout: string): string {
+  getTempsRestant(produitSlug:string,dateAjout: string): string {
     const dateAjoutMs = new Date(dateAjout).getTime();
     const maintenant = new Date().getTime();
     const tempsEcoule = maintenant - dateAjoutMs;
     const tempsRestantMs = (5 * 60 * 1000) - tempsEcoule; // 5 minutes en millisecondes
 
     if (tempsRestantMs <= 0) {
+      this.removeProd(produitSlug);
       return 'Expiré';
     }
 
@@ -127,7 +134,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
     const minutes = Math.floor(tempsRestantMs / (60 * 1000));
     const secondes = Math.floor((tempsRestantMs % (60 * 1000)) / 1000);
 
-    return `${minutes}min ${secondes}s`;
+    return `Expire dans ${minutes}min ${secondes}s`;
   }
 
   getTimeColor(dateAjout: string): string {

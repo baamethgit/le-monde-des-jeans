@@ -39,3 +39,25 @@ class AvisCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model=Avis
         fields='__all__'
+
+
+# serializers.py
+from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
+
+class SuperUserCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = ['phone_number', 'nom_complet', 'addresse_mail', 'password']
+
+    def create(self, validated_data):
+        user = get_user_model().objects.create_superuser(
+            phone_number=validated_data['phone_number'],
+            nom_complet=validated_data['nom_complet'],
+            addresse_mail=validated_data.get('addresse_mail', ''),
+            password=validated_data['password']
+        )
+        return user
