@@ -36,5 +36,11 @@ export const navbarData = [
       routeLink: 'zones-livraison',
       icon: 'bi bi-geo-alt-fill',
       label: 'Zones de Livraisons'
-    },  
+    },
+    {
+  
+      routeLink: 'informations-generales',
+      icon: 'bi bi-info-circle',
+      label: 'Infos Générales'
+    }, 
   ];

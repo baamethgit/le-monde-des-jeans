@@ -3,6 +3,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/users/user.service';
+import { Infos } from '../../models/infos.module';
+import { InfosService } from '../../services/infos.service';
 
 @Component({
   selector: 'app-header',
@@ -14,11 +16,14 @@ import { UserService } from '../../services/users/user.service';
 export class HeaderComponent implements OnInit{
   currentUser: User | undefined = undefined;
   is_authenticated = false;
+  infos:Infos | undefined;
+  private infosService = inject(InfosService);
   private userService = inject(UserService);
 
   constructor(){}
 
   ngOnInit(): void {
+    this.loadInfos();
     this.userService.getUser().subscribe({
       next: (data) => {
           this.currentUser = data;
@@ -28,6 +33,16 @@ export class HeaderComponent implements OnInit{
         this.is_authenticated = false;
       }
     })
+  }
+
+  loadInfos(): void {
+    this.infosService.getInfos().subscribe(
+      {
+        next: (data) => {
+          this.infos = data;
+        }
+      }
+    )
   }
 
   logout(): void {

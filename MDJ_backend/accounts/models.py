@@ -100,3 +100,20 @@ class Avis(models.Model):
 
     def __str__(self):
         return str(self.Avis_author)
+    
+class InformationsGenerales(models.Model):
+    class Meta:
+        verbose_name_plural = 'Informations generales'
+    addresse_mail_site = models.EmailField(max_length=255)
+    telephone_site = PhoneNumberField(region='SN')
+    addresse_site = models.CharField(max_length=255)
+    Lien_facebook = models.URLField(null=True, blank=True)
+    Lien_instagram = models.URLField(null=True, blank=True)
+    Lien_Whatsapp = models.URLField(null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.pk and InformationsGenerales.objects.exists():
+            raise ValueError("Il ne peut y avoir qu'un seul enregistrement pour InformationsGenerales.")
+        super(InformationsGenerales, self).save(*args, **kwargs)
+    def __str__(self):
+        return str(self.addresse_mail_site)

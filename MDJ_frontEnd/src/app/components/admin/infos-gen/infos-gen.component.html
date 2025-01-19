@@ -1,0 +1,119 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white py-3">
+            <h2 class="mb-0 text-center">Configuration du site</h2>
+          </div>
+          
+          <div class="card-body p-4">
+            <form [formGroup]="infoForm" (ngSubmit)="onSubmit()" *ngIf="infoForm">
+              <!-- Section Contact -->
+              <div class="mb-4">
+                <h4 class="text-primary mb-3">Informations de contact</h4>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="addresse_mail_site" formControlName="addresse_mail_site" placeholder="Email">
+                      <label for="addresse_mail_site">
+                        <i class="bi bi-envelope me-2"></i>Email
+                      </label>
+                      <div class="text-danger small mt-1" *ngIf="infoForm.get('addresse_mail_site')?.errors?.['email'] && infoForm.get('addresse_mail_site')?.touched">
+                        <i class="bi bi-exclamation-circle me-1"></i>Email invalide
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                      <input type="tel" class="form-control" id="telephone_site" formControlName="telephone_site" placeholder="Téléphone">
+                      <label for="telephone_site">
+                        <i class="bi bi-telephone me-2"></i>Téléphone
+                      </label>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="addresse_site" formControlName="addresse_site" placeholder="Adresse">
+                  <label for="addresse_site">
+                    <i class="bi bi-geo-alt me-2"></i>Adresse
+                  </label>
+                </div>
+              </div>
+  
+              <!-- Section Réseaux Sociaux -->
+              <div class="mb-4">
+                <h4 class="text-primary mb-3">Réseaux sociaux</h4>
+                <div class="social-links">
+                  <div class="form-floating mb-3">
+                    <input type="url" class="form-control" id="Lien_facebook" formControlName="Lien_facebook" placeholder="Facebook">
+                    <label for="Lien_facebook">
+                      <i class="bi bi-facebook me-2"></i>Lien Facebook
+                    </label>
+                    <div class="text-danger small mt-1" *ngIf="infoForm.get('Lien_facebook')?.errors?.['pattern'] && infoForm.get('Lien_facebook')?.touched">
+                      <i class="bi bi-exclamation-circle me-1"></i>URL Facebook invalide
+                    </div>
+                  </div>
+  
+                  <div class="form-floating mb-3">
+                    <input type="url" class="form-control" id="Lien_instagram" formControlName="Lien_instagram" placeholder="Instagram">
+                    <label for="Lien_instagram">
+                      <i class="bi bi-instagram me-2"></i>Lien Instagram
+                    </label>
+                    <div class="text-danger small mt-1" *ngIf="infoForm.get('Lien_instagram')?.errors?.['pattern'] && infoForm.get('Lien_instagram')?.touched">
+                      <i class="bi bi-exclamation-circle me-1"></i>URL Instagram invalide
+                    </div>
+                  </div>
+  
+                  <div class="form-floating mb-3">
+                    <input type="url" class="form-control" id="Lien_Whatsapp" formControlName="Lien_Whatsapp" placeholder="WhatsApp">
+                    <label for="Lien_Whatsapp">
+                      <i class="bi bi-whatsapp me-2"></i>Lien WhatsApp
+                    </label>
+                    <div class="text-danger small mt-1" *ngIf="infoForm.get('Lien_Whatsapp')?.errors?.['pattern'] && infoForm.get('Lien_Whatsapp')?.touched">
+                      <i class="bi bi-exclamation-circle me-1"></i>URL WhatsApp invalide
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-outline-secondary me-2" (click)="resetForm()">
+                  <i class="bi bi-arrow-counterclockwise me-2"></i>Réinitialiser
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="!infoForm.valid">
+                  <i class="bi bi-save me-2"></i>Enregistrer les modifications
+                </button>
+              </div>
+            </form>
+  
+            <!-- Messages -->
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+              <div *ngIf="successMessage" class="toast show bg-success text-white" role="alert">
+                <div class="toast-header bg-success text-white">
+                  <i class="bi bi-check-circle me-2"></i>
+                  <strong class="me-auto">Succès</strong>
+                  <button type="button" class="btn-close btn-close-white" (click)="successMessage = ''"></button>
+                </div>
+                <div class="toast-body">
+                  {{ successMessage }}
+                </div>
+              </div>
+  
+              <div *ngIf="errorMessage" class="toast show bg-danger text-white" role="alert">
+                <div class="toast-header bg-danger text-white">
+                  <i class="bi bi-x-circle me-2"></i>
+                  <strong class="me-auto">Erreur</strong>
+                  <button type="button" class="btn-close btn-close-white" (click)="errorMessage = ''"></button>
+                </div>
+                <div class="toast-body">
+                  {{ errorMessage }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

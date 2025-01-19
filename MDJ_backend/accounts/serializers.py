@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from accounts.models import CustomUser,Avis
+from accounts.models import CustomUser,Avis,InformationsGenerales
 from phonenumber_field.serializerfields import PhoneNumberField
 
 
@@ -38,4 +38,9 @@ class AvisSerializer(serializers.ModelSerializer):
 class AvisCreationSerializer(serializers.ModelSerializer):
     class Meta:
         model=Avis
+        fields='__all__'
+        
+class InformationsGeneralesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=InformationsGenerales
         fields='__all__'

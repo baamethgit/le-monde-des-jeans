@@ -8,6 +8,8 @@ import { categorie } from '../../models/categorie';
 import { ProduitService } from '../../services/produits/produit.service';
 import { UserService } from '../../services/users/user.service';
 import { Avis, AvisCreationData } from '../../models/Avis';
+import { Infos } from '../../models/infos.module';
+import { InfosService } from '../../services/infos.service';
 
 
 @Component({
@@ -23,7 +25,8 @@ export class HomeComponent {
   special_list:Produit[]=[];
   avis_list:Avis[]=[];
   limit_prod=10;
-  constructor(private readonly categorieService:CategorieService, private readonly productService:ProduitService, private readonly avisService: UserService){}
+  infos:Infos | undefined;
+  constructor(private readonly categorieService:CategorieService, private readonly productService:ProduitService, private readonly avisService: UserService, private readonly infosService:InfosService){}
 
   ngOnInit(){
     this.categorieService.getAllCategories().subscribe({
@@ -41,6 +44,8 @@ export class HomeComponent {
 
     this.loadSpecials();
 
+    this.loadInfos();
+
 
     this.avisService.getAllAvis().subscribe({
       next:(data)=>{this.avis_list=data}
@@ -52,6 +57,17 @@ export class HomeComponent {
     this.productService.getProductBySpecial().subscribe({
       next:(data)=>{this.special_list=data}
     })
+  }
+
+  loadInfos(): void {
+    this.infosService.getInfos().subscribe(
+      {
+        next: (data) => {
+          this.infos = data;
+          console.log(this.infos);
+        }
+      }
+    )
   }
 
   createAvis(newAvis:AvisCreationData){
