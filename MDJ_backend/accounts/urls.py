@@ -2,8 +2,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView, \
     VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout, \
-    create_superuser
-    VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout, InformationsGeneralesView
+    create_superuser, InformationsGeneralesView
+
+VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout, InformationsGeneralesView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
