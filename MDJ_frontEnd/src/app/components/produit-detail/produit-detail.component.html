@@ -3,9 +3,9 @@
     <div class="product-detail__grid">
       <!-- Gallery Section -->
       <div class="product-detail__gallery">
-        <p-galleria [value]="list_p" 
-                    [responsiveOptions]="responsiveOptions" 
-                    [numVisible]="7" 
+        <p-galleria [value]="list_p"
+                    [responsiveOptions]="responsiveOptions"
+                    [numVisible]="7"
                     [circular]="true"
                     class="product-gallery">
           <ng-template pTemplate="item" let-item>
@@ -58,28 +58,28 @@
               </span>
             </div>
           </div>
-
+          <!--
           <div class="product-info__quantity">
             <label for="quantity-input" class="quantity-label">Quantité:</label>
             <div class="quantity-control">
-              <button type="button" 
-                      id="decrement-button" 
+              <button type="button"
+                      id="decrement-button"
                       (click)="decrementQuantity()"
                       class="quantity-btn quantity-btn--left">
                 <svg class="quantity-btn__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                 </svg>
               </button>
-              <input type="text" 
-                     id="quantity-input" 
-                     class="quantity-input" 
+              <input type="text"
+                     id="quantity-input"
+                     class="quantity-input"
                      [(ngModel)]="quantity"
                      min="1"
                      [max]="product_selected?.QuantiteStock"
                      required
                      readonly />
-              <button type="button" 
-                      id="increment-button" 
+              <button type="button"
+                      id="increment-button"
                       (click)="incrementQuantity()"
                       class="quantity-btn quantity-btn--right">
                 <svg class="quantity-btn__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
@@ -87,7 +87,7 @@
                 </svg>
               </button>
             </div>
-          </div>
+          </div> -->
 
           <div class="product-info__actions">
             <button class="btn btn--secondary" (click)="addToCart()">
@@ -112,7 +112,7 @@
 <section class="related-products">
   <div class="container">
     <h2 class="related-products__title">Vous pourrez aussi aimer</h2>
-    
+
     <div class="products-grid">
       @for (item of must_like_product; track $index) {
         <a [routerLink]="['/produits', item.slug]" class="product-card">
@@ -120,7 +120,7 @@
             <img [ngSrc]="item.images[0].image" fill [alt]="item.nom">
             <span class="product-card__badge">NEW</span>
           </div>
-          
+
           <div class="product-card__content">
             <h3 class="product-card__title">{{item.nom}}</h3>
             <p class="product-card__price">{{item.prix}} FCFA</p>

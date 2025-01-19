@@ -39,15 +39,16 @@ class InitiateWavePaymentView(APIView):
             order = Commande.objects.get(id=request.data['order_id'])
         except:
             return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)
-
+        success_url = f'{FRONTEND_URL}/payment-success/{order.id}'
+        error_url = f'{FRONTEND_URL}/payment-error/{order.id}'
         checkout_data = {
             'amount': str(order.montant),
             'currency': 'XOF',
             'client_reference': str(order.ref_code),
-            'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
-            #'success_url': 'https://www.google.sn/',
-            'error_url': f'{FRONTEND_URL}/payment-error/{order.id}'
-            #'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
+            #'success_url': success_url,
+            'success_url': 'https://www.google.sn/',
+            #'error_url':error_url
+            'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
         }
 
         # Dans ta vue
@@ -65,6 +66,9 @@ class InitiateWavePaymentView(APIView):
             json=checkout_data,
             headers=headers
         )
+        print(response)
+        if response.status_code != 200:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         existing_session = WaveCheckoutSession.objects.filter(
             order=order,

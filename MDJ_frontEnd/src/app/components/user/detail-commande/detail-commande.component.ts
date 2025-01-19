@@ -82,16 +82,27 @@ export class DetailCommandeComponent implements OnInit{
        }
       }
     }
+  updateCommandeZone(zoneId: number | undefined) {
+    if (this.commande?.id) {
+      const updateData = {
+        recupere_magasin: this.selectedOption === 'recuperation',
+        zone_livraison: zoneId
+      };
+
+      this.commandeService.updateCommande(this.commande.id, updateData).subscribe({
+        next: () => this.loadData(),
+        error: (err) => console.error('Erreur mise à jour zone:', err)
+      });
+    }
+  }
 
     payWithWave() {
       if(this.commande?.id){
         this.paymentService.initiateWavePayment(this.commande.id).subscribe({
           next:(response: any) => {
             window.location.href = response.wave_launch_url;
-            console.log(response)
           },
           error:(erreur: any) => {
-            console.log("erreur",erreur)
           }
         }
 
@@ -99,15 +110,18 @@ export class DetailCommandeComponent implements OnInit{
       }
     }
 
+
   loadData(){
     this.commandeService.getCurrentCommande().subscribe({
       next:(data)=>{
         this.commande = data;
         this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
-        this.selectedZone = this.commande?.recupere_magasin ? undefined : this.commande?.zone_livraison;
-        if(!this.commande?.zone_livraison && this.zones.length){
-
+        if (this.commande?.zone_livraison) {
+          this.selectedZone = this.commande.zone_livraison;
+        } else if (this.zones.length && this.selectedOption === 'livraison') {
           this.selectedZone = this.zones[0];
+          // Mettre à jour la commande avec la première zone
+          this.updateCommandeZone(this.zones[0].id);
         }
       },
       error:(error)=>{
@@ -121,21 +135,10 @@ export class DetailCommandeComponent implements OnInit{
 
   onZoneChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    const selectedZoneNumber = parseInt(selectElement.value, 10);
+    const selectedZoneId = parseInt(selectElement.value, 10);
 
-    this.loadZone(selectedZoneNumber);
-    // @ts-ignore
-    // this.commandeService.updateCommande(this.commande?.id,{'recupere_magasin':false,'zone_livraison':this.selectedZone?.id}).subscribe(
-    //   {
-    //     next(value) {
-    //         console.log('update valide',value);
-    //     },
-    //     error(err) {
-    //         console.log("erreur lors de la maj")
-    //     },
-    //   }
-    // )
-    // this.loadData();
+    this.loadZone(selectedZoneId);
+    this.updateCommandeZone(selectedZoneId);
   }
 
   loadZone(n:number){
@@ -166,16 +169,22 @@ export class DetailCommandeComponent implements OnInit{
       })
   }
 
-//   annulerCommande(id:number){
-//     this.commandeService.updateCommande(id,{statut:'ANNULEE'}).subscribe({
-//       next:(data)=>{
-//         this.router.navigate(['/mdj_admin/commandes/'])
-//       },
-//       error:(error)=>{
+  get calculTotal(): number {
+    if (!this.commande) return 0;
 
-//       }
-//     })
-// }
+    // Convertir explicitement en nombres
+    const montantProduits = this.commande.produits.reduce((total, produit) =>
+      total + (Number(produit.prix) || 0), 0);
 
+    const fraisLivraison = (this.selectedOption === 'livraison' && this.selectedZone)
+      ? Number(this.selectedZone.prix_livraison || 0)
+      : 0;
+
+    // Utiliser Number() pour s'assurer que c'est bien un calcul numérique
+    const total = Number(montantProduits) + Number(fraisLivraison);
+
+    // Arrondir à 2 décimales pour éviter les erreurs de précision
+    return Math.round(total * 100) / 100;
+  }
 
 }
