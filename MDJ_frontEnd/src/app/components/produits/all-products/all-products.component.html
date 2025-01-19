@@ -10,6 +10,11 @@
                 @if (item.neuf) {
                   <div class="product-item__new-badge">NEUF</div>
                 }
+                @if (item.special) {
+                  <div class="product-item__crown">
+                    <img src="../../../../assets/img/king.png" alt="" srcset="">
+                  </div>
+                }
                 <img 
                   [ngSrc]="item.images[0].image" 
                   [width]="300" 
