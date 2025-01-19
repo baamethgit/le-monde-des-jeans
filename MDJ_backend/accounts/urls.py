@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView, \
-    VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout
+    VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout, InformationsGeneralesView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -25,6 +25,8 @@ urlpatterns = [
     path("delete-user/<str:slug>/",deleteUserView.as_view()),
     path('avis/',AvisView.as_view()),
     path('avis/<int:id_avis>',AvisView.as_view()),
+    path('InfosGen/', InformationsGeneralesView.as_view()),
+    path('InfosGen/update', InformationsGeneralesView.as_view()),
 
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

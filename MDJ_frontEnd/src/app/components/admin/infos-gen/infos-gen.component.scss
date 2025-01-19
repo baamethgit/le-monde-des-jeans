@@ -1,0 +1,27 @@
+.form-floating > label {
+    padding-left: 1.75rem;
+  }
+  
+  .social-links .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  .toast {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .card {
+    border-radius: 1rem;
+    border: none;
+  }
+  
+  .card-header {
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+  }
+  
+  .btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+  }
