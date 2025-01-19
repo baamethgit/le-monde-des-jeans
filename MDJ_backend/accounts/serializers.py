@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from accounts.models import CustomUser,Avis
+from accounts.models import CustomUser,Avis,InformationsGenerales
 from phonenumber_field.serializerfields import PhoneNumberField
 
 
@@ -61,3 +61,8 @@ class SuperUserCreateSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+class InformationsGeneralesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=InformationsGenerales
+        fields='__all__'

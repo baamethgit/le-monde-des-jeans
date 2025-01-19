@@ -4,18 +4,18 @@
             <div class="col-lg-4 col-md-6">
                 <h2 id="footer-title" class="h3 mb-4">Le Monde Des Jeans</h2>
                 <address class="mb-4">
-                    <p>HLM1 villa n16, Dakar</p>
+                    <p>{{infos?.adresse_site}}</p>
                     <p>Senegal</p>
-                    <p><a href="tel:+221784346017" class="text-light">+221 78 434 60 17</a></p>
+                    <p><a href="tel:+221784346017" class="text-light">{{infos?.telephone_site}}</a></p>
                 </address>
                 <div class="social-icons">
-                    <a href="https://www.facebook.com/profile.php?id=61555758929509" class="me-3" target="_blank" rel="noopener noreferrer">
+                    <a href={{infos?.Lien_facebook}} target="_blank" class="me-3" target="_blank" rel="noopener noreferrer">
                         <img src="../../assets/img/facebook.png" width="30" height="30" alt="Facebook" class="social-icon">
                     </a>
-                    <a href="#" class="me-3">
+                    <a href={{infos?.Lien_instagram}} target="_blank" class="me-3">
                         <img src="../../assets/img/insta.png" width="30" height="30" alt="Instagram" class="social-icon">
                     </a>
-                    <a href="https://chat.whatsapp.com/IfL8jPCvs993TzOAoFo8ac" target="_blank" rel="noopener noreferrer">
+                    <a href={{infos?.Lien_Whatsapp}} target="_blank" target="_blank" rel="noopener noreferrer">
                         <img src="../../assets/img/whatsapp.png" width="30" height="30" alt="WhatsApp" class="social-icon">
                     </a>
                 </div>

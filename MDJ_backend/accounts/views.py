@@ -6,6 +6,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSerializer, AvisSerializer, AvisCreationSerializer, SuperUserCreateSerializer
 from accounts.models import CustomUser,CodeOTP,Avis, CodeOTPResetPassword
+from .serializers import UserSerializer, AvisSerializer,AvisCreationSerializer,InformationsGeneralesSerializer
+from accounts.models import CustomUser,CodeOTP,Avis, CodeOTPResetPassword, InformationsGenerales
 
 import jwt
 from .utils import send_otp_via_email
@@ -306,6 +308,21 @@ class Logout(APIView):
                 {'error': 'Erreur lors de la déconnexion.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+class InformationsGeneralesView(APIView):
+    permission_classes = [IsAuthenticated,IsAdminUser]
+    def get(self, request):
+        informations_generales = InformationsGenerales.objects.first()
+        serializer = InformationsGeneralesSerializer(informations_generales)
+        return Response(serializer.data)
+
+    def put(self, request):
+        informations_generales = InformationsGenerales.objects.first()
+        serializer = InformationsGeneralesSerializer(informations_generales, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # views.py

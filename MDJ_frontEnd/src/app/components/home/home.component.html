@@ -184,13 +184,14 @@
                 <div class="contact-box">
                   <h3 class="box-title">Réseaux sociaux</h3>
                   <div class="social-icons">
-                    <a href="#" aria-label="Facebook">
+                    <a href={{infos?.Lien_facebook}} target="_blank" aria-label="Facebook">
                       <img ngSrc="../../assets/img/5296499_fb_facebook_facebook logo_icon.png" width="40" height="40" alt="Facebook">
                     </a>
-                    <a href="#" aria-label="Instagram">
+                    <a [href]="infos?.Lien_instagram" target="_blank" aria-label="Instagram">
                       <img ngSrc="../../assets/img/5296765_camera_instagram_instagram logo_icon.png" width="40" height="40" alt="Instagram">
                     </a>
-                    <a href="#" aria-label="WhatsApp">
+                    <a [href]="infos?.Lien_Whatsapp" target="_blank"
+                    aria-label="WhatsApp">
                       <img ngSrc="../../assets/img/6929232_logo_whatsapp_icon.png" width="40" height="40" alt="WhatsApp">
                     </a>
                   </div>
@@ -199,14 +200,14 @@
                   <h3 class="box-title">Téléphone</h3>
                   <div class="contact-info">
                     <img ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="Téléphone">
-                    <a href="tel:+22178434617">+221 78 434 60 17</a>
+                    <a href="tel:{{infos?.telephone_site}}">{{infos?.telephone_site}}</a>
                   </div>
                 </div>
                 <div class="contact-box">
                   <h3 class="box-title">Email</h3>
                   <div class="contact-info">
                     <img ngSrc="../../assets/img/8155538_email_mail_message_talk_envelope_icon.png" width="40" height="40" alt="Email">
-                    <a href="mailto:A...@gmail.com">A...&#64;gmail.com</a>
+                    <a href="mailto:{{infos?.addresse_mail_site}}">{{infos?.addresse_mail_site?.substring(0,5)}}...&#64;gmail.com</a>
                   </div>
                 </div>
               </div>
