@@ -33,6 +33,7 @@ import { PaiementComponent } from './components/user/paiement/paiement.component
 import { PaymentComponent } from './components/admin/payment/payment.component';
 import { PaiementSuccessComponent } from './components/paiement-success/paiement-success.component';
 import { PaiementFailedComponent } from './components/paiement-failed/paiement-failed.component';
+import { InfosGenComponent } from './components/admin/infos-gen/infos-gen.component';
 
 
 export const routes: Routes = [
@@ -77,7 +78,8 @@ export const routes: Routes = [
       { path: 'avis', component: AdminAvisClientsComponent },
       { path: 'zones-livraison', component: ListeZonesComponent },
       { path: 'zones-livraison/:id/modifier', component: UpdateZoneComponent },
-      { path: 'zones-livraison/creer', component: CreateZoneComponent }
+      { path: 'zones-livraison/creer', component: CreateZoneComponent },
+      { path: 'informations-generales', component: InfosGenComponent }
     ]
   },
 
