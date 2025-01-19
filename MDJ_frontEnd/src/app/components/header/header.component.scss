@@ -15,7 +15,7 @@ $blue_color: #377DFF;
           background-color: white;
           border: none;
           width: 40px;
-          @media(min-width:584px ){
+          @media(min-width:960px ){
             display: none;
           }
         }
@@ -47,13 +47,13 @@ $blue_color: #377DFF;
                     margin: 20px 0px;
                 }
                 .left_nav_sec{
-                    width: 90%;
+                    width: 60%;
                     justify-content: space-between;
                 }
             }
         }
       .navbar-brand {
-        #font-family: princess;
+        // #font-family: princess;
         font-family: "Monsieur La Doulaise", serif;
         font-weight: 400;
         font-style: normal;
