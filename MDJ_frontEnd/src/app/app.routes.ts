@@ -18,11 +18,6 @@ import { ProfilUpdateComponent } from './components/user/profil-update/profil-up
 import { DetailClientComponent } from './components/admin/detail-client/detail-client.component';
 import { DetailCommandeComponent } from './components/user/detail-commande/detail-commande.component';
 import { CommandeValideeComponent } from './components/user/commande-validee/commande-validee.component';
-
-import { ContactsComponent } from './components/contacts/contacts.component';
-import { detailProduitResolver } from './services/produits/resolvers/detail-produit.resolver';
-import { ProduitService } from './services/produits/produit.service';
-import { inject } from '@angular/core';
 import { AdminListeCommandesComponent } from './components/admin/admin-liste-commandes/admin-liste-commandes.component';
 import { AdminDetailCommandeComponent } from './components/admin/admin-detail-commande/admin-detail-commande.component';
 
@@ -42,29 +37,28 @@ import { PaiementFailedComponent } from './components/paiement-failed/paiement-f
 
 export const routes: Routes = [
     {path: '', component: LayoutComponent,children:[
-    {path: '', component: HomeComponent},
+    {path: '', component: HomeComponent, title: 'LMDJ | Accueil' },
     
-    {path: 'panier', component: PanierComponent},
+    {path: 'panier', component: PanierComponent, title: 'LMDJ | Panier' },
     // {path:'produits', component: ProduitsComponent},
-    {path: 'commande-validee', component:CommandeValideeComponent,
+    {path: 'commande-validee', component:CommandeValideeComponent,title: 'LMDJ | Commande'
         },
-    {path: 'profile', component: ProfilComponent,
+    {path: 'profile', component: ProfilComponent,title: 'LMDJ | Profile'
         },
-    {path: 'profile/edit', component: ProfilUpdateComponent,
+    {path: 'profile/edit', component: ProfilUpdateComponent,title: 'LMDJ | Profile'
         },
-    {path: 'detail-commande', component: DetailCommandeComponent,
+    {path: 'detail-commande', component: DetailCommandeComponent,title: 'LMDJ | Commande'
         },
-    {path: 'mes-commandes', component: MesCommandesComponent,
+    {path: 'mes-commandes', component: MesCommandesComponent,title: 'LMDJ | Commandes',
         },
     {path:'produits', component: ProduitsComponent, children:[
         {path:'',component:AllProductsComponent, pathMatch:'full'},
         {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
-    ]},
-    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full'},
-    {path:'avis', component:AvisComponent, pathMatch:'full'},
-    {path:'contacts', component:ContactsComponent, pathMatch:'full'},
-    {path:'payment-success/:id', component:CommandeValideeComponent, pathMatch:'full'},
-    {path:'payment-error/:id', component:PaiementFailedComponent, pathMatch:'full'},
+    ], title: 'LMDJ | Produits' },
+    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full', title: 'LMDJ | Produit'},
+    {path:'avis', component:AvisComponent, pathMatch:'full', title: 'LMDJ | Avis'},
+    {path:'payment-success/:id', component:CommandeValideeComponent, pathMatch:'full', title: 'LMDJ | Paiement'},
+    {path:'payment-error/:id', component:PaiementFailedComponent, pathMatch:'full', title: 'LMDJ | Paiement'},
 
 ]},
     {path:'mdj_admin', component: AdminHomeComponent, children:[
@@ -83,8 +77,8 @@ export const routes: Routes = [
     ]},
 
     {path: 'resetpwd', component: ResetPasswordComponent},
-    {path: 'login', component: LoginComponent},
-    {path: 'inscription', component: SignupComponent},
+    {path: 'login', component: LoginComponent,title: 'LMDJ | Login'},
+    {path: 'inscription', component: SignupComponent,title: 'LMDJ | Inscription'},
     {path: 'sdfsdfsd/suf_creer_/superuser/uI90', component: SignupComponent},
 
     { path: '**', component: NotFoundComponent, data: { breadcrumb: 'Page not found' } },
