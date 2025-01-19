@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class PaiementService {
 
-    private apiUrl = '/api/paiement';
+    // private apiUrl = '/api/paiement';
+    private apiUrl = 'http://127.0.0.1:8000/paiement';
 
     constructor(private http: HttpClient) { }
 

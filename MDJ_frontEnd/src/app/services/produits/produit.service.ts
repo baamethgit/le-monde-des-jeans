@@ -9,7 +9,8 @@ import { User } from '../../models/user';
   providedIn: 'root'
 })
 export class ProduitService {
-  private apiUrl="/api/apiProduit/products/"
+  // private apiUrl="/api/apiProduit/products/"
+  private apiUrl="http://127.0.0.1:8000/apiProduit/products/"
 
   constructor(private http:HttpClient) { }
 
