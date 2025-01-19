@@ -8,6 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { CommandeService } from '../../../services/commandes/commande.service';
 import { StatutCommande } from '../../../models/StatutCommande';
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-admin-liste-commandes',
@@ -52,7 +53,11 @@ export class AdminListeCommandesComponent implements OnInit{
   }
 
   loadCommandes() : void{
-    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm,this.statutFiltre,this.startDate,this.endDate).subscribe({
+    this.isLoading = true;
+    this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm,this.statutFiltre,this.startDate,this.endDate)
+      .pipe(
+        finalize(() => this.isLoading = false)
+      ).subscribe({
       next:(response)=>{
         this.commandes = response.results;
         this.totalItems = response.count;
@@ -64,7 +69,7 @@ export class AdminListeCommandesComponent implements OnInit{
   }
 
   onSort({ column, direction }: SortEvent) {
-		
+
 	}
 
   onStatusFilterChange(event: Event) {
@@ -75,7 +80,7 @@ export class AdminListeCommandesComponent implements OnInit{
   onDateFilterChange(event: Event) {
     this.loadCommandes();
   }
-  
+
   openDeleteCommandeModal(id:number){
     alert("étes vous sur de vouloir supprimer");
     this.commandeService.supprimerCommandeParAdmin(id).subscribe({
@@ -86,5 +91,5 @@ export class AdminListeCommandesComponent implements OnInit{
 
       }
     })
-  } 
+  }
 }

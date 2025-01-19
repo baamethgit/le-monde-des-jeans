@@ -33,24 +33,34 @@
 				<th scope="col" class="static-right">Actions</th>
 			</tr>
 		</thead>
-		<tbody>
-			@for (user of users; track user.id) {
-				<tr>
-					<td><ngb-highlight [result]="user.nom_complet" [term]="searchTerm" /></td>
-					<td><ngb-highlight [result]="user.phone_number" [term]="searchTerm" /></td>
-                    <td>
-                        <!-- <button class="action-btn view-btn" (click)="viewOrders(user.phone_number)">Voir commandes</button> -->
-                        <!-- <button class="action-btn edit-btn"><a class="w-100 h-100 text-decoration-none" style="color:inherit" [routerLink]="['/mdj_admin/infos-client',user.slug]">Modifier</a></button> -->
-                        <button class="action-btn delete-btn" (click)="deleteUser(user.slug)">Supprimer</button>
-                    </td>
-
-				</tr>
-			} @empty {
-				<tr>
-					<td colspan="4" class="bg-warning" style="text-align: center">Aucun client trouvé.</td>
-				</tr>
-			}
-		</tbody>
+    <tbody>
+    <!-- Loader -->
+      @if (isLoading) {
+        <tr>
+          <td colspan="4" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </td>
+        </tr>
+      } @else {
+        @if (users.length) {
+          @for (user of users; track user.id) {
+            <tr>
+              <td><ngb-highlight [result]="user.nom_complet" [term]="searchTerm" /></td>
+              <td><ngb-highlight [result]="user.phone_number" [term]="searchTerm" /></td>
+              <td>
+                <button class="action-btn delete-btn" (click)="deleteUser(user.slug)">Supprimer</button>
+              </td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="4" class="bg-warning" style="text-align: center">Aucun client trouvé.</td>
+          </tr>
+        }
+      }
+    </tbody>
 	</table>
 
 	<div *ngIf="users.length" class="d-flex justify-content-between p-2">

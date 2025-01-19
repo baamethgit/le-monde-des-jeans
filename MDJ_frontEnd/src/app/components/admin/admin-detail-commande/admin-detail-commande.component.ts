@@ -41,11 +41,11 @@ export class AdminDetailCommandeComponent implements OnInit {
           },
         }
       )
-      
+
   }
   downloadOrderDetails() {
     const element = document.getElementById('order-details-box');
-    
+
     html2canvas(element as HTMLElement).then((canvas) => {
       const imageData = canvas.toDataURL('image/png');
       const link = document.createElement('a');
@@ -54,15 +54,15 @@ export class AdminDetailCommandeComponent implements OnInit {
       link.click();
     });
   }
-  
+
 
   changeStatut(statut: StatutCommande){
       this.commandeService.updateCommande(this.commande.id,{'statut':statut.toString()}).subscribe({
         next:(data)=>{
-        
+
         },
         error:(error)=>{
-  
+
         }
       })
   }

@@ -23,20 +23,20 @@ $blue_color: #377DFF;
         .right_nav_sec{
             width: 75%;
         }
-        
+
         // @media(max-width:1050px){
         //     .right_nav_sec{
         //         width: 79%;
         //         justify-content: end;
         //     }
-            
+
         // }
         @media(max-width:1160px){
             .right_nav_sec{
                 margin: auto;
                 width: 100%;
             }
-            
+
         }
         @media(max-width:962px){
             .right_nav_sec{
@@ -50,10 +50,13 @@ $blue_color: #377DFF;
                     width: 90%;
                     justify-content: space-between;
                 }
-            } 
+            }
         }
       .navbar-brand {
-        font-family: princess;
+        #font-family: princess;
+        font-family: "Monsieur La Doulaise", serif;
+        font-weight: 400;
+        font-style: normal;
         font-size: 24px;
         @media(max-width:1160px){
             margin: auto;
@@ -62,7 +65,7 @@ $blue_color: #377DFF;
           margin: 0;
       }
       }
-  
+
       div {
         ul {
             width: 50%;
@@ -72,7 +75,7 @@ $blue_color: #377DFF;
             @media(max-width:1000px){
                 width: 65%;
             }
-            
+
           li {
             color: black;
           }
@@ -85,12 +88,12 @@ $blue_color: #377DFF;
           li:hover{
             color: $blue_color;
           }
-  
+
           .header_whatsapp {
             width: 30px;
           }
         }
-  
+
         .user_profile_header {
           button {
             border-radius: 5px;
@@ -107,7 +110,7 @@ $blue_color: #377DFF;
                 border-radius: 5px;
                 padding: 5px;
                 background-color: white;
-                
+
                 .cart_header {
                     .cart_header_img {
                       width: 25px;
@@ -116,8 +119,8 @@ $blue_color: #377DFF;
                   }
               }
         }
-  
-        
+
+
       }
     }
   }

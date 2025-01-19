@@ -9,6 +9,7 @@ import { categorie } from '../../../models/categorie';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { spec } from 'node:test/reporters';
 import { RouterLink } from '@angular/router';
+import {finalize} from "rxjs";
 
 export const TAILLES = [
   { value: 'S', label: 'S' },
@@ -73,7 +74,8 @@ files: NgxFileDropEntry[] = [];
 acceptedFilesType: string = '.png,.jpg,.jpeg';
 previewUrlsProd: string[] = [];
 previewUrlsCat: string[] = [];
-
+isPLoading:boolean = false;
+isCLoading:boolean = false;
 ngOnInit():void{
   this.loadProducts()
   this.loadCategories()
@@ -126,10 +128,13 @@ ngOnInit():void{
       images: this.formBuilder.array([], [Validators.required, Validators.minLength(1)]),
     }
   )
-  
+
 }
 loadProducts(){
-  this.produitsService.getProducts().subscribe({
+  this.isPLoading = true;
+  this.produitsService.getProducts().pipe(
+    finalize(() => this.isPLoading = false)
+  ).subscribe({
     next:(data)=>{
       this.produits=data;
       this.collectionSize=this.produits.length
@@ -138,7 +143,10 @@ loadProducts(){
   })
 }
 loadCategories(){
-  this.categoryService.getAllCategories().subscribe({
+  this.isCLoading = true;
+  this.categoryService.getAllCategories().pipe(
+    finalize(() => this.isCLoading = false)
+  ).subscribe({
     next:(data)=>{
       this.category=data;
     }
@@ -323,7 +331,7 @@ removeImageProdUpdate(index: number) {
 createProduct() {
   if (this.AddProductForm.valid) {
     const formData = new FormData();
-    
+
     formData.append('prix', this.AddProductForm.get('prix_produit')?.value);
     formData.append('categorie', this.AddProductForm.get('categorySelect')?.value);
 
@@ -350,11 +358,11 @@ createProduct() {
     });
 
     this.produitsService.CreateProduct(formData).subscribe({
-      next: (data) => { 
+      next: (data) => {
         console.log('Enregistrement réussi !!! :', data);
         this.resetFormProd();
         this.loadProducts()
-        
+
       },
       error: (error) => { console.log('Erreur lors de l\'enregistrement : ', error); }
     });
@@ -366,7 +374,7 @@ createProduct() {
 UpdateProduct(id:number) {
   if (this.UpdateProductForm.valid) {
     const formData = new FormData();
-    
+
     formData.append('prix', this.UpdateProductForm.get('prix_produit')?.value);
     formData.append('categorie', this.UpdateProductForm.get('categorySelect')?.value);
 
@@ -393,11 +401,11 @@ UpdateProduct(id:number) {
     });
 
     this.produitsService.updateProduct(id,formData).subscribe({
-      next: (data) => { 
+      next: (data) => {
         console.log('MAJ réussie !!! :', data);
         this.loadProducts()
         this.resetFormProdUpdate();
-        
+
       },
       error: (error) => { console.log('Erreur lors de l\'enregistrement : ', error); }
     });
@@ -409,7 +417,7 @@ UpdateProduct(id:number) {
 createCategory() {
   if (this.AddCategoryForm.valid) {
     const formData = new FormData();
-    
+
     formData.append('nom', this.AddCategoryForm.get('nom_categorie')?.value);
     formData.append('slug', this.AddCategoryForm.get('nom_categorie')?.value)
 
@@ -422,7 +430,7 @@ createCategory() {
     });
 
     this.categoryService.createCategory(formData).subscribe({
-      next: (data) => { 
+      next: (data) => {
         console.log('Enregistrement réussi !!! :', data);
         this.loadCategories();
         this.resetFormCat();
@@ -517,7 +525,7 @@ deleteCat(id:number){
 UpdateCat(id:number){
   if (this.UpdateCategoryForm.valid) {
     const formData = new FormData();
-    
+
     formData.append('nom', this.UpdateCategoryForm.get('nom_categorie')?.value);
     formData.append('slug', this.UpdateCategoryForm.get('nom_categorie')?.value)
 
@@ -530,7 +538,7 @@ UpdateCat(id:number){
     });
 
     this.categoryService.updateCategory(id,formData).subscribe({
-      next: (data) => { 
+      next: (data) => {
         console.log('Mise a jour réussie !!! :', data);
         this.loadCategories()
         this.resetFormUpdateCat();

@@ -278,12 +278,24 @@ class DashboardKpiView(APIView):
             .values('methode_paiement')
             .annotate(total=Sum('montant'))
         )
-
+        total_commandes = Commande.objects.count()
         commandes_par_statut = (
             Commande.objects
             .values('statut')
             .annotate(nombre=Count('id'))
         )
+        # Préparer les données pour le frontend
+        commandes_par_statut_list = []
+        for item in commandes_par_statut:
+            statut_label = item['statut']
+            count = item['nombre']
+            percentage = (count / total_commandes * 100) if total_commandes > 0 else 0
+
+            commandes_par_statut_list.append({
+                'label': statut_label,
+                'count': count,
+                'percentage': round(percentage, 2)  # arrondi à 2 décimales
+            })
 
         response_data = {
             'nombre_produits':nombre_produits,
@@ -294,7 +306,7 @@ class DashboardKpiView(APIView):
             'nombre_nouvelles_commandes':nombre_nouvelles_commandes,
             'ventes_totales': ventes_totales,
             'ventes_par_methode': {item['methode_paiement']: item['total'] for item in ventes_par_methode},
-            "commandes_par_statut":commandes_par_statut
+            "commandes_par_statut":commandes_par_statut_list
         }
 
         return Response(response_data, status=status.HTTP_200_OK)

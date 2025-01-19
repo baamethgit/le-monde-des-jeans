@@ -52,7 +52,7 @@ export class ProduitService {
   }
 
   deleteProduct(id:number):Observable<any>{
-    return this.http.delete<Produit>(`${this.apiUrl}${id}`)
+    return this.http.delete<Produit>(`${this.apiUrl}${id}/`)
   }
 
   updateProduct(id:number, data:FormData):Observable<Produit>{

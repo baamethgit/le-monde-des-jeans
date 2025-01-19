@@ -24,7 +24,7 @@ export class CategorieService {
   }
 
   deleteCategory(id:number):Observable<any>{
-    return this.http.delete<categorie>(`${this.apiUrl}${id}`)
+    return this.http.delete<categorie>(`${this.apiUrl}${id}/`)
   }
   updateCategory(id:number, data:FormData):Observable<categorie>{
     return this.http.put<categorie>(`${this.apiUrl}${id}/`, data)

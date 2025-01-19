@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../../services/users/user.service';
 import { Avis } from '../../../models/Avis';
+import {finalize} from "rxjs";
 
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
@@ -19,6 +20,7 @@ export class AdminAvisClientsComponent implements OnInit{
   message : string = '';
   page = 1;
   pageSize = 2;
+  isLoading : boolean = false;
 
   avisService = inject(UserService);
   constructor(){}
@@ -39,7 +41,10 @@ export class AdminAvisClientsComponent implements OnInit{
   }
 
   loadAvis():void{
-    this.avisService.getAllAvis().subscribe({
+    this.isLoading = true;
+    this.avisService.getAllAvis().pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next:(data)=>{
         this.reviews = data;
       }

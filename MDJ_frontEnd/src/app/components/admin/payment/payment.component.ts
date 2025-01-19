@@ -1,7 +1,9 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import {PaiementService} from "../../../services/paiement.service";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-payment',
@@ -16,40 +18,73 @@ export class PaymentComponent implements OnInit{
   startDate = '';
   endDate = '';
   minAmount = 0;
+  payments : any = [];
+  isPLoading : boolean = false;
+  isKpiLoading : boolean = false;
+  paiementService = inject(PaiementService);
 
-  // Example data
-  payments = [
-    {
-      id_transaction: 'TRX123456',
-      commande_ref: 'CMD789',
-      client: 'John Doe',
-      montant: 150000,
-      methode_paiement: 'ORANGE_MONEY',
-      date_paiement: new Date(),
-    },
-    {
-      id_transaction: 'TRX123457',
-      commande_ref: 'CMD790',
-      client: 'Jane Smith',
-      montant: 75000,
-      methode_paiement: 'WAVE',
-      date_paiement: new Date(),
-    },
-    // Ajoutez plus de données d'exemple ici
-  ];
-
-  get filteredPayments() {
-    return this.payments.filter(payment => {
-      if (this.selectedMethod && payment.methode_paiement !== this.selectedMethod) {
-        return false;
-      }
-      if (this.minAmount && payment.montant < this.minAmount) {
-        return false;
-      }
-      // Ajoutez d'autres filtres si nécessaire
-      return true;
-    });
+  kpi = {
+    "total_paiement": 0,
+    "paiement_par_wave": 0,
+    "paiement_par_om": 0,
+    "paiement_par_cb": 0
+  } as any
+  ngOnInit() {
+    // Charger les données initiales
+    this.loadPayment();
+    this.loadPaymentKPI();
   }
+
+  loadPayment():void{
+    this.isPLoading = true;
+
+    const filters = {
+      selectedMethod: this.selectedMethod,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      minAmount: this.minAmount
+    };
+
+    this.paiementService.getPayments(filters).pipe(
+      finalize(()=>{
+        this.isPLoading = false;
+      })
+    ).subscribe(
+      {
+        next:(data)=>{
+          this.payments = data;
+        },
+        error:(error)=>{
+
+        }
+      }
+    )
+  }
+
+  loadPaymentKPI():void{
+    this.isKpiLoading = true;
+    const filters = {
+      selectedMethod: this.selectedMethod,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      minAmount: this.minAmount
+    };
+    this.paiementService.getPaymentSummary(filters).pipe(
+      finalize(()=>{
+        this.isKpiLoading = false;
+      })
+    ).subscribe(
+      {
+        next:(data)=>{
+          this.kpi = data;
+        },
+        error:(error)=>{
+
+        }
+      }
+    )
+  }
+
 
   getMethodeBadgeClass(methode: string): string {
     const classes = {
@@ -69,7 +104,22 @@ export class PaymentComponent implements OnInit{
     return labels[methode as keyof typeof labels] || methode;
   }
 
-  ngOnInit() {
-    // Charger les données initiales
+  formatAmount(amount: number): string {
+    console.log(amount)
+    console.log(typeof amount)
+    if (amount < 1000) {
+      // Si le montant est inférieur à 1000, retourne-le tel quel
+      return amount.toString();
+    } else if (amount >= 1000 && amount < 1000000) {
+      // Si le montant est compris entre 1000 et 1 million
+      return (amount / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    } else if (amount >= 1000000 && amount < 1000000000) {
+      // Si le montant est compris entre 1 million et 1 milliard
+      return (amount / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    } else {
+      // Si le montant est supérieur ou égal à 1 milliard
+      return (amount / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+    }
   }
+
 }

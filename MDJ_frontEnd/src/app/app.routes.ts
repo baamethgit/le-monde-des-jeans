@@ -36,45 +36,50 @@ import { PaiementFailedComponent } from './components/paiement-failed/paiement-f
 
 
 export const routes: Routes = [
-    {path: '', component: LayoutComponent,children:[
-    {path: '', component: HomeComponent, title: 'LMDJ | Accueil' },
-    
-    {path: 'panier', component: PanierComponent, title: 'LMDJ | Panier' },
-    // {path:'produits', component: ProduitsComponent},
-    {path: 'commande-validee', component:CommandeValideeComponent,title: 'LMDJ | Commande'
-        },
-    {path: 'profile', component: ProfilComponent,title: 'LMDJ | Profile'
-        },
-    {path: 'profile/edit', component: ProfilUpdateComponent,title: 'LMDJ | Profile'
-        },
-    {path: 'detail-commande', component: DetailCommandeComponent,title: 'LMDJ | Commande'
-        },
-    {path: 'mes-commandes', component: MesCommandesComponent,title: 'LMDJ | Commandes',
-        },
-    {path:'produits', component: ProduitsComponent, children:[
-        {path:'',component:AllProductsComponent, pathMatch:'full'},
-        {path:'categorie/:slug', component:ProductFilterComponent, pathMatch:'full'}
-    ], title: 'LMDJ | Produits' },
-    {path:'produits/:slug', component: ProduitDetailComponent, pathMatch:'full', title: 'LMDJ | Produit'},
-    {path:'avis', component:AvisComponent, pathMatch:'full', title: 'LMDJ | Avis'},
-    {path:'payment-success/:id', component:CommandeValideeComponent, pathMatch:'full', title: 'LMDJ | Paiement'},
-    {path:'payment-error/:id', component:PaiementFailedComponent, pathMatch:'full', title: 'LMDJ | Paiement'},
-
-]},
-    {path:'mdj_admin', component: AdminHomeComponent, children:[
-        {path:'dashboard', component: DashboardAdminComponent, pathMatch:'full'},
-        {path:'commandes', component: AdminListeCommandesComponent, pathMatch:'full'},
-        {path:'paiements', component: PaymentComponent, pathMatch:'full'},
-        {path:'produits', component: AdminProduitsComponent, pathMatch:'full'},
-        {path: 'commandes/:ref-code', component: AdminDetailCommandeComponent},
-        {path:'clients', component: ClientsComponent, pathMatch:'full'},
-        {path:'infos-client/:slug', component: DetailClientComponent, pathMatch:'full'},
-        {path:'avis', component: AdminAvisClientsComponent, pathMatch:'full'},
-        {path:'zones-livraison', component: ListeZonesComponent, pathMatch:'full'},
-        {path:'zones-livraison/:id/modifier', component: UpdateZoneComponent , pathMatch:'full'},
-        {path:'zones-livraison/creer', component: CreateZoneComponent , pathMatch:'full'},
-
-    ]},
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      { path: '', component: HomeComponent, title: 'LMDJ | Accueil' },
+      { path: 'panier', component: PanierComponent, title: 'LMDJ | Panier' },
+      { path: 'commande-validee', component: CommandeValideeComponent, title: 'LMDJ | Commande' },
+      { path: 'profile', component: ProfilComponent, title: 'LMDJ | Profile' },
+      { path: 'profile/edit', component: ProfilUpdateComponent, title: 'LMDJ | Profile' },
+      { path: 'detail-commande', component: DetailCommandeComponent, title: 'LMDJ | Commande' },
+      { path: 'mes-commandes', component: MesCommandesComponent, title: 'LMDJ | Commandes' },
+      {
+        path: 'produits',
+        component: ProduitsComponent,
+        children: [
+          { path: '', component: AllProductsComponent, pathMatch: 'full' },
+          { path: 'categorie/:slug', component: ProductFilterComponent }
+        ],
+        title: 'LMDJ | Produits'
+      },
+      { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' },
+      { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis' },
+      { path: 'payment-success/:id', component: CommandeValideeComponent, title: 'LMDJ | Paiement' },
+      { path: 'payment-error/:id', component: PaiementFailedComponent, title: 'LMDJ | Paiement' }
+    ]
+  },
+  {
+    path: 'mdj_admin',
+    component: AdminHomeComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardAdminComponent },
+      { path: 'commandes', component: AdminListeCommandesComponent },
+      { path: 'paiements', component: PaymentComponent },
+      { path: 'produits', component: AdminProduitsComponent },
+      { path: 'commandes/:ref-code', component: AdminDetailCommandeComponent },
+      { path: 'clients', component: ClientsComponent },
+      { path: 'infos-client/:slug', component: DetailClientComponent },
+      { path: 'avis', component: AdminAvisClientsComponent },
+      { path: 'zones-livraison', component: ListeZonesComponent },
+      { path: 'zones-livraison/:id/modifier', component: UpdateZoneComponent },
+      { path: 'zones-livraison/creer', component: CreateZoneComponent }
+    ]
+  },
 
     {path: 'resetpwd', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent,title: 'LMDJ | Login'},

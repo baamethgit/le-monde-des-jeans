@@ -4,8 +4,8 @@
 		<span class="reviews-title ">Commandes</span>
 	</h2>
 	<div class="filters">
-	  <input type="text" [(ngModel)]="searchTerm" 
-	  placeholder="Rechercher par numéro ou client" 
+	  <input type="text" [(ngModel)]="searchTerm"
+	  placeholder="Rechercher par numéro ou client"
 	  class="search-input " style="width:auto;min-width: 280px;"
 	  (input)="onSearch()"
 	  >
@@ -41,7 +41,18 @@
 		</tr>
 	  </thead>
 	  <tbody>
-		<tr *ngFor="let commande of commandes">
+      @if (isLoading) {
+        <tr>
+          <td colspan="8" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </td>
+        </tr>
+      } @else {
+        @if (commandes.length) {
+      @for (commande of commandes;track commande.id){
+		<tr>
 		  <td class="fw-bold" [innerHTML]="highlightText(commande.ref_code)"></td>
 		  <td>
 			<span [innerHTML]="highlightText(commande.client.nom_complet)"></span><br>
@@ -62,6 +73,12 @@
 			<button (click)="openDeleteCommandeModal(commande.id)" class="action-btn delete bg-danger text-white" [disabled]="commande.statut!=StatutCommande.LIVREE">Supprimer</button>
 		  </td>
 		</tr>
+        }} @else {
+          <tr>
+            <td colspan="4" class="bg-warning" style="text-align: center">Aucune commande trouvée.</td>
+          </tr>
+        }
+      }
 </tbody>
 	</table>
 	<p class="alert alert-warning" *ngIf="!commandes.length && isLoading === false">

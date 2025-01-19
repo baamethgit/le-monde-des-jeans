@@ -7,7 +7,7 @@
     <i class="bi bi-plus-circle mx-2"></i>Ajouter une Categorie
   </button>
 </div>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -22,7 +22,7 @@
           <div class="center">
             <form action="#" [formGroup]="AddProductForm" (ngSubmit)="createProduct()">
               <div formArrayName="images">
-                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedProd($event)" 
+                <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedProd($event)"
                  [accept]="acceptedFilesType">
                   <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                     <div class="text-center">
@@ -50,7 +50,7 @@
                   <label for="nom_produit" class="text">Nom produit : </label>
                   <input formControlName="nom_produit" type="text" class="input" name="input">
                 </div>
-          
+
                 <div class="d-flex flex-column">
                   <div class="coolinput">
                     <label for="prix_produit"  class="text">Prix : </label>
@@ -77,7 +77,7 @@
                   </ng-container>
                 </div>
               </div>
-              
+
               <div class="d-flex justify-content-between my-2">
                 <div class="d-flex flex-column">
                   <select class="form-select" formControlName="categorySelect">
@@ -92,8 +92,8 @@
                                 obligatoire.</small>
                   </ng-container>
                 </div>
-          
-          
+
+
                 <select class="form-select" formControlName="taille">
                   <option value="" disabled selected>Taille</option>
                   @for (item of tailles; track $index) {
@@ -101,9 +101,9 @@
                   }
                 </select>
               </div>
-              
-              
-        
+
+
+
               <div class="d-flex justify-content-between">
                 <select class="form-select" formControlName="couleur" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                   <option value="" disabled selected>Couleur</option>
@@ -111,7 +111,7 @@
                     <option value="{{item.value}}">{{item.label}}</option>
                   }
                 </select>
-                
+
                 <select class="form-select"  formControlName="composition">
                   <option value="" disabled selected>Composition</option>
                   @for (item of compo; track $index) {
@@ -130,7 +130,7 @@
                             <small class="text-danger" *ngIf="AddProductForm.controls['stock_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
                 </ng-container>
 
-                
+
                 <div class="d-flex flex-column align-items-center">
                   <span>Special</span>
                   <label class="checkbox-container">
@@ -159,7 +159,7 @@
             </form>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -168,13 +168,13 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Ajout d'une categorie</h5>
-          
+
         </div>
         <div class="modal-body">
           <div class="center">
             <form action="#" [formGroup]="AddCategoryForm" (ngSubmit)="createCategory()">
               <div formArrayName="images">
-                <ngx-file-drop [multiple]="false" dropZoneLabel="Drop files here" (onFileDrop)="droppedCat($event)" 
+                <ngx-file-drop [multiple]="false" dropZoneLabel="Drop files here" (onFileDrop)="droppedCat($event)"
                  [accept]="acceptedFilesType">
                   <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                     <div class="text-center">
@@ -210,7 +210,7 @@
                                 <small class="text-danger" *ngIf="AddCategoryForm.controls['nom_categorie'].hasError('pattern')">Seul les lettres sont autorisees</small>
                   </ng-container>
                 </div>
-          
+
                 <div class="d-flex flex-column">
                     <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
                     <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
@@ -223,7 +223,7 @@
             </form>
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -242,7 +242,16 @@
           </tr>
         </thead>
         <tbody>
-          
+          @if (isPLoading) {
+            <tr>
+              <td colspan="4" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @if (paginateProduits.length) {
           @for (item of paginateProduits; track $index) {
             <tr>
                 <td>{{item.id}}</td>
@@ -279,7 +288,7 @@
                       <div class="modal-body">
                         <form action="#" [formGroup]="UpdateProductForm" (ngSubmit)="UpdateProduct(item.id)">
                           <div formArrayName="images">
-                            <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedProdUpdate($event)" 
+                            <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedProdUpdate($event)"
                              [accept]="acceptedFilesType">
                               <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                                 <div class="text-center">
@@ -298,8 +307,8 @@
                                 </div>
                               </div>
                             </div>
-                            
-                            
+
+
                             <div *ngIf="UpdateProductForm.get('images')?.hasError('required') && UpdateProductForm.get('images')?.touched" class="text-danger">
                               Au moins une image est requise.
                             </div>
@@ -309,7 +318,7 @@
                               <label for="nom_produit" class="text">Nom produit : </label>
                               <input formControlName="nom_produit" type="text" class="input" name="input" placeholder="{{item.nom}}">
                             </div>
-                      
+
                             <div class="d-flex flex-column">
                               <div class="coolinput">
                                 <label for="prix_produit"  class="text">Prix : </label>
@@ -335,7 +344,7 @@
                               </ng-container>
                             </div>
                           </div>
-                          
+
                           <div class="d-flex justify-content-between my-2">
                             <div class="d-flex flex-column">
                               <select class="form-select" formControlName="categorySelect">
@@ -350,8 +359,8 @@
                                             obligatoire.</small>
                               </ng-container>
                             </div>
-                      
-                      
+
+
                             <select class="form-select" formControlName="taille">
                               <option value="" disabled selected>Taille</option>
                               @for (item of tailles; track $index) {
@@ -359,9 +368,9 @@
                               }
                             </select>
                           </div>
-                          
-                          
-                    
+
+
+
                           <div class="d-flex justify-content-between">
                             <select class="form-select" formControlName="couleur" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
                               <option value="" disabled selected>Couleur</option>
@@ -369,7 +378,7 @@
                                 <option value="{{item.value}}">{{item.label}}</option>
                               }
                             </select>
-                            
+
                             <select class="form-select"  formControlName="composition">
                               <option value="" disabled selected>Composition</option>
                               @for (item of compo; track $index) {
@@ -377,7 +386,7 @@
                               }
                             </select>
                           </div>
-            
+
                           <div class="d-flex align-items-center justify-content-between">
                             <div class="coolinput">
                               <label for="Stock"  class="text">Stock : </label>
@@ -387,8 +396,8 @@
                                     *ngIf="UpdateProductForm.controls['stock_produit'].invalid && (AddProductForm.controls['stock_produit'].dirty || UpdateProductForm.controls['stock_produit'].touched)">
                                         <small class="text-danger" *ngIf="UpdateProductForm.controls['stock_produit'].hasError('pattern')">Seul les chiffres sont autorises</small>
                             </ng-container>
-            
-                            
+
+
                             <div class="d-flex flex-column align-items-center">
                               <span>Special</span>
                               <label class="checkbox-container">
@@ -405,7 +414,7 @@
                               </label>
                             </div>
                           </div>
-            
+
                           <div>
                             <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
                             <textarea formControlName="desc_produit" class="form-control" id="exampleFormControlTextarea1" rows="3">{{item.description}}</textarea>
@@ -416,12 +425,17 @@
                           </div>
                         </form>
                       </div>
-                      
+
                     </ng-template>
                   </td>
               </tr>
           }
-          
+            }@else {
+              <tr>
+                <td colspan="4" class="bg-warning" style="text-align: center">Aucun produit trouvé.</td>
+              </tr>
+            }
+          }
         </tbody>
       </table>
       <div *ngIf="produits.length" class="d-flex justify-content-between p-2">
@@ -446,15 +460,25 @@
           </tr>
         </thead>
         <tbody>
-          
-          @for (item of category; track $index) {
+          @if (isCLoading) {
             <tr>
-                <td>{{item.id}}</td>
-                <td>
+              <td colspan="4" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </td>
+            </tr>
+          } @else {
+
+            @if (category.length){
+              @for (item of category; track $index) {
+                <tr>
+                  <td>{{item.id}}</td>
+                  <td>
                     <img src="{{item.image}}" width="30" alt="">
                     {{item.nom}}
-                </td>
-                <td class="actions-cell text-center">
+                  </td>
+                  <td class="actions-cell text-center">
                     <button (click)="openWindowCustomClass(updateCategory, item)" class="action-btn edit mx-1" style="background-color: rgb(32, 149, 228); border: none;" ><i class="fas fa-edit    "></i></button>
                     <button (click)="openSm(content)" type="button" style="background-color: red; border: none;"><i class="fa fa-trash" aria-hidden="true"></i></button>
                     <ng-template #content let-modal>
@@ -477,8 +501,8 @@
                         <div class="center">
                           <form action="#" [formGroup]="UpdateCategoryForm" (ngSubmit)="UpdateCat(item.id)">
                             <div formArrayName="images">
-                              <ngx-file-drop [multiple]="false" dropZoneLabel="Drop files here" (onFileDrop)="droppedCatUpdate($event)" 
-                               [accept]="acceptedFilesType">
+                              <ngx-file-drop [multiple]="false" dropZoneLabel="Drop files here" (onFileDrop)="droppedCatUpdate($event)"
+                                             [accept]="acceptedFilesType">
                                 <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
                                   <div class="text-center">
                                     <div>Vous pouvez deposer l'image de la categorie ici (obligatoire) :</div>
@@ -507,17 +531,17 @@
                                   <input formControlName="nom_categorie" type="text" class="input" name="input" placeholder="{{item.nom}}">
                                 </div>
                                 <ng-container
-                                          *ngIf="UpdateCategoryForm.controls['nom_categorie'].invalid && (UpdateCategoryForm.controls['nom_categorie'].dirty || UpdateCategoryForm.controls['nom_categorie'].touched)">
-                                          <small class="text-danger" *ngIf="UpdateCategoryForm.controls['nom_categorie'].hasError('required')">Ce champ est
-                                              obligatoire.</small>
-                                              <small class="text-danger" *ngIf="UpdateCategoryForm.controls['nom_categorie'].hasError('pattern')">Seul les lettres sont autorises</small>
+                                  *ngIf="UpdateCategoryForm.controls['nom_categorie'].invalid && (UpdateCategoryForm.controls['nom_categorie'].dirty || UpdateCategoryForm.controls['nom_categorie'].touched)">
+                                  <small class="text-danger" *ngIf="UpdateCategoryForm.controls['nom_categorie'].hasError('required')">Ce champ est
+                                    obligatoire.</small>
+                                  <small class="text-danger" *ngIf="UpdateCategoryForm.controls['nom_categorie'].hasError('pattern')">Seul les lettres sont autorises</small>
                                 </ng-container>
                               </div>
-                        
+
                               <div class="d-flex flex-column">
-                                  <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
-                                  <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3" >{{item.description}}</textarea>
-                                </div>
+                                <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
+                                <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3" >{{item.description}}</textarea>
+                              </div>
                             </div>
                             <div class="modal-footer">
                               <button type="submit"  class="rounded-1 my-2 btn btn-success">Update</button>
@@ -526,12 +550,19 @@
                           </form>
                         </div>
                       </div>
-                      
+
                     </ng-template>
                   </td>
+                </tr>
+              }
+
+            } @else {
+              <tr>
+                <td colspan="4" class="bg-warning" style="text-align: center">Aucune catégorie trouvée.</td>
               </tr>
+            }
           }
-          
+
         </tbody>
       </table>
 </div>
