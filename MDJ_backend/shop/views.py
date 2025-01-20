@@ -64,9 +64,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == 'retrieve' or self.action == 'list':
             permission_classes = [IsAuthenticated]
         elif self.action in ['update', 'partial_update', 'create', 'destroy']:
-            permission_classes = [IsAdminUser]
+            permission_classes = [IsAdminUser, IsAuthenticated]
         else:
-            permission_classes = []
+            permission_classes = [IsAdminUser, IsAuthenticated]
         return [permission() for permission in permission_classes]
     def retrieve(self, request, *args, **kwargs):
         # Récupérer le produit par le slug au lieu de l'id
