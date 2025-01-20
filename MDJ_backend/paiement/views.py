@@ -66,7 +66,7 @@ class InitiateWavePaymentView(APIView):
             json=checkout_data,
             headers=headers
         )
-        print(response)
+
         if response.status_code != 200:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -77,6 +77,7 @@ class InitiateWavePaymentView(APIView):
 
         if existing_session:
             if timezone.now() < existing_session.created_at + timedelta(minutes=60):
+                Payment.objects.filter(client=order.client, statut='pending').delete()
                 return Response({'wave_launch_url': existing_session.wave_launch_url})
             else:
                 existing_session.status = 'expired'
@@ -132,7 +133,9 @@ class WaveWebhookView(APIView):
         try:
             event = request.data
             logger.info(f'Received Wave webhook: {event["type"]}')
-
+            print("=====================")
+            print(event)
+            print("=====================")
             if event['type'] == 'checkout.session.completed':
                 try:
                     session = WaveCheckoutSession.objects.select_for_update().get(
@@ -210,7 +213,7 @@ class PaymentFilterView(APIView):
 
         # Filtrer les paiements
         filters = Q()
-
+        #filters &= Q(statut='completed')
         if methode_paiement:
             filters &= Q(methode_paiement=methode_paiement)
         if start_date:
@@ -237,6 +240,8 @@ class PaymentSummaryView(APIView):
 
         # Filtrage des paiements
         filters = Q()
+        filters &= Q(statut='completed')
+
         if methode_paiement:
             filters &= Q(methode_paiement=methode_paiement)
         if start_date:

@@ -271,10 +271,11 @@ class DashboardKpiView(APIView):
         nombre_commandes = Commande.objects.all().count()
         nombre_nouvelles_commandes = Commande.objects.filter(date_commande__date__gte=start_of_week).count()
 
-        ventes_totales = Payment.objects.aggregate(total=Sum('montant'))['total'] or 0
+        ventes_totales = Payment.objects.filter(statut='completed').aggregate(total=Sum('montant'))['total'] or 0
 
         ventes_par_methode = (
             Payment.objects
+            .filter(statut='completed')
             .values('methode_paiement')
             .annotate(total=Sum('montant'))
         )

@@ -30,7 +30,11 @@ export class AdminHeaderComponent implements OnInit{
   }
 
   logout(): void {
-    this.userService.logout();
-    window.location.reload();
+    this.userService.logout().subscribe(
+      (response) => {
+        window.location.reload();
+
+      }
+    );
   }
 }
