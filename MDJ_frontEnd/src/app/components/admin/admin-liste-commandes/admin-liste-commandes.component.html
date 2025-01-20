@@ -75,15 +75,12 @@
 		</tr>
         }} @else {
           <tr>
-            <td colspan="4" class="bg-warning" style="text-align: center">Aucune commande trouvée.</td>
+            <td colspan="8" class="bg-warning" style="text-align: center">Aucune commande trouvée.</td>
           </tr>
         }
       }
 </tbody>
 	</table>
-	<p class="alert alert-warning" *ngIf="!commandes.length && isLoading === false">
-		Aucune commande trouvée.
-	</p>
 </div>
 	<div class="pagination">
 	  <button class="page-btn me-2">&lt;</button>

@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import {Component, inject, input, OnInit} from '@angular/core';
 import { CarouselModule} from 'primeng/carousel';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule, NgOptimizedImage, SlicePipe } from '@angular/common';
@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
-export class ProduitDetailComponent {
+export class ProduitDetailComponent implements OnInit{
 
   list_p: any[] = [];
   product_selected: Produit | undefined;
@@ -61,7 +61,7 @@ responsiveOptions = [
       }
     });
   }
-  
+
   loadProduct(slug: string): void {
     this.produitService.getProductBySlug(slug).subscribe({
       next: (data: Produit) => {

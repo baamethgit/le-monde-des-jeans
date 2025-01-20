@@ -39,15 +39,16 @@ class InitiateWavePaymentView(APIView):
             order = Commande.objects.get(id=request.data['order_id'])
         except:
             return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)
-
+        success_url = f'{FRONTEND_URL}/payment-success/{order.id}'
+        error_url = f'{FRONTEND_URL}/payment-error/{order.id}'
         checkout_data = {
             'amount': str(order.montant),
             'currency': 'XOF',
             'client_reference': str(order.ref_code),
-            'success_url': f'{FRONTEND_URL}/payment-success/{order.id}',
-            #'success_url': 'https://www.google.sn/',
-            'error_url': f'{FRONTEND_URL}/payment-error/{order.id}'
-            #'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
+            #'success_url': success_url,
+            'success_url': 'https://www.google.sn/',
+            #'error_url':error_url
+            'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
         }
 
         # Dans ta vue
@@ -66,6 +67,9 @@ class InitiateWavePaymentView(APIView):
             headers=headers
         )
 
+        if response.status_code != 200:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         existing_session = WaveCheckoutSession.objects.filter(
             order=order,
             status='pending'
@@ -73,6 +77,7 @@ class InitiateWavePaymentView(APIView):
 
         if existing_session:
             if timezone.now() < existing_session.created_at + timedelta(minutes=60):
+                Payment.objects.filter(client=order.client, statut='pending').delete()
                 return Response({'wave_launch_url': existing_session.wave_launch_url})
             else:
                 existing_session.status = 'expired'
@@ -128,7 +133,9 @@ class WaveWebhookView(APIView):
         try:
             event = request.data
             logger.info(f'Received Wave webhook: {event["type"]}')
-
+            print("=====================")
+            print(event)
+            print("=====================")
             if event['type'] == 'checkout.session.completed':
                 try:
                     session = WaveCheckoutSession.objects.select_for_update().get(
@@ -206,7 +213,7 @@ class PaymentFilterView(APIView):
 
         # Filtrer les paiements
         filters = Q()
-
+        #filters &= Q(statut='completed')
         if methode_paiement:
             filters &= Q(methode_paiement=methode_paiement)
         if start_date:
@@ -233,6 +240,8 @@ class PaymentSummaryView(APIView):
 
         # Filtrage des paiements
         filters = Q()
+        filters &= Q(statut='completed')
+
         if methode_paiement:
             filters &= Q(methode_paiement=methode_paiement)
         if start_date:

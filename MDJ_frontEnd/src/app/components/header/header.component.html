@@ -29,7 +29,7 @@
                   <li><a class="dropdown-item" href="#" (click)="logout()">Se déconnecter</a></li>
                 </ul>
               </div>
-              <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span> 
+              <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span>
             </button>
           </div>
           <div class="user_profile_cart">
@@ -55,7 +55,10 @@
           <a href=""><li>Accueil</li></a>
           <a [routerLink]="['/produits']"><li>Produits</li></a>
           <a [routerLink]="['/avis']"><li>Avis</li></a>
-          <a class="whatsapp_link_header text-nowrap" href="{{infos?.Lien_Whatsapp}}" target="_blank">Groupe Whatsapp <img class="header_whatsapp" src="../../assets/img/6929232_logo_whatsapp_icon.png"></a>
+          <a class="whatsapp_link_header text-nowrap" target="_blank"
+             href="https://chat.whatsapp.com/IfL8jPCvs993TzOAoFo8ac"  rel="noopener noreferrer">
+            Groupe Whatsapp <img class="header_whatsapp" src="../../assets/img/6929232_logo_whatsapp_icon.png">
+</a>
         </ul>
         <div class="d-flex justify-content-between gap-2 left_nav_sec align-items-center">
           <div class="user_profile_header ">
@@ -70,7 +73,7 @@
                   <li><a class="dropdown-item" href="#" (click)="logout()">Se déconnecter</a></li>
                 </ul>
               </div>
-              <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span> 
+              <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span>
             </button>
           </div>
           <div class="user_profile_cart">
@@ -80,7 +83,7 @@
               </div>
               <span class="text-nowrap" ><a href="/panier">panier</a></span>
             </button>
-            
+
           </div>
           <div class="user_profile_cart">
             <button class="border d-flex bt_card">
@@ -94,3 +97,4 @@
       </div>
     </nav>
 </section>
+

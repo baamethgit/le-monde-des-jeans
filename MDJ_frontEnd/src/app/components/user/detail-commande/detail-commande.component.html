@@ -17,7 +17,7 @@
                   <span class="radio-button"></span>
                   <span class="label-text">Livraison</span>
                 </label>
-                
+
                 <label class="option">
                   <input type="radio" name="deliveryOption" [(ngModel)]="selectedOption" value="recuperation">
                   <span class="radio-button"></span>
@@ -30,9 +30,7 @@
                     <div class="delivery-zone">
                         <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
                         <select (change)="onZoneChange($event)">
-                            <option [value]="null">
-                                Choisir une zone
-                            </option>
+
                             <ng-container *ngFor="let zone of zones">
                                 <option [value]="zone.id" [selected]="selectedZone?.id">
                                     Zone {{zone.numero}} : {{ zone.nom }}
@@ -44,14 +42,14 @@
                         <p><span class="fw-bold text-dark">Coût Livraison : </span>
                         <span >{{ selectedZone?.prix_livraison }} <strong>FCFA</strong></span></p>
                     </div>
-    
+
                     <div class="delivery-method">
                         <p>{{selectedZone?.info || 'infos sur cette zone'}}</p>
                     </div>
                 }@else {
                     <p>Aucune zone proposé,vous avez l'option récupération.</p>
                 }
-               
+
             </div>
             <div *ngIf="selectedOption != 'livraison'"  class="col-10 mx-auto border p-3 rounded-2">
                 <p class="text-center ">
@@ -86,7 +84,7 @@
                             <span>Orange Money</span>
                             <img src="../../../../assets/img/orange-money.jpg" alt="" style="width: 40px;height:40px;">
                         </span>
-                        
+
                     </label>
                     <small class="text-warning text-center">L'option Orange Money n'est pas encore disponible.</small>
                 </div>
@@ -110,7 +108,7 @@
                 </p>
                 <p class="d-flex justify-content-between fw-bold border-top my-2">
                     <span>TOTAL</span>
-                    <span>{{commande?.montant}} FCFA</span>
+                    <span>{{calculTotal}}  FCFA</span>
                 </p>
             </div>
             <p *ngIf="commande" class="py-3 d-flex justify-content-between flex-wrap">
@@ -124,20 +122,3 @@
     </p>
 
 </section>
-
-<!-- 
-
-<ng-template #content let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Profile update</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<form>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae voluptatem, incidunt atque ea voluptates aut vitae beatae excepturi eius maxime eos nobis corporis eaque earum qui veritatis et obcaecati quibusdam?
-		</form>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="payerCommande()">Save</button>
-	</div>
-</ng-template> -->
