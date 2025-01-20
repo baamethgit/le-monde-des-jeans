@@ -18,19 +18,19 @@ export const authInterceptor: HttpInterceptorFn = (
   if(request.url.includes('login') || request.url.includes('inscription') || request.url.includes('resetpwd')){
     return next(request);
   }
-  
+
   if (token) {
     const clonedRequest = request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
       }
     });
-    
+
     return next(clonedRequest)
     .pipe(
       catchError(error => {
         if (error instanceof HttpErrorResponse &&
-          error.status === 401) 
+          error.status === 401)
           {
             if (!isRefreshing) {
               isRefreshing = true;
