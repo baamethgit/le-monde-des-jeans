@@ -336,6 +336,7 @@ createProduct() {
     formData.append('categorie', this.AddProductForm.get('categorySelect')?.value);
 
     const nom = this.AddProductForm.get('nom_produit')?.value;
+    const pointure = this.UpdateProductForm.get('pointure_produit')?.value;
     const taille = this.AddProductForm.get('taille')?.value;
     const couleur = this.AddProductForm.get('couleur')?.value;
     const composition = this.AddProductForm.get('composition')?.value;
@@ -345,6 +346,7 @@ createProduct() {
     const neuf = this.AddProductForm.get('neuf_checkbox')?.value ? 'true' : 'false';
 
     if (nom) formData.append('nom', nom);
+    if (pointure) formData.append('pointure', pointure)
     if (taille) formData.append('taille', taille);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
@@ -379,6 +381,7 @@ UpdateProduct(id:number) {
     formData.append('categorie', this.UpdateProductForm.get('categorySelect')?.value);
 
     const nom = this.UpdateProductForm.get('nom_produit')?.value;
+    const pointure = this.UpdateProductForm.get('pointure_produit')?.value;
     const taille = this.UpdateProductForm.get('taille')?.value;
     const couleur = this.UpdateProductForm.get('couleur')?.value;
     const composition = this.UpdateProductForm.get('composition')?.value;
@@ -388,6 +391,7 @@ UpdateProduct(id:number) {
     const neuf = this.UpdateProductForm.get('neuf_checkbox')?.value ? 'true' : 'false';
 
     if (nom) formData.append('nom', nom);
+    if (pointure) formData.append('pointure', pointure)
     if (taille) formData.append('taille', taille);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);

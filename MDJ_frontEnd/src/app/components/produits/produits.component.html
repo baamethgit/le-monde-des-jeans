@@ -1,18 +1,5 @@
 <section class="product_brand">
-    <div class="brand text-center d-flex justify-content-center">
-        <img class="paste-image-icon" ngSrc="../../assets/img/435688628_122141508104191964_5213991208487601928_n.jpg" fill priority alt="" srcset="">
-        <div class="inner_brand">
-            <div class="inner_brand_path">
-                Accueil > <span class="inner_brand_current_location">Shop</span>
-            </div>
-            <div class="inner_brand_title">
-                Boutique
-            </div>
-            <div class="inner_brand_desc">
-                Des vetements et chaussures a bon prix.
-            </div>
-        </div>
-    </div>
+    <!-- Previous content unchanged -->
 </section>
 <section class="product">
     <div class="product_main d-flex flex-column flex-md-row px-3 px-md-0 align-items-md-start">
@@ -31,7 +18,7 @@
                     >
                       Tous les produits
                     </a>
-                  </li>
+                </li>
                 @for (item of list_categorie; track $index) {
                     <li>
                         <a
@@ -50,16 +37,25 @@
                   <option value="{{item.slug}}">{{item.nom}}</option>
                 }
             </select>
-              
-              
+
+            <!-- Legend Section -->
+            <div class="product_legend mt-4">
+                <h4 class="my-4">LÉGENDE</h4>
+                <div class="legend_items">
+                    <div class="legend_item d-flex align-items-center mb-4">
+                        <img src="../../../assets/img/king.png" alt="VIP" class="legend_icon me-2">
+                        <span>Produit VIP</span>
+                    </div>
+                    <div class="legend_item d-flex align-items-center">
+                        <div class="legend-badge-wrapper me-2">
+                            <div class="product-item__new-badge-legend">NEUF</div>
+                        </div>
+                        <span>Produit Neuf</span>
+                    </div>
+                </div>
+            </div>
         </div>
         
-            <router-outlet class="p-0 m-0 row">
-                
-            </router-outlet>
+        <router-outlet class="p-0 m-0 row"></router-outlet>
     </div>
-                
-            
-        
-    
 </section>

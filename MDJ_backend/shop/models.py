@@ -52,7 +52,7 @@ class Produit(models.Model):
         ('BR', 'Marron'),
     )
 
-    nom = models.CharField(max_length=200)
+    nom = models.CharField(max_length=200, null=True, blank=True)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
     description=models.CharField(null=True, blank=True,max_length=1500)

@@ -5,17 +5,20 @@ import { CategorieService } from '../../../services/categories/categorie.service
 import { Subscription } from 'rxjs';
 import { Produit } from '../../../models/produit';
 import { NgOptimizedImage } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-filter',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink, NgOptimizedImage, FormsModule],
   templateUrl: './product-filter.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
 export class ProductFilterComponent {
   produits_category: Produit[] = [];
   current_category: string = '';
+  selectedNew: string = '';
+  selectedSpecial: string = '';
   private routeSub: Subscription | undefined;
 
 constructor(private produitService:ProduitService, private categorieService:CategorieService, private route:ActivatedRoute){}
