@@ -7,6 +7,9 @@
                     [responsiveOptions]="responsiveOptions" 
                     [numVisible]="7" 
                     [circular]="true"
+                    [showItemNavigators]="true"
+                    [showThumbnails]="true"
+                    [showThumbnailNavigators]="false"
                     class="product-gallery">
           <ng-template pTemplate="item" let-item>
             <div class="product-gallery__main">
@@ -27,6 +30,12 @@
           <h6 class="product-info__error" *ngIf="errorMessage">{{errorMessage}}</h6>
           <h1 class="product-info__title">{{product_selected?.nom}}</h1>
           <p class="product-info__price">{{product_selected?.prix}} FCFA</p>
+          
+          <!-- Added Description Section -->
+          <div class="product-info__description">
+            <h2 class="description__title">Description</h2>
+            <p class="description__text">{{product_selected?.description}}</p>
+          </div>
 
           <div class="product-info__specs">
             @if (product_selected?.taille) {
@@ -34,17 +43,20 @@
                 <span class="spec-item__label">Taille:</span>
                 <span class="spec-item__value">{{product_selected?.taille}}</span>
               </div>
-            } @else {
+            } 
+            @if (product_selected?.pointure){
               <div class="spec-item">
                 <span class="spec-item__label">Pointure:</span>
                 <span class="spec-item__value">{{product_selected?.pointure}}</span>
               </div>
             }
 
-            <div class="spec-item">
-              <span class="spec-item__label">Composition:</span>
-              <span class="spec-item__value">{{product_selected?.composition}}</span>
-            </div>
+            @if (product_selected?.composition) {
+              <div class="spec-item">
+                <span class="spec-item__label">Composition:</span>
+                <span class="spec-item__value">{{product_selected?.composition}}</span>
+              </div>
+            }
 
             <div class="spec-item">
               <span class="spec-item__label">Stock:</span>
@@ -130,7 +142,7 @@
     </div>
 
     <div class="related-products__action">
-      <button class="btn btn--outline">Voir plus</button>
+      <button [routerLink]="['/produits/categorie', product_selected?.categorie_detail?.nom]" class="btn btn--outline">Voir plus</button>
     </div>
   </div>
 </section>

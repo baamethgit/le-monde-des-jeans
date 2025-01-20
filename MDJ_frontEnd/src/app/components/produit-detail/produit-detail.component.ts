@@ -29,15 +29,22 @@ export class ProduitDetailComponent {
   userService = inject(UserService);
   errorMessage = '';
   quantity: number = 1;
-  responsiveOptions: any[] = [
-    {
-        breakpoint: '1300px',
-        numVisible: 4
-    },
-    {
-        breakpoint: '575px',
-        numVisible: 1
-    }
+responsiveOptions = [
+  {
+    breakpoint: '1024px',
+    numVisible: 5,
+    showThumbnails: true
+  },
+  {
+    breakpoint: '768px',
+    numVisible: 3,
+    showThumbnails: false
+  },
+  {
+    breakpoint: '560px',
+    numVisible: 1,
+    showThumbnails: false
+  }
 ];
 
   constructor(

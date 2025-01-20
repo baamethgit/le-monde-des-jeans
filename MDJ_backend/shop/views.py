@@ -63,7 +63,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated,IsAdminUser]
     def retrieve(self, request, *args, **kwargs):
         # Récupérer le produit par le slug au lieu de l'id
-        slug = kwargs.get('pk')  # 'pk' est l'argument par défaut utilisé pour l'identifiant
+        slug = kwargs.get('pk')  
         produit = get_object_or_404(models.Produit, slug=slug)
         serializer = self.get_serializer(produit)
         return Response(serializer.data)
