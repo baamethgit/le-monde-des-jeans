@@ -550,92 +550,105 @@ $blue_color: #377DFF;
       flex: 0 0 200px;
     }
   }
+
+
   .marques {
     position: relative;
     z-index: 5;
     background-color: $blue_color;
-    padding: 40px 0;
+    padding: 20px 0; // Réduit légèrement le padding
     overflow: hidden;
 }
 
-.marques {
-    position: relative;
-    z-index: 5;
-    background-color: $blue_color;
-    padding: 40px 0;
-    overflow: hidden;
-  }
-  
-  .marques h2 {
+.marques h2 {
     color: white;
-    margin-bottom: 30px;
+    margin-bottom: 20px; // Réduit la marge
     font-size: 2.5rem;
-  }
-  
-  .brand-slider {
+}
+
+.brand-slider {
     width: 100%;
     overflow: hidden;
-  }
-  
-  .brand-track {
+}
+
+.brand-track {
     display: flex;
     animation: scroll 40s linear infinite;
-  }
-  
-  .brand-track img {
-    width: 150px;
-    height: auto;
+}
+
+.brand-track img {
+    width: auto; // Changé de width fixe à auto
+    height: 100px; // Hauteur fixe pour toutes les images
     margin: 0 25px;
     opacity: 0.7;
     transition: opacity 0.3s ease;
-  }
-  
-  .brand-track img:hover {
+    object-fit: contain; // Garde les proportions tout en remplissant l'espace
+}
+
+.polo_icon {
+    height: 120px !important ;// Ajustement spécifique pour le logo Polo qui pourrait être plus grand
+}
+
+.brand-track img:hover {
     opacity: 1;
-  }
-  
-  @keyframes scroll {
+}
+
+@keyframes scroll {
     0% {
-      transform: translateX(0);
+        transform: translateX(0);
     }
     100% {
-      transform: translateX(calc(-150px * 6 - 50px * 6));
+        transform: translateX(calc(-60px * 6 - 50px * 6)); // Ajusté en fonction de la nouvelle taille
     }
-  }
-  
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
+    .marques {
+        padding: 15px 0;
+    }
+
     .marques h2 {
-      font-size: 2rem;
+        font-size: 2rem;
+        margin-bottom: 15px;
     }
     
     .brand-track img {
-      width: 100px;
-      margin: 0 15px;
+        height: 80px; // Légèrement plus petit sur tablette
+        margin: 0 15px;
+    }
+
+    .polo_icon {
+        height: 100px !important;
     }
     
     @keyframes scroll {
-      100% {
-        transform: translateX(calc(-100px * 6 - 30px * 6));
-      }
+        100% {
+            transform: translateX(calc(-45px * 6 - 30px * 6));
+        }
     }
-  }
-  
-  @media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
     .marques h2 {
-      font-size: 1.5rem;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
     }
     
     .brand-track img {
-      width: 80px;
-      margin: 0 10px;
+        height: 70px; // Encore plus petit sur mobile
+        margin: 0 10px;
+    }
+
+    .polo_icon {
+        height: 90px !important;
     }
     
     @keyframes scroll {
-      100% {
-        transform: translateX(calc(-80px * 6 - 20px * 6));
-      }
+        100% {
+            transform: translateX(calc(-35px * 6 - 20px * 6));
+        }
     }
-  }
+}
 
 .Accueil_Intro{
     .floating_object{
