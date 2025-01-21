@@ -45,10 +45,10 @@ class InitiateWavePaymentView(APIView):
             'amount': str(order.montant),
             'currency': 'XOF',
             'client_reference': str(order.ref_code),
-            #'success_url': success_url,
-            'success_url': 'https://www.google.sn/',
-            #'error_url':error_url
-            'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
+            'success_url': success_url,
+            #'success_url': 'https://www.google.sn/',
+            'error_url':error_url
+            #'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
         }
 
         # Dans ta vue

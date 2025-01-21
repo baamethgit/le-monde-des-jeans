@@ -29,15 +29,27 @@
                 @if (zones.length) {
                     <div class="delivery-zone">
                         <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
+                      @if (isZoneLoading) {
+                        <tr>
+                          <td colspan="8" class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                              <span class="visually-hidden">Chargement...</span>
+                            </div>
+                          </td>
+                        </tr>
+                      } @else {
                         <select (change)="onZoneChange($event)">
-
-                            <ng-container *ngFor="let zone of zones">
-                                <option [value]="zone.id" [selected]="selectedZone?.id">
-                                    Zone {{zone.numero}} : {{ zone.nom }}
-                                </option>
-                            </ng-container>
+                          <ng-container *ngFor="let zone of zones">
+                            <option [value]="zone.id" [selected]="selectedZone?.id === zone.id">
+                              Zone {{zone.numero}} : {{ zone.nom }}
+                            </option>
+                          </ng-container>
                         </select>
+                      }
+
+
                     </div>
+                  @if (!isZoneLoading) {
                     <div class="delivery-cost">
                         <p><span class="fw-bold text-dark">Coût Livraison : </span>
                         <span >{{ selectedZone?.prix_livraison }} <strong>FCFA</strong></span></p>
@@ -46,6 +58,7 @@
                     <div class="delivery-method">
                         <p>{{selectedZone?.info || 'infos sur cette zone'}}</p>
                     </div>
+                  }
                 }@else {
                     <p>Aucune zone proposé,vous avez l'option récupération.</p>
                 }

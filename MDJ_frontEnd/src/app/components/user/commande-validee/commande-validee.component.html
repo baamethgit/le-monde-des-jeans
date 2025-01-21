@@ -9,19 +9,24 @@
         <h4 class="text-center"  >VOTRE COMMANDE A ETE VALIDEE</h4>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Date : </span>
-            <span class="fw-bold">21 Octobre 2024</span>
+            <span class="fw-bold">{{commande.date_commande}}</span>
         </p>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Total : </span>
-            <span class="fw-bold">23000 frs</span>
+            <span class="fw-bold">{{ commande.montant }} frs</span>
         </p>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Zone de Livraison : </span>
-            <span class="fw-bold">Ngor-Almadies</span>
+          @if (commande.recupere_magasin){
+            <span class="fw-bold">Récupération sur place</span>
+          } @else {
+            <span class="fw-bold" >{{ commande.zone_livraison }}</span>
+
+          }
         </p>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Méthode de Paiement : </span>
-            <span class="fw-bold">Orange Money</span>
+            <span class="fw-bold">Wave</span>
         </p>
         <p class="mx-auto d-flex align-items-center justify-content-center text-center">
             <button class="my-1 w-50 bg-dark rounded-3 border-0 p-2" style="color:white">

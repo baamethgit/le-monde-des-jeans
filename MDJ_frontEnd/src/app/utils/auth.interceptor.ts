@@ -47,10 +47,8 @@ export const authInterceptor: HttpInterceptorFn = (
                 }),
                 catchError(refreshError => {
                   isRefreshing = false;
-                  console.log("erreur de refreshing",refreshError)
 
                   if (refreshError.status == '401') {
-                    console.log("deconnexion")
                     authService.logout();
                   }
                   router.navigate(["login"]);
