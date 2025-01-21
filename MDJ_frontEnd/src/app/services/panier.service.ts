@@ -4,12 +4,14 @@ import { Observable } from 'rxjs';
 import { IcontenuPanier, Ipanier } from '../components/user/panier/panier.model';
 import dayjs from 'dayjs';
 import * as duration from 'dayjs/plugin/duration';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PanierService {
-  private apiUrl = 'http://127.0.0.1:8000/apiProduit';
+  private baseUrl = environment.apiUrl;
+  private apiUrl = `${this.baseUrl}/apiProduit`;
 
   constructor(private http: HttpClient) { }
 

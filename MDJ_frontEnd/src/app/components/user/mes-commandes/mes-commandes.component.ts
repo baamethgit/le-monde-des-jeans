@@ -43,7 +43,7 @@ export class MesCommandesComponent implements OnInit {
         this.mesCommandesEnCours = data;
       },
       error : (error) =>{
-          
+
       },
     })
     this.commandeService.getListeCommandesHistorique().subscribe({
@@ -51,12 +51,17 @@ export class MesCommandesComponent implements OnInit {
           this.mesCommandesLivrees = value;
       },
       error : (err) =>{
-          
+
       },
     })
   }
 
-  MarquerColisRecu(id_commande:number):void{
+  MarquerColisRecu(id_commande:number, event: Event):void{
+    const checkbox = event.target as HTMLInputElement;
+    const isChecked = checkbox.checked;
+    if (isChecked) {
+      const confirmed = confirm("Vous-étes sur d'avoir reçu le colis?");
+      if (confirmed) {
     this.commandeService.updateCommandeStatus(id_commande,{'statut':'LIVREE'}).subscribe({
       next:(data)=>{
         this.loadData();
@@ -66,6 +71,10 @@ export class MesCommandesComponent implements OnInit {
 
       }
     })
+    }else{
+        checkbox.checked = false;
+      }
+    }
   }
 
   temoigner():void{

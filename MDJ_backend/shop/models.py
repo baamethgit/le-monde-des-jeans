@@ -228,7 +228,7 @@ class Commande(models.Model):
 
     def marquer_comme_livree(self):
         if self.statut == 'PAYEE' or self.statut == 'EN_COURS_LIVRAISON':
-            self.date_livraison = timezone.now
+            self.date_livraison = timezone.now()
             self.statut = 'LIVREE'
             self.save()
 

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ZoneLivraison } from '../../models/zone-livraison';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import {environment} from "../../../environments/environment";
 
 export interface statCommande{
   total_commandes: number,
@@ -14,7 +15,8 @@ export interface statCommande{
 })
 export class CommandeService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://127.0.0.1:8000/';
+  private baseUrl = `${environment.apiUrl}/`;
+
 
   constructor() { }
 
@@ -80,7 +82,7 @@ export class CommandeService {
     return this.http.get(`${this.baseUrl}apiProduit/detail-commande/${commandeId}/`,{withCredentials: true  });
   }
 
-  getCommandeByRefCode(commandeRefCode: number): Observable<any> {
+  getCommandeByRefCode(commandeRefCode: string): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/detail-commande-ref/${commandeRefCode}/`,{withCredentials: true  });
   }
 

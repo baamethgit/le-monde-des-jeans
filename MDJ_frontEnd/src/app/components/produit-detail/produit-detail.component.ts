@@ -96,7 +96,7 @@ acheterDirectement(productSlug : string | undefined){
       },
       error : (error)=>{
         if(error.error.message_erreur)
-          this.errorMessage = error.error.message_erreur;
+          this.errorMessage = "Vous avez une commande en attente,veuillez la valider d'abord .";
       }
     });
   }}

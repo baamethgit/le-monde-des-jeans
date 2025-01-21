@@ -55,7 +55,7 @@
                 {{order.date_livraison | date : 'dd MMMM YYYY HH:mm'}}
               </div>
               <div *ngIf="order.statut === StatutCommande.EN_COURS_LIVRAISON ||  order.statut === StatutCommande.PAYEE">
-                <input type="checkbox" name="" (change)="MarquerColisRecu(order.id)" id="order.id">
+                <input type="checkbox" name="" (change)="MarquerColisRecu(order.id, $event)" id="order.id">
                 <label for="order.id" class="mx-1">Colis reçu</label>
               </div>
               <div class="order-total">
