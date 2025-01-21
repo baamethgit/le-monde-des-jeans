@@ -26,6 +26,7 @@
 .product-detail__gallery {
   position: relative;
   background: #fff;
+  height: max-content;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -247,19 +248,17 @@
 .related-products__action {
   text-align: center;
 }
-/* Styles principaux de la galerie */
 :host ::ng-deep .p-galleria {
   background: transparent;
   border: none;
   
-  /* Style du conteneur principal */
   .p-galleria-content {
     padding: 0;
   }
 
-  /* Style pour l'image principale */
+  /* Container principal */
   .p-galleria-item-wrapper {
-    height: 400px;  // Hauteur fixe pour le conteneur principal
+    height: 400px;
 
     .p-galleria-item {
       padding: 0;
@@ -276,7 +275,42 @@
     }
   }
 
-  /* Style pour les miniatures */
+  /* Flèches de navigation principales */
+  .p-galleria-item-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem !important;
+    height: 3rem !important;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1;
+    transition: all 0.3s ease;
+    
+    &.p-galleria-item-prev {
+      left: 1rem;
+    }
+    
+    &.p-galleria-item-next {
+      right: 1rem;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .p-icon {
+      color: white;
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Style pour les thumbnails */
   .p-galleria-thumbnail-wrapper {
     padding: 1rem 0;
     background: transparent;
@@ -287,9 +321,9 @@
       .p-galleria-thumbnail-items-container {
         .p-galleria-thumbnail-item {
           opacity: 0.7;
-          transition: opacity 0.2s;
+          transition: all 0.3s ease;
           cursor: pointer;
-
+          
           &:hover {
             opacity: 1;
           }
@@ -303,45 +337,38 @@
           }
 
           img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             object-fit: cover;
             border-radius: 4px;
             border: 2px solid transparent;
-            transition: border-color 0.2s;
+            transition: border-color 0.3s ease;
           }
         }
       }
     }
-  }
 
-  /* Style pour les boutons de navigation */
-  .p-galleria-indicators {
-    padding: 1rem;
-  }
-
-  @media (min-width: 575px) {
+    /* Navigation des thumbnails */
     .p-galleria-thumbnail-prev,
     .p-galleria-thumbnail-next {
-      display: none;
-    }
-  }
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      width: 2rem !important;
+      height: 2rem !important;
+      border-radius: 50%;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.7);
+      }
 
-  .p-galleria-thumbnail-prev,
-  .p-galleria-thumbnail-next {
-    margin: 0 0.5rem;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    
-    &:hover {
-      background: rgba(0, 0, 0, 0.7);
-    }
-
-    &.p-link {
-      color: white;
+      .p-icon {
+        color: white;
+        font-size: 1rem;
+      }
     }
   }
 }
@@ -350,25 +377,50 @@
 @media screen and (max-width: 768px) {
   :host ::ng-deep .p-galleria {
     .p-galleria-item-wrapper {
-      height: 300px;  // Hauteur réduite sur mobile
+      height: 300px;
     }
 
+    /* Navigation principale sur mobile */
+    .p-galleria-item-nav {
+      width: 2.5rem !important;
+      height: 2.5rem !important;
+      opacity: 1 !important;
+      
+      &.p-galleria-item-prev {
+        left: 0.5rem;
+      }
+      
+      &.p-galleria-item-next {
+        right: 0.5rem;
+      }
+    }
+
+    /* Thumbnails sur mobile */
     .p-galleria-thumbnail-wrapper {
+      padding: 0.5rem 0;
+
       .p-galleria-thumbnail-container {
+        padding: 0 1.5rem;
+
         .p-galleria-thumbnail-items-container {
           .p-galleria-thumbnail-item {
             img {
-              width: 60px;  // Miniatures plus petites sur mobile
-              height: 60px;
+              width: 50px;
+              height: 50px;
             }
           }
         }
       }
+
+      /* Navigation des thumbnails sur mobile */
+      .p-galleria-thumbnail-prev,
+      .p-galleria-thumbnail-next {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
     }
   }
 }
-
-/* Style pour le conteneur de la galerie */
 .product-gallery {
   background: white;
   padding: 1rem;
@@ -478,5 +530,41 @@
   .quantity-input {
     width: 50px;
     height: 36px;
+  }
+}
+.product-info__description {
+  margin: 1.5rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.description__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.description__text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #666;
+  white-space: pre-line;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-info__description {
+    margin: 1rem 0;
+    padding: 0.75rem 0;
+  }
+  
+  .description__title {
+    font-size: 1rem;
+  }
+  
+  .description__text {
+    font-size: 0.9375rem;
   }
 }

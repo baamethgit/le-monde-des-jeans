@@ -5,17 +5,20 @@ import { RouterLink } from '@angular/router';
 import { Produit } from '../../../models/produit';
 import { categorie } from '../../../models/categorie';
 import { CommonModule ,NgOptimizedImage} from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [RouterLink,CommonModule, NgOptimizedImage],
+  imports: [RouterLink,CommonModule, NgOptimizedImage, FormsModule],
   templateUrl: './all-products.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
 export class AllProductsComponent implements OnInit{
   produits:Produit[]=[];
   list_categorie:categorie[]=[];
+  selectedNew: string = '';
+  selectedSpecial: string = '';
 
   constructor(private produitService:ProduitService, private categorieService:CategorieService){}
 

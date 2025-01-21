@@ -60,10 +60,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Produit.objects.all()
     serializer_class = serializers.ProductSerializer
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    def get_permissions(self):
+        if self.action == 'retrieve' or self.action == 'list':
+            permission_classes = [IsAuthenticated]
+        elif self.action in ['update', 'partial_update', 'create', 'destroy']:
+            permission_classes = [IsAdminUser, IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser, IsAuthenticated]
+        return [permission() for permission in permission_classes]
     def retrieve(self, request, *args, **kwargs):
         # Récupérer le produit par le slug au lieu de l'id
-        slug = kwargs.get('pk')  # 'pk' est l'argument par défaut utilisé pour l'identifiant
+        slug = kwargs.get('pk')  
         produit = get_object_or_404(models.Produit, slug=slug)
         serializer = self.get_serializer(produit)
         return Response(serializer.data)
