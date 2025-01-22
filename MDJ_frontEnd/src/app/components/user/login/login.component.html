@@ -1,104 +1,127 @@
-<section class="container-md container-fluid py-5">
-    <div class="row align-items-center justify-content-center h-100">
-      <!-- Image Section -->
-      <div class="col-md-6 mb-4 mb-md-0">
-        <div class="login-image-container rounded-3 overflow-hidden shadow">
-          <img src="../../../../assets/img/men39s-clothes-hanger-generative-ai.jpg" 
-               alt="Fashion Login Image" 
-               class="img-fluid object-fit-cover">
+@if(isServer) {
+  <div class="bg-dark bg-opacity-25 position-absolute d-flex align-items-center justify-content-center w-100" style="width:100vw;height:100vh ;top:0;left:0">
+    <div id="wifi-loader">
+      <svg class="circle-outer" viewBox="0 0 86 86">
+        <circle class="back" cx="43" cy="43" r="40"></circle>
+        <circle class="front" cx="43" cy="43" r="40"></circle>
+        <circle class="new" cx="43" cy="43" r="40"></circle>
+      </svg>
+      <svg class="circle-middle" viewBox="0 0 60 60">
+        <circle class="back" cx="30" cy="30" r="27"></circle>
+        <circle class="front" cx="30" cy="30" r="27"></circle>
+      </svg>
+      <svg class="circle-inner" viewBox="0 0 34 34">
+        <circle class="back" cx="17" cy="17" r="14"></circle>
+        <circle class="front" cx="17" cy="17" r="14"></circle>
+      </svg>
+      <div class="text" data-text="Chargement..."></div>
+    </div>
+  </div>
+} @else {
+  @if (!this.isUser()) {
+    <section class="container-md container-fluid py-5">
+      <div class="row align-items-center justify-content-center h-100">
+        <!-- Image Section -->
+        <div class="col-md-6 mb-4 mb-md-0">
+          <div class="login-image-container rounded-3 overflow-hidden shadow">
+            <img src="../../../../assets/img/men39s-clothes-hanger-generative-ai.jpg"
+                 alt="Fashion Login Image"
+                 class="img-fluid object-fit-cover">
+          </div>
         </div>
-      </div>
-  
-      <!-- Login Form Section -->
-      <div class="col-md-6 col-lg-5">
-        <div class="card border-0 shadow-sm">
-          <div class="card-body p-4 p-md-5">
-            <form [formGroup]="loginForm" (ngSubmit)="loginUser()" class="needs-validation">
-              <!-- Header -->
-              <div class="text-center mb-4">
-                <h3 class="fw-bold mb-2">Connexion</h3>
-                <p class="text-muted">
-                  Je n'ai pas encore de compte, 
-                  <a routerLink="/inscription" class="text-primary text-decoration-none">
-                    créer un compte
-                  </a>
-                </p>
-              </div>
-  
-              <!-- Phone Number Field -->
-              <div class="form-floating mb-3">
-                <input type="text" 
-                       id="phone_number" 
-                       formControlName="phone_number" 
-                       class="form-control" 
-                       placeholder="+221 |"
-                       [class.is-invalid]="loginForm.controls['phone_number'].invalid && 
-                                        (loginForm.controls['phone_number'].dirty || 
+
+        <!-- Login Form Section -->
+        <div class="col-md-6 col-lg-5">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 p-md-5">
+              <form [formGroup]="loginForm" (ngSubmit)="loginUser()" class="needs-validation">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                  <h3 class="fw-bold mb-2">Connexion</h3>
+                  <p class="text-muted">
+                    Je n'ai pas encore de compte,
+                    <a routerLink="/inscription" class="text-primary text-decoration-none">
+                      créer un compte
+                    </a>
+                  </p>
+                </div>
+
+                <!-- Phone Number Field -->
+                <div class="form-floating mb-3">
+                  <input type="text"
+                         id="phone_number"
+                         formControlName="phone_number"
+                         class="form-control"
+                         placeholder="+221 |"
+                         [class.is-invalid]="loginForm.controls['phone_number'].invalid &&
+                                        (loginForm.controls['phone_number'].dirty ||
                                          loginForm.controls['phone_number'].touched)">
-                <label for="phone_number">Numéro de Téléphone</label>
-                
-                <!-- Error Messages -->
-                <div class="invalid-feedback" *ngIf="loginForm.controls['phone_number'].invalid && 
+                  <label for="phone_number">Numéro de Téléphone</label>
+
+                  <!-- Error Messages -->
+                  <div class="invalid-feedback" *ngIf="loginForm.controls['phone_number'].invalid &&
                      (loginForm.controls['phone_number'].dirty || loginForm.controls['phone_number'].touched)">
-                  <small *ngIf="loginForm.controls['phone_number'].hasError('required')">
-                    Ce champ est obligatoire
-                  </small>
-                  <small *ngIf="loginForm.controls['phone_number'].hasError('email') || 
+                    <small *ngIf="loginForm.controls['phone_number'].hasError('required')">
+                      Ce champ est obligatoire
+                    </small>
+                    <small *ngIf="loginForm.controls['phone_number'].hasError('email') ||
                               loginForm.controls['phone_number'].hasError('validMail')">
-                    Veuillez saisir un numéro de téléphone valide
-                  </small>
+                      Veuillez saisir un numéro de téléphone valide
+                    </small>
+                  </div>
                 </div>
-              </div>
-  
-              <!-- Password Field -->
-              <div class="form-floating mb-3">
-                <div class="input-group">
-                  <input [type]="InputType" 
-                         id="password" 
-                         formControlName="password" 
-                         class="form-control border-end-0" 
-                         placeholder="Mot de passe"
-                         [class.is-invalid]="loginForm.controls['password'].invalid && 
-                                          (loginForm.controls['password'].dirty || 
+
+                <!-- Password Field -->
+                <div class="form-floating mb-3">
+                  <div class="input-group">
+                    <input [type]="InputType"
+                           id="password"
+                           formControlName="password"
+                           class="form-control border-end-0"
+                           placeholder="Mot de passe"
+                           [class.is-invalid]="loginForm.controls['password'].invalid &&
+                                          (loginForm.controls['password'].dirty ||
                                            loginForm.controls['password'].touched)">
-                  <button class="btn btn-outline-secondary border border-start-0" 
-                          type="button" 
-                          (click)="togglePassword()">
-                    <i [class]="InputType === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
-                  </button>
-                </div>
-                
-                <!-- Error Message -->
-                <div class="invalid-feedback" *ngIf="loginForm.controls['password'].invalid && 
+                    <button class="btn btn-outline-secondary border border-start-0"
+                            type="button"
+                            (click)="togglePassword()">
+                      <i [class]="InputType === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+                    </button>
+                  </div>
+
+                  <!-- Error Message -->
+                  <div class="invalid-feedback" *ngIf="loginForm.controls['password'].invalid &&
                      (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
-                  <small *ngIf="loginForm.controls['password'].hasError('required')">
-                    Ce champ est obligatoire
-                  </small>
+                    <small *ngIf="loginForm.controls['password'].hasError('required')">
+                      Ce champ est obligatoire
+                    </small>
+                  </div>
                 </div>
-              </div>
-  
-              <!-- Forgot Password Link -->
-              <div class="d-flex justify-content-end mb-4">
-                <a routerLink="/resetpwd" class="text-primary text-decoration-none small">
-                  Mot de passe oublié ?
-                </a>
-              </div>
-  
-              <!-- Error Message -->
-              <div *ngIf="loginError" class="alert alert-danger text-center small" role="alert">
-                {{ loginError }}
-              </div>
-  
-              <!-- Submit Button -->
-              <button type="submit" 
-                      class="btn btn-primary w-100 py-2 mb-3"
-                      [disabled]="loginForm.invalid">
-                <span>Se Connecter</span>
-              </button>
-            </form>
+
+                <!-- Forgot Password Link -->
+                <div class="d-flex justify-content-end mb-4">
+                  <a routerLink="/resetpwd" class="text-primary text-decoration-none small">
+                    Mot de passe oublié ?
+                  </a>
+                </div>
+
+                <!-- Error Message -->
+                <div *ngIf="loginError" class="alert alert-danger text-center small" role="alert">
+                  {{ loginError }}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="btn btn-primary w-100 py-2 mb-3"
+                        [disabled]="loginForm.invalid">
+                  <span>Se Connecter</span>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  
+    </section>
+  }
+}
+

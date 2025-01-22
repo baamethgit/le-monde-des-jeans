@@ -5,4 +5,6 @@ export interface User {
     addresse_mail:string;
     password?: string;
     slug:string;
+    is_staff?:boolean,
+    is_superuser?:boolean,
 }

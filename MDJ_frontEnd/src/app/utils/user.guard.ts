@@ -9,10 +9,13 @@ export const userGuard: CanActivateFn = (
   ) => {
     const userService = inject(UserService);
     const router = inject(Router);
-      if (userService.loggedIn.value) {
+
+     if (userService.getAccessToken() != null) {
         return true;
       } else {
-        router.navigate(['/login']);
-        return false;
+        router.navigate(['/login'], {
+          queryParams: { returnUrl: state.url }
+        });
+         return false;
       }
 };

@@ -28,6 +28,7 @@ export class UserService {
 
 
   private hasToken(): boolean {
+
     return !!this.getAccessToken();
   }
 
@@ -40,6 +41,12 @@ export class UserService {
       return localStorage.getItem('access_token');
     }
     return null;
+  }
+
+  userIsAdmin(){
+    this.getUser().subscribe({
+
+    })
   }
 
   setAccessToken(token : string): void {

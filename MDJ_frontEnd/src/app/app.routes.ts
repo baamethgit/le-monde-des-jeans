@@ -34,6 +34,8 @@ import { PaymentComponent } from './components/admin/payment/payment.component';
 import { PaiementSuccessComponent } from './components/paiement-success/paiement-success.component';
 import { PaiementFailedComponent } from './components/paiement-failed/paiement-failed.component';
 import { InfosGenComponent } from './components/admin/infos-gen/infos-gen.component';
+import {userGuard} from "./utils/user.guard";
+import {adminGuard} from "./utils/admin.guard";
 
 
 export const routes: Routes = [
@@ -41,13 +43,13 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', component: HomeComponent, title: 'LMDJ | Accueil' },
-      { path: 'panier', component: PanierComponent, title: 'LMDJ | Panier' },
-      { path: 'commande-validee', component: CommandeValideeComponent, title: 'LMDJ | Commande' },
-      { path: 'profile', component: ProfilComponent, title: 'LMDJ | Profile' },
-      { path: 'profile/edit', component: ProfilUpdateComponent, title: 'LMDJ | Profile' },
-      { path: 'detail-commande', component: DetailCommandeComponent, title: 'LMDJ | Commande' },
-      { path: 'mes-commandes', component: MesCommandesComponent, title: 'LMDJ | Commandes' },
+      { path: '', component: HomeComponent, title: 'LMDJ | Accueil',canActivate:[userGuard] },
+      { path: 'panier', component: PanierComponent, title: 'LMDJ | Panier',canActivate:[userGuard]  },
+      { path: 'commande-validee', component: CommandeValideeComponent, title: 'LMDJ | Commande' ,canActivate:[userGuard] },
+      { path: 'profile', component: ProfilComponent, title: 'LMDJ | Profile' ,canActivate:[userGuard] },
+      { path: 'profile/edit', component: ProfilUpdateComponent, title: 'LMDJ | Profile' ,canActivate:[userGuard] },
+      { path: 'detail-commande', component: DetailCommandeComponent, title: 'LMDJ | Commande',canActivate:[userGuard]  },
+      { path: 'mes-commandes', component: MesCommandesComponent, title: 'LMDJ | Commandes',canActivate:[userGuard]  },
       {
         path: 'produits',
         component: ProduitsComponent,
@@ -55,38 +57,39 @@ export const routes: Routes = [
           { path: '', component: AllProductsComponent, pathMatch: 'full' },
           { path: 'categorie/:slug', component: ProductFilterComponent }
         ],
-        title: 'LMDJ | Produits'
+        title: 'LMDJ | Produits',canActivate:[userGuard]
       },
-      { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' },
-      { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis' },
-      { path: 'payment-success/:id', component: CommandeValideeComponent, title: 'LMDJ | Paiement' },
-      { path: 'payment-error/:id', component: PaiementFailedComponent, title: 'LMDJ | Paiement' }
+      { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' ,canActivate:[userGuard] },
+      { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis' ,canActivate:[userGuard] },
+      { path: 'payment-success/:id', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
+      { path: 'payment-error/:id', component: PaiementFailedComponent, title: 'LMDJ | Paiement' ,canActivate:[userGuard] }
     ]
   },
   {
     path: 'mdj_admin',
     component: AdminHomeComponent,
+
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardAdminComponent },
-      { path: 'commandes', component: AdminListeCommandesComponent },
-      { path: 'paiements', component: PaymentComponent },
-      { path: 'produits', component: AdminProduitsComponent },
-      { path: 'commandes/:ref-code', component: AdminDetailCommandeComponent },
-      { path: 'clients', component: ClientsComponent },
-      { path: 'infos-client/:slug', component: DetailClientComponent },
-      { path: 'avis', component: AdminAvisClientsComponent },
-      { path: 'zones-livraison', component: ListeZonesComponent },
-      { path: 'zones-livraison/:id/modifier', component: UpdateZoneComponent },
-      { path: 'zones-livraison/creer', component: CreateZoneComponent },
-      { path: 'informations-generales', component: InfosGenComponent }
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+      { path: 'dashboard', component: DashboardAdminComponent , title: 'LMDJ | Admin-dashboard', canActivate: [adminGuard]},
+      { path: 'commandes', component: AdminListeCommandesComponent , title: 'LMDJ | Admin-commandes', canActivate: [adminGuard]},
+      { path: 'paiements', component: PaymentComponent , title: 'LMDJ | Admin-paiements', canActivate: [adminGuard]},
+      { path: 'produits', component: AdminProduitsComponent , title: 'LMDJ | Admin-produits', canActivate: [adminGuard]},
+      { path: 'commandes/:ref-code', component: AdminDetailCommandeComponent , title: 'LMDJ | Admin-detail-commande', canActivate: [adminGuard]},
+      { path: 'clients', component: ClientsComponent , title: 'LMDJ | Admin-clients', canActivate: [adminGuard]},
+      { path: 'infos-client/:slug', component: DetailClientComponent , title: 'LMDJ | Admin-infoclient', canActivate: [adminGuard]},
+      { path: 'avis', component: AdminAvisClientsComponent , title: 'LMDJ | Admin-avis-client', canActivate: [adminGuard]},
+      { path: 'zones-livraison', component: ListeZonesComponent , title: 'LMDJ | Admin-zones-livraisons', canActivate: [adminGuard]},
+      { path: 'zones-livraison/:id/modifier', component: UpdateZoneComponent , title: 'LMDJ | Admin-update-zone', canActivate: [adminGuard]},
+      { path: 'zones-livraison/creer', component: CreateZoneComponent , title: 'LMDJ | Admin-create-zone', canActivate: [adminGuard]},
+      { path: 'informations-generales', component: InfosGenComponent , title: 'LMDJ | Admin-infospage', canActivate: [adminGuard]}
     ]
   },
 
     {path: 'resetpwd', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent,title: 'LMDJ | Login'},
     {path: 'inscription', component: SignupComponent,title: 'LMDJ | Inscription'},
-    {path: 'sdfsdfsd/suf_creer_/superuser/uI90', component: SignupComponent},
+    {path: 'sdfsdfsd/suf_creer_/superuser/uI90', component: SignupComponent, title: 'LMDJ | Admin-sup', canActivate: [adminGuard]},
 
-    { path: '**', component: NotFoundComponent, data: { breadcrumb: 'Page not found' } },
+    { path: '**', component: NotFoundComponent },
 ]

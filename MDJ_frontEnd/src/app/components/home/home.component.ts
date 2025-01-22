@@ -31,15 +31,16 @@ export class HomeComponent {
   ngOnInit(){
     this.categorieService.getAllCategories().subscribe({
       next:(data:categorie[])=>{this.catagorie_list=data},
-      error:(error)=>{console.log('Erreur lors de l\'affichage des catégories :', error.error.detail)}
+      error:(error)=>{
+      }
     })
 
     this.productService.getProducts().subscribe({
       next:(data)=>{
         this.products_list=data;
-        console.log(this.products_list)
-      },
-      error:(error)=>{console.log('Erreur lors de l\'affichage des produits :', error.error.detail)}
+       },
+      error:(error)=>{
+      }
     })
 
     this.loadSpecials();
@@ -64,7 +65,6 @@ export class HomeComponent {
       {
         next: (data) => {
           this.infos = data;
-          console.log(this.infos);
         }
       }
     )
@@ -73,7 +73,6 @@ export class HomeComponent {
   createAvis(newAvis:AvisCreationData){
     this.avisService.addAvis(newAvis).subscribe({
       next:(data)=>{
-        console.log('avis ajouté avec succés');
       }
     })
   }

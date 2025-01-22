@@ -49,7 +49,6 @@ export class HeaderComponent implements OnInit{
     this.userService.logout().subscribe(
       (response) => {
     window.location.reload();
-
       }
     );
   }
