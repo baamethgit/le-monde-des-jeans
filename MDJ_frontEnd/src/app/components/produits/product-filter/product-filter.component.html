@@ -78,11 +78,11 @@
     }
 
   </div>
-</div>
+
 <div *ngIf="produits_category.length" class="d-flex justify-content-between p-2">
-  <ngb-pagination 
-    [collectionSize]="totalItems" 
-    [(page)]="page" 
+  <ngb-pagination
+    [collectionSize]="totalItems"
+    [(page)]="page"
     [pageSize]="pageSize"
     (pageChange)="onPageChange($event)"
     [boundaryLinks]="true"
@@ -90,4 +90,6 @@
     aria-label="Navigation des pages">
   </ngb-pagination>
   <p>{{totalItems}} produits au total</p>
+</div>
+  }
 </div>
