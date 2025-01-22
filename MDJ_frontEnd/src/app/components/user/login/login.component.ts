@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {CommonModule, isPlatformServer} from '@angular/common';
+import {Component, Inject, OnInit, PLATFORM_ID, signal} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
@@ -18,7 +18,17 @@ export class LoginComponent implements OnInit{
   loginError :string = '';
   currentUser: User | null = null;
 
-  constructor(private userService:UserService,private fb:FormBuilder,private router:Router){}
+  isServer = false;
+  isUser = signal(false)
+
+  constructor(@Inject(PLATFORM_ID) platformId: Object,private userService:UserService,private fb:FormBuilder,private router:Router){
+    this.isServer = isPlatformServer(platformId);
+    const userToken = this.userService.getAccessToken();
+    if(userToken){
+      this.isUser.set(true)
+    }
+
+  }
 
   ngOnInit(): void {
 
@@ -56,7 +66,7 @@ export class LoginComponent implements OnInit{
         this.loginForm.markAllAsTouched();
       }
     }
-  
+
     togglePassword(){
       if (this.InputType == 'password'){
         this.InputType = 'text';

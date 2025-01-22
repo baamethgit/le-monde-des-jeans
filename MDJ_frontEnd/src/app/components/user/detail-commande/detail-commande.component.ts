@@ -11,6 +11,7 @@ import { Commande } from '../../../models/commande';
 import { Paiement } from '../../../models/paiement';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaiementService } from '../../../services/paiement.service';
+import {finalize} from "rxjs";
 
 
 @Component({
@@ -35,6 +36,7 @@ export class DetailCommandeComponent implements OnInit{
   paymentService = inject(PaiementService);
   userService = inject(UserService);
   isLoading = false;
+  isZoneLoading = false;
   selectedOption: string = 'livraison';
 
 
@@ -46,17 +48,12 @@ export class DetailCommandeComponent implements OnInit{
         this.commandeService.getDeliveryZones().subscribe({
           next:(data)=>{
             this.zones = data;
-
           },
           error:(error)=>{
 
           }
         })
         this.loadData();
-  }
-
-  openModal(modalname: any): void {
-    this.modalService.open(modalname, { size: 'lg', centered: true });
   }
 
   payerCommande() : void{
@@ -83,13 +80,18 @@ export class DetailCommandeComponent implements OnInit{
       }
     }
   updateCommandeZone(zoneId: number | undefined) {
+    this.isZoneLoading = true;
     if (this.commande?.id) {
       const updateData = {
         recupere_magasin: this.selectedOption === 'recuperation',
         zone_livraison: zoneId
       };
 
-      this.commandeService.updateCommande(this.commande.id, updateData).subscribe({
+      this.commandeService.updateCommande(this.commande.id, updateData).pipe(
+        finalize(()=>{
+          this.isZoneLoading = false;
+        })
+      ).subscribe({
         next: () => this.loadData(),
         error: (err) => console.error('Erreur mise à jour zone:', err)
       });
@@ -116,13 +118,14 @@ export class DetailCommandeComponent implements OnInit{
       next:(data)=>{
         this.commande = data;
         this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
-        if (this.commande?.zone_livraison) {
-          this.selectedZone = this.commande.zone_livraison;
-        } else if (this.zones.length && this.selectedOption === 'livraison') {
-          this.selectedZone = this.zones[0];
-          // Mettre à jour la commande avec la première zone
-          this.updateCommandeZone(this.zones[0].id);
+        if (this.selectedOption === 'livraison'){
+          if (this.commande?.zone_livraison) {
+            this.selectedZone = this.commande.zone_livraison;
+          } else if (this.zones.length) {
+            this.selectedZone = this.zones[0];
+          }
         }
+
       },
       error:(error)=>{
         this.message = '';
@@ -136,7 +139,6 @@ export class DetailCommandeComponent implements OnInit{
   onZoneChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedZoneId = parseInt(selectElement.value, 10);
-
     this.loadZone(selectedZoneId);
     this.updateCommandeZone(selectedZoneId);
   }
@@ -152,7 +154,6 @@ export class DetailCommandeComponent implements OnInit{
       },
       error:(error)=>{
         this.selectedZone = undefined;
-
       }
     })
   }

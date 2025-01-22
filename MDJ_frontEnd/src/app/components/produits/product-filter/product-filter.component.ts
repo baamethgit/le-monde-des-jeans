@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ProduitService } from '../../../services/produits/produit.service';
 import { ActivatedRoute, Route, RouterLink } from '@angular/router';
 import { CategorieService } from '../../../services/categories/categorie.service';
-import { Subscription } from 'rxjs';
+import {finalize, Subscription} from 'rxjs';
 import { Produit } from '../../../models/produit';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { NgbPaginationModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstra
   templateUrl: './product-filter.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
-export class ProductFilterComponent {
+export class ProductFilterComponent implements OnInit{
   produits_category: Produit[] = [];
   totalItems: number = 0;
   page = 1;
@@ -23,9 +23,11 @@ export class ProductFilterComponent {
   current_category: string = '';
   selectedNew: string = '';
   selectedSpecial: string = '';
+  isLoading: boolean = false;
+
   private routeSub: Subscription | undefined;
 
-constructor(private produitService:ProduitService, private categorieService:CategorieService, private route:ActivatedRoute){}
+constructor(private produitService:ProduitService, private route:ActivatedRoute){}
 
 ngOnInit(): void {
   // Écouter les changements de paramètres de route
@@ -40,13 +42,16 @@ ngOnInit(): void {
 
 // Charger les produits par catégorie
 loadProductsByCategory(categorieSlug: string): void {
-  this.produitService.getProductByCategory(categorieSlug, this.page, this.pageSize).subscribe({
+ this.isLoading = true;
+  this.produitService.getProductByCategory(categorieSlug, this.page, this.pageSize).pipe(
+    finalize(() => this.isLoading = false)
+  ).subscribe({
     next: (data) => {
       this.produits_category = data.results;
       this.totalItems = data.count;
     },
     error: (error) => {
-      console.error('Erreur lors de la récupération des produits :', error);
+      
     }
   });
 }

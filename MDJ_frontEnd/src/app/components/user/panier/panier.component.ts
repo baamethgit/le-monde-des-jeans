@@ -57,7 +57,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
       },
       error : (error)=>{
         if(error.error.message_erreur)
-          this.errorMessage = error.error.message_erreur;
+          this.errorMessage = "Vous avez une commande en attente,veuillez la valider d'abord .";
       },
     })
   }
@@ -108,7 +108,6 @@ export class PanierComponent implements OnInit ,OnDestroy{
     }
     })
     this.mettreAJourTempsRestant();
-
   }
 
   mettreAJourTempsRestant() {

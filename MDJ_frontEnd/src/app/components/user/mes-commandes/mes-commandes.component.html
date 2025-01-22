@@ -1,6 +1,6 @@
 <div class="container-commandes">
     <h1>Mes Commandes</h1>
-    
+
     <div class="tabs">
       <div class="tab-buttons">
         <button [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'">
@@ -10,7 +10,7 @@
             <i class="bi bi-check-circle"></i> Historique
         </button>
       </div>
-      
+
       <div class="tab-content" *ngIf="activeTab === 'pending'">
         @for (order of mesCommandesEnCours; track order.id) {
           <div class="order-card">
@@ -20,7 +20,7 @@
                 {{order.statut}}
               </span>
             </div>
-            <p class="text-center my-0 py-0">
+            <p class="text-center my-0 py-0" *ngIf="order.statut=='EN_ATTENTE'">
               <button class="btn-success my-0 btn p-0" type="button">
                 <a [routerLink]="['/detail-commande']" class="m-0 p-2 text-decoration-none text-white">Finaliser</a>
               </button>
@@ -43,7 +43,7 @@
                     <i class="bi bi-shop"></i> Récupéré au magasin
                   </p>
                 }
-                  
+
               </div>
               <div class="delivery-time" *ngIf="order.date_livraison">
                   <i class="bi bi-clock"></i>
@@ -55,7 +55,7 @@
                 {{order.date_livraison | date : 'dd MMMM YYYY HH:mm'}}
               </div>
               <div *ngIf="order.statut === StatutCommande.EN_COURS_LIVRAISON ||  order.statut === StatutCommande.PAYEE">
-                <input type="checkbox" name="" (change)="MarquerColisRecu(order.id)" id="order.id">
+                <input type="checkbox" name="" (change)="MarquerColisRecu(order.id, $event)" id="order.id">
                 <label for="order.id" class="mx-1">Colis reçu</label>
               </div>
               <div class="order-total">
@@ -69,8 +69,8 @@
           </p>
       }
       </div>
-      
-      <div class="tab-content" *ngIf="activeTab === 'completed'"> 
+
+      <div class="tab-content" *ngIf="activeTab === 'completed'">
         @for (order of mesCommandesLivrees; track order.id) {
           <div class="order-card">
               <div class="order-header">
@@ -99,7 +99,7 @@
                     }
                   </div>
                   <div class="delivery-time" *ngIf="order.date_livraison">
-                    
+
                       <i class="bi bi-clock"></i>
                       @if (!order.recupere_magasin) {
                         Livrée
@@ -131,13 +131,13 @@
       <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeModal()"></button>
     </div>
     <div class="modal-body">
-      <form (ngSubmit)="temoigner()" [formGroup]="TemoignageForm">  
+      <form (ngSubmit)="temoigner()" [formGroup]="TemoignageForm">
         <div class="row mb-3 mt-1 d-flex align-items-center">
           <div class="col-12 px-3">
             <label for="Texte_avis" class="form-label">Votre témoignage</label>
             <textarea class="form-control" id="Texte_avis" formControlName="Texte_avis" rows="4" ></textarea>
           <p *ngIf="TemoignageForm.controls['Texte_avis'].hasError('required') && (TemoignageForm.controls['Texte_avis'].dirty || TemoignageForm.controls['Texte_avis'].touched)" class="text-danger">Le message est obligatoire</p>
-  
+
           </div>
           <div class="col-12 ">
             <label for="nbre_etoiles" class="form-label">Nombre d'étoiles</label>
@@ -145,9 +145,9 @@
               <input id="nbre_etoiles" type="number" max="5" min="1" value="4" formControlName="nbre_etoiles" >
             </div>
           </div>
-  
+
         </div>
-  
+
         <button type="submit" class="btn btn-primary w-100">Envoyer</button>
       </form>
     </div>

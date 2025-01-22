@@ -1,18 +1,18 @@
 <section class="Header">
     <nav class="navbar ps-5 d-flex">
-      <a href="" class="navbar-brand">Le Monde Des Jeans</a>
+      <a [routerLink]="['']"  class="navbar-brand">Le Monde Des Jeans</a>
       <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <img class="burger_menu_header" src="../../assets/img/9666699_menu_burger_horizontal_icon.png" alt="" srcset="">
       </button>
       <div class="collapse navbar-collapse d-lg-none" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto text-center align-items-center m-auto">
-          <a href=""><li class="my-2">Accueil</li></a>
+          <a [routerLink]="['']" ><li class="my-2">Accueil</li></a>
           <a [routerLink]="['/produits']"><li class="my-2">Produits</li></a>
           <a [routerLink]="['/avis']"><li class="my-2">Avis</li></a>
-          <a class="whatsapp_link_header text-nowrap my-2" target="_blank" 
+          <a class="whatsapp_link_header text-nowrap my-2" target="_blank"
              href="{{infos?.Lien_Whatsapp}}">
-             Groupe Whatsapp 
+             Groupe Whatsapp
             <img class="header_whatsapp" src="../../assets/img/6929232_logo_whatsapp_icon.png" alt="whatsapp">
           </a>
         </ul>
@@ -26,7 +26,7 @@
                 </button>
                 <ul class="dropdown-menu p-2 ms-0">
                   <li><a class="dropdown-item" routerLink="/profile">Voir Profil</a></li>
-                  <li><a class="dropdown-item" href="#" (click)="logout()">Se déconnecter</a></li>
+                  <li><a class="dropdown-item" (click)="logout()">Se déconnecter</a></li>
                 </ul>
               </div>
               <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span>
@@ -37,7 +37,7 @@
               <div class="cart_header">
                 <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
               </div>
-              <span class="text-nowrap" ><a href="/mes-commandes">Mes Commandes</a></span>
+              <span class="text-nowrap" ><a [routerLink]='["/mes-commandes"]'>Mes Commandes</a></span>
             </button>
           </div>
           <div class="user_profile_cart">
@@ -45,18 +45,18 @@
               <div class="cart_header">
                 <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
               </div>
-              <span class="text-nowrap" ><a href="/panier">panier</a></span>
+              <span class="text-nowrap" ><a [routerLink]="['/panier']">panier</a></span>
             </button>
           </div>
         </div>
       </div>
       <div class="d-none d-lg-flex right_nav_sec  align-items-center justify-content-around">
         <ul class="d-flex list-unstyled justify-content-between align-items-center">
-          <a href=""><li>Accueil</li></a>
+          <a [routerLink]="['']" ><li>Accueil</li></a>
           <a [routerLink]="['/produits']"><li>Produits</li></a>
           <a [routerLink]="['/avis']"><li>Avis</li></a>
           <a class="whatsapp_link_header text-nowrap" target="_blank"
-             href="https://chat.whatsapp.com/IfL8jPCvs993TzOAoFo8ac"  rel="noopener noreferrer">
+             href="{{infos?.Lien_Whatsapp}}"  rel="noopener noreferrer">
             Groupe Whatsapp <img class="header_whatsapp" src="../../assets/img/6929232_logo_whatsapp_icon.png">
 </a>
         </ul>
@@ -70,7 +70,7 @@
                 </button>
                 <ul class="dropdown-menu p-2 ms-0">
                   <li><a class="dropdown-item" routerLink="/profile">Voir Profil</a></li>
-                  <li><a class="dropdown-item" href="#" (click)="logout()">Se déconnecter</a></li>
+                  <li><a class="dropdown-item" (click)="logout()">Se déconnecter</a></li>
                 </ul>
               </div>
               <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span>
@@ -81,7 +81,7 @@
               <div class="cart_header">
                 <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
               </div>
-              <span class="text-nowrap" ><a href="/panier">panier</a></span>
+              <span class="text-nowrap" ><a  [routerLink]="['/panier']">panier</a></span>
             </button>
 
           </div>
@@ -90,7 +90,7 @@
               <div class="cart_header">
                 <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
               </div>
-              <span class="text-nowrap" ><a href="/mes-commandes">Mes Commandes</a></span>
+              <span class="text-nowrap" ><a  [routerLink]="['/mes-commandes']">Mes Commandes</a></span>
             </button>
           </div>
         </div>

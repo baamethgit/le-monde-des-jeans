@@ -26,22 +26,25 @@ export class AdminDetailCommandeComponent implements OnInit {
   constructor(private router:Router,private route : ActivatedRoute){}
 
   ngOnInit(): void {
-      const refCode = this.route.snapshot.params['ref-code'];
       // this.route.paramMap
       //   .pipe(map(params => params.get('id')), tap(id => (this.id = +id)))
       //   .subscribe(id => {});
-      this.commandeService.getCommandeByRefCode(refCode).subscribe(
-        {
-          next:(value)=> {
-            this.commande = value;
-              console.log(this.commande);
-          },
-          error:(error)=> {
-            this.notCommandFound = true;
-          },
-        }
-      )
+      this.loadCommande();
 
+  }
+  loadCommande():void{
+    const refCode = this.route.snapshot.params['ref-code'];
+    this.commandeService.getCommandeByRefCode(refCode).subscribe(
+      {
+        next:(value)=> {
+          this.commande = value;
+          console.log(this.commande);
+        },
+        error:(error)=> {
+          this.notCommandFound = true;
+        },
+      }
+    )
   }
   downloadOrderDetails() {
     const element = document.getElementById('order-details-box');
@@ -59,7 +62,7 @@ export class AdminDetailCommandeComponent implements OnInit {
   changeStatut(statut: StatutCommande){
       this.commandeService.updateCommande(this.commande.id,{'statut':statut.toString()}).subscribe({
         next:(data)=>{
-
+            this.loadCommande();
         },
         error:(error)=>{
 

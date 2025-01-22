@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { categorie } from '../../models/categorie';
+import {environment} from "../../../environments/environment";
 
 
 
@@ -11,7 +12,8 @@ import { categorie } from '../../models/categorie';
   providedIn: 'root'
 })
 export class CategorieService {
-  private apiUrl="http://127.0.0.1:8000/apiProduit/categories/"
+  private apiUrl=`${environment.apiUrl}/apiProduit/categories/`;
+
   constructor(private http:HttpClient) { }
 
 

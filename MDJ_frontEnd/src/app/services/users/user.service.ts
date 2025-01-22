@@ -5,12 +5,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Avis, AvisCreationData } from '../../models/Avis';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl = 'http://127.0.0.1:8000/user/';
+
+  private readonly baseUrl = `${environment.apiUrl}/user/`;
 
   loggedIn = new BehaviorSubject<boolean>(this.hasToken());
 
@@ -26,6 +28,7 @@ export class UserService {
 
 
   private hasToken(): boolean {
+
     return !!this.getAccessToken();
   }
 
@@ -38,6 +41,12 @@ export class UserService {
       return localStorage.getItem('access_token');
     }
     return null;
+  }
+
+  userIsAdmin(){
+    this.getUser().subscribe({
+
+    })
   }
 
   setAccessToken(token : string): void {

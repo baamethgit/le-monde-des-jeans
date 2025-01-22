@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, Inject, PLATFORM_ID} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -17,11 +17,19 @@ import { filter } from 'rxjs';
 export class AppComponent {
   title = 'MDJ_frontEnd';
   isAdmin = false;
-  constructor(private router: Router) {
+  private isBrowser: boolean;
+
+
+  constructor(private router: Router,    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      window.scrollTo(0, 0);
+      if(this.isBrowser){
+        window.scrollTo(0, 0);
+      }
     });
   }
 }

@@ -62,7 +62,7 @@
 		  <td class="text-center text-primary fw-bold">{{ commande.montant }}</td>
 		  <td *ngIf="commande.zone_livraison">Zone {{commande.zone_livraison.numero}} : {{commande.zone_livraison.nom}}</td>
 		  <td *ngIf="!commande.zone_livraison">Récupéré au magasin</td>
-		  <td><span class="status pending">{{commande.statut.toString()}}</span></td>
+		  <td><span  class="status fw-bold status-{{ commande.statut.toString() }}">{{commande.statut.toString()}}</span></td>
 		  <td *ngIf="commande.date_livraison">{{commande.date_livraison | date : 'dd MMMM YYYY'}}</td>
 		  <td *ngIf="!commande.date_livraison" class="text-center">---</td>
 		  <td class="actions-cell">

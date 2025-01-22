@@ -17,9 +17,9 @@ export class ProduitsComponent implements OnInit {
   current_category: string = ''; // Par défaut, afficher tous les produits
 
   constructor(
-    private produitService: ProduitService, 
-    private router: Router, 
-    private categorieService: CategorieService, 
+    private produitService: ProduitService,
+    private router: Router,
+    private categorieService: CategorieService,
     private route: ActivatedRoute
   ) {}
 
@@ -30,7 +30,7 @@ export class ProduitsComponent implements OnInit {
         this.list_categorie = data;
       },
       error: (error) => {
-        console.log('Erreur lors de l\'affichage des catégories :', error.error.detail);
+        //console.log('Erreur lors de l\'affichage des catégories :', error.error.detail);
       }
     });
 

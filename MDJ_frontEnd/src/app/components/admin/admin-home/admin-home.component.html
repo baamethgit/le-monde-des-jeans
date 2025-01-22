@@ -1,10 +1,39 @@
-<div class="admin_page">
-    <app-admin-header></app-admin-header>
-    <div class="main-layout">
+@if(isLoading){
+  <div class="bg-dark bg-opacity-25 position-absolute d-flex align-items-center justify-content-center w-100" style="width:100vw;height:100vh ;top:0;left:0">
+    <div id="wifi-loader">
+      <svg class="circle-outer" viewBox="0 0 86 86">
+        <circle class="back" cx="43" cy="43" r="40"></circle>
+        <circle class="front" cx="43" cy="43" r="40"></circle>
+        <circle class="new" cx="43" cy="43" r="40"></circle>
+      </svg>
+      <svg class="circle-middle" viewBox="0 0 60 60">
+        <circle class="back" cx="30" cy="30" r="27"></circle>
+        <circle class="front" cx="30" cy="30" r="27"></circle>
+      </svg>
+      <svg class="circle-inner" viewBox="0 0 34 34">
+        <circle class="back" cx="17" cy="17" r="14"></circle>
+        <circle class="front" cx="17" cy="17" r="14"></circle>
+      </svg>
+      <div class="text" data-text="Chargement..."></div>
+    </div>
+  </div>
+} @else {
+  @if (isAuthenticated && isAdmin){
+    <div class="admin_page">
+      <app-admin-header></app-admin-header>
+      <div class="main-layout">
         <app-admin-sidebar class="sidebar"></app-admin-sidebar>
-      <div class="content">
-        <router-outlet></router-outlet>
+        <div class="content">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-</div>
-  
+  } @else {
+    <div class="d-flex justify-content-center my-5">
+      <h1 class="text-danger text-center">
+        ---
+      </h1>
+    </div>
+  }
+
+}

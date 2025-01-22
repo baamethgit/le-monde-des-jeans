@@ -3,21 +3,21 @@
     margin: 0 auto;
     padding: 20px;
   }
-  
+
   h1 {
     font-size: 24px;
     margin-bottom: 20px;
   }
-  
+
   .tabs {
     margin-top: 20px;
   }
-  
+
   .tab-buttons {
     display: flex;
     margin-bottom: 20px;
   }
-  
+
   .tab-buttons button {
     flex: 1;
     padding: 10px;
@@ -25,64 +25,62 @@
     background: #f5f5f5;
     cursor: pointer;
   }
-  
+
   .tab-buttons button.active {
     background: #007bff;
     color: white;
   }
-  
+
   .order-card {
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 20px;
     padding: 15px;
   }
-  
+
   .order-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
   }
-  
+
   .status-badge {
     padding: 2px 7px;
     border-radius: 15px;
     color: white;
     font-size: 14px;
   }
-  
+
   .status-EN_ATTENTE { background-color: black; }
-  .status-EN_PREPARATION { background-color: rgb(225, 5, 148); }
   .status-EN_COURS_LIVRAISON { background-color: yellow;color:black }
   .status-LIVREE { background-color: green; }
   .status-PAYEE { background-color: rgb(52, 8, 227); }
-  .status-ANNULEE { background-color: red; }
-  
+
   .order-date {
     color: #666;
     font-size: 14px;
     margin-bottom: 10px;
   }
-  
+
   .order-details {
     margin-top: 15px;
   }
-  
+
   .items ul {
     list-style-type: disc;
     margin-left: 20px;
   }
-  
+
   .delivery-info, .delivery-time {
     margin-top: 10px;
   }
-  
+
   .order-total {
     margin-top: 15px;
     font-weight: bold;
   }
-  
+
   .no-orders {
     text-align: center;
     color: #666;

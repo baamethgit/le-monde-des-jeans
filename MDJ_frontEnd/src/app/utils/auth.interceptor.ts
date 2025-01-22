@@ -12,60 +12,56 @@ export const authInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn
 ) => {
   const authService = inject(UserService);
-  const router = inject(Router);
-  const token = authService.getAccessToken();
+
 
   if(request.url.includes('login') || request.url.includes('inscription') || request.url.includes('resetpwd')){
     return next(request);
   }
 
-  if (token) {
-    const clonedRequest = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    return next(clonedRequest)
-    .pipe(
-      catchError(error => {
-        if (error instanceof HttpErrorResponse &&
-          error.status === 401)
-          {
-            if (!isRefreshing) {
-              isRefreshing = true;
-              return authService.refreshToken().pipe(
-                switchMap(() => {
-                  isRefreshing = false;
-                  const newToken = authService.getAccessToken();
-                  const newRequest = request.clone({
-                    setHeaders: {
-                      Authorization: `Bearer ${newToken}`
-                    }
-                  });
-                  return next(newRequest);
-                }),
-                catchError(refreshError => {
-                  isRefreshing = false;
-                  console.log("erreur de refreshing",refreshError)
-
-                  if (refreshError.status == '401') {
-                    console.log("deconnexion")
-                    authService.logout();
-                  }
-                  router.navigate(["login"]);
-                  return throwError(() => refreshError);
-                })
-              );
-            }
-            return next(clonedRequest);
-        }
-        return throwError(() => error);
-      })
-    );
+  const token = authService.getAccessToken();
+  if (!token) {
+    return throwError(() => new Error('No token available'));
   }
-  router.navigate(['login']);
-  return next(request);
+
+  const clonedRequest = request.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return next(clonedRequest).pipe(
+    catchError(error => {
+      if (error instanceof HttpErrorResponse && error.status == 401) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          return authService.refreshToken().pipe(
+            switchMap(() => {
+              isRefreshing = false;
+              const newToken = authService.getAccessToken();
+              const newRequest = request.clone({
+                setHeaders: {
+                  Authorization: `Bearer ${newToken}`
+                }
+              });
+              return next(newRequest);
+            }),
+            catchError(refreshError => {
+              isRefreshing = false;
+              if (refreshError.status == '401') {
+                authService.logout().subscribe(
+                  (response) => {
+                    window.location.reload();
+                  });
+              }
+              return throwError(() => refreshError);
+            })
+          );
+        }
+        return next(clonedRequest);
+      }
+      return throwError(() => error);
+    })
+  );
 };
 
 

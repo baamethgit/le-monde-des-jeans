@@ -13,6 +13,7 @@ import { User } from '../../../models/user';
 export class AdminHeaderComponent implements OnInit{
   currentUser: User | undefined = undefined;
   is_authenticated = false;
+  isAdmin = false;
   private userService = inject(UserService);
 
   constructor(){}
@@ -22,6 +23,7 @@ export class AdminHeaderComponent implements OnInit{
       next: (data) => {
           this.currentUser = data;
           this.is_authenticated = true;
+          this.isAdmin = (data.is_staff && data.is_superuser) || false;
       },
       error: (error) => {
         this.is_authenticated = false;

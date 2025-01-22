@@ -1,5 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { CategorieService } from '../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
@@ -19,10 +19,11 @@ import { InfosService } from '../../services/infos.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent  implements OnInit{
   page = 1;
   pageSize = 10;
   totalItems = 0;
+
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
   special_list:Produit[]=[];
@@ -33,15 +34,18 @@ export class HomeComponent {
   ngOnInit(){
     this.categorieService.getAllCategories().subscribe({
       next:(data:categorie[])=>{this.catagorie_list=data},
-      error:(error)=>{console.log('Erreur lors de l\'affichage des catégories :', error.error.detail)}
+      error:(error)=>{
+      }
     })
 
     this.productService.getProducts(this.page, this.pageSize).subscribe({
       next:(data)=>{
+
         this.products_list=data.results;
         this.totalItems = data.count;
-      },
-      error:(error)=>{console.log('Erreur lors de l\'affichage des produits :', error.error.detail)}
+       },
+      error:(error)=>{
+      }
     })
 
     this.loadSpecials();
@@ -66,7 +70,6 @@ export class HomeComponent {
       {
         next: (data) => {
           this.infos = data;
-          console.log(this.infos);
         }
       }
     )
@@ -75,7 +78,6 @@ export class HomeComponent {
   createAvis(newAvis:AvisCreationData){
     this.avisService.addAvis(newAvis).subscribe({
       next:(data)=>{
-        console.log('avis ajouté avec succés');
       }
     })
   }

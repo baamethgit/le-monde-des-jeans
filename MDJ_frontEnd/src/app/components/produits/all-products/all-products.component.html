@@ -1,70 +1,81 @@
 <div class="product-grid">
   <h2 class="product-grid__title">Tous les produits</h2>
-  
-  <div class="product-grid__filters">
-    <div class="filter-select">
-      <label for="newFilter" class="filter-select__label">Produits neufs</label>
-      <select id="newFilter" class="filter-select__input" [(ngModel)]="selectedNew">
-        <option value="">Tous</option>
-        <option value="true">Neufs uniquement</option>
-        <option value="false">Non neufs</option>
-      </select>
+
+  @if (isLoading){
+    <div class="bg-dark bg-opacity-50 position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top:0;left:0">
+      <p>
+        <button class="btn btn-primary" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          Loading...
+        </button>
+      </p>
+    </div>
+  } @else {
+    <div class="product-grid__filters">
+      <div class="filter-select">
+        <label for="newFilter" class="filter-select__label">Produits neufs</label>
+        <select id="newFilter" class="filter-select__input" [(ngModel)]="selectedNew">
+          <option value="">Tous</option>
+          <option value="true">Neufs uniquement</option>
+          <option value="false">Non neufs</option>
+        </select>
+      </div>
+
+      <div class="filter-select">
+        <label for="specialFilter" class="filter-select__label">Produits spéciaux</label>
+        <select id="specialFilter" class="filter-select__input" [(ngModel)]="selectedSpecial">
+          <option value="">Tous</option>
+          <option value="true">Spéciaux uniquement</option>
+          <option value="false">Non spéciaux</option>
+        </select>
+      </div>
     </div>
 
-    <div class="filter-select">
-      <label for="specialFilter" class="filter-select__label">Produits spéciaux</label>
-      <select id="specialFilter" class="filter-select__input" [(ngModel)]="selectedSpecial">
-        <option value="">Tous</option>
-        <option value="true">Spéciaux uniquement</option>
-        <option value="false">Non spéciaux</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="product-grid__container">
-    @if (produits && produits.length > 0) {
-      @for (item of produits; track item) {
-        @if (item.QuantiteStock > 0 && 
-            (selectedNew === '' || item.neuf.toString() === selectedNew) && 
-            (selectedSpecial === '' || item.special.toString() === selectedSpecial)) {
-          <div class="product-item">
-            <a [routerLink]="['/produits', item.slug]" class="product-item__link">
-              <div class="product-item__img-container">
-                @if (item.neuf) {
-                  <div class="product-item__new-badge">NEUF</div>
-                }
-                @if (item.special) {
-                  <div class="product-item__crown">
-                    <img src="../../../../assets/img/king.png" alt="" srcset="">
-                  </div>
-                }
-                <img 
-                  [ngSrc]="item.images[0].image" 
-                  [width]="300" 
-                  [height]="400"
-                  [alt]="item.nom"
-                  class="product-item__img"
-                  loading="lazy"
-                >
-              </div>
-              <div class="product-item__info">
-                <div class="product-item__name">{{ item.nom }}</div>
-                <div class="product-item__price">{{ item.prix }} FCFA</div>
-              </div>
-            </a>
-          </div>
+    <div class="product-grid__container">
+      @if (produits && produits.length > 0) {
+        @for (item of produits; track item) {
+          @if (item.QuantiteStock > 0 &&
+          (selectedNew === '' || item.neuf.toString() === selectedNew) &&
+          (selectedSpecial === '' || item.special.toString() === selectedSpecial)) {
+            <div class="product-item">
+              <a [routerLink]="['/produits', item.slug]" class="product-item__link">
+                <div class="product-item__img-container">
+                  @if (item.neuf) {
+                    <div class="product-item__new-badge">NEUF</div>
+                  }
+                  @if (item.special) {
+                    <div class="product-item__crown">
+                      <img src="../../../../assets/img/king.png" alt="" srcset="">
+                    </div>
+                  }
+                  <img
+                    [ngSrc]="item.images[0].image"
+                    [width]="300"
+                    [height]="400"
+                    [alt]="item.nom"
+                    class="product-item__img"
+                    loading="lazy"
+                  >
+                </div>
+                <div class="product-item__info">
+                  <div class="product-item__name">{{ item.nom }}</div>
+                  <div class="product-item__price">{{ item.prix }} FCFA</div>
+                </div>
+              </a>
+            </div>
+          }
         }
-      }
-    } @else {
-      <div class="product-grid__empty">
-        <div class="product-grid__empty-content">
-          <svg xmlns="http://www.w3.org/2000/svg" class="product-grid__empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="18" rx="2"/>
-            <path d="M12 8v8"/>
-            <path d="M8 12h8"/>
-          </svg>
-          <h3 class="product-grid__empty-title">Aucun produit disponible</h3>
-          <p class="product-grid__empty-text">Notre catalogue est en cours de mise à jour</p>
+      } @else {
+        <div class="product-grid__empty">
+          <div class="product-grid__empty-content">
+            <svg xmlns="http://www.w3.org/2000/svg" class="product-grid__empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="18" rx="2"/>
+              <path d="M12 8v8"/>
+              <path d="M8 12h8"/>
+            </svg>
+            <h3 class="product-grid__empty-title">Aucun produit disponible</h3>
+            <p class="product-grid__empty-text">Notre catalogue est en cours de mise à jour</p>
+          </div>
         </div>
       </div>
     }

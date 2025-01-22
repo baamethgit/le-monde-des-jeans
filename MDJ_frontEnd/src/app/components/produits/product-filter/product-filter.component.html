@@ -1,6 +1,15 @@
 <div class="product-grid">
   <h2 class="product-grid__title">{{current_category}}</h2>
-  
+  @if (isLoading){
+    <div class="bg-dark bg-opacity-50 position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top:0;left:0">
+      <p>
+        <button class="btn btn-primary" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          Loading...
+        </button>
+      </p>
+    </div>
+  } @else {
   <div class="product-grid__filters">
     <div class="filter-select">
       <label for="newFilter" class="filter-select__label">Produits neufs</label>
@@ -24,8 +33,8 @@
   <div class="product-grid__container">
     @if (produits_category && produits_category.length > 0) {
       @for (item of produits_category; track item) {
-        @if (item.QuantiteStock > 0 && 
-            (selectedNew === '' || item.neuf.toString() === selectedNew) && 
+        @if (item.QuantiteStock > 0 &&
+            (selectedNew === '' || item.neuf.toString() === selectedNew) &&
             (selectedSpecial === '' || item.special.toString() === selectedSpecial)) {
           <div class="product-item">
             <a [routerLink]="['/produits', item.slug]" class="product-item__link">
@@ -38,9 +47,9 @@
                     <img src="../../../../assets/img/king.png" alt="" srcset="">
                   </div>
                 }
-                <img 
-                  [ngSrc]="item.images[0].image" 
-                  [width]="300" 
+                <img
+                  [ngSrc]="item.images[0].image"
+                  [width]="300"
                   [height]="400"
                   [alt]="item.nom"
                   class="product-item__img"
@@ -67,6 +76,7 @@
         </div>
       </div>
     }
+
   </div>
 </div>
 <div *ngIf="produits_category.length" class="d-flex justify-content-between p-2">

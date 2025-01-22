@@ -55,10 +55,12 @@ $blue_color: #377DFF;
       .navbar-brand {
         // #font-family: princess;
         font-family: "Monsieur La Doulaise", serif;
-        font-weight: 400;
+        font-weight: bolder;
+        letter-spacing:3px;
+
         font-style: normal;
-        font-size: 24px;
-        @media(max-width:1160px){
+        font-size: 30px;
+        @media(max-width:1260px){
             margin: auto;
         }
         @media(max-width:584px){

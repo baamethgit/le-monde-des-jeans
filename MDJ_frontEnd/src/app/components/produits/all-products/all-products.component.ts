@@ -6,7 +6,10 @@ import { Produit } from '../../../models/produit';
 import { categorie } from '../../../models/categorie';
 import { CommonModule ,NgOptimizedImage} from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { NgbPagination, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import {finalize} from "rxjs";
+
 
 @Component({
   selector: 'app-all-products',
@@ -24,12 +27,12 @@ export class AllProductsComponent implements OnInit{
   list_categorie:categorie[]=[];
   selectedNew: string = '';
   selectedSpecial: string = '';
+  isLoading = false;
 
   constructor(private produitService:ProduitService, private categorieService:CategorieService){}
 
 
   ngOnInit():void{
-
     this.loadProducts();
     this.categorieService.getAllCategories().subscribe({
       next: (data:categorie[])=>{
@@ -42,14 +45,16 @@ export class AllProductsComponent implements OnInit{
   }
 
   loadProducts() {
-    this.produitService.getProducts(this.page, this.pageSize).subscribe({
+    this.isLoading = true;
+    this.produitService.getProducts(this.page, this.pageSize).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next: (data)=>{
         this.produits=data.results;
         this.totalItems = data.count;
-        console.log(this.produits)
       },
       error: (error) => {
-             console.log('Erreur lors de l affichage des produits :', error.error.detail);
+            
       }
     })
   }
