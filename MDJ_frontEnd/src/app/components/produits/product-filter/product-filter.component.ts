@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ProduitService } from '../../../services/produits/produit.service';
 import { ActivatedRoute, Route, RouterLink } from '@angular/router';
 import { CategorieService } from '../../../services/categories/categorie.service';
-import { Subscription } from 'rxjs';
+import {finalize, Subscription} from 'rxjs';
 import { Produit } from '../../../models/produit';
 import { NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,14 +14,16 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './product-filter.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
-export class ProductFilterComponent {
+export class ProductFilterComponent implements OnInit{
   produits_category: Produit[] = [];
   current_category: string = '';
   selectedNew: string = '';
   selectedSpecial: string = '';
+  isLoading: boolean = false;
+
   private routeSub: Subscription | undefined;
 
-constructor(private produitService:ProduitService, private categorieService:CategorieService, private route:ActivatedRoute){}
+constructor(private produitService:ProduitService, private route:ActivatedRoute){}
 
 ngOnInit(): void {
   // Écouter les changements de paramètres de route
@@ -36,7 +38,11 @@ ngOnInit(): void {
 
 // Charger les produits par catégorie
 loadProductsByCategory(categorieSlug: string): void {
-  this.produitService.getProductByCategory(categorieSlug).subscribe({
+  this.isLoading = true;
+
+  this.produitService.getProductByCategory(categorieSlug).pipe(
+    finalize(() => this.isLoading = false)
+  ).subscribe({
     next: (data: Produit[]) => {
       this.produits_category = data;
     },

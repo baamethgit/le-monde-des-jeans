@@ -1,5 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { CategorieService } from '../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
@@ -19,7 +19,7 @@ import { InfosService } from '../../services/infos.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
   special_list:Produit[]=[];

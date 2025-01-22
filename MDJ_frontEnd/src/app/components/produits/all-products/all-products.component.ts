@@ -6,6 +6,7 @@ import { Produit } from '../../../models/produit';
 import { categorie } from '../../../models/categorie';
 import { CommonModule ,NgOptimizedImage} from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-all-products',
@@ -19,15 +20,18 @@ export class AllProductsComponent implements OnInit{
   list_categorie:categorie[]=[];
   selectedNew: string = '';
   selectedSpecial: string = '';
+  isLoading = false;
 
   constructor(private produitService:ProduitService, private categorieService:CategorieService){}
 
 
   ngOnInit():void{
-    this.produitService.getProducts().subscribe({
+    this.isLoading = true;
+    this.produitService.getProducts().pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next: (data:Produit[])=>{
         this.produits=data;
-        console.log(this.produits)
       },
       error: (error) => {
              console.log('Erreur lors de l affichage des produits :', error.error.detail);
