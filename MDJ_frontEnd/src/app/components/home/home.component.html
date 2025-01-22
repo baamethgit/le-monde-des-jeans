@@ -66,7 +66,7 @@
             <div class="nouveautes__container">
               @if (products_list.length > 0) {
                 <div class="nouveautes__list">
-                  @for (item of products_list.slice(-limit_prod); track $index) {
+                  @for (item of products_list; track $index) {
                     <a [routerLink]="['/produits', item.slug]" class="product-card">
                       <div class="product-card__image-container">
                         <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
@@ -98,7 +98,7 @@
           <div class="nouveautes__container">
             @if (special_list.length > 0) {
               <div class="nouveautes__list">
-                @for (item of special_list.slice(-limit_prod); track $index) {
+                @for (item of special_list; track $index) {
                   <a [routerLink]="['/produits', item.slug]" class="product-card">
                     <div class="product-card__image-container">
                       <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">

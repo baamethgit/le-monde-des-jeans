@@ -24,6 +24,9 @@ export class ProduitDetailComponent implements OnInit{
   list_p: any[] = [];
   product_selected: Produit | undefined;
   must_like_product: Produit[] = [];
+  page = 1;
+  pageSize = 10;
+  totalItems = 0;
   commandeService = inject(CommandeService);
   panierService = inject(PanierService);
   userService = inject(UserService);
@@ -104,7 +107,7 @@ acheterDirectement(productSlug : string | undefined){
   loadSimilarProducts(): void {
     if (this.product_selected?.categorie_detail?.slug) {
       const categorySlug = this.product_selected.categorie_detail.slug;
-      this.produitService.getProductByCategory(categorySlug).subscribe({
+      this.produitService.getProductByCategory(categorySlug, this.page, this.pageSize).subscribe({
         next: (data: Produit[]) => {
           this.must_like_product = data.filter(p => p.slug !== this.product_selected?.slug);
         },

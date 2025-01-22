@@ -252,8 +252,8 @@
               </td>
             </tr>
           } @else {
-            @if (paginateProduits.length) {
-          @for (item of paginateProduits; track $index) {
+            @if (produits.length) {
+          @for (item of produits; track $index) {
             <tr>
                 <td>{{item.id}}</td>
                 <td>
@@ -440,7 +440,14 @@
         </tbody>
       </table>
       <div *ngIf="produits.length" class="d-flex justify-content-between p-2">
-        <ngb-pagination (pageChange)="loadProducts()" [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+        <ngb-pagination 
+        [collectionSize]="collectionSize" 
+        [(page)]="page" 
+        [pageSize]="pageSize"
+        (pageChange)="OnPageChange($event)"
+        [boundaryLinks]="true"
+        [maxSize]="5"
+        aria-label="Navigation des pages">
         </ngb-pagination>
         <p>{{collectionSize}} produits au total</p>
         <select class="form-select" style="width: max-content;" [(ngModel)]="pageSize" (ngModelChange)="loadProducts();">

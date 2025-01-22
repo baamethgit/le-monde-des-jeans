@@ -4,6 +4,7 @@
   --background-color: #f8f9fa;
   --card-background: #ffffff;
   --card-border: #e0e0e0;
+  --star-color: #ffd700;
 }
 
 .testimonials-section {
@@ -57,10 +58,33 @@
   margin-bottom: 1.5rem;
 }
 
+.testimonial-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
 .testimonial-author {
   font-size: 1.1rem;
   color: var(--primary-color);
-  text-align: right;
+}
+
+.star-rating {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.product_star_empty{
+  color: #999;
+}
+.product_star{
+  color:#ff7300;
+}
+.date-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
 }
 
 @media (max-width: 768px) {

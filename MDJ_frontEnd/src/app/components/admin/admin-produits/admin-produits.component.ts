@@ -59,7 +59,6 @@ category:categorie[]=[];
 tailles=TAILLES
 compo=COMPO
 couleur=COULEUR
-paginateProduits:Produit[]=[]
 page:number=1;
 pageSize:number=10;
 collectionSize:number=0;
@@ -132,15 +131,19 @@ ngOnInit():void{
 }
 loadProducts(){
   this.isPLoading = true;
-  this.produitsService.getProducts().pipe(
+  this.produitsService.getProductsAdmin(this.page,this.pageSize).pipe(
     finalize(() => this.isPLoading = false)
   ).subscribe({
     next:(data)=>{
-      this.produits=data;
-      this.collectionSize=this.produits.length
-      this.getProductsPagination()
+      this.produits=data.results;
+      this.collectionSize=data.count
     }
   })
+}
+
+OnPageChange(page: number) {
+  this.page = page;
+  this.loadProducts();
 }
 loadCategories(){
   this.isCLoading = true;
@@ -218,10 +221,6 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
   }
 
   this.modalService.open(content, { windowClass : "myCustomModalClass"});
-}
-
-getProductsPagination(){
-  this.paginateProduits=this.produits.slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
 }
 
 
