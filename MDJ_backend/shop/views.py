@@ -57,9 +57,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = models.Produit.objects.all()
     serializer_class = serializers.ProductSerializer
+    pagination_class = CustomPagination
+
     def get_permissions(self):
         if self.action == 'retrieve' or self.action == 'list':
             permission_classes = [IsAuthenticated]
@@ -68,6 +75,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAdminUser, IsAuthenticated]
         return [permission() for permission in permission_classes]
+
     def retrieve(self, request, *args, **kwargs):
         # Récupérer le produit par le slug au lieu de l'id
         slug = kwargs.get('pk')  
@@ -152,10 +160,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-class CustomPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 100
 
 class CommandeListView(ListAPIView):
     serializer_class = CommandeSerializer

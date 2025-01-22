@@ -13,21 +13,20 @@ export class ProduitService {
 
   constructor(private http:HttpClient) { }
 
-  getProducts():Observable<Produit[]>{
-    return this.http.get<Produit[]>(this.apiUrl)
+  getProducts(page: number = 1, pageSize: number = 10):Observable<any>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    return this.http.get<Produit[]>(this.apiUrl, { params })
   }
 
 
-  getProductsAdmin(page: number = 1, pageSize: number = 10, searchTerm: string = ''): Observable<any> {
+  getProductsAdmin(page: number = 1, pageSize: number = 10): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
 
-    if (searchTerm) {
-      params = params.set('search', searchTerm);
-    }
-
-    return this.http.get<User[]>(`${this.apiUrl}`, { params });
+    return this.http.get<Produit[]>(`${this.apiUrl}`, { params });
   }
 
 
@@ -39,12 +38,18 @@ export class ProduitService {
 
 
 
-  getProductByCategory(categorie:string):Observable<Produit[]>{
-    return this.http.get<Produit[]>(`${this.apiUrl}?categorie=${categorie}`)
+  getProductByCategory(categorie:string, page: number = 1, pageSize: number = 10):Observable<any>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    return this.http.get<Produit[]>(`${this.apiUrl}?categorie=${categorie}`,{ params })
   }
 
-  getProductBySpecial():Observable<Produit[]>{
-    return this.http.get<Produit[]>(`${this.apiUrl}?special=True`)
+  getProductBySpecial(page: number = 1, pageSize: number = 10):Observable<any>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    return this.http.get<Produit[]>(`${this.apiUrl}?special=True`,{ params })
   }
 
   CreateProduct(formData: FormData): Observable<any> {

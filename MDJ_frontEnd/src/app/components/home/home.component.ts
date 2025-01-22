@@ -20,11 +20,13 @@ import { InfosService } from '../../services/infos.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  page = 1;
+  pageSize = 10;
+  totalItems = 0;
   catagorie_list:categorie[]=[];
   products_list:Produit[]=[];
   special_list:Produit[]=[];
   avis_list:Avis[]=[];
-  limit_prod=10;
   infos:Infos | undefined;
   constructor(private readonly categorieService:CategorieService, private readonly productService:ProduitService, private readonly avisService: UserService, private readonly infosService:InfosService){}
 
@@ -34,10 +36,10 @@ export class HomeComponent {
       error:(error)=>{console.log('Erreur lors de l\'affichage des catégories :', error.error.detail)}
     })
 
-    this.productService.getProducts().subscribe({
+    this.productService.getProducts(this.page, this.pageSize).subscribe({
       next:(data)=>{
-        this.products_list=data;
-        console.log(this.products_list)
+        this.products_list=data.results;
+        this.totalItems = data.count;
       },
       error:(error)=>{console.log('Erreur lors de l\'affichage des produits :', error.error.detail)}
     })
@@ -54,8 +56,8 @@ export class HomeComponent {
   }
 
   loadSpecials(){
-    this.productService.getProductBySpecial().subscribe({
-      next:(data)=>{this.special_list=data}
+    this.productService.getProductBySpecial(this.page, this.pageSize).subscribe({
+      next:(data)=>{this.special_list=data.results}
     })
   }
 
