@@ -257,8 +257,8 @@ class UserDetailView(APIView):
     
 class deleteUserView(APIView):
     permission_classes = [IsAuthenticated,IsAdminUser]
-    def delete(self, request,slug):
-        user = get_object_or_404(CustomUser, slug=slug)
+    def delete(self, request,id):
+        user = get_object_or_404(CustomUser, id=id)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 """

@@ -12,14 +12,14 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './delete-modal.component.scss'
 })
 export class DeleteModalComponent {
-  slug?: any;
+  id?: any;
   error : string = '';
 
   protected activeModal = inject(NgbActiveModal);
   protected userService = inject(UserService);
 
   ngOnInit(): void {
-   
+
   }
 
 
@@ -27,7 +27,7 @@ export class DeleteModalComponent {
     this.activeModal.dismiss();
   }
   delete():void{
-    this.userService.deleteUser(this.slug).subscribe({
+    this.userService.deleteUser(this.id).subscribe({
       next: (data) => {
         this.activeModal.close();
       },
@@ -36,7 +36,7 @@ export class DeleteModalComponent {
       }
     });
   }
-  
+
 
 }
 

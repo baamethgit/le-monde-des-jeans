@@ -25,7 +25,7 @@ urlpatterns = [
     path("creer-client/",UserCreateView.as_view()),
     path("client/",UserDetailView.as_view()),  
     #path("user/<str:slug>/",getUserBySlug.as_view()),
-    path("delete-user/<str:slug>/",deleteUserView.as_view()),
+    path("delete-user/<int:id>/",deleteUserView.as_view()),
     path('avis/',AvisView.as_view()),
     path('avis/<int:id_avis>',AvisView.as_view()),
     path('create-superuser/', create_superuser, name='create_superuser'),

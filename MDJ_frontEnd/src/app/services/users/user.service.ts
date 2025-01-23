@@ -164,8 +164,8 @@ export class UserService {
 
 
 
-  deleteUser(slug:string):Observable<any>{
-    const url = `${this.baseUrl}delete-user/${slug}/`;
+  deleteUser(id:number):Observable<any>{
+    const url = `${this.baseUrl}delete-user/${id}/`;
     return this.http.delete<any>(url);
   }
 

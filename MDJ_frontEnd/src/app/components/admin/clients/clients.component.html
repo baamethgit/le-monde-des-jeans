@@ -50,7 +50,7 @@
               <td><ngb-highlight [result]="user.nom_complet" [term]="searchTerm" /></td>
               <td><ngb-highlight [result]="user.phone_number" [term]="searchTerm" /></td>
               <td>
-                <button class="action-btn delete-btn" (click)="deleteUser(user.slug)">Supprimer</button>
+                <button class="action-btn delete-btn" (click)="deleteUser(user.id || 0)">Supprimer</button>
               </td>
             </tr>
           }

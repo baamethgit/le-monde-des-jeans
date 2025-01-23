@@ -19,14 +19,9 @@ export class LoginComponent implements OnInit{
   currentUser: User | null = null;
 
   isServer = false;
-  isUser = signal(false)
 
   constructor(@Inject(PLATFORM_ID) platformId: Object,private userService:UserService,private fb:FormBuilder,private router:Router){
     this.isServer = isPlatformServer(platformId);
-    const userToken = this.userService.getAccessToken();
-    if(userToken){
-      this.isUser.set(true)
-    }
 
   }
 
