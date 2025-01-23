@@ -79,6 +79,9 @@
                     </a>
                   }
                 </div>
+                <div class="related-products__action text-center">
+                  <button [routerLink]="['/produits']" class="btn btn--outline">Voir plus</button>
+                </div>
               } @else {
                 <div class="empty-state">
                   <div class="empty-state__content">
@@ -109,6 +112,9 @@
                     </div>
                   </a>
                 }
+              </div>
+              <div class="related-products__action text-center">
+                <button [routerLink]="['/produits']" class="btn btn--outline">Voir plus</button>
               </div>
             } @else {
               <div class="empty-state">
