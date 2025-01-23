@@ -25,7 +25,7 @@ export class ProduitDetailComponent implements OnInit{
   product_selected: Produit | undefined;
   must_like_product: Produit[] = [];
   page = 1;
-  pageSize = 10;
+  pageSize = 5;
   totalItems = 0;
   commandeService = inject(CommandeService);
   panierService = inject(PanierService);
@@ -108,8 +108,8 @@ acheterDirectement(productSlug : string | undefined){
     if (this.product_selected?.categorie_detail?.slug) {
       const categorySlug = this.product_selected.categorie_detail.slug;
       this.produitService.getProductByCategory(categorySlug, this.page, this.pageSize).subscribe({
-        next: (data: Produit[]) => {
-          this.must_like_product = data.filter(p => p.slug !== this.product_selected?.slug);
+        next: (data) => {
+          this.must_like_product = data.results.filter((p: { slug: string | undefined; }) => p.slug !== this.product_selected?.slug);
         },
         error: (error) => {
           console.log('Erreur lors de l\'affichage des produits similaires :', error.error.detail);
