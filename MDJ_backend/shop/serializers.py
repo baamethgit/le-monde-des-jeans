@@ -70,7 +70,7 @@ class CommandeSerializer(ModelSerializer):
     
     class Meta:
         model = Commande
-        fields = ['id','client','produits','zone_livraison','ref_code','date_commande','date_livraison','statut','recupere_magasin','montant']
+        fields = ['id','client','produits','zone_livraison','ref_code','date_commande','date_livraison','date_expiration','statut','recupere_magasin','montant']
         read_only_fields = ['ref_code', 'client']
 
 
