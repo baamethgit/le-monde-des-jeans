@@ -77,19 +77,21 @@
             <p class="product-grid__empty-text">Notre catalogue est en cours de mise à jour</p>
           </div>
         </div>
-      </div>
     }
   </div>
-</div>
-<div *ngIf="produits.length" class="d-flex justify-content-between p-2">
-  <ngb-pagination 
-    [collectionSize]="totalItems" 
-    [(page)]="page" 
-    [pageSize]="pageSize"
-    (pageChange)="onPageChange($event)"
-    [boundaryLinks]="true"
-    [maxSize]="5"
-    aria-label="Navigation des pages">
-  </ngb-pagination>
-  <p>{{totalItems}} produits au total</p>
+    <div *ngIf="produits.length" class="d-flex justify-content-between p-2">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="page"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChange($event)"
+        [boundaryLinks]="true"
+        [maxSize]="5"
+        aria-label="Navigation des pages">
+      </ngb-pagination>
+      <p>{{totalItems}} produits au total</p>
+    </div>
+  }
+
+
 </div>
