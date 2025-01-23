@@ -4,6 +4,9 @@ from MDJ_backend.settings import AUTH_USER_MODEL
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from datetime import timedelta
+import environ
+env = environ.Env()
+environ.Env.read_env()
 
 import itertools
 
@@ -154,7 +157,9 @@ class ZoneLivraison(models.Model):
     
     def __str__(self):
         return self.nom
-    
+
+DUREE_ATTENTE_COMMANDE = env.int("DUREE_ATTENTE_COMMANDE",default=5)
+
 class Commande(models.Model):
     STATUT_CHOICES = (
         ('EN_ATTENTE', 'En attente de paiement'),
@@ -167,6 +172,7 @@ class Commande(models.Model):
     ref_code = models.CharField(max_length=20, unique=True)
     produits = models.ManyToManyField(Produit)
     date_commande = models.DateTimeField(auto_now_add=True)
+    date_expiration = models.DateTimeField(null=True, blank=True)
     date_livraison = models.DateTimeField(null=True, blank=True)
     statut = models.CharField(max_length=30, choices=STATUT_CHOICES, default='EN_ATTENTE')
     zone_livraison = models.ForeignKey(ZoneLivraison, on_delete=models.SET_NULL, null=True, blank=True)
@@ -175,10 +181,12 @@ class Commande(models.Model):
     @classmethod
     def generate_ref_code(cls):
         timestamp = int(timezone.now().timestamp())
-        random_num = random.randint(1000, 9999)  # Ajoute un nombre aléatoire
-        return f"{timestamp:x}{random_num}"  # Combine le timestamp et un numéro aléatoire
+        random_num = random.randint(1000, 9999)
+        return f"{timestamp:x}{random_num}"
 
     def save(self, *args, **kwargs):
+        if not self.id:
+            self.date_expiration = timezone.now() + timedelta(minutes=DUREE_ATTENTE_COMMANDE)
         if not self.ref_code:
             attempts = 0
             max_attempts = 3
@@ -196,18 +204,10 @@ class Commande(models.Model):
             super().save(*args, **kwargs)
 
     def est_expire(self):
-        return (timezone.now() > self.date_commande + timedelta(minutes=5)) and self.statut == 'EN_ATTENTE'
-    """
-    def liberer_produits_apres_delais(self):
-        if self.est_expire() and self.id:
-            for produit in self.produits.all():
-                # produit.reserve = False
-                produit.QuantiteStock -= 1
-                produit.save()
-            self.delete()
-"""
+        return (timezone.now() > self.date_expiration) and self.statut == 'EN_ATTENTE'
+
     def __str__(self):
-        return f"Commande {self.ref_code} par {self.client.nom_complet}"
+        return f"Commande {self.ref_code}"
     
     @property
     def montant(self):
@@ -231,4 +231,5 @@ class Commande(models.Model):
             self.date_livraison = timezone.now()
             self.statut = 'LIVREE'
             self.save()
+
 

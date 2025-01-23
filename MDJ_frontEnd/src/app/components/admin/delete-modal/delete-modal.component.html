@@ -1,28 +1,27 @@
-@if (slug) {
+@if (id) {
     <div>
         <div class="modal-header bg-blue text-white">
           <h4 class="modal-title">Confirmation de suppression</h4>
         </div>
-      
+
         <div class="modal-body">
             <p class="alert alert-danger" *ngIf="error">{{error}}</p>
 
           <p>
             Etes-vous sur de vouloir supprimer l'utilisateur
         </p>
-          
-      
+
+
         </div>
-      
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
             <span>Annuler</span>
           </button>
-      
+
           <button (click)="delete()" type="submit" class="btn btn-danger">
             <span>Supprimer</span>
           </button>
         </div>
       </div>
   }
-  

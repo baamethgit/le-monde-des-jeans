@@ -63,10 +63,10 @@ export class ClientsComponent implements OnInit {
   editUser(customer_id:number){
 
   }
-  deleteUser(slug:string){
-    const modalRef = this.modalService.open(DeleteModalComponent, { size: 'lg',centered:true, backdrop: 'static' });
+  deleteUser(id:number){
 
-    modalRef.componentInstance.slug = slug;
+    const modalRef = this.modalService.open(DeleteModalComponent, { size: 'lg',centered:true, backdrop: 'static' });
+    modalRef.componentInstance.id = id;
     modalRef.result.then(
       () => this.loadUsers(),
       () => {}
