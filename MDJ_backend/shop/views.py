@@ -7,7 +7,7 @@ from . import  models
 from . import serializers
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
-from .serializers import ZoneSerializer,CommandeSerializer
+from .serializers import ZoneSerializer, CommandeSerializer, PanierSerializerSansProd
 from .models import ZoneLivraison, Commande
 from django.db.models import Q, Count
 from rest_framework.pagination import PageNumberPagination
@@ -201,7 +201,7 @@ def panier_detail(request):
 
     panier, _ = Panier.objects.get_or_create(client=user)
     # panier.nettoyer_produits_expires()
-    serializer = PanierSerializer(panier)
+    serializer = PanierSerializerSansProd(panier)
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -218,7 +218,7 @@ def ajouter_produit(request):
     if panier.ajouter_produit(produit):
         return Response({"message": "Produit ajouté au panier"}, status=status.HTTP_200_OK)
     else:
-        return Response({"message_erreur": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message_erreur": "Le produit est en rupture de stock"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

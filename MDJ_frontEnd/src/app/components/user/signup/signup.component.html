@@ -22,8 +22,9 @@
           <input placeholder="+221 | " formControlName="phone_number" type="text" class="form-control" id="phone_number">
           <div *ngIf="SignupForm.controls['phone_number'].invalid && (SignupForm.controls['phone_number'].dirty || SignupForm.controls['phone_number'].touched)">
             <small class="text-danger"
-              *ngIf="SignupForm.controls['phone_number'].hasError('email') || SignupForm.controls['phone_number'].hasError('validMail')">
-              Veuillez saisir un numéro de téléphone valide
+              *ngIf="SignupForm.controls['phone_number'].hasError('validphoneNumber')">
+              Le numéro de téléphone doit être un numéro sénégalais valide (ex: 771234567).
+
             </small>
             <small class="text-danger" *ngIf="SignupForm.controls['phone_number'].hasError('required')">Ce champ est
               obligatoire.</small>

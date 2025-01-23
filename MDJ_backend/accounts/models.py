@@ -5,32 +5,61 @@ from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 from django.template.defaultfilters import slugify
 
+from accounts.validators import validate_phone_number_senegal
+
+
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import BaseUserManager
+from .validators import validate_phone_number_senegal  # Importe le validateur personnalisé
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
+        # Vérifie que le numéro de téléphone est fourni
         if not phone_number:
-            raise ValueError('Le numéro de téléphone est obligatoire')
+            raise ValueError('Le numéro de téléphone est obligatoire.')
+
+        # Valide le numéro de téléphone
+        try:
+            validate_phone_number_senegal(phone_number)
+        except ValidationError as e:
+            raise ValueError(str(e))  # Relève une ValueError avec le message d'erreur
+
+        # Vérifie que les champs obligatoires sont fournis
+        if not extra_fields.get('nom_complet'):
+            raise ValueError('Le nom complet est obligatoire.')
+        if not extra_fields.get('addresse_mail'):
+            raise ValueError('L\'adresse e-mail est obligatoire.')
+
+        # Normalise l'adresse e-mail
+        addresse_mail = self.normalize_email(extra_fields.get('addresse_mail'))
+        extra_fields['addresse_mail'] = addresse_mail
+
+        # Crée l'utilisateur
         user = self.model(phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, phone_number, password=None, **extra_fields):
+        # Définit les champs par défaut pour un superutilisateur
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
 
+        # Valide les champs spécifiques au superutilisateur
         if extra_fields.get('is_staff') is not True:
-            raise ValueError('Le superuser doit avoir is_staff=True.')
+            raise ValueError('Le superutilisateur doit avoir is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Le superuser doit avoir is_superuser=True.')
+            raise ValueError('Le superutilisateur doit avoir is_superuser=True.')
 
+        # Crée le superutilisateur
         return self.create_user(phone_number, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Client'
     nom_complet = models.CharField(max_length=255)
-    phone_number = PhoneNumberField(region='SN',unique=True)
+    phone_number = PhoneNumberField(region='SN',unique=True,validators=[validate_phone_number_senegal])
     addresse_mail = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

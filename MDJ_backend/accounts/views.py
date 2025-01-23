@@ -1,5 +1,12 @@
+from django.db import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
+# views.py
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.conf import settings
 
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -33,12 +40,6 @@ class RegisterView(APIView):
         password = request.data.get("password")
         nom_complet = request.data.get("nom_complet")
 
-        # Vérifier si l'utilisateur existe déjà
-        if CustomUser.objects.filter(phone_number=phone_number).exists():
-            return Response({"error": "Un compte avec ce numéro de téléphone existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
-
-        if CustomUser.objects.filter(addresse_mail=addresse_mail).exists():
-            return Response({"error": "Un compte avec cet addresse mail existe déjà"}, status=status.HTTP_400_BAD_REQUEST)
         """
         # Générer un code OTP
         otp_code = random.randint(100000, 999999)
@@ -61,17 +62,49 @@ class RegisterView(APIView):
         
 """
         try:
-            user = CustomUser(
+            # Crée l'utilisateur en utilisant le CustomUserManager
+            user = CustomUser.objects.create_user(
                 phone_number=phone_number,
                 addresse_mail=addresse_mail,
-                nom_complet=nom_complet
+                nom_complet=nom_complet,
+                password=password
             )
-            user.set_password(password)
-            user.save()
-            return Response({"message": "Utilisateur créé avec succès"}, status=status.HTTP_201_CREATED)
-        except ValidationError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "Utilisateur créé avec succès"},
+                status=status.HTTP_201_CREATED
+            )
 
+        except ValueError as e:
+            # Gère les erreurs de validation (levées par le CustomUserManager)
+            return Response(
+                {"erreur_rencontre": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        except IntegrityError as e:
+            # Gère les erreurs d'unicité (numéro de téléphone ou adresse e-mail déjà utilisés)
+            if 'phone_number' in str(e):
+                return Response(
+                    {"erreur_rencontre": "Ce numéro de téléphone est déjà utilisé."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            elif 'addresse_mail' in str(e):
+                return Response(
+                    {"erreur_rencontre": "Cette adresse e-mail est déjà utilisée."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            else:
+                return Response(
+                    {"erreur_rencontre": "Une erreur inattendue s'est produite."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        except Exception as e:
+            # Gère toutes les autres exceptions inattendues
+            return Response(
+                {"erreur_rencontre": "Une erreur inattendue s'est produite."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 class VerifyOTPView(APIView):
     def post(self, request):
         addresse_mail = request.data.get('addresse_mail')
@@ -158,8 +191,6 @@ class SendPasswordResetOTP(APIView):
 
             return Response({"message": "Code OTP envoyé", "expires_in": 600}, status=status.HTTP_200_OK)
         return Response({"error": "Ce compte n'existe pas !!"}, status=status.HTTP_400_BAD_REQUEST)
-        
-       
 
 class VerifyOTPResetView(APIView):
     def post(self, request):
@@ -261,13 +292,6 @@ class deleteUserView(APIView):
         user = get_object_or_404(CustomUser, id=id)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-"""
-class getUserBySlug(RetrieveAPIView):
-    permission_classes = [IsAuthenticated,IsAdminUser]
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = 'slug'
-"""
 
 class AvisView(APIView):
     permission_classes = [IsAuthenticated]
@@ -295,7 +319,6 @@ class AvisView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class Logout(APIView):
-
     def post(self, request):
         try:
             logout(request)
@@ -325,12 +348,6 @@ class InformationsGeneralesView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# views.py
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from django.conf import settings
 
 
 @api_view(['POST'])
@@ -338,23 +355,20 @@ from django.conf import settings
 def create_superuser(request):
     serializer = SuperUserCreateSerializer(data=request.data)
     if serializer.is_valid():
-        # Vérification supplémentaire de sécurité
         if not settings.DEBUG and not request.user.is_superuser:
             return Response(
-                {"error": "Seul un superuser peut créer d'autres superusers en production"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
         try:
             serializer.save()
             return Response(
-                {"message": "Superuser créé avec succès"},
+                {"message": "admin créé avec succès"},
                 status=status.HTTP_201_CREATED
             )
         except Exception as e:
             return Response(
-                {"error": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_400_BAD_REQUEST)

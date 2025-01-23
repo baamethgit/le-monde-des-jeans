@@ -26,7 +26,7 @@ export default class Validation {
         return null;
       }
 
-      const phoneNumberValidationPattern = /^(?:\+221)?(7[05678]\d{7})$/;
+      const phoneNumberValidationPattern = /^(?:\+221)?(7[05678]|33|30)\d{7}$/;
       const isValid = phoneNumberValidationPattern.test(control.value);
 
       if (isValid) {

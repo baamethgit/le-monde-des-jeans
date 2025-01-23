@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
 import Validation from '../../../shared/my-validators';
 import { User } from '../../../models/user';
+import {finalize} from "rxjs";
 
 
 @Component({
@@ -43,12 +44,14 @@ export class SignupComponent implements OnInit{
         password_confirm: ['', [Validators.required]],
       },
       {
-        validators: [Validation.match('password', 'password_confirm')]
+        validators: [Validation.match('password', 'password_confirm'),
+                      Validation.phoneNumberValidation('phone_number'),
+        ],
       }
     );
-      
+
   }
- 
+
   togglePassword(input: HTMLInputElement) {
     if (input.type === 'password') {
       input.type = 'text';
@@ -56,7 +59,7 @@ export class SignupComponent implements OnInit{
       input.type = 'password';
     }
   }
-  
+
   register():void{
     if(this.SignupForm.valid){
       this.isloading = true;
@@ -68,15 +71,21 @@ export class SignupComponent implements OnInit{
       const nom_complet = this.SignupForm.getRawValue().nom_complet || '';
       const password = this.SignupForm.getRawValue().password || '';
       const addresse_mail = this.SignupForm.getRawValue().addresse_mail || '';
-      this.userService.register({nom_complet:nom_complet,phone_number:phone_number,password:password,addresse_mail:addresse_mail}).subscribe({
+      this.userService.register({nom_complet:nom_complet,phone_number:phone_number,password:password,addresse_mail:addresse_mail})
+        .pipe(
+          finalize(() => {
+            this.isloading = false;
+          })
+        )
+        .subscribe({
         next: (data) => {
           // this.otpSent = true;
           // this.isloading = false;
           this.router.navigate(['login']);
         },
         error: (error) => {
-          this.SignupError = error.error;
-          // this.errorMessage = "Erreur lors de l'envoi du code OTP. Veuillez réessayer.";
+
+          this.SignupError = error.error.erreur_rencontre;
         }
       })
 
@@ -84,7 +93,7 @@ export class SignupComponent implements OnInit{
       this.SignupForm.markAllAsTouched();
     }
   }
- 
+
   onVerifyOTP() {
     let addresse_mail = this.SignupForm.getRawValue().addresse_mail || '';
     this.userService.verifyOTP(addresse_mail,this.otpCode).subscribe({
