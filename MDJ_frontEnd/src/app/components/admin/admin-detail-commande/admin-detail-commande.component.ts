@@ -3,10 +3,10 @@ import { Commande } from '../../../models/commande';
 import { CommandeService } from '../../../services/commandes/commande.service';
 import { StatutCommande } from '../../../models/StatutCommande';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, tap } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-admin-detail-commande',
   standalone: true,
@@ -16,7 +16,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminDetailCommandeComponent implements OnInit {
   textStatut : string = '';
-  statutCommande!: StatutCommande;
   commande! : Commande;
   notCommandFound : boolean = false;
   commandeService = inject(CommandeService);
@@ -30,7 +29,6 @@ export class AdminDetailCommandeComponent implements OnInit {
       //   .pipe(map(params => params.get('id')), tap(id => (this.id = +id)))
       //   .subscribe(id => {});
       this.loadCommande();
-
   }
   loadCommande():void{
     const refCode = this.route.snapshot.params['ref-code'];

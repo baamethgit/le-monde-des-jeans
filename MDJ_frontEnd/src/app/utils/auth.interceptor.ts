@@ -14,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (
   const authService = inject(UserService);
 
 
-  if(request.url.includes('login') || request.url.includes('register') || request.url.includes('resetpwd') || request.url.includes('logout')){
+  if(request.url.includes('login') || request.url.includes('register') || request.url.includes('resetpwd') || request.url.includes('logout') || request.url.includes('verify-email')){
     return next(request);
   }
 

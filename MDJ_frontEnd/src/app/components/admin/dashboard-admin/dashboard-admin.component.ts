@@ -23,7 +23,6 @@ export class DashboardAdminComponent implements OnInit {
     "nombre_commandes": 0,
     "nombre_nouvelles_commandes": 0,
     "ventes_totales": 0,
-    "ventes_par_methode": {},
     "commandes_par_statut": [] as any
   }
   ngOnInit() {
@@ -51,4 +50,22 @@ export class DashboardAdminComponent implements OnInit {
       },
     })
   }
+
+
+  formatAmount(amount: number): string {
+    if (amount < 1000) {
+      // Si le montant est inférieur à 1000, retourne-le tel quel
+      return amount.toString();
+    } else if (amount >= 1000 && amount < 1000000) {
+      // Si le montant est compris entre 1000 et 1 million
+      return (amount / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    } else if (amount >= 1000000 && amount < 1000000000) {
+      // Si le montant est compris entre 1 million et 1 milliard
+      return (amount / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    } else {
+      // Si le montant est supérieur ou égal à 1 milliard
+      return (amount / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+    }
+  }
+
 }

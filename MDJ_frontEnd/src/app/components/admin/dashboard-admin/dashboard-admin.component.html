@@ -23,7 +23,7 @@
                 </div>
                 <div class="flex-grow-1 ms-3">
                   <h6 class="text-muted mb-1">Ventes Totales</h6>
-                  <h3 class="mb-0">{{kpi.ventes_totales}} FCFA</h3>
+                  <h4 class="mb-0">{{ formatAmount(kpi.ventes_totales)}} FCFA</h4>
 
                 </div>
               </div>
@@ -85,15 +85,15 @@
       <div class="row g-4 mb-4">
         <div class="col-12 col-xl-8">
           <div class="position-relative h-100" style="min-height: 400px;">
-            <img 
-              src="assets/img/commande_admin_page.png" 
+            <img
+              src="assets/img/commande_admin_page.png"
               alt="Commande admin page"
               class="position-absolute w-100 h-100"
               style="object-fit: cover; object-position: center;"
             >
           </div>
         </div>
-      
+
         <div class="col-12 col-xl-4">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-transparent border-0">

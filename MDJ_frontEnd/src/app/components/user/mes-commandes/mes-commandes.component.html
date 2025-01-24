@@ -22,7 +22,7 @@
             </div>
             <p class="text-center my-0 py-0" *ngIf="order.statut=='EN_ATTENTE'">
               <button class="btn-success my-0 btn p-0" type="button">
-                <a [routerLink]="['/detail-commande']" class="m-0 p-2 text-decoration-none text-white">Finaliser</a>
+                <a [routerLink]="['/detail-commande']" class="m-0 p-3 shadow text-decoration-none text-white">Finaliser</a>
               </button>
             </p>
             <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>

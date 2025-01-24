@@ -3,7 +3,7 @@
       <img src="../../../../assets/img/men39s-clothes-hanger-generative-ai.jpg" alt="">
     </div>
     <div class="mx-auto col-10 col-sm-8 col-md-6 px-md-5 d-flex align-items-center justify-content-center">
-      <form *ngIf="!otpSent" action="#" class="w-100 h-100 login position-relative" method='POST' (ngSubmit)="register()"
+      <form class="w-100 h-100 login position-relative" method='POST' (ngSubmit)="register()"
         [formGroup]="SignupForm">
         <h3 class="text-center mb-3">Créer un compte</h3>
         <p class="text-center">
@@ -75,20 +75,10 @@
         <button type="submit" class="btn btn-primary w-100">Envoyer</button>
         <br><small class="d-block text-center mt-2">Vous recevrez un code de vérification sur votre addresse mail.</small>
       </form>
-      <div *ngIf="otpSent">
-        <h2>Vérification OTP</h2>
-        <form method="post" (ngSubmit)="onVerifyOTP()">
-          <div class="mb-3">
-            <label for="otpCode" class="form-label">Code OTP:</label>
-            <input type="text" id="otpCode" [(ngModel)]="otpCode" name="otpCode" class="form-control" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Vérifier</button>
-        </form>
-      </div>
     </div>
-  </section>
+</section>
 
-  <div *ngIf="isloading" class="bg-dark bg-opacity-25 position-absolute d-flex align-items-center justify-content-center w-100" style="width:100vw;height:100vh ;top:0;left:0">
+<div *ngIf="isloading" class="bg-dark bg-opacity-25 position-absolute d-flex align-items-center justify-content-center w-100" style="width:100vw;height:100vh ;top:0;left:0">
     <div id="wifi-loader">
         <svg class="circle-outer" viewBox="0 0 86 86">
             <circle class="back" cx="43" cy="43" r="40"></circle>

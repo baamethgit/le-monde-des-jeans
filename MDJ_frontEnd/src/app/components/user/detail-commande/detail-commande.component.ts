@@ -24,13 +24,10 @@ import {finalize} from "rxjs";
 export class DetailCommandeComponent implements OnInit{
   methodePaiement : string = 'WAVE';
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
-  @Input() a_livrer : boolean = true;
   commande : Commande | undefined;
   zones: ZoneLivraison[] = [];
   selectedZone: ZoneLivraison | undefined;
-  prixLivraison : number = 0;
   message : string = '';
-  numZone = 1;
   client! : User;
   commandeService = inject(CommandeService);
   paymentService = inject(PaiementService);
@@ -40,7 +37,6 @@ export class DetailCommandeComponent implements OnInit{
   selectedOption: string = 'livraison';
 
 
-  protected modalService = inject(NgbModal);
 
   constructor(private readonly router : Router){}
 

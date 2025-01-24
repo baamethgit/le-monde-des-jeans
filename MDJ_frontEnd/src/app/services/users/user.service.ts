@@ -184,14 +184,27 @@ export class UserService {
     return this.http.post<AvisCreationData>(url,data,{ withCredentials: true })
   }
 
-   // Étape 1 : Envoyer les informations d'inscription et recevoir l'OTP
-  register(signupData: { phone_number: string,addresse_mail:string, password: string, nom_complet: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}register/`, signupData);
+   register(signupData: { phone_number: string,addresse_mail:string, password: string, nom_complet: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}register/`, signupData,{withCredentials:true});
   }
 
-  // Étape 2 : Vérifier l'OTP et finaliser l'inscription
-  verifyOTP(addresse_mail: string,otpCode: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}verify-otp/`, { addresse_mail: addresse_mail,otp_code: otpCode }, { withCredentials: true });
+
+  ClientToAdmin(id_user:number): Observable<any> {
+    return this.http.post(`${this.baseUrl}update_user_to_admin/${id_user}/`, {},{withCredentials:true});
+  }
+
+  AdminToClient(id_user:number): Observable<any> {
+    return this.http.post(`${this.baseUrl}update_admin_to_client/${id_user}/`, {},{withCredentials:true});
+  }
+
+  ActiveDesactiveClient(id_user:number): Observable<any> {
+    return this.http.post(`${this.baseUrl}active_desactive_user/${id_user}/`, {},{withCredentials:true});
+  }
+
+  verifyEmail(token: string) : Observable<any> {
+    let params = new HttpParams()
+      .set('token', token);
+    return this.http.get(`${this.baseUrl}verify-email/` ,{params,withCredentials:true});
   }
 
 }

@@ -20,8 +20,7 @@ export class SignupComponent implements OnInit{
   InputType : string = 'password';
   SignupForm! : FormGroup;
   SignupError :string = '';
-  otpCode: string = '';
-  otpSent: boolean = false;
+  msgCreation = "";
   isloading: boolean = false;
   user : User = {
     phone_number : "",
@@ -79,8 +78,8 @@ export class SignupComponent implements OnInit{
         )
         .subscribe({
         next: (data) => {
-          // this.otpSent = true;
-          // this.isloading = false;
+          this.msgCreation = data.message
+          alert(this.msgCreation);
           this.router.navigate(['login']);
         },
         error: (error) => {
@@ -94,15 +93,4 @@ export class SignupComponent implements OnInit{
     }
   }
 
-  onVerifyOTP() {
-    let addresse_mail = this.SignupForm.getRawValue().addresse_mail || '';
-    this.userService.verifyOTP(addresse_mail,this.otpCode).subscribe({
-      next:(data)=>{
-        this.router.navigate(['/login']);
-      },
-      error:(error)=>{
-        // this.errorMessage = "Erreur lors de la vérification du code OTP. Veuillez réessayer.";
-      }
-  });
-  }
 }

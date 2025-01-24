@@ -1,0 +1,22 @@
+/* Centrer le contenu verticalement */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Ajouter une ombre et un peu d'espacement à la carte */
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+/* Style pour les messages d'alerte */
+.alert {
+  margin-top: 20px;
+}
+
+/* Bouton de redirection */
+.btn-primary {
+  margin-top: 20px;
+}

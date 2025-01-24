@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {Component, inject, OnInit} from '@angular/core';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {PaiementService} from "../../services/paiement.service";
 
 @Component({
   selector: 'app-paiement-success',
@@ -8,12 +9,24 @@ import { RouterLink } from '@angular/router';
   templateUrl: './paiement-success.component.html',
   styleUrl: './paiement-success.component.scss'
 })
-export class PaiementSuccessComponent {
-ngOnInit(): void {
-  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-  //Add 'implements OnInit' to the class.
-  // verifierStatut(){
+export class PaiementSuccessComponent implements OnInit{
 
-  // }
-}
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private paiementService = inject(PaiementService);
+
+  ngOnInit(): void {
+    const refCode = this.route.snapshot.params['ref-code'];
+    if(!refCode){
+      this.router.navigate(['**']);
+    }else {
+      this.paiementService.verifyPaymentStatus(refCode).subscribe({
+        next: (data) => {
+
+        },
+        error:(error)=>{
+          this.router.navigate(['payment-error',refCode]);
+        }})
+    }
+  }
 }

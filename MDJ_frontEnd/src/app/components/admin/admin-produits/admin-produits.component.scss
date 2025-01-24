@@ -11,6 +11,7 @@ $blue_color: #377DFF;
   box-shadow: -5px 0 5px -5px rgba(0,0,0,0.1);
 }
 
+
 .actions-cell {
   box-shadow: -5px 0 5px -5px rgba(0,0,0,0.1);
 }
@@ -52,7 +53,7 @@ $blue_color: #377DFF;
     position: static;
     max-width: 240px;
   }
-  
+
   .coolinput label.text {
     font-size: 0.75rem;
     color: $blue_color;
@@ -64,20 +65,20 @@ $blue_color: #377DFF;
     background-color: #fff;
     width: fit-content;
   }
-  
+
   .coolinput input[type=text].input {
     padding: 11px 10px;
     font-size: 0.75rem;
     border: 2px $blue_color solid;
     border-radius: 5px;
   }
-  
+
   .coolinput input[type=text].input:focus {
     outline: none;
   }
 select{
   width: 200px;
-  
+
   border: 2px $blue_color solid;
 }
 
