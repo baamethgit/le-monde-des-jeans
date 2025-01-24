@@ -140,7 +140,7 @@ class WaveWebhookView(APIView):
             )
 
 class CheckPaymentStatusView(APIView):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     def get(self, request, order_ref):
         order = get_object_or_404(Commande,ref_code=order_ref)
         session = get_object_or_404(WaveCheckoutSession,order_id=order.id)
