@@ -1,10 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView, \
-    VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout, \
-    create_superuser, InformationsGeneralesView
-
-VerifyOTPView, UserListView, UserCreateView, VerifyOTPResetView, SendPasswordResetOTP, AvisView, Logout, InformationsGeneralesView
+from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView,\
+    create_superuser, VerifyEmailView, ClientToAdmin, ActiveDesactiveClient, AdminToClient,UserListView, UserCreateView,AvisView, Logout, InformationsGeneralesView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -14,17 +11,19 @@ from django.urls import path
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
-    path('verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
     path('login/', LoginView.as_view(), name='login'),
     path('get-user/', UserDetailView.as_view()),
+
+    path('update_user_to_admin/<int:id_user>/', ClientToAdmin.as_view()),
+    path('update_admin_to_client/<int:id_user>/', AdminToClient.as_view()),
+    path('active_desactive_user/<int:id_user>/', ActiveDesactiveClient.as_view()),
+
     path('change_password/', PasswordChangeView.as_view()),
-    path('send-otp/', SendPasswordResetOTP.as_view()),
-    path('verify-reset-otp/', VerifyOTPResetView.as_view()),
+    path('verify-email/', VerifyEmailView.as_view(), name='verify-email'),
     path('reset-password/', ResetPasswordView.as_view()),
     path('admin_users_list/',UserListView.as_view()),
     path("creer-client/",UserCreateView.as_view()),
-    path("client/",UserDetailView.as_view()),  
-    #path("user/<str:slug>/",getUserBySlug.as_view()),
+    path("client/",UserDetailView.as_view()),
     path("delete-user/<int:id>/",deleteUserView.as_view()),
     path('avis/',AvisView.as_view()),
     path('avis/<int:id_avis>',AvisView.as_view()),

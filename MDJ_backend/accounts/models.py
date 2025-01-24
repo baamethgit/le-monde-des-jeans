@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from phonenumber_field.modelfields import PhoneNumberField
 from django.template.defaultfilters import slugify
 
@@ -34,10 +35,12 @@ class CustomUserManager(BaseUserManager):
         addresse_mail = self.normalize_email(extra_fields.get('addresse_mail'))
         extra_fields['addresse_mail'] = addresse_mail
 
+        extra_fields.setdefault('is_active', False)
         # Crée l'utilisateur
         user = self.model(phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        user.generate_verification_token()
         return user
 
     def create_superuser(self, phone_number, password=None, **extra_fields):
@@ -62,6 +65,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = PhoneNumberField(region='SN',unique=True,validators=[validate_phone_number_senegal])
     addresse_mail = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
+    verification_token = models.CharField(max_length=64, blank=True, null=True)
+    verification_token_expires = models.DateTimeField(blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True,blank=True)
@@ -71,6 +76,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
+    def generate_verification_token(self):
+        self.verification_token = get_random_string(64)
+        self.verification_token_expires = timezone.now() + timezone.timedelta(hours=10)
+        self.save()
 
     def save(self, *args, **kwargs):
         if self.slug != slugify(self.phone_number):

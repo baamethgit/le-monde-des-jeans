@@ -8,7 +8,7 @@ class UserSerializer(ModelSerializer):
     phone_number = PhoneNumberField(region="SN")
     class Meta:
         model = CustomUser
-        fields = ["id","nom_complet","phone_number",'addresse_mail',"password","is_staff","is_superuser"]
+        fields = ["id","nom_complet","phone_number",'addresse_mail',"password","is_staff","is_superuser","is_active"]
 
     # Pour crypter le password
     def create(self, validated_data):
@@ -41,8 +41,6 @@ class AvisCreationSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
-# serializers.py
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 

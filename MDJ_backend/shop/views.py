@@ -284,12 +284,7 @@ class DashboardKpiView(APIView):
 
         ventes_totales = Payment.objects.filter(statut='completed').aggregate(total=Sum('montant'))['total'] or 0
 
-        ventes_par_methode = (
-            Payment.objects
-            .filter(statut='completed')
-            .values('methode_paiement')
-            .annotate(total=Sum('montant'))
-        )
+
         total_commandes = Commande.objects.count()
         commandes_par_statut = (
             Commande.objects
@@ -317,7 +312,6 @@ class DashboardKpiView(APIView):
             'nombre_commandes':nombre_commandes,
             'nombre_nouvelles_commandes':nombre_nouvelles_commandes,
             'ventes_totales': ventes_totales,
-            'ventes_par_methode': {item['methode_paiement']: item['total'] for item in ventes_par_methode},
             "commandes_par_statut":commandes_par_statut_list
         }
 
