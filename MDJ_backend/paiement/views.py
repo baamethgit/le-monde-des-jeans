@@ -23,7 +23,7 @@ import requests
 
 
 class InitiateWavePaymentView(APIView):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     def post(self, request):
         try:
             order = Commande.objects.get(id=request.data['order_id'])
