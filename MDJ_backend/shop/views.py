@@ -7,7 +7,7 @@ from . import  models
 from . import serializers
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
-from .serializers import ZoneSerializer,CommandeSerializer
+from .serializers import ZoneSerializer, CommandeSerializer, PanierSerializerSansProd
 from .models import ZoneLivraison, Commande
 from django.db.models import Q, Count
 from rest_framework.pagination import PageNumberPagination
@@ -211,7 +211,7 @@ def panier_detail(request):
 
     panier, _ = Panier.objects.get_or_create(client=user)
     # panier.nettoyer_produits_expires()
-    serializer = PanierSerializer(panier)
+    serializer = PanierSerializerSansProd(panier)
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -228,7 +228,7 @@ def ajouter_produit(request):
     if panier.ajouter_produit(produit):
         return Response({"message": "Produit ajouté au panier"}, status=status.HTTP_200_OK)
     else:
-        return Response({"message_erreur": "Le produit est déjà réservé"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message_erreur": "Le produit est en rupture de stock"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -294,12 +294,7 @@ class DashboardKpiView(APIView):
 
         ventes_totales = Payment.objects.filter(statut='completed').aggregate(total=Sum('montant'))['total'] or 0
 
-        ventes_par_methode = (
-            Payment.objects
-            .filter(statut='completed')
-            .values('methode_paiement')
-            .annotate(total=Sum('montant'))
-        )
+
         total_commandes = Commande.objects.count()
         commandes_par_statut = (
             Commande.objects
@@ -327,7 +322,6 @@ class DashboardKpiView(APIView):
             'nombre_commandes':nombre_commandes,
             'nombre_nouvelles_commandes':nombre_nouvelles_commandes,
             'ventes_totales': ventes_totales,
-            'ventes_par_methode': {item['methode_paiement']: item['total'] for item in ventes_par_methode},
             "commandes_par_statut":commandes_par_statut_list
         }
 

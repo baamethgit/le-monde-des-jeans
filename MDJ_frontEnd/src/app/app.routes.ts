@@ -36,6 +36,7 @@ import { PaiementFailedComponent } from './components/paiement-failed/paiement-f
 import { InfosGenComponent } from './components/admin/infos-gen/infos-gen.component';
 import {userGuard} from "./utils/user.guard";
 import {adminGuard} from "./utils/admin.guard";
+import {VerifyEmailComponent} from "./components/user/verify-email/verify-email.component";
 
 
 export const routes: Routes = [
@@ -59,6 +60,7 @@ export const routes: Routes = [
         ],
         title: 'LMDJ | Produits'
       },
+
       { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' },
       { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis'},
       { path: 'payment-success/:id', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
@@ -89,6 +91,7 @@ export const routes: Routes = [
     {path: 'resetpwd', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent,title: 'LMDJ | Login'},
     {path: 'inscription', component: SignupComponent,title: 'LMDJ | Inscription'},
+    { path: 'verify-email', component: VerifyEmailComponent },
     {path: 'sdfsdfsd/suf_creer_/superuser/uI90', component: SignupComponent, title: 'LMDJ | Admin-sup', canActivate: [adminGuard]},
 
     { path: '**', component: NotFoundComponent },

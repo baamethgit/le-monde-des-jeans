@@ -91,6 +91,7 @@ class ImageProduit(models.Model):
     
 
 
+DUREE_ATTENTE_PANIER = env.int("DUREE_ATTENTE_PANIER",default=5)
 
 class PanierProduit(models.Model):
     """
@@ -102,11 +103,8 @@ class PanierProduit(models.Model):
     quantite = models.PositiveIntegerField(default=1)
 
     def est_expire(self):
-        return timezone.now() > self.date_ajout + timedelta(minutes=10)
-    # penser à dynamiser le timing pour l'évolutivité
-    
-    # def __str__(self) -> str:
-    #     return f"{self.produit} ajouté le {self.date_ajout}"
+        return timezone.now() > self.date_ajout + timedelta(minutes=DUREE_ATTENTE_PANIER)
+
 
 class Panier(models.Model):
     client = models.OneToOneField(AUTH_USER_MODEL,on_delete = models.CASCADE)
@@ -132,22 +130,17 @@ class Panier(models.Model):
         for panier_produit in self.panierproduit_set.all():
             if panier_produit.est_expire():
                 produit = panier_produit.produit
-                # produit.reserve = False
-                produit.QuantiteStock += 1
+                produit.QuantiteStock += panier_produit.quantite
                 produit.save()
                 panier_produit.delete()
 
     def ajouter_produit(self, produit : Produit):
-        # if not produit.reserve:
         if produit.QuantiteStock:
             PanierProduit.objects.create(panier=self, produit=produit)
-            # produit.reserve = True
             produit.QuantiteStock -= 1
             produit.save()
             return True
         return False
-
-
 
 class ZoneLivraison(models.Model):
     numero = models.PositiveIntegerField(unique=True)

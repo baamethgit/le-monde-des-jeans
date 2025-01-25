@@ -18,8 +18,8 @@ export class PaiementService {
     return this.http.post(`${this.apiUrl}/api/wave/initiate/`, { order_id: orderId },{withCredentials:true});
   }
 
-  verifyPaymentStatus(sessionId: number) {
-    return this.http.post(`${this.apiUrl}/api/wave/session`, { session_id: sessionId });
+  verifyPaymentStatus(refCode: string) {
+    return this.http.get(`${this.apiUrl}/api/wave/check_status/${refCode}`, { withCredentials:true });
   }
 
   getPayments(filters: { selectedMethod?: string, startDate?: string, endDate?: string, minAmount?: number }): Observable<any[]> {

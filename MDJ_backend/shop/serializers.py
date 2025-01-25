@@ -58,10 +58,18 @@ class PanierSerializer(ModelSerializer):
         model = Panier
         fields = ['id','client', 'produits', 'date_creation', 'montant','quantitePanier']
         read_only_fields = ['montant', 'quantitePanier']
-    # class Meta:
-    #     model = Panier
-    #     fields = '__all__'
-        
+
+class PanierSerializerSansProd(ModelSerializer):
+    client = UserSerializer()
+    montant = FloatField()
+    quantitePanier = IntegerField()
+    class Meta:
+        model = Panier
+        fields = ['id','client','date_creation', 'montant','quantitePanier']
+        read_only_fields = ['montant', 'quantitePanier']
+
+
+
 class CommandeSerializer(ModelSerializer):
     client = UserSerializer()
     produits = ProductSerializer(many=True)

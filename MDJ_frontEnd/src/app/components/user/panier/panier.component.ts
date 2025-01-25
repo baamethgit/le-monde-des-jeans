@@ -9,6 +9,7 @@ import { IcontenuPanier, Ipanier } from './panier.model';
 import {finalize, interval, Subscription} from 'rxjs';
 
 import { CommandeService } from '../../../services/commandes/commande.service';
+import {environment} from "../../../../environments/environment";
 
 
 
@@ -22,6 +23,7 @@ import { CommandeService } from '../../../services/commandes/commande.service';
 export class PanierComponent implements OnInit ,OnDestroy{
   CheckoutStep : CheckoutStep = CheckoutStep.Panier;
   isLoading = false;
+  DUREEATTENTEPANIER = environment.DUREE_ATTENTE_PANIER;
 
   panier:Omit<Ipanier,'produits'>|undefined;
   contenupanier : IcontenuPanier[] = [];
@@ -122,7 +124,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
     const dateAjoutMs = new Date(dateAjout).getTime();
     const maintenant = new Date().getTime();
     const tempsEcoule = maintenant - dateAjoutMs;
-    const tempsRestantMs = (5 * 60 * 1000) - tempsEcoule; // 5 minutes en millisecondes
+    const tempsRestantMs = (this.DUREEATTENTEPANIER * 60 * 1000) - tempsEcoule; // DUREEATTENTEPANIER minutes en millisecondes
 
     if (tempsRestantMs <= 0) {
       this.removeProd(produitSlug);
@@ -140,7 +142,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
     const dateAjoutMs = new Date(dateAjout).getTime();
     const maintenant = new Date().getTime();
     const tempsEcoule = maintenant - dateAjoutMs;
-    const tempsRestantMs = (5 * 60 * 1000) - tempsEcoule;
+    const tempsRestantMs = (this.DUREEATTENTEPANIER * 60 * 1000) - tempsEcoule;
 
     if (tempsRestantMs <= 60000) { // Dernière minute
       return 'red';

@@ -26,7 +26,6 @@ export class ProduitDetailComponent implements OnInit{
   must_like_product: Produit[] = [];
   page = 1;
   pageSize = 5;
-  totalItems = 0;
   commandeService = inject(CommandeService);
   panierService = inject(PanierService);
   userService = inject(UserService);

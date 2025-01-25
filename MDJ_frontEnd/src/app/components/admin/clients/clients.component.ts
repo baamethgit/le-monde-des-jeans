@@ -22,6 +22,7 @@ export class ClientsComponent implements OnInit {
   users: User[] = [];
   page = 1;
   isLoading: boolean = false;
+  isUpdateLoading: boolean = false;
   pageSize = 20;
   searchTerm = '';
   totalItems = 0;
@@ -52,19 +53,8 @@ export class ClientsComponent implements OnInit {
     this.loadUsers();
   }
 
-  onPageSizeChange() {
-    this.page = 1;
-    this.loadUsers();
-  }
 
-  viewOrders(customer_phone:string){
-
-  }
-  editUser(customer_id:number){
-
-  }
   deleteUser(id:number){
-
     const modalRef = this.modalService.open(DeleteModalComponent, { size: 'lg',centered:true, backdrop: 'static' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
@@ -73,4 +63,65 @@ export class ClientsComponent implements OnInit {
     );
   }
 
+  errorUpdate = "";
+
+  UserToAdmin(user:any):void{
+
+    const confirmed = confirm(`êtes-vous sûr de vouloir donner le role d'admin à ${user.nom_complet}`);
+    if(confirmed){
+      this.isUpdateLoading = true;
+      this.userService.ClientToAdmin(user.id).pipe(
+        finalize(() => this.isUpdateLoading = false)
+      ).subscribe({
+        next: (response) => {
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.errorUpdate = "erreur lors de la mis à jour de l'utilisateur"
+        }
+      });
+
+    }
+  }
+
+
+  AdminToUser(user:any):void{
+    const confirmed = confirm(`êtes-vous sûr de vouloir retirer le role d'admin à ${user.nom_complet}`);
+    if (confirmed){
+      this.isUpdateLoading = true;
+
+      this.userService.AdminToClient(user.id).pipe(
+        finalize(() => this.isUpdateLoading = false)
+      ).subscribe({
+        next: (response) => {
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.errorUpdate = "erreur lors de la mis à jour de l'utilisateur"
+        }
+      });
+    }else{
+
+    }
+    }
+
+
+  ActiveDesactiveClient(user:any):void{
+    const confirmed = confirm(`êtes-vous sûr de vouloir ${!user.is_active?'activer':'desactiver'} le compte de ${user.phone_number}`);
+    if(confirmed){
+      this.isUpdateLoading = true;
+
+      this.userService.ActiveDesactiveClient(user.id).pipe(
+        finalize(() => this.isUpdateLoading = false)
+      ).subscribe({
+        next: (response) => {
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.errorUpdate = "erreur lors de la mis à jour de l'utilisateur"
+        }
+      });
+
+    }
+     }
 }

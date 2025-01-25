@@ -6,5 +6,6 @@ export interface User {
     password?: string;
     slug:string;
     is_staff?:boolean,
+    is_active?:boolean,
     is_superuser?:boolean,
 }

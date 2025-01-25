@@ -1,0 +1,34 @@
+<div class="container mt-5">
+  <div class="row vw-100 vh-100 justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <!-- En-tête -->
+          <h2 class="card-title mb-4">Vérification de l'adresse e-mail</h2>
+          @if (isLoading){
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          } @else {
+            @if (message){
+              <div class="alert alert-success" role="alert">
+                {{ message }}
+              </div>
+              <div class="mt-4">
+                <a routerLink="/login" class="btn btn-primary">
+                  Se connecter
+                </a>
+              </div>
+            } @else if (error) {
+              <div class="alert alert-danger" role="alert">
+                {{ error }}
+              </div>
+            }
+          }
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

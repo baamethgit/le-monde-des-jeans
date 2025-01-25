@@ -1,4 +1,4 @@
-	<div class="mb-3 row">
+<div class="mb-3 row">
 		<h2 class="d-flex align-items-center gap-2">
 			<img src="/assets/img/seller.png" alt="Illustration livraison" class="img-fluid mb-3 " style="max-height: 150px;">
 			<span class="reviews-title ">Mes Clients</span>
@@ -20,19 +20,27 @@
 		</div>
 </form>
 
-		<!-- @if (user) {
-			<span class="col col-form-label">Loading...</span>
-		} -->
 	</div>
 
-	<table class="table table-striped user-list overflow-x-auto">
-		<thead>
-			<tr>
-				<th scope="col" >Nom Complet</th>
-				<th scope="col">Téléphone</th>
-				<th scope="col" class="static-right">Actions</th>
-			</tr>
-		</thead>
+@if (isUpdateLoading) {
+  <tr>
+    <td colspan="4" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </td>
+  </tr>
+} @else {
+  <table class="table table-striped user-list overflow-x-auto">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col" >Nom Complet</th>
+      <th scope="col">Téléphone</th>
+      <th scope="col">Mail</th>
+      <th scope="col" class="static-right">Actions</th>
+    </tr>
+    </thead>
     <tbody>
     <!-- Loader -->
       @if (isLoading) {
@@ -47,10 +55,33 @@
         @if (users.length) {
           @for (user of users; track user.id) {
             <tr>
+              <td>
+              <span class="badge " [ngClass]="{'bg-success text-success': user.is_active, 'bg-danger text-danger': !user.is_active}">
+                {{ user.is_active ? 'aa' : 'aa' }}
+              </span>
+              </td>
               <td><ngb-highlight [result]="user.nom_complet" [term]="searchTerm" /></td>
               <td><ngb-highlight [result]="user.phone_number" [term]="searchTerm" /></td>
+              <td><ngb-highlight [result]="user.addresse_mail" [term]="searchTerm" /></td>
+
               <td>
-                <button class="action-btn delete-btn" (click)="deleteUser(user.id || 0)">Supprimer</button>
+                <button class="action-btn mb-1  edit-btn" (click)="ActiveDesactiveClient(user)">
+                  {{!user.is_active ? "Activer":"Désactiver"}}
+                </button>
+                @if (user.is_staff && user.is_superuser){
+                  <button  class="action-btn mb-1 bg-dark text-white" (click)="AdminToUser(user.id)">
+                    Enlever Admin
+                  </button>
+                } @else {
+                  <button class="action-btn mb-1 bg-dark text-white" (click)="UserToAdmin(user)">
+                    Rendre admin
+                  </button>
+                }
+
+
+                <button class="action-btn mb-1  delete-btn" (click)="deleteUser(user.id || 0)">
+                  <i class="fas fa-trash-alt"></i>
+                  Sup</button>
               </td>
             </tr>
           }
@@ -61,10 +92,11 @@
         }
       }
     </tbody>
-	</table>
+  </table>
 
-	<div *ngIf="users.length" class="d-flex justify-content-between p-2">
-		<ngb-pagination (pageChange)="loadUsers()" [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize">
-		</ngb-pagination>
-        <p>{{totalItems}} clients au total</p>
-	</div>
+  <div *ngIf="users.length" class="d-flex justify-content-between p-2">
+    <ngb-pagination (pageChange)="loadUsers()" [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize">
+    </ngb-pagination>
+    <p>{{totalItems}} clients au total</p>
+  </div>
+}

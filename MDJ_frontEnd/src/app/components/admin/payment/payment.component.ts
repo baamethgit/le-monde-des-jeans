@@ -29,8 +29,8 @@ export class PaymentComponent implements OnInit{
     "paiement_par_om": 0,
     "paiement_par_cb": 0
   } as any
+
   ngOnInit() {
-    // Charger les données initiales
     this.loadPayment();
     this.loadPaymentKPI();
   }
@@ -105,8 +105,6 @@ export class PaymentComponent implements OnInit{
   }
 
   formatAmount(amount: number): string {
-    console.log(amount)
-    console.log(typeof amount)
     if (amount < 1000) {
       // Si le montant est inférieur à 1000, retourne-le tel quel
       return amount.toString();
