@@ -32,22 +32,24 @@
               <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span>
             </button>
           </div>
-          <div class="user_profile_cart">
-            <button class="border d-flex bt_card">
-              <div class="cart_header">
-                <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
-              </div>
-              <span class="text-nowrap" ><a [routerLink]='["/mes-commandes"]'>Mes Commandes</a></span>
-            </button>
-          </div>
-          <div class="user_profile_cart">
-            <button class="border d-flex bt_card">
-              <div class="cart_header">
-                <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
-              </div>
-              <span class="text-nowrap" ><a [routerLink]="['/panier']">panier</a></span>
-            </button>
-          </div>
+          @if(is_authenticated){
+            <div class="user_profile_cart">
+              <button class="border d-flex bt_card">
+                <div class="cart_header">
+                  <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
+                </div>
+                <span class="text-nowrap" ><a [routerLink]='["/mes-commandes"]'>Mes Commandes</a></span>
+              </button>
+            </div>
+            <div class="user_profile_cart">
+              <button class="border d-flex bt_card">
+                <div class="cart_header">
+                  <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
+                </div>
+                <span class="text-nowrap" ><a [routerLink]="['/panier']">panier</a></span>
+              </button>
+            </div>
+          }
         </div>
       </div>
       <div class="d-none d-lg-flex right_nav_sec  align-items-center justify-content-around">
@@ -76,23 +78,25 @@
               <span *ngIf="!is_authenticated"><a routerLink="/login">Se Connecter</a></span>
             </button>
           </div>
-          <div class="user_profile_cart">
-            <button class="border d-flex bt_card">
-              <div class="cart_header">
-                <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
-              </div>
-              <span class="text-nowrap" ><a  [routerLink]="['/panier']">panier</a></span>
-            </button>
+          @if(is_authenticated){
+            <div class="user_profile_cart">
+              <button class="border d-flex bt_card">
+                <div class="cart_header">
+                  <img class="cart_header_img" src="../../assets/img/8666616_shopping_cart_icon.png">
+                </div>
+                <span class="text-nowrap" ><a  [routerLink]="['/panier']">panier</a></span>
+              </button>
 
-          </div>
-          <div class="user_profile_cart">
-            <button class="border d-flex bt_card">
-              <div class="cart_header">
-                <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
-              </div>
-              <span class="text-nowrap" ><a  [routerLink]="['/mes-commandes']">Mes Commandes</a></span>
-            </button>
-          </div>
+            </div>
+            <div class="user_profile_cart">
+              <button class="border d-flex bt_card">
+                <div class="cart_header">
+                  <img class="cart_header_img" src="../../assets/img/commandes-header-icon.png">
+                </div>
+                <span class="text-nowrap" ><a  [routerLink]="['/mes-commandes']">Mes Commandes</a></span>
+              </button>
+            </div>
+          }
         </div>
       </div>
     </nav>

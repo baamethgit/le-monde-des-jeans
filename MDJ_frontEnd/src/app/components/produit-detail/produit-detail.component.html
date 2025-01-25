@@ -58,10 +58,17 @@
               </div>
             }
 
-            <div class="spec-item">
-              <span class="spec-item__label">Stock:</span>
-              <span class="spec-item__value">{{product_selected?.QuantiteStock}}</span>
-            </div>
+            @if(product_selected && product_selected.QuantiteStock > 0) {
+              <div class="spec-item">
+                <span class="spec-item__label">Stock:</span>
+                <span class="spec-item__value">{{product_selected.QuantiteStock}}</span>
+              </div>
+            }@else {
+              <div class="spec-item">
+                <span class="spec-item__label">Stock:</span>
+                <span class="spec-item__value_empty text-bg-danger rounded rounded-2 p-1">Stock epuise</span>
+              </div>
+            }
 
             <div class="spec-item">
               <span class="spec-item__label">État:</span>
@@ -101,14 +108,20 @@
             </div>
           </div> -->
 
-          <div class="product-info__actions">
-            <button class="btn btn--secondary" (click)="addToCart()">
-              Ajouter au panier
-            </button>
-            <button class="btn btn--primary" (click)="acheterDirectement(product_selected?.slug)">
-              Acheter directement
-            </button>
-          </div>
+          @if (product_selected && product_selected.QuantiteStock > 0) {
+            <div class="product-info__actions">
+              <button class="btn btn--secondary" (click)="addToCart()">
+                Ajouter au panier
+              </button>
+              <button class="btn btn--primary" (click)="acheterDirectement(product_selected?.slug)">
+                Acheter directement
+              </button>
+            </div>
+          }@else{
+            <div class="product_empty">
+              Produit epuise
+            </div>
+          }
 
           <div class="product-info__category">
             <span class="category-label">Catégorie:</span>
