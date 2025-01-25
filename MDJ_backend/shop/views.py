@@ -53,9 +53,19 @@ class UpdateZoneView(APIView):
         return Response(serializer.data)
     
 class CategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
     queryset = models.Categorie.objects.all()
     serializer_class = serializers.CategorySerializer
+    
+    def get_permissions(self):
+        if self.action == 'retrieve' or self.action == 'list':
+            permission_classes = []
+        elif self.action in ['update', 'partial_update', 'create', 'destroy']:
+            permission_classes = [IsAdminUser, IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser, IsAuthenticated]
+        return [permission() for permission in permission_classes]
+    
+    
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
@@ -69,7 +79,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'retrieve' or self.action == 'list':
-            permission_classes = [IsAuthenticated]
+            permission_classes = []
         elif self.action in ['update', 'partial_update', 'create', 'destroy']:
             permission_classes = [IsAdminUser, IsAuthenticated]
         else:

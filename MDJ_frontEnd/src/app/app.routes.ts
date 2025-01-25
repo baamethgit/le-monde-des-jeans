@@ -44,7 +44,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', component: HomeComponent, title: 'LMDJ | Accueil',canActivate:[userGuard] },
+      { path: '', component: HomeComponent, title: 'LMDJ | Accueil' },
       { path: 'panier', component: PanierComponent, title: 'LMDJ | Panier',canActivate:[userGuard]  },
       { path: 'commande-validee', component: CommandeValideeComponent, title: 'LMDJ | Commande' ,canActivate:[userGuard] },
       { path: 'profile', component: ProfilComponent, title: 'LMDJ | Profile' ,canActivate:[userGuard] },
@@ -58,12 +58,13 @@ export const routes: Routes = [
           { path: '', component: AllProductsComponent, pathMatch: 'full' },
           { path: 'categorie/:slug', component: ProductFilterComponent }
         ],
-        title: 'LMDJ | Produits',canActivate:[userGuard]
+        title: 'LMDJ | Produits'
       },
-      { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' ,canActivate:[userGuard] },
-      { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis' ,canActivate:[userGuard] },
-      { path: 'payment-success/:ref-code', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
-      { path: 'payment-error/:ref-code', component: PaiementFailedComponent, title: 'LMDJ | Paiement' ,canActivate:[userGuard] }
+
+      { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' },
+      { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis'},
+      { path: 'payment-success/:id', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
+      { path: 'payment-error/:id', component: PaiementFailedComponent, title: 'LMDJ | Paiement' ,canActivate:[userGuard] }
     ]
   },
   {

@@ -197,7 +197,15 @@ class deleteUserView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class AvisView(APIView):
-    permission_classes = [IsAuthenticated]
+    
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return []
+        elif self.request.method == 'POST':
+            return [IsAuthenticated()]
+        elif self.request.method == 'DELETE':
+            return [IsAdminUser()]
+        return []
     def get(self,request):
         list_avis = Avis.objects.all()
         serializer = AvisSerializer(list_avis,many=True)
@@ -236,7 +244,11 @@ class Logout(APIView):
             )
 
 class InformationsGeneralesView(APIView):
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    
+    def get_permissions(self):
+        if self.request.method == 'PUT':
+            return [IsAdminUser(), IsAuthenticated()]
+        return []
     def get(self, request):
         informations_generales = InformationsGenerales.objects.first()
         serializer = InformationsGeneralesSerializer(informations_generales)
