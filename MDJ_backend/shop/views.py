@@ -167,7 +167,11 @@ class ProductViewSet(viewsets.ModelViewSet):
         compo = self.request.query_params.get('compo', None)
         if compo:
             queryset = queryset.filter(composition=compo)
-
+            
+        available = self.request.query_params.get('available', None)
+        if available:
+            queryset = queryset.filter(QuantiteStock__gt=0)
+            
         return queryset
 
 

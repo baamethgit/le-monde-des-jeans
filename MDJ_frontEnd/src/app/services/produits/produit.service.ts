@@ -19,7 +19,7 @@ export class ProduitService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
-    return this.http.get<Produit[]>(this.apiUrl, { params })
+    return this.http.get<Produit[]>(this.apiUrl+`?available`, { params })
   }
 
 
