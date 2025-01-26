@@ -189,19 +189,18 @@ SIMPLE_JWT = {
 
 
 #entetes sécurité
+if env('PRODUCTION') == True:
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_BROWSER_XSS_FILTER = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
 
-
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_BROWSER_XSS_FILTER = True
-SESSION_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_SSL_REDIRECT = True
-
-REFERRER_POLICY = 'strict-origin-when-cross-origin'
-PERMISSIONS_POLICY = "geolocation=(), camera=(), microphone=()"
+    REFERRER_POLICY = 'strict-origin-when-cross-origin'
+    PERMISSIONS_POLICY = "geolocation=(), camera=(), microphone=()"
 
 #logs
 

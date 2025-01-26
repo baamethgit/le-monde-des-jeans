@@ -38,7 +38,9 @@ def creer_commande(request):
             produit.save()
             commande.produits.add(produit)
             commande.save()
-    
+        else:
+            return Response({"error": "Produit en rupture de stock"}, status=status.HTTP_400_BAD_REQUEST)
+
     else:
         return Response({"error": "Données invalides pour créer une commande"}, status=status.HTTP_400_BAD_REQUEST)
 

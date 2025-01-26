@@ -64,7 +64,7 @@ export class HomeComponent  implements OnInit{
   loadProducts(){
     this.isPLoading = true;
     this.productService.getProducts(this.page, this.pageSize).pipe(
-      finalize(() => this.isPLoading = true)
+      finalize(() => this.isPLoading = false)
     ).subscribe({
       next:(data)=>{
 
@@ -79,7 +79,7 @@ export class HomeComponent  implements OnInit{
   loadSpecials(){
     this.isPSpeciauxLoading = true;
     this.productService.getProductBySpecial(this.page, this.pageSize).pipe(
-      finalize(() => this.isPSpeciauxLoading = true)
+      finalize(() => this.isPSpeciauxLoading = false)
     ).subscribe({
       next:(data)=>{this.special_list=data.results}
     })
