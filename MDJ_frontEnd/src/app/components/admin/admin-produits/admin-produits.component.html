@@ -47,14 +47,14 @@
               </div>
               <div class="d-flex justify-content-between">
                 <div class="coolinput">
-                  <label for="nom_produit" class="text">Nom produit : </label>
-                  <input formControlName="nom_produit" type="text" class="input" name="input">
+                  <label for="nom_produit_addForm" class="text">Nom produit : </label>
+                  <input id="nom_produit_addForm" formControlName="nom_produit" type="text" class="input" name="input">
                 </div>
 
                 <div class="d-flex flex-column">
                   <div class="coolinput">
-                    <label for="prix_produit"  class="text">Prix : </label>
-                    <input formControlName="prix_produit" type="text" class="input" name="input">
+                    <label for="prix_produit_addForm"  class="text">Prix : </label>
+                    <input id="prix_produit_addForm" formControlName="prix_produit" type="text" class="input" name="input">
                   </div>
                   <ng-container
                           *ngIf="AddProductForm.controls['prix_produit'].invalid && (AddProductForm.controls['prix_produit'].dirty || AddProductForm.controls['prix_produit'].touched)">
@@ -66,8 +66,8 @@
 
                 <div class="d-flex flex-column">
                   <div class="coolinput">
-                    <label for="pointure_produit"  class="text">Pointure : </label>
-                    <input formControlName="pointure_produit" type="text" class="input" name="input">
+                    <label for="pointure_produit_addForm"  class="text">Pointure : </label>
+                    <input id="pointure_produit_addForm" formControlName="pointure_produit" type="text" class="input" name="input">
                   </div>
                   <ng-container
                           *ngIf="UpdateProductForm.controls['pointure_produit'].invalid && (UpdateProductForm.controls['pointure_produit'].dirty || UpdateProductForm.controls['prix_produit'].touched)">
@@ -123,8 +123,8 @@
 
               <div class="d-flex align-items-center justify-content-between">
                 <div class="coolinput">
-                  <label for="Stock"  class="text">Stock : </label>
-                  <input formControlName="stock_produit" type="text" class="input" name="input" placeholder="1">
+                  <label for="Stock_addForm"  class="text">Stock : </label>
+                  <input id="Stock_addForm" formControlName="stock_produit" type="text" class="input" name="input" placeholder="1">
                 </div>
                 <ng-container
                         *ngIf="AddProductForm.controls['stock_produit'].invalid && (AddProductForm.controls['stock_produit'].dirty || AddProductForm.controls['stock_produit'].touched)">
@@ -150,8 +150,8 @@
               </div>
 
               <div>
-                <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
-                <textarea formControlName="desc_produit" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <label for="exampleFormControlTextarea1_addProdForm" class="form-label">Description : </label>
+                <textarea formControlName="desc_produit" class="form-control" id="exampleFormControlTextarea1_addProdForm" rows="3"></textarea>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -201,8 +201,8 @@
               <div class="d-flex flex-column justify-content-between">
                 <div class="d-flex flex-column">
                   <div class="coolinput">
-                    <label for="nom_categorie" class="text">Nom categorie : </label>
-                    <input formControlName="nom_categorie" type="text" class="input" name="input">
+                    <label for="nom_categorie_addForm" class="text">Nom categorie : </label>
+                    <input id="nom_categorie_addForm" formControlName="nom_categorie" type="text" class="input" name="input">
                   </div>
                   <ng-container
                             *ngIf="AddCategoryForm.controls['nom_categorie'].invalid && (AddCategoryForm.controls['nom_categorie'].dirty || AddCategoryForm.controls['nom_categorie'].touched)">
@@ -213,8 +213,8 @@
                 </div>
 
                 <div class="d-flex flex-column">
-                    <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
-                    <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <label for="exampleFormControlTextarea1_addCatForm" class="form-label">Description Categorie : </label>
+                    <textarea id="exampleFormControlTextarea1_addCatForm" formArrayName="desc_categorie" class="form-control" rows="3"></textarea>
                   </div>
               </div>
               <div class="modal-footer">
@@ -316,14 +316,14 @@
                           </div>
                           <div class="d-flex justify-content-between">
                             <div class="coolinput">
-                              <label for="nom_produit" class="text">Nom produit : </label>
-                              <input formControlName="nom_produit" type="text" class="input" name="input" placeholder="{{item.nom}}">
+                              <label for="nom_produit_updateForm" class="text">Nom produit : </label>
+                              <input id="nom_produit_updateForm" formControlName="nom_produit" type="text" class="input" name="input" placeholder="{{item.nom}}">
                             </div>
 
                             <div class="d-flex flex-column">
                               <div class="coolinput">
-                                <label for="prix_produit"  class="text">Prix : </label>
-                                <input formControlName="prix_produit" type="text" class="input" name="input" placeholder="{{item.prix}}">
+                                <label for="prix_produit_updateForm"  class="text">Prix : </label>
+                                <input id="prix_produit_updateForm" formControlName="prix_produit" type="text" class="input" name="input" placeholder="{{item.prix}}">
                               </div>
                               <ng-container
                                       *ngIf="UpdateProductForm.controls['prix_produit'].invalid && (UpdateProductForm.controls['prix_produit'].dirty || UpdateProductForm.controls['prix_produit'].touched)">
@@ -334,8 +334,8 @@
                             </div>
                             <div class="d-flex flex-column">
                               <div class="coolinput">
-                                <label for="pointure_produit"  class="text">Pointure : </label>
-                                <input formControlName="pointure_produit" type="text" class="input" name="input" placeholder="{{item.pointure}}">
+                                <label for="pointure_produit_updateForm"  class="text">Pointure : </label>
+                                <input id="pointure_produit_updateForm" formControlName="pointure_produit" type="text" class="input" name="input" placeholder="{{item.pointure}}">
                               </div>
                               <ng-container
                                       *ngIf="UpdateProductForm.controls['pointure_produit'].invalid && (UpdateProductForm.controls['pointure_produit'].dirty || UpdateProductForm.controls['prix_produit'].touched)">
@@ -390,8 +390,8 @@
 
                           <div class="d-flex align-items-center justify-content-between">
                             <div class="coolinput">
-                              <label for="Stock"  class="text">Stock : </label>
-                              <input formControlName="stock_produit" type="text" class="input" name="input" placeholder="1">
+                              <label for="Stock_updateForm"  class="text">Stock : </label>
+                              <input id="Stock_updateForm" formControlName="stock_produit" type="text" class="input" name="input" placeholder="1">
                             </div>
                             <ng-container
                                     *ngIf="UpdateProductForm.controls['stock_produit'].invalid && (AddProductForm.controls['stock_produit'].dirty || UpdateProductForm.controls['stock_produit'].touched)">
@@ -417,8 +417,8 @@
                           </div>
 
                           <div>
-                            <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
-                            <textarea formControlName="desc_produit" class="form-control" id="exampleFormControlTextarea1" rows="3">{{item.description}}</textarea>
+                            <label for="exampleFormControlTextarea1_updateForm" class="form-label">Description : </label>
+                            <textarea formControlName="desc_produit" class="form-control" id="exampleFormControlTextarea1_updateForm" rows="3">{{item.description}}</textarea>
                           </div>
                           <div class="modal-footer">
                             <button type="submit" (click)="modal.close('Close click')" class="btn rounded-1 my-2 btn-danger">Mettre a jour</button>
@@ -535,8 +535,8 @@
                             <div class="d-flex flex-column justify-content-between">
                               <div class="d-flex flex-column">
                                 <div class="coolinput">
-                                  <label for="nom_categorie" class="text">Nom categorie : </label>
-                                  <input formControlName="nom_categorie" type="text" class="input" name="input" placeholder="{{item.nom}}">
+                                  <label for="nom_categorie_updateCatForm" class="text">Nom categorie : </label>
+                                  <input id="nom_categorie_updateCatForm" formControlName="nom_categorie" type="text" class="input" name="input" placeholder="{{item.nom}}">
                                 </div>
                                 <ng-container
                                   *ngIf="UpdateCategoryForm.controls['nom_categorie'].invalid && (UpdateCategoryForm.controls['nom_categorie'].dirty || UpdateCategoryForm.controls['nom_categorie'].touched)">
@@ -547,8 +547,8 @@
                               </div>
 
                               <div class="d-flex flex-column">
-                                <label for="exampleFormControlTextarea1" class="form-label">Description : </label>
-                                <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1" rows="3" >{{item.description}}</textarea>
+                                <label for="exampleFormControlTextarea1_updateCatForm" class="form-label">Description : </label>
+                                <textarea formArrayName="desc_categorie" class="form-control" id="exampleFormControlTextarea1_updateCatForm" rows="3" >{{item.description}}</textarea>
                               </div>
                             </div>
                             <div class="modal-footer">
