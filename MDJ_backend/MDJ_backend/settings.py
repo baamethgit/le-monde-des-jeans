@@ -189,7 +189,7 @@ SIMPLE_JWT = {
 
 
 #entetes sécurité
-if env('PRODUCTION') == True:
+if env.bool('PRODUCTION') == True:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
     SECURE_BROWSER_XSS_FILTER = True
