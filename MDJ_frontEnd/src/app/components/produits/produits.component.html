@@ -5,7 +5,7 @@
     <div class="product_main d-flex flex-column flex-md-row px-3 px-md-0 align-items-md-start">
         <div class="product_filter me-5">
             <h4 class="filter_title d-flex align-items-center my-4">
-               <img src="../../assets/img/9104236_filter_setting_sort_configuration_icon.png" alt="" srcset=""> 
+               <img src="../../assets/img/9104236_filter_setting_sort_configuration_icon.png" alt="" srcset="">
                Filtres
             </h4>
             <h4 class="my-4">CATEGORIES</h4>
@@ -19,20 +19,34 @@
                       Tous les produits
                     </a>
                 </li>
+              @if (isCategoriesLoading){
+                <ngx-skeleton-loader
+                  [count]="4"
+                  appearance="circle"
+                  [theme]="{
+    'margin': '5px',
+    'display': 'block',
+    'background-color': '#f0f0f0',
+    'border-radius': '10px'
+  }">
+                </ngx-skeleton-loader>
+              } @else {
                 @for (item of list_categorie; track $index) {
-                    <li>
-                        <a
-                          (click)="switch_category(item.slug)"
-                          class="link_category"
-                          [ngClass]="{'active': current_category === item.slug}"
-                        >
-                          {{item.nom}}
-                        </a>
-                    </li>
+                  <li>
+                    <a
+                      (click)="switch_category(item.slug)"
+                      class="link_category"
+                      [ngClass]="{'active': current_category === item.slug}"
+                    >
+                      {{item.nom}}
+                    </a>
+                  </li>
                 }
+              }
+
             </ul>
-            <select 
-                class="form-select show-tick d-md-none ps-2 pe-5" 
+            <select
+                class="form-select show-tick d-md-none ps-2 pe-5"
                 [(ngModel)]="selectedCategory"
                 (change)="onCategorySelect($event)">
                 <option value="">Tous les produits</option>
@@ -58,7 +72,7 @@
                 </div>
             </div>
         </div>
-        
+
         <router-outlet class="p-0 m-0 row"></router-outlet>
     </div>
 </section>

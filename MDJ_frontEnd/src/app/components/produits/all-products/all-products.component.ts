@@ -9,12 +9,13 @@ import { FormsModule } from '@angular/forms';
 
 import { NgbPagination, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import {finalize} from "rxjs";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [RouterLink,CommonModule, NgOptimizedImage, FormsModule, NgbPaginationModule],
+  imports: [RouterLink, CommonModule, NgOptimizedImage, FormsModule, NgbPaginationModule, NgxSkeletonLoaderModule],
   templateUrl: './all-products.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
@@ -39,7 +40,7 @@ export class AllProductsComponent implements OnInit{
         this.list_categorie=data
       },
       error: (error) => {
-             console.log('Erreur lors de l affichage des categorie :', error.error.detail);
+
       }
     })
   }
@@ -54,7 +55,7 @@ export class AllProductsComponent implements OnInit{
         this.totalItems = data.count;
       },
       error: (error) => {
-            
+
       }
     })
   }

@@ -37,6 +37,7 @@ import { InfosGenComponent } from './components/admin/infos-gen/infos-gen.compon
 import {userGuard} from "./utils/user.guard";
 import {adminGuard} from "./utils/admin.guard";
 import {VerifyEmailComponent} from "./components/user/verify-email/verify-email.component";
+import {InitresetpasswdComponent} from "./components/initresetpasswd/initresetpasswd.component";
 
 
 export const routes: Routes = [
@@ -88,7 +89,8 @@ export const routes: Routes = [
     ]
   },
 
-    {path: 'resetpwd', component: ResetPasswordComponent},
+    {path: 'resetpwd', component: InitresetpasswdComponent},
+    {path: 'cpw-verify-email', component: ResetPasswordComponent},
     {path: 'login', component: LoginComponent,title: 'LMDJ | Login'},
     {path: 'inscription', component: SignupComponent,title: 'LMDJ | Inscription'},
     { path: 'verify-email', component: VerifyEmailComponent },

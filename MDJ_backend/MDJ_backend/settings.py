@@ -172,7 +172,10 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }
 
 from datetime import timedelta
@@ -183,3 +186,22 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+
+#logs
+
+from loguru import logger
+import sys
+# Configuration de Loguru
+logger.add("/var/log/django/debug.log", rotation="3 days",colorize=True, retention="15 days", level="DEBUG", format="{time} {level} {module}.{function}:{line} - {message}")
+logger.add(sys.stdout, level="INFO",colorize=True, format="{time} {level} {module}.{function}:{line} - {message}")

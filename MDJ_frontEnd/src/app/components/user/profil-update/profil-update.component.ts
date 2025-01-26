@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { User } from '../../../models/user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../../services/users/user.service';
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './profil-update.component.html',
   styleUrl: './profil-update.component.scss'
 })
-export class ProfilUpdateComponent {
+export class ProfilUpdateComponent implements OnInit{
   user!: User;
   error: string = '';
   updateError: string = '';
@@ -30,6 +30,7 @@ export class ProfilUpdateComponent {
       {
         nom_complet: ['', [Validators.required,Validators.minLength(5)]],
         phone_number: ['', [Validators.required]],
+        mail: ['', [Validators.required,Validators.email]],
       },
       {
         validators: [Validation.phoneNumberValidation('phone_number')]
@@ -50,7 +51,7 @@ export class ProfilUpdateComponent {
       }
     });
 
-   
+
 
     this.passwordForm = this.formBuilder.group(
       {
@@ -76,7 +77,8 @@ export class ProfilUpdateComponent {
     if (this.user) {
       this.userForm.patchValue({
         nom_complet: this.user.nom_complet,
-        phone_number: this.user.phone_number
+        phone_number: this.user.phone_number,
+        mail: this.user.addresse_mail,
       });
     }
   }
@@ -85,6 +87,7 @@ export class ProfilUpdateComponent {
     if (this.userForm.valid) {
       this.user.nom_complet = this.userForm.getRawValue().nom_complet;
       this.user.phone_number = this.userForm.getRawValue().phone_number;
+      this.user.addresse_mail = this.userForm.getRawValue().mail;
       this.userService.updateUser(this.user).subscribe({
         next: (data) => {
           this.router.navigate(['/profile']);

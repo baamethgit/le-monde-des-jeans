@@ -2,7 +2,6 @@ import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse, HttpH
 import { inject } from '@angular/core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { Router } from '@angular/router';
 import { UserService } from '../services/users/user.service';
 
 let isRefreshing = false;
@@ -20,7 +19,8 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const token = authService.getAccessToken();
   if (!token) {
-    return throwError(() => new Error('No token available'));
+    //return throwError(() => new Error('No token available'));
+    return next(request);
   }
 
   const clonedRequest = request.clone({

@@ -23,6 +23,9 @@ def creer_commande(request):
     if request.data.get('from_panier'):
         panier = Panier.objects.get(client=user)
         # je dw vérifier dabord s'il ya des produits pour ne pas créer un commande vide
+        if not panier.panierproduit_set.exists():
+            return Response({"message_erreur": "Votre panier est vide"}, status=status.HTTP_400_BAD_REQUEST)
+
         for panier_produit in panier.panierproduit_set.all():
             commande.produits.add(panier_produit.produit)
         commande.save()

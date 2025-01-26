@@ -7,11 +7,12 @@ import { Produit } from '../../../models/produit';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbPaginationModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 
 @Component({
   selector: 'app-product-filter',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage, FormsModule, CommonModule, NgbPaginationModule],
+    imports: [RouterLink, NgOptimizedImage, FormsModule, CommonModule, NgbPaginationModule, NgxSkeletonLoaderModule],
   templateUrl: './product-filter.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
@@ -51,7 +52,7 @@ loadProductsByCategory(categorieSlug: string): void {
       this.totalItems = data.count;
     },
     error: (error) => {
-      
+
     }
   });
 }

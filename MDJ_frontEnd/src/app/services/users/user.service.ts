@@ -43,11 +43,6 @@ export class UserService {
     return null;
   }
 
-  userIsAdmin(){
-    this.getUser().subscribe({
-
-    })
-  }
 
   setAccessToken(token : string): void {
     if (this.isBrowser) {
@@ -103,18 +98,20 @@ export class UserService {
     return this.http.post<any>(`${this.baseUrl}change_password/`, {mdp_actuel : currentPassword,nouveau_mdp:newPassword}, {withCredentials: true  });
   }
 
-  sendPasswordResetOTP(addresse_mail: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}send-otp/`, { addresse_mail });
-  }
-
-  verifyPasswordResetOTP(addresse_mail: string, otp: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}verify-reset-otp/`, { addresse_mail, otp });
-  }
-
-  resetPassword(addresse_mail: string, newPassWord: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}reset-password/`, {
-      addresse_mail,newPassWord
+  InitResetPassword(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}init_reset-password/`, {
+      'email':email
     });
+  }
+
+  resetPassword(newPassWord: string,token:string): Observable<any> {
+    let params = new HttpParams()
+      .set('token', token);
+
+    return this.http.post(`${this.baseUrl}reset-password/`,
+            {'new_mdp':newPassWord
+            },{params:params}
+      );
   }
 
   login(phone_number: string, password: string): Observable<any> {

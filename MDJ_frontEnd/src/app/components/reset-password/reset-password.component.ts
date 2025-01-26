@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import Validation from '../../shared/my-validators';
 import { UserService } from '../../services/users/user.service';
 
@@ -14,24 +14,27 @@ import { UserService } from '../../services/users/user.service';
   styleUrl: './reset-password.component.scss'
 })
 export class ResetPasswordComponent implements OnInit {
-  step: 'email' | 'otp' | 'new-password' = 'email';
   email: string = '';
-  otp: string = '';
   showPassword: boolean = false;
   isLoading: boolean = false;
-  emailError: string = '';
-  otpError: string = '';
   passwordForm!: FormGroup;
-
+  error = "";
+  token :string | null = null;
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    this.token = this.route.snapshot.queryParamMap.get('token');
+    if (!this.token){
+      this.router.navigate(['/**']);
+    }
     this.initPasswordForm();
   }
+
 
   private initPasswordForm() {
     this.passwordForm = this.fb.group({
@@ -44,64 +47,21 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  onEmailSubmitted() {
-    if (!this.email) {
-      this.emailError = "L'adresse email est requise";
-      return;
-    }
-    
-    this.isLoading = true;
-    this.emailError = '';
-
-    // Appel au service pour envoyer l'OTP par email
-    this.userService.sendPasswordResetOTP(this.email).subscribe({
-      next: () => {
-        this.step = 'otp';
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.emailError = error.error.message || "Une erreur est survenue";
-        this.isLoading = false;
-      }
-    });
-  }
-
-  onOtpSubmitted() {
-    if (!this.otp) {
-      this.otpError = "Le code de vérification est requis";
-      return;
-    }
-
-    this.isLoading = true;
-    this.otpError = '';
-
-    this.userService.verifyPasswordResetOTP(this.email, this.otp).subscribe({
-      next: () => {
-        this.step = 'new-password';
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.otpError = error.error.message || "Code invalide";
-        this.isLoading = false;
-      }
-    });
-  }
 
   onPasswordChanged() {
-    if (this.passwordForm.invalid) return;
-
+    if (this.passwordForm.invalid) {
+     this.passwordForm.markAllAsTouched();
+      return;
+    }
     this.isLoading = true;
-    const { newPassword } = this.passwordForm.value;
+    const newPassword = this.passwordForm.getRawValue().newPassword;
 
-    this.userService.resetPassword(this.email, newPassword).subscribe({
+    this.userService.resetPassword(newPassword,this.token || '').subscribe({
       next: () => {
-        // Rediriger vers la page de connexion avec un message de succès
-        this.router.navigate(['/login'], {
-          queryParams: { message: 'Mot de passe réinitialisé avec succès' }
-        });
+        this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+        this.error = error.error.error
         this.isLoading = false;
       }
     });

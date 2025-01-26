@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
-import logging
+from loguru import logger
 from paiement.models import WaveCheckoutSession, Payment
 from paiement.serializers import PaiementSerializer
 from shop.models import Commande
@@ -50,7 +50,7 @@ class InitiateWavePaymentView(APIView):
             'Authorization': f'Bearer {WAVE_API_KEY}',
             'Content-Type': 'application/json'
         }
-
+        logger.info(f"initiation de paiement par {request.user}")
         response = requests.post(
             'https://api.wave.com/v1/checkout/sessions',
             json=checkout_data,
@@ -85,9 +85,6 @@ class InitiateWavePaymentView(APIView):
         )
 
         return Response({'wave_launch_url': session.wave_launch_url})
-
-
-logger = logging.getLogger(__name__)
 
 
 class WaveWebhookView(APIView):

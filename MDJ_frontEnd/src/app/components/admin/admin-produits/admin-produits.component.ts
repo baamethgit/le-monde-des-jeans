@@ -1,4 +1,4 @@
-import { Component, inject, NgModule, numberAttribute, TemplateRef } from '@angular/core';
+import {Component, inject, NgModule, numberAttribute, OnInit, TemplateRef} from '@angular/core';
 import { ProduitService } from '../../../services/produits/produit.service';
 import { Produit } from '../../../models/produit';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -50,7 +50,7 @@ export const COULEUR = [
 })
 
 
-export class AdminProduitsComponent {
+export class AdminProduitsComponent implements OnInit{
 private produitsService=inject(ProduitService)
 private categoryService=inject(CategorieService)
 private modalService=inject(NgbModal)
@@ -360,12 +360,11 @@ createProduct() {
 
     this.produitsService.CreateProduct(formData).subscribe({
       next: (data) => {
-        console.log('Enregistrement réussi !!! :', data);
         this.resetFormProd();
         this.loadProducts()
 
       },
-      error: (error) => { console.log('Erreur lors de l\'enregistrement : ', error); }
+      error: (error) => {  }
     });
   } else {
     this.AddProductForm.markAllAsTouched();
