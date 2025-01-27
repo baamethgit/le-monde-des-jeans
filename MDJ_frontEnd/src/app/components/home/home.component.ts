@@ -53,8 +53,10 @@ export class HomeComponent  implements OnInit{
     this.loadInfos();
 
 
-    this.avisService.getAllAvis().subscribe({
-      next:(data)=>{this.avis_list=data}
+    this.avisService.getAllAvis(this.page,this.pageSize).subscribe({
+      next:(data)=>{
+        this.avis_list=data.results;
+      }
     })
 
   }

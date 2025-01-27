@@ -12,8 +12,8 @@
       </td>
     </tr>
   } @else {
-    @if (paginatedCommentaires.length) {
-      @for (review of paginatedCommentaires; track review.id) {
+    @if (reviews.length) {
+      @for (review of reviews; track review.id) {
     <div class="review-card">
         <button class="delete-btn" title="supprimer l'avis" (click)="deleteReview(review.id)" aria-label="Supprimer l'avis">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -41,38 +41,21 @@
   }
 </div>
 <div class="d-flex justify-content-center">
-<ngb-pagination
-    [(page)]="page"
+  <div *ngIf="reviews.length" class="d-flex justify-content-between p-2 w-100">
+    <ngb-pagination 
+    [collectionSize]="totalItems" 
+    [(page)]="page" 
     [pageSize]="pageSize"
-    [collectionSize]="reviews.length"
+    (pageChange)="OnPageChange($event)"
     [boundaryLinks]="true"
-	[maxSize]="5"
-    [rotate]="true"
-	(pageChange)="selectPage($event)" *ngIf="paginatedCommentaires.length">
->
-	<ng-template ngbPaginationPages let-page>
-		@if (totalPages > 0) {
-			<li class="ngb-custom-pages-item">
-				<div class="mb-3 d-flex flex-nowrap px-2">
-					<label id="paginationInputLabel" for="paginationInput" class="col-form-label me-2 ms-1">Page</label>
-					<input
-						#i
-						type="text"
-						inputmode="numeric"
-						pattern="[0-9]*"
-						class="form-control custom-pages-input"
-						id="paginationInput"
-						[value]="page"
-						(keyup.enter)="selectPage(i.value)"
-						(blur)="selectPage(i.value)"
-						(input)="formatInput($any($event).target)"
-						aria-labelledby="paginationInputLabel paginationDescription"
-						style="width: 2.5rem"
-					/>
-					<span id="paginationDescription" class="col-form-label text-nowrap px-2"> sur  {{ totalPages }}</span>
-				</div>
-			</li>
-		}
-	</ng-template>
-</ngb-pagination>
+    [maxSize]="5"
+    aria-label="Navigation des pages">
+    </ngb-pagination>
+    <p>{{totalItems}} commentaires au total</p>
+    <select class="form-select" style="width: max-content;" [(ngModel)]="pageSize" (ngModelChange)="loadAvis();">
+        <option selected [ngValue]="10">10 produits par page</option>
+        <option [ngValue]="50">50 produits par page</option>
+        <option [ngValue]="totalItems">Toutes les commentaires</option>
+    </select>
+  </div>
 </div>
