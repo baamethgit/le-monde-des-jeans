@@ -1,3 +1,5 @@
+from errno import errorcode
+
 from django.core.validators import validate_email
 from django.db import IntegrityError
 from rest_framework.views import APIView
@@ -98,7 +100,7 @@ class LoginView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             return Response(
-                {'error': 'Identifiants invalides'},
+                {'error_identifiants': 'Identifiants invalides',},
                 status=status.HTTP_400_BAD_REQUEST
             )
         if user is not None:

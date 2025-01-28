@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit{
   InputType : string = 'password';
   loginForm! : FormGroup;
   loginError : boolean = false;
+  identifiantsError = "";
   isLoading = false;
 
   isServer = false;
@@ -41,6 +42,8 @@ export class LoginComponent implements OnInit{
     }
 
     loginUser():void{
+    this.loginError=false;
+    this.identifiantsError = '';
       if(this.loginForm.valid){
         let phone_number = this.loginForm.getRawValue().phone_number || '';
         phone_number = phone_number.trim();
@@ -63,7 +66,11 @@ export class LoginComponent implements OnInit{
           },
           error: (error) => {
             this.loginForm.markAllAsTouched();
-            this.loginError = true;
+            if (error.error.error_identifiants){
+              this.identifiantsError = error.error.error_identifiants
+            }else {
+              this.loginError = true;
+            }
           }
         })
       }else{
