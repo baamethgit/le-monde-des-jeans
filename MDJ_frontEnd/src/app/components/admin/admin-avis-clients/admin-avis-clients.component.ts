@@ -4,6 +4,7 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../../services/users/user.service';
 import { Avis } from '../../../models/Avis';
 import {finalize} from "rxjs";
+import { FormsModule } from '@angular/forms';
 
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
@@ -11,7 +12,7 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
 @Component({
   selector: 'app-admin-avis-clients',
   standalone: true,
-  imports: [CommonModule, NgbPagination],
+  imports: [CommonModule, NgbPagination, FormsModule],
   templateUrl: './admin-avis-clients.component.html',
   styleUrl: './admin-avis-clients.component.scss'
 })
@@ -19,7 +20,8 @@ export class AdminAvisClientsComponent implements OnInit{
   reviews : Avis[] = [];
   message : string = '';
   page = 1;
-  pageSize = 2;
+  pageSize = 20;
+  totalItems = 0;
   isLoading : boolean = false;
 
   avisService = inject(UserService);
@@ -42,33 +44,25 @@ export class AdminAvisClientsComponent implements OnInit{
 
   loadAvis():void{
     this.isLoading = true;
-    this.avisService.getAllAvis().pipe(
+    this.avisService.getAllAvis(this.page, this.pageSize).pipe(
       finalize(() => this.isLoading = false)
     ).subscribe({
       next:(data)=>{
-        this.reviews = data;
+        this.reviews = data.results;
+        this.totalItems = data.count;
       }
     })
   }
 
-  get paginatedCommentaires(): Avis[] {
-    const start = (this.page - 1) * this.pageSize; // Calcul de l'index de début
-    return this.reviews.slice(start, start + this.pageSize); // Retourne les commentaires pour la page actuelle
-  }
 
-  get totalPages(): number {
-    return Math.ceil(this.reviews.length / this.pageSize);
-  }
-
-  selectPage(page: string | number): void {
-    if (typeof page === 'number') {
-      page = page.toString();
-    }
-    this.page = parseInt(page, 10) || 1;
-  }
 
   formatInput(input: HTMLInputElement) {
     input.value = input.value.replace(FILTER_PAG_REGEX, '');
+  }
+
+  OnPageChange(page: number) {
+    this.page = page;
+    this.loadAvis();
   }
 
 }

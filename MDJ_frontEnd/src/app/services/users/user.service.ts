@@ -166,9 +166,12 @@ export class UserService {
     return this.http.delete<any>(url);
   }
 
-  getAllAvis():Observable<Avis[]>{
+  getAllAvis(page: number = 1, pageSize: number = 10):Observable<any>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
     const url=`${this.baseUrl}avis/`
-    return this.http.get<Avis[]>(url,{ withCredentials: true })
+    return this.http.get<Avis[]>(url,{params, withCredentials: true })
   }
 
   deleteAvis(id:number):Observable<any>{

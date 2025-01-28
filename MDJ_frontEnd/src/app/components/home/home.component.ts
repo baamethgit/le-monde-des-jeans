@@ -51,13 +51,20 @@ export class HomeComponent  implements OnInit{
 
 
 
+    this.avisService.getAllAvis(this.page,this.pageSize).subscribe({
+      next:(data)=>{
+        this.avis_list=data.results;
+      }
   }
   loadAvis():void{
     this.isAvisLoading=true;
-    this.avisService.getAllAvis().pipe(
+      this.avisService.getAllAvis(this.page,this.pageSize).pipe(
       finalize(() => this.isAvisLoading = false)
     ).subscribe({
-      next:(data)=>{this.avis_list=data}
+      next:(data)=>{
+        this.avis_list=data.results;
+      }
+
     })
   }
 

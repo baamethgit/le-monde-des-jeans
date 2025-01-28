@@ -257,6 +257,7 @@ class deleteUserView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class AvisView(APIView):
+    pagination_class = CustomPagination
     
     def get_permissions(self):
         if self.request.method == 'GET':
@@ -266,9 +267,19 @@ class AvisView(APIView):
         elif self.request.method == 'DELETE':
             return [IsAuthenticated,IsAdminUser()]
         return []
-    def get(self,request):
+    def get(self, request):
         list_avis = Avis.objects.all()
-        serializer = AvisSerializer(list_avis,many=True)
+        
+        # Appliquer la pagination
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(list_avis, request)
+        
+        if page is not None:
+            serializer = AvisSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        
+        # Si la pagination n'est pas appliquée, retourner tous les résultats
+        serializer = AvisSerializer(list_avis, many=True)
         return Response(serializer.data)
     
     def post(self,request):
