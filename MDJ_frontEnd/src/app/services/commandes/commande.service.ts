@@ -86,11 +86,11 @@ export class CommandeService {
   getCurrentCommande(): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/commandes-en-attente/`,{withCredentials: true  });
   }
-
+/*
   getListeCommandes(): Observable<any> {
     return this.http.post(`${this.baseUrl}apiProduit/commandes-client/`,{withCredentials: true  });
   }
-
+*/
   getListeCommandesEnCours(): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/commandes-en-cours/`,{withCredentials: true });
   }

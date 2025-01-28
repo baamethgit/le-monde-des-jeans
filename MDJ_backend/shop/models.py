@@ -5,6 +5,8 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from datetime import timedelta
 import environ
+import os
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -61,13 +63,13 @@ class Produit(models.Model):
 
     nom = models.CharField(max_length=200, null=True, blank=True)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
-    categorie = models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True, related_name='produits')
+    categorie = models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True, related_name='produits', db_index=True)
     description=models.CharField(null=True, blank=True,max_length=1500)
     taille = models.CharField(max_length=128, choices=TAILLES, blank=True, null=True)
     pointure=models.PositiveIntegerField(blank=True, null=True)
     composition = models.CharField(max_length=128, choices=COMPO, blank=True, null=True)
     couleur = models.CharField(max_length=128, choices=COULEUR, blank=True, null=True)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True,db_index=True)
     QuantiteStock = models.PositiveBigIntegerField(default=1, null=False, blank=False)
     special = models.BooleanField(default=False)
     neuf = models.BooleanField(default=False)
@@ -88,7 +90,6 @@ class Produit(models.Model):
 
     def __str__(self):
         return self.nom
-import os
 class ImageProduit(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='images_produits/',verbose_name='photo')
@@ -107,8 +108,8 @@ class PanierProduit(models.Model):
     """
     pour gérer la relation entre un produit et le panier
     """
-    panier = models.ForeignKey('Panier', on_delete=models.CASCADE)
-    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    panier = models.ForeignKey('Panier', on_delete=models.CASCADE, db_index=True)
+    produit = models.ForeignKey(Produit, on_delete=models.CASCADE, db_index=True)
     date_ajout = models.DateTimeField(auto_now_add=True)
     quantite = models.PositiveIntegerField(default=1)
 
@@ -120,9 +121,10 @@ class Panier(models.Model):
     client = models.OneToOneField(AUTH_USER_MODEL,on_delete = models.CASCADE)
     produits = models.ManyToManyField(Produit, through=PanierProduit)
     date_creation = models.DateTimeField(auto_now_add=True)
+    verrouille = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Panier de {self.client.nom_complet}"
+        return f"Panier de {self.client}"
 
     def get_montant(self):
         return sum(produit.prix for produit in self.produits.all())
@@ -137,6 +139,8 @@ class Panier(models.Model):
         return cartitems.count()
     
     def nettoyer_produits_expires(self):
+        if self.verrouille:
+            return
         for panier_produit in self.panierproduit_set.all():
             if panier_produit.est_expire():
                 produit = panier_produit.produit
@@ -156,7 +160,7 @@ class ZoneLivraison(models.Model):
     numero = models.PositiveIntegerField(unique=True)
     nom = models.CharField(max_length=100)
     prix_livraison = models.DecimalField(max_digits=10, decimal_places=2)
-    info = models.TextField(max_length=1000,blank=True,null=True) # plus d info
+    info = models.TextField(max_length=1000,blank=True,null=True)
     
     def __str__(self):
         return self.nom
@@ -172,7 +176,7 @@ class Commande(models.Model):
     )
 
     client = models.ForeignKey(AUTH_USER_MODEL,on_delete = models.CASCADE)
-    ref_code = models.CharField(max_length=20, unique=True)
+    ref_code = models.CharField(max_length=20, unique=True, db_index=True)
     produits = models.ManyToManyField(Produit)
     date_commande = models.DateTimeField(auto_now_add=True)
     date_expiration = models.DateTimeField(null=True, blank=True)

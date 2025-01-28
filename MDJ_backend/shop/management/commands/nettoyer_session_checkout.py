@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
 from paiement.models import WaveCheckoutSession, Payment
 from django.utils import timezone
-from django.db import Q
+from django.db.models import Q
 from datetime import timedelta
+from loguru import logger
 
 
 class Command(BaseCommand):
@@ -23,6 +24,9 @@ class Command(BaseCommand):
         expired_payments = Payment.objects.filter(date_paiement__lte=five_minutes_ago, statut='pending')
         expired_payments_count = expired_payments.count()
         expired_payments.delete()
+
+        logger.info(f'[CRONJOB] : {expired_sessions_count} sessions expirées supprimées.')
+        logger.info(f'[CRONJOB] : {expired_payments_count} paiements expirés supprimés.')
 
         self.stdout.write(self.style.SUCCESS(f'{expired_sessions_count} sessions expirées supprimées.'))
         self.stdout.write(self.style.SUCCESS(f'{expired_payments_count} paiements expirés supprimés.'))

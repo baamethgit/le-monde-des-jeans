@@ -6,44 +6,78 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Commande, Produit, Panier
 from .serializers import CommandeSerializer, CommandeHistoriqueSerializer, CommandeUpdateSerializer
+from loguru import logger
+from django.db import transaction
+from django.db.models import F
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def creer_commande(request):
     user = request.user
+    try:
+        with transaction.atomic():
 
-    commande_existante = Commande.objects.filter(client=user, statut='EN_ATTENTE').first()
-    if commande_existante:
-        return Response({"message_erreur": "Vous avez déja une commande en attente,validez d'abord.", "commande_id": commande_existante.id}, status=status.HTTP_400_BAD_REQUEST)
+            commande_existante = Commande.objects.filter(client=user, statut='EN_ATTENTE').first()
+            if commande_existante:
+                logger.warning(f"tentative de commande sans valider l'existante .user = {request.user}")
+                return Response({"message_erreur": "Vous avez déjà une commande en attente, validez-la d'abord."},
+                                status=status.HTTP_400_BAD_REQUEST)
 
-    commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
-   
-    if request.data.get('from_panier'):
-        panier = Panier.objects.get(client=user)
-        # je dw vérifier dabord s'il ya des produits pour ne pas créer un commande vide
-        if not panier.panierproduit_set.exists():
-            return Response({"message_erreur": "Votre panier est vide"}, status=status.HTTP_400_BAD_REQUEST)
+            commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
 
-        for panier_produit in panier.panierproduit_set.all():
-            commande.produits.add(panier_produit.produit)
-        commande.save()
-        panier.panierproduit_set.all().delete()
-    
-    elif request.data.get('produit_slug'):
-        produit = get_object_or_404(Produit, slug=request.data['produit_slug'])
-        if produit.QuantiteStock:
-            produit.QuantiteStock -= 1
-            produit.save()
-            commande.produits.add(produit)
-            commande.save()
-        else:
-            return Response({"error": "Produit en rupture de stock"}, status=status.HTTP_400_BAD_REQUEST)
+            if request.data.get('from_panier'):
+                logger.info(f"tentative de création d'une commande à partir du panier.user = {request.user}")
+                panier = get_object_or_404(Panier, client=user)
+                panier.verrouille = True
+                panier.save()
+                if not panier.panierproduit_set.exists():
+                    logger.warning(f"Panier vidé pendant la création de la commande. user={request.user}")
+                    return Response({"message": "Votre panier est vide"},
+                                    status=status.HTTP_400_BAD_REQUEST)
 
-    else:
-        return Response({"error": "Données invalides pour créer une commande"}, status=status.HTTP_400_BAD_REQUEST)
+                for panier_produit in panier.panierproduit_set.select_related('produit').all():
+                    produit = Produit.objects.select_for_update().get(id=panier_produit.produit.id)
+                    if produit.QuantiteStock < panier_produit.quantite:
+                        logger.warning(f"Stock insuffisant pour {produit.nom} pour creer une commande.user={request.user}")
+                        return Response({"message_erreur": f"Stock insuffisant pour {produit.nom}"},
+                                        status=status.HTTP_400_BAD_REQUEST)
 
-    serializer = CommandeSerializer(commande)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    Produit.objects.filter(id=produit.id).update(
+                        QuantiteStock=F('QuantiteStock') - panier_produit.quantite
+                    )
+                    logger.info(f"produit {produit} ajouté à la commande {commande.ref_code}")
+                    commande.produits.add(produit)
+
+                panier.panierproduit_set.all().delete()
+
+            elif request.data.get('produit_slug'):
+                produit = Produit.objects.select_for_update().get(slug=request.data['produit_slug'])
+                if produit.QuantiteStock <= 0:
+                    return Response({"error": "Produit en rupture de stock"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+                Produit.objects.filter(id=produit.id).update(
+                    QuantiteStock=F('QuantiteStock') - 1
+                )
+                commande.produits.add(produit)
+                logger.info(f"produit {produit} ajouté à la commande {commande.ref_code}")
+            else:
+                logger.error(f"Données invalides pour créer une commande ,user={request.user}", exc_info=True)
+                return Response({"error": "Données invalides pour créer une commande"},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = CommandeSerializer(commande)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        logger.error(f"Une erreur est survenue lors de la création de la commande:details: {str(e)}", exc_info=True)
+        return Response({"error": "Une erreur est survenue lors de la création de la commande."},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    finally:
+        if 'panier' in locals() and panier:
+            panier.verrouille = False
+            panier.save()
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -53,7 +87,6 @@ def detail_commande(request, commande_id):
 
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -66,7 +99,6 @@ def detail_commande_by_refcode(request, ref_code):
 @permission_classes([IsAuthenticated])
 def detail_commande_courante(request):
     commande = get_object_or_404(Commande,client=request.user,statut = 'EN_ATTENTE')
-
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
 
@@ -100,64 +132,49 @@ def liste_commandes_historiques(request):
     serializer = CommandeHistoriqueSerializer(commandes, many=True)
     return Response(serializer.data)
 
-"""
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def valider_commande(request, commande_id):
-    user = request.user
-    commande = get_object_or_404(Commande, id=commande_id, client=user, statut='EN_ATTENTE')
-    commande.marquer_comme_payee()
-    
-    serializer = CommandeSerializer(commande)
-    return Response(serializer.data)
-"""
-"""
-@api_view(['POST'])
-def annuler_commande(request, commande_id):
-    user = request.user
-    
-    commande = get_object_or_404(Commande, id=commande_id, client=user)
-    commande.annuler()
-    
-    serializer = CommandeSerializer(commande)
-    return Response(serializer.data)
-"""
+def deleteCommandeByClient(request, commande_id):
+    with transaction.atomic():
+        commande = get_object_or_404(Commande, id=commande_id, client=request.user)
+        logger.info(f"tentative de suppression d'une commande par le client {request.user}")
+        if commande.statut != 'EN_ATTENTE':
+            return Response({"message": f"La commande {commande.ref_code} ne peut pas être supprimée"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['delete'])
-@permission_classes([IsAuthenticated])
-def deleteCommandeByClient(request,commande_id):
-    commande = get_object_or_404(Commande, id=commande_id, client=request.user)
-
-    if not commande.statut == 'EN_ATTENTE':
-        return Response({"message": f"La commande {commande.ref_code} ne peut pas est supprimée"}, status=status.HTTP_400_BAD_REQUEST)
-
-    for produit in commande.produits.all():
-        if produit.QuantiteStock:
-            produit.QuantiteStock += 1
-        produit.save()
-
-    commande.delete()
-    
-    return Response({"message": f"La commande {commande.ref_code} est supprimé"}, status=status.HTTP_200_OK)
-
-@api_view(['delete'])
-@permission_classes([IsAuthenticated,IsAdminUser])
-def deleteCommandeByAdmin(request,commande_id):
-    user = request.user
-    commande = get_object_or_404(Commande, id=commande_id, client=user)
-
-    if commande.statut == 'LIVREE':
+        for produit in commande.produits.select_for_update().all():
+            Produit.objects.filter(id=produit.id).update(
+                QuantiteStock=F('QuantiteStock') + 1
+            )
+        ref_commande = commande.ref_code
         commande.delete()
-        return Response({"message": f"La commande {commande.ref_code} est supprimé"}, status=status.HTTP_204_NO_CONTENT)
+    logger.info(f"commande {ref_commande} supprimé avec succees")
+    return Response({"message": f"La commande {commande.ref_code} a été supprimée"},
+                    status=status.HTTP_200_OK)
 
-    for produit in commande.produits.all():
-        if produit.QuantiteStock:
-            produit.QuantiteStock += 1
-        produit.save()
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def deleteCommandeByAdmin(request, commande_id):
+    with transaction.atomic():
+        commande = get_object_or_404(Commande, id=commande_id)
 
-    commande.delete()
+        if commande.statut == 'LIVREE':
+            commande.delete()
+            logger.info(f"La commande {commande.ref_code} (livrée) est supprimé par le client {request.user}")
 
-    return Response({"message": f"La commande {commande.ref_code} est supprimé"}, status=status.HTTP_200_OK)
+            return Response({"message": f"La commande {commande.ref_code} a été supprimée.statut = {commande.statut}"},
+                            status=status.HTTP_204_NO_CONTENT)
+
+        for produit in commande.produits.select_for_update().all():
+            Produit.objects.filter(id=produit.id).update(
+                QuantiteStock=F('QuantiteStock') + 1
+            )
+
+        commande.delete()
+
+    logger.info(f"commande {commande.ref_code} supprimé par l'admin {request.user}")
+    return Response({"message": f"La commande {commande.ref_code} a été supprimée"},
+                    status=status.HTTP_200_OK)
 
 
 class CommandeUpdateStatusView(APIView):

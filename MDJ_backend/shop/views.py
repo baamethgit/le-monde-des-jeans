@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView, DestroyAPIView
 from .serializers import ZoneSerializer, CommandeSerializer, PanierSerializerSansProd
 from .models import ZoneLivraison, Commande
-from django.db.models import Q, Count
+from django.db.models import Q, Count, F,Sum
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -20,6 +20,9 @@ from django.shortcuts import get_object_or_404
 from django.utils.dateparse import parse_date
 from datetime import timedelta
 from django.utils.timezone import now
+from loguru import logger
+from django.db import transaction
+
 
 class getDeliveryZones(ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -218,36 +221,75 @@ def panier_detail(request):
 @permission_classes([IsAuthenticated])
 def ajouter_produit(request):
     user = request.user
-    panier, _ = Panier.objects.get_or_create(client=user)
     produit_slug = request.data.get('produit_slug')
-    produit = get_object_or_404(Produit, slug=produit_slug)
-    
-    if panier.ajouter_produit(produit):
-        return Response({"message": "Produit ajouté au panier"}, status=status.HTTP_200_OK)
-    else:
-        return Response({"message_erreur": "Le produit est en rupture de stock"}, status=status.HTTP_400_BAD_REQUEST)
+    if not produit_slug:
+        return Response(
+            {"message_erreur": "Le slug du produit est requis"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
+    try:
+        with transaction.atomic():
+
+            produit = Produit.objects.select_for_update().get(slug=produit_slug)
+
+            if produit.QuantiteStock <= 0:
+                return Response(
+                    {"message_erreur": "Le produit est en rupture de stock"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            panier, _ = Panier.objects.get_or_create(client=user)
+            Produit.objects.filter(id=produit.id).update(
+                QuantiteStock=F('QuantiteStock') - 1
+            )
+
+            PanierProduit.objects.create(
+                panier=panier,
+                produit=produit,
+            )
+            logger.info(f"produit {produit} ajouté au panier de {user}")
+            return Response(
+                {"message": "Produit ajouté au panier"},
+                status=status.HTTP_200_OK
+            )
+
+    except Produit.DoesNotExist:
+        logger.error(f"produit {produit} non trouvé pour l'ajout au panier", exc_info=True)
+        return Response(
+            {"message_erreur": "Produit non trouvé"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        logger.error(f"Erreur d'ajout du produit {produit} au panier de {request.user},{str(e)}", exc_info=True)
+        return Response(
+            {"message_erreur": "Une erreur est survenue"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def retirer_produit(request):
-    user = request.user
-    panier = get_object_or_404(Panier, client=user)
-    produit_slug = request.data.get('produit_slug')
-    produit = get_object_or_404(Produit, slug=produit_slug)
-    panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
+    with transaction.atomic():
+        panier = get_object_or_404(Panier, client=request.user)
+        produit_slug = request.data.get('produit_slug')
+        if not produit_slug:
+            return Response({"error": "Le slug du produit est requis."}, status=status.HTTP_400_BAD_REQUEST)
+        produit = get_object_or_404(Produit, slug=produit_slug)
+        panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
 
-    produit.QuantiteStock += 1
-    produit.save()
-    panier_produit.delete()
-    
+        Produit.objects.filter(id=produit.id).update(QuantiteStock=F('QuantiteStock') + panier_produit.quantite)
+        panier_produit.delete()
+    logger.info(f"quantité du produit {produit} incrémenté de {panier_produit.quantite}")
+    logger.info(f"le produit {produit} est retiré du panier de {request.user}")
     return Response({"message": "Produit retiré du panier"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def contenu_panier(request):
     user = request.user
-    panier = Panier.objects.get(client=user)
-    panier.nettoyer_produits_expires()
+    panier = get_object_or_404(Panier, client=user)
+
+    #panier.nettoyer_produits_expires()
     panier_produits = PanierProduit.objects.filter(panier=panier)
     serializer = PanierProduitSerializer(panier_produits, many=True)
     return Response(serializer.data)
@@ -255,16 +297,20 @@ def contenu_panier(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def vider_panier(request):
-    user = request.user
-    panier = get_object_or_404(Panier,client=user)
-    for panier_produit in PanierProduit.objects.filter(panier=panier):
-        produit = panier_produit.produit
-        produit.QuantiteStock += 1
-        produit.save()
-        panier_produit.delete()
+    with transaction.atomic():
+        panier = get_object_or_404(Panier, client=request.user)
+        panier_produits = PanierProduit.objects.filter(panier=panier)
+
+        for pp in panier_produits:
+            Produit.objects.filter(id=pp.produit.id).update(
+                QuantiteStock=F('QuantiteStock') + pp.quantite
+            )
+
+        panier_produits.delete()
+    logger.info(f"Panier de {request.user} vidé")
     return Response({"message": "Panier vidé"}, status=status.HTTP_200_OK)
 
-from django.db.models import Sum
+
 
 class DashboardKpiView(APIView):
     permission_classes = (IsAuthenticated,IsAdminUser)

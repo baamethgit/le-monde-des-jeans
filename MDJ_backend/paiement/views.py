@@ -32,7 +32,7 @@ class InitiateWavePaymentView(APIView):
             order = Commande.objects.get(id=request.data['order_id'])
             order.date_expiration = order.date_expiration + timedelta(minutes=2)
         except:
-            logger.error(f"initiation de payment par {request.user} échoué : la commande nest pas trouvé.")
+            logger.error(f"initiation de payment par {request.user} échoué : la commande nest pas trouvé.", exc_info=True)
             return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)
         success_url = f'{FRONTEND_URL}/payment-success/{order.ref_code}'
         error_url = f'{FRONTEND_URL}/payment-error/{order.ref_code}'
@@ -55,7 +55,7 @@ class InitiateWavePaymentView(APIView):
         )
 
         if response.status_code != 200:
-            logger.error(f"erreur lors du paiement par wave.Réponse de wave : {response.status_code}")
+            logger.error(f"erreur lors du paiement par wave.Réponse de wave : {response.status_code}", exc_info=True)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         existing_session = WaveCheckoutSession.objects.filter(
@@ -99,7 +99,7 @@ class WaveWebhookView(APIView):
                         session_id=event['data']['id']
                     )
                 except WaveCheckoutSession.DoesNotExist:
-                    logger.error(f'Session not found: {event["data"]["id"]}')
+                    logger.error(f'Session not found: {event["data"]["id"]}', exc_info=True)
                     return Response(
                         {'error': 'Session not found'},
                         status=status.HTTP_404_NOT_FOUND
@@ -107,7 +107,7 @@ class WaveWebhookView(APIView):
 
 
                 if session.status == 'completed':
-                    logger.error(f"tentative de paiement pour une commande déja payée.")
+                    logger.error(f"tentative de paiement pour une commande déja payée.", exc_info=True)
                     return Response({'status': 'Already processed'})
 
                 payment_status = event['data']['payment_status']
@@ -131,7 +131,7 @@ class WaveWebhookView(APIView):
                 return Response({'status': 'Ignored event type'})
 
         except Exception as e:
-            logger.error(f'Error processing webhook: {str(e)}')
+            logger.error(f'Error processing webhook: {str(e)}', exc_info=True)
             return Response(
                 {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -198,7 +198,7 @@ class CheckPaymentStatusView(APIView):
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
-            logger.error(f"Erreur lors de la vérification du paiement: {str(e)}")
+            logger.error(f"Erreur lors de la vérification du paiement: {str(e)}", exc_info=True)
             return Response({
                 'status': 'error',
                 'message': 'Une erreur est survenue lors de la vérification'
