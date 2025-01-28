@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
 import { CategorieService } from '../../services/categories/categorie.service';
 import { FormsModule } from '@angular/forms';
 import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
@@ -10,11 +10,7 @@ import {finalize} from "rxjs";
 @Component({
   selector: 'app-produits',
   standalone: true,
-<<<<<<< HEAD
-  imports: [CommonModule, RouterOutlet, NgOptimizedImage, FormsModule],
-=======
-    imports: [CommonModule, RouterLink, RouterOutlet, NgOptimizedImage, FormsModule, NgxSkeletonLoaderModule],
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
+  imports: [CommonModule, FormsModule, RouterLink, RouterOutlet, NgOptimizedImage, NgxSkeletonLoaderModule],
   templateUrl: './produits.component.html',
   styleUrl: './produits.component.scss'
 })
@@ -37,8 +33,7 @@ this.loadCategories();
       const slug = this.route.snapshot.firstChild?.paramMap.get('slug');
       this.current_category = <string>slug;
       this.selectedCategory = <string>slug;
-<<<<<<< HEAD
-=======
+
     });
   }
 
@@ -50,7 +45,6 @@ this.loadCategories();
       next: (data: any[]) => {
         this.list_categorie = data;
       }
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
     });
   }
 

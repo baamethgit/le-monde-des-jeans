@@ -38,12 +38,9 @@ export class AllProductsComponent implements OnInit{
     this.categorieService.getAllCategories().subscribe({
       next: (data:categorie[])=>{
         this.list_categorie=data
-<<<<<<< HEAD
-=======
       },
       error: (error) => {
 
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
       }
     })
   }
@@ -56,13 +53,9 @@ export class AllProductsComponent implements OnInit{
       next: (data)=>{
         this.produits=data.results;
         this.totalItems = data.count;
-<<<<<<< HEAD
-=======
       },
       error: (error) => {
-
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
-      }
+}
     })
   }
 

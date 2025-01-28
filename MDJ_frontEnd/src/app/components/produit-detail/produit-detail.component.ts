@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { CarouselModule} from 'primeng/carousel';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgOptimizedImage } from '@angular/common';
+import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
+import {NgOptimizedImage, SlicePipe} from '@angular/common';
 import { ProduitService } from '../../services/produits/produit.service';
 import { CommandeService } from '../../services/commandes/commande.service';
 import { UserService } from '../../services/users/user.service';
@@ -16,11 +16,8 @@ import {finalize} from "rxjs";
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-<<<<<<< HEAD
-  imports: [CarouselModule, RouterLink, NgOptimizedImage, GalleriaModule,FormsModule],
-=======
-    imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule, FormsModule, NgxSkeletonLoaderModule],
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
+    imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule, FormsModule, NgxSkeletonLoaderModule,
+      CarouselModule, RouterLink, NgOptimizedImage, GalleriaModule,FormsModule],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })

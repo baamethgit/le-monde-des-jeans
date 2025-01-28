@@ -40,23 +40,6 @@ export class HomeComponent  implements OnInit{
     this.categorieService.getAllCategories().subscribe({
       next:(data:categorie[])=>{this.catagorie_list=data}
     })
-
-<<<<<<< HEAD
-    this.productService.getProducts(this.page, this.pageSize).subscribe({
-      next:(data)=>{
-
-        this.products_list=data.results;
-        this.totalItems = data.count;
-       }
-      next: (data: categorie[]) => {
-        this.catagorie_list = data
-      },
-      error: (error) => {
-      }
-    })
-
-=======
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
     this.loadSpecials();
     this.loadProducts();
 

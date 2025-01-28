@@ -35,10 +35,7 @@ export class ProfilComponent implements OnInit{
       this.user = data;
       },
       error: (error) => {
-<<<<<<< HEAD
-=======
         this.error = true;
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
       }
     })
     this.commandeService.getStatsCommande().subscribe({

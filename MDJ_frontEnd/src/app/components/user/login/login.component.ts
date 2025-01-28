@@ -66,15 +66,12 @@ export class LoginComponent implements OnInit{
           },
           error: (error) => {
             this.loginForm.markAllAsTouched();
-<<<<<<< HEAD
-            this.loginError = error.error.error;
-=======
+
             if (error.error.error_identifiants){
               this.identifiantsError = error.error.error_identifiants
             }else {
               this.loginError = true;
             }
->>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
           }
         })
       }else{
