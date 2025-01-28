@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
-import { AdminSidebarComponent } from '../admin/admin-sidebar/admin-sidebar.component';
 import { FooterComponent } from '../footer/footer.component';
 import { RouterOutlet } from '@angular/router';
 

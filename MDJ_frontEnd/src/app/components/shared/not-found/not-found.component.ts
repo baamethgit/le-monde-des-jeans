@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './not-found.component.scss'
 })
 export class NotFoundComponent {
-  private location = inject(Location);
+  private readonly location = inject(Location);
   previousPage():void{
     this.location.back();
   }

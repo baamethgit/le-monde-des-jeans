@@ -1,14 +1,13 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import {Component, inject, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import {PaiementService} from "../../../services/paiement.service";
 import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule,FormsModule,DatePipe,RouterLink],
+  imports: [CommonModule,FormsModule,DatePipe],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.scss'
 })
@@ -53,9 +52,6 @@ export class PaymentComponent implements OnInit{
       {
         next:(data)=>{
           this.payments = data;
-        },
-        error:(error)=>{
-
         }
       }
     )

@@ -5,6 +5,7 @@ import { User } from '../../models/user';
 import { UserService } from '../../services/users/user.service';
 import { Infos } from '../../models/infos.module';
 import { InfosService } from '../../services/infos.service';
+import { log } from 'console';
 
 @Component({
   selector: 'app-header',
@@ -17,8 +18,8 @@ export class HeaderComponent implements OnInit{
   currentUser: User | undefined = undefined;
   is_authenticated = false;
   infos:Infos | undefined;
-  private infosService = inject(InfosService);
-  private userService = inject(UserService);
+  private readonly infosService = inject(InfosService);
+  private readonly userService = inject(UserService);
 
   constructor(){}
 

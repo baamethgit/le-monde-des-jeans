@@ -38,11 +38,20 @@ export class HomeComponent  implements OnInit{
 
   ngOnInit(){
     this.categorieService.getAllCategories().subscribe({
-      next:(data:categorie[])=>{this.catagorie_list=data},
-      error:(error)=>{
-      }
+      next:(data:categorie[])=>{this.catagorie_list=data}
     })
 
+<<<<<<< HEAD
+    this.productService.getProducts(this.page, this.pageSize).subscribe({
+      next:(data)=>{
+
+        this.products_list=data.results;
+        this.totalItems = data.count;
+       }
+    })
+
+=======
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
     this.loadSpecials();
     this.loadProducts();
 

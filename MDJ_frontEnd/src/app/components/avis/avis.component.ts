@@ -20,10 +20,7 @@ ngOnInit():void{
   this.userService.getAllAvis().subscribe({
     next:(data:Avis[])=>{
       this.Avis=data
-    },
-    error: (error) => {
-      console.log('Erreur lors de l affichage des avis :', error.error.detail);
-}
+    }
 
   })
 }

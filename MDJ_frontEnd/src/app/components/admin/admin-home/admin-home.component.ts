@@ -19,7 +19,7 @@ export class AdminHomeComponent implements OnInit{
   isAdmin = false;
   isLoading = true;
 
-  constructor(private router:Router,private route:ActivatedRoute,private userService:UserService){
+  constructor(private readonly router:Router,private readonly route:ActivatedRoute,private readonly userService:UserService){
     if(this.route.toString().endsWith('mdj_admin')){
       this.router.navigate(['mdj_admin/dashboard']);
     }

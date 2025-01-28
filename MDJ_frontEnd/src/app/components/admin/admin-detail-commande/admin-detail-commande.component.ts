@@ -22,7 +22,7 @@ export class AdminDetailCommandeComponent implements OnInit {
   protected readonly StatutCommande = StatutCommande;
 
 
-  constructor(private router:Router,private route : ActivatedRoute){}
+  constructor(private readonly router:Router,private readonly route : ActivatedRoute){}
 
   ngOnInit(): void {
       // this.route.paramMap

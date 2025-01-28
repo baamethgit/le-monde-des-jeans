@@ -47,6 +47,7 @@ export class DashboardAdminComponent implements OnInit {
       },
       error : (error) => {
         this.erreur_kpi = true;
+        
       },
     })
   }
