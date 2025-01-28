@@ -64,9 +64,10 @@
                     <small *ngIf="loginForm.controls['phone_number'].hasError('required')">
                       Ce champ est obligatoire
                     </small>
-                    <small *ngIf="loginForm.controls['phone_number'].hasError('email') ||
-                              loginForm.controls['phone_number'].hasError('validMail')">
-                      Veuillez saisir un numéro de téléphone valide
+                    <small class="text-danger"
+                           *ngIf="loginForm.controls['phone_number'].hasError('validphoneNumber')">
+                      Le numéro de téléphone doit être un numéro sénégalais valide (ex: 771234567 ou +221771234567).
+
                     </small>
                   </div>
                 </div>
@@ -107,7 +108,7 @@
 
                 <!-- Error Message -->
                 <div *ngIf="loginError" class="alert alert-danger text-center small" role="alert">
-                  {{ loginError }}
+                  Une erreur innatendu est servenu.Veuillez réessayer plus tard
                 </div>
 
                 <!-- Submit Button -->

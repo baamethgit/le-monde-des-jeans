@@ -29,9 +29,7 @@ import { UpdateZoneComponent } from './components/admin/update-zone/update-zone.
 import { CreateZoneComponent } from './components/admin/create-zone/create-zone.component';
 import { NotFoundComponent } from './components/shared/not-found/not-found.component';
 import { LayoutComponent } from './components/layout/layout.component';
-import { PaiementComponent } from './components/user/paiement/paiement.component';
 import { PaymentComponent } from './components/admin/payment/payment.component';
-import { PaiementSuccessComponent } from './components/paiement-success/paiement-success.component';
 import { PaiementFailedComponent } from './components/paiement-failed/paiement-failed.component';
 import { InfosGenComponent } from './components/admin/infos-gen/infos-gen.component';
 import {userGuard} from "./utils/user.guard";
@@ -64,8 +62,8 @@ export const routes: Routes = [
 
       { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' },
       { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis'},
-      { path: 'payment-success/:id', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
-      { path: 'payment-error/:id', component: PaiementFailedComponent, title: 'LMDJ | Paiement' ,canActivate:[userGuard] }
+      { path: 'payment-success/:ref-code', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
+      { path: 'payment-error/:ref-code', component: PaiementFailedComponent, title: 'LMDJ | Paiement' ,canActivate:[userGuard] }
     ]
   },
   {

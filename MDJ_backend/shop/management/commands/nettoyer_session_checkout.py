@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from paiement.models import WaveCheckoutSession, Payment
 from django.utils import timezone
+from django.db import Q
 from datetime import timedelta
 
 
@@ -10,7 +11,10 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         ten_min_ago = timezone.now() - timedelta(minutes=10)
 
-        expired_sessions = WaveCheckoutSession.objects.filter(created_at__lte=ten_min_ago)
+        expired_sessions = WaveCheckoutSession.objects.filter(
+            Q(created_at__lte=ten_min_ago) |
+            Q(status='expired')
+        )
         expired_sessions_count = expired_sessions.count()
         expired_sessions.delete()
 

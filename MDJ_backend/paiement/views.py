@@ -12,6 +12,8 @@ from paiement.serializers import PaiementSerializer
 from shop.models import Commande
 import environ
 
+from shop.serializers import CommandeSerializer
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -25,9 +27,12 @@ import requests
 class InitiateWavePaymentView(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self, request):
+        logger.info(f"initiate wave payment request for commande {request.data['order_id']} by {request.user}.")
         try:
             order = Commande.objects.get(id=request.data['order_id'])
+            order.date_expiration = order.date_expiration + timedelta(minutes=2)
         except:
+            logger.error(f"initiation de payment par {request.user} échoué : la commande nest pas trouvé.")
             return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)
         success_url = f'{FRONTEND_URL}/payment-success/{order.ref_code}'
         error_url = f'{FRONTEND_URL}/payment-error/{order.ref_code}'
@@ -36,21 +41,13 @@ class InitiateWavePaymentView(APIView):
             'currency': 'XOF',
             'client_reference': str(order.ref_code),
             'success_url': success_url,
-            #'success_url': 'https://www.google.sn/',
             'error_url':error_url
-            #'error_url': 'https://www.awwwards.com/awwwards/collections/404-error-page/'
         }
-
-        # Dans ta vue
-        """logger.debug(f"Headers envoyés : {headers}")
-        logger.debug(f"URL appelée : {url}")
-        logger.debug(f"Réponse : {response.text}")
-"""
         headers = {
             'Authorization': f'Bearer {WAVE_API_KEY}',
             'Content-Type': 'application/json'
         }
-        logger.info(f"initiation de paiement par {request.user}")
+
         response = requests.post(
             'https://api.wave.com/v1/checkout/sessions',
             json=checkout_data,
@@ -58,16 +55,18 @@ class InitiateWavePaymentView(APIView):
         )
 
         if response.status_code != 200:
+            logger.error(f"erreur lors du paiement par wave.Réponse de wave : {response.status_code}")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         existing_session = WaveCheckoutSession.objects.filter(
             order=order,
             status='pending'
-        ).first()
+        ).order_by('-created_at').first()
 
         if existing_session:
-            if timezone.now() < existing_session.created_at + timedelta(minutes=60):
-                Payment.objects.filter(client=order.client, statut='pending').delete()
+            if timezone.now() < existing_session.created_at + timedelta(minutes=10):
+                logger.info(f"utilisation d'une session wave existante pour paiement.User ({request.user})")
+                #Payment.objects.filter(client=order.client, statut='pending').delete()
                 return Response({'wave_launch_url': existing_session.wave_launch_url})
             else:
                 existing_session.status = 'expired'
@@ -83,6 +82,7 @@ class InitiateWavePaymentView(APIView):
             session_id=response.json()['id'],
             wave_launch_url=response.json()['wave_launch_url']
         )
+        logger.info(f"wave launch url send successfully to {request.user}")
 
         return Response({'wave_launch_url': session.wave_launch_url})
 
@@ -107,6 +107,7 @@ class WaveWebhookView(APIView):
 
 
                 if session.status == 'completed':
+                    logger.error(f"tentative de paiement pour une commande déja payée.")
                     return Response({'status': 'Already processed'})
 
                 payment_status = event['data']['payment_status']
@@ -122,7 +123,7 @@ class WaveWebhookView(APIView):
                 elif payment_status == 'failed':
                     session.status = 'failed'
                     session.save()
-
+                logger.info(f"paiement réussi pour la commande {session.order.ref_code}")
                 return Response({'status': 'success'})
 
             else:
@@ -136,27 +137,72 @@ class WaveWebhookView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class CheckPaymentStatusView(APIView):
     permission_classes = (IsAuthenticated,)
+
     def get(self, request, order_ref):
-        order = get_object_or_404(Commande,ref_code=order_ref)
-        session = get_object_or_404(WaveCheckoutSession,order_id=order.id)
+        try:
+            logger.info(f"Vérification du statut de paiement pour la commande {order_ref}")
 
-        if session.status != 'completed':
-            response = requests.get(
-                f'https://api.wave.com/v1/checkout/sessions/{session.session_id}',
-                headers={'Authorization': f'Bearer {WAVE_API_KEY}'}
-            )
+            # Récupération de la commande
+            order = get_object_or_404(Commande, ref_code=order_ref)
 
-            if response.json()['payment_status'] == 'succeeded':
-                session.status = 'completed'
-                session.save()
-                if session.order.status != 'PAYEE':
-                    session.order.status = 'PAYEE'
-                    session.order.save()
+            # Si la commande est déjà marquée comme payée, pas besoin de vérifier plus loin
+            if order.statut == 'PAYEE':
+                return Response({
+                    'commande': CommandeSerializer(order).data,
+                    'status': 'succeeded',
+                    'message': 'Commande déjà payée'
+                }, status=status.HTTP_200_OK)
 
-        return Response({'status': session.status})
+            payment_status = 'failed'
 
+            # Vérification de la session Wave
+            try:
+                session = WaveCheckoutSession.objects.get(
+                    order_id=order.id
+                )
+
+                # Vérification du statut auprès de l'API Wave seulement si on a une session
+                response = requests.get(
+                    f'https://api.wave.com/v1/checkout/sessions/{session.session_id}',
+                    headers={'Authorization': f'Bearer {WAVE_API_KEY}'}
+                )
+
+                if response.status_code == 200:
+                    wave_data = response.json()
+                    if wave_data['payment_status'] == 'succeeded':
+                        payment_status = 'succeeded'
+                        session.status = 'completed'
+                        session.save()
+
+                        order.marquer_comme_payee()
+                        order.save()
+
+            except WaveCheckoutSession.DoesNotExist:
+                logger.info(f"checkPaymentStatus : Aucune session trouvée ,Commande {order_ref} non payé ")
+                return Response({
+                    'commande': CommandeSerializer(order).data,
+                    'status': 'failed',
+                    'message': ''
+                }, status=status.HTTP_200_OK)
+
+            logger.info(
+                f"Vérification du statut de paiement pour la commande {order_ref} : résultat = {payment_status}")
+
+            return Response({
+                'commande': CommandeSerializer(order).data,
+                'status': payment_status,
+                'message': 'Vérification effectuée avec succès'
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la vérification du paiement: {str(e)}")
+            return Response({
+                'status': 'error',
+                'message': 'Une erreur est survenue lors de la vérification'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class PaymentFilterView(APIView):
     permission_classes = (IsAuthenticated,IsAdminUser)
