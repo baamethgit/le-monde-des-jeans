@@ -2,11 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../../../services/users/user.service';
 import { User } from '../../../models/user';
 import { CommonModule } from '@angular/common';
-import { UpdateUserComponent } from '../update-user/update-user.component';
-import { RouterLink } from '@angular/router';
 import { NgbHighlight, NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { DetailClientComponent } from '../detail-client/detail-client.component';
 import { LoaderComponent } from '../../loader/loader.component';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import {finalize} from "rxjs";
@@ -14,7 +11,7 @@ import {finalize} from "rxjs";
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [CommonModule,FormsModule,RouterLink, NgbHighlight, NgbPaginationModule,DetailClientComponent,LoaderComponent],
+  imports: [CommonModule,FormsModule, NgbHighlight, NgbPaginationModule,LoaderComponent],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss'
 })
@@ -27,7 +24,7 @@ export class ClientsComponent implements OnInit {
   searchTerm = '';
   totalItems = 0;
   modalService = inject(NgbModal);
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -41,9 +38,6 @@ export class ClientsComponent implements OnInit {
       next: (response) => {
         this.users = response.results;
         this.totalItems = response.count;
-      },
-      error: (error) => {
-        // console.error('Erreur lors du chargement des utilisateurs', error);
       }
     });
   }

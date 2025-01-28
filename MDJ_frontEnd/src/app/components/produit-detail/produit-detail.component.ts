@@ -1,21 +1,20 @@
-import {Component, inject, input, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CarouselModule} from 'primeng/carousel';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { CommonModule, NgOptimizedImage, SlicePipe } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
 import { ProduitService } from '../../services/produits/produit.service';
 import { CommandeService } from '../../services/commandes/commande.service';
 import { UserService } from '../../services/users/user.service';
 import { Produit } from '../../models/produit';
 import { PanierService } from '../../services/panier.service';
 import { GalleriaModule } from 'primeng/galleria';
-import { RadioButton } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-  imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule,FormsModule],
+  imports: [CarouselModule, RouterLink, NgOptimizedImage, GalleriaModule,FormsModule],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
@@ -50,9 +49,9 @@ responsiveOptions = [
 ];
 
   constructor(
-    private route: ActivatedRoute,
-    private produitService: ProduitService,
-    private router: Router
+    private readonly route: ActivatedRoute,
+    private readonly produitService: ProduitService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -70,9 +69,6 @@ responsiveOptions = [
         this.product_selected = data;
         this.list_p = data.images;
         this.loadSimilarProducts();
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement du produit:', error);
       }
     });
 }
@@ -109,14 +105,9 @@ acheterDirectement(productSlug : string | undefined){
       this.produitService.getProductByCategory(categorySlug, this.page, this.pageSize).subscribe({
         next: (data) => {
           this.must_like_product = data.results.filter((p: { slug: string | undefined; }) => p.slug !== this.product_selected?.slug);
-        },
-        error: (error) => {
-          console.log('Erreur lors de l\'affichage des produits similaires :', error.error.detail);
         }
       });
-    } else {
-      console.log('Aucun slug de catégorie disponible pour ce produit.');
-    }
+    } else { /* empty */ }
   }
 
 // addToCart(){
@@ -149,10 +140,7 @@ acheterDirectement(productSlug : string | undefined){
       this.panierService.ajouterProduit(this.product_selected.slug).subscribe({
         next: (data) => {
           this.router.navigate(['/panier']);
-        },
-        error: (error) => {
-          console.log('Erreur lors de l\'ajout au panier :', error.error.detail);
-        },
+        }
       });
     }
   }

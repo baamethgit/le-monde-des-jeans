@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { ProduitService } from '../../services/produits/produit.service';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CategorieService } from '../../services/categories/categorie.service';
 import { FormsModule } from '@angular/forms';
 
@@ -9,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-produits',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, NgOptimizedImage, FormsModule],
+  imports: [CommonModule, RouterOutlet, NgOptimizedImage, FormsModule],
   templateUrl: './produits.component.html',
   styleUrl: './produits.component.scss'
 })
@@ -19,9 +18,9 @@ export class ProduitsComponent implements OnInit {
   selectedCategory: string = '';
 
   constructor(
-    private router: Router,
-    private categorieService: CategorieService,
-    private route: ActivatedRoute
+    private readonly router: Router,
+    private readonly categorieService: CategorieService,
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +34,6 @@ export class ProduitsComponent implements OnInit {
       const slug = this.route.snapshot.firstChild?.paramMap.get('slug');
       this.current_category = <string>slug;
       this.selectedCategory = <string>slug;
-      console.log("selectedCategory : ", this.selectedCategory, "current_category : ", this.current_category);
     });
   }
 

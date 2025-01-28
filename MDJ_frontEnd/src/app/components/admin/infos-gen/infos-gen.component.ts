@@ -16,8 +16,8 @@ export class InfosGenComponent {
   errorMessage: string = '';
 
   constructor(
-    private fb: FormBuilder,
-    private infosService: InfosService
+    private readonly fb: FormBuilder,
+    private readonly infosService: InfosService
   ) {
     this.infoForm = this.fb.group({
       addresse_mail_site: ['', [Validators.required, Validators.email]],
@@ -40,7 +40,6 @@ export class InfosGenComponent {
       },
       error: (error) => {
         this.errorMessage = 'Erreur lors du chargement des informations.';
-        console.error('Erreur:', error);
       }
     });
   }
@@ -59,7 +58,6 @@ export class InfosGenComponent {
         },
         error: (error) => {
           this.errorMessage = 'Erreur lors de la mise à jour des informations.';
-          console.error('Erreur:', error);
         }
       });
     }

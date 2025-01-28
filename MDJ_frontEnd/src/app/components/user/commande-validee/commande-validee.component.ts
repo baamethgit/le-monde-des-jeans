@@ -15,7 +15,7 @@ import {CommonModule, NgIf} from "@angular/common";
 export class CommandeValideeComponent implements OnInit{
   CheckoutStep : CheckoutStep = CheckoutStep.FinaliserCommande;
   commande! : Commande;
-  private paiementService = inject(PaiementService);
+  private readonly paiementService = inject(PaiementService);
 
   ngOnInit(): void {
 

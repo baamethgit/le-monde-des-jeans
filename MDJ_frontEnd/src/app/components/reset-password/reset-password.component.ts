@@ -24,9 +24,9 @@ export class ResetPasswordComponent implements OnInit {
   passwordForm!: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly userService: UserService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -99,10 +99,6 @@ export class ResetPasswordComponent implements OnInit {
         this.router.navigate(['/login'], {
           queryParams: { message: 'Mot de passe réinitialisé avec succès' }
         });
-      },
-      error: (error) => {
-        console.error('Erreur lors de la réinitialisation du mot de passe:', error);
-        this.isLoading = false;
       }
     });
   }

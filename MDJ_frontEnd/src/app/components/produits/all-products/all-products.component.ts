@@ -7,7 +7,7 @@ import { categorie } from '../../../models/categorie';
 import { CommonModule ,NgOptimizedImage} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { NgbPagination, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import {finalize} from "rxjs";
 
 
@@ -29,7 +29,7 @@ export class AllProductsComponent implements OnInit{
   selectedSpecial: string = '';
   isLoading = false;
 
-  constructor(private produitService:ProduitService, private categorieService:CategorieService){}
+  constructor(private readonly produitService:ProduitService, private readonly categorieService:CategorieService){}
 
 
   ngOnInit():void{
@@ -37,9 +37,6 @@ export class AllProductsComponent implements OnInit{
     this.categorieService.getAllCategories().subscribe({
       next: (data:categorie[])=>{
         this.list_categorie=data
-      },
-      error: (error) => {
-             console.log('Erreur lors de l affichage des categorie :', error.error.detail);
       }
     })
   }
@@ -52,9 +49,6 @@ export class AllProductsComponent implements OnInit{
       next: (data)=>{
         this.produits=data.results;
         this.totalItems = data.count;
-      },
-      error: (error) => {
-            
       }
     })
   }

@@ -11,9 +11,9 @@ import {PaiementService} from "../../services/paiement.service";
 })
 export class PaiementSuccessComponent implements OnInit{
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private paiementService = inject(PaiementService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly paiementService = inject(PaiementService);
 
   ngOnInit(): void {
     const refCode = this.route.snapshot.params['ref-code'];

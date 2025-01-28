@@ -33,9 +33,7 @@ export class HomeComponent  implements OnInit{
 
   ngOnInit(){
     this.categorieService.getAllCategories().subscribe({
-      next:(data:categorie[])=>{this.catagorie_list=data},
-      error:(error)=>{
-      }
+      next:(data:categorie[])=>{this.catagorie_list=data}
     })
 
     this.productService.getProducts(this.page, this.pageSize).subscribe({
@@ -43,9 +41,7 @@ export class HomeComponent  implements OnInit{
 
         this.products_list=data.results;
         this.totalItems = data.count;
-       },
-      error:(error)=>{
-      }
+       }
     })
 
     this.loadSpecials();

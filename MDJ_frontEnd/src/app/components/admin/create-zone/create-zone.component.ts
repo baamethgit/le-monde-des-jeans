@@ -48,10 +48,7 @@ export class CreateZoneComponent implements OnInit{
     this.commandeService.createZone(newZone).subscribe({
       next:(response)=>{
           this.alertMessage = "Une nouvelle Zone a été créée";
-      },
-      error : (error) => {
-          console.log(error.error);
-      },
+      }
     })
   }
 

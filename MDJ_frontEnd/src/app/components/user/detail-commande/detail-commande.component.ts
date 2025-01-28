@@ -8,8 +8,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
 import { Commande } from '../../../models/commande';
-import { Paiement } from '../../../models/paiement';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaiementService } from '../../../services/paiement.service';
 import {finalize} from "rxjs";
 
@@ -17,7 +15,7 @@ import {finalize} from "rxjs";
 @Component({
   selector: 'app-detail-commande',
   standalone: true,
-  imports: [CheckoutProgressBarComponent,FormsModule,CommonModule,ReactiveFormsModule,RouterLink],
+  imports: [CheckoutProgressBarComponent,FormsModule,CommonModule,ReactiveFormsModule],
   templateUrl: './detail-commande.component.html',
   styleUrl: './detail-commande.component.scss'
 })

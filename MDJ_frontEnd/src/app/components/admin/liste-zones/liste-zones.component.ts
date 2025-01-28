@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ZoneLivraison } from '../../../models/zone-livraison';
 import { CommandeService } from '../../../services/commandes/commande.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateZoneComponent } from '../create-zone/create-zone.component';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -33,9 +31,6 @@ export class ListeZonesComponent implements OnInit{
   ).subscribe({
     next:(data)=>{
       this.zones = data;
-    },
-    error:(error)=>{
-
     }
   })
   }

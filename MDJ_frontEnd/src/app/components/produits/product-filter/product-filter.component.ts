@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import { ProduitService } from '../../../services/produits/produit.service';
-import { ActivatedRoute, Route, RouterLink } from '@angular/router';
-import { CategorieService } from '../../../services/categories/categorie.service';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {finalize, Subscription} from 'rxjs';
 import { Produit } from '../../../models/produit';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbPaginationModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-filter',
@@ -27,7 +26,7 @@ export class ProductFilterComponent implements OnInit{
 
   private routeSub: Subscription | undefined;
 
-constructor(private produitService:ProduitService, private route:ActivatedRoute){}
+constructor(private readonly produitService:ProduitService, private readonly route:ActivatedRoute){}
 
 ngOnInit(): void {
   // Écouter les changements de paramètres de route
@@ -49,9 +48,6 @@ loadProductsByCategory(categorieSlug: string): void {
     next: (data) => {
       this.produits_category = data.results;
       this.totalItems = data.count;
-    },
-    error: (error) => {
-      
     }
   });
 }

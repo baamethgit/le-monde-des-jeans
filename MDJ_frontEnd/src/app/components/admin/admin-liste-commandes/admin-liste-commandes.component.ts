@@ -1,19 +1,20 @@
-import { AsyncPipe, CommonModule, DecimalPipe, JsonPipe } from '@angular/common';
+import { CommonModule, } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommandesDirective, SortEvent } from '../../../directives/commandes.directive';
+import {  NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import {  SortEvent } from '../../../directives/commandes.directive';
 import { Commande } from '../../../models/commande';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { CommandeService } from '../../../services/commandes/commande.service';
 import { StatutCommande } from '../../../models/StatutCommande';
 import {finalize} from "rxjs";
+import { log } from 'console';
 
 @Component({
   selector: 'app-admin-liste-commandes',
   standalone: true,
-  imports: [DecimalPipe,RouterLink, FormsModule, AsyncPipe, NgbHighlight, CommandesDirective, NgbPaginationModule,JsonPipe,CommonModule],
+  imports: [RouterLink, FormsModule, NgbPaginationModule,CommonModule],
   templateUrl: './admin-liste-commandes.component.html',
   styleUrl: './admin-liste-commandes.component.scss'
 })
@@ -61,9 +62,6 @@ export class AdminListeCommandesComponent implements OnInit{
       next:(response)=>{
         this.commandes = response.results;
         this.totalItems = response.count;
-      },
-      error:(error)=>{
-        console.log(error);
       }
     })
   }

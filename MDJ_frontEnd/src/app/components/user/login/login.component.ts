@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit{
           error: (error) => {
             this.loginForm.markAllAsTouched();
             this.loginError = error.error.error;
-            console.log("login échoué")
           }
         })
       }else{
