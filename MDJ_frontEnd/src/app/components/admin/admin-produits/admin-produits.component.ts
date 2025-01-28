@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Component, inject, TemplateRef } from '@angular/core';
+=======
+import {Component, inject, NgModule, numberAttribute, OnInit, TemplateRef} from '@angular/core';
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
 import { ProduitService } from '../../../services/produits/produit.service';
 import { Produit } from '../../../models/produit';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -49,10 +53,17 @@ export const COULEUR = [
 })
 
 
+<<<<<<< HEAD
 export class AdminProduitsComponent {
 private readonly produitsService=inject(ProduitService)
 private readonly categoryService=inject(CategorieService)
 private readonly modalService=inject(NgbModal)
+=======
+export class AdminProduitsComponent implements OnInit{
+private produitsService=inject(ProduitService)
+private categoryService=inject(CategorieService)
+private modalService=inject(NgbModal)
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
 produits:Produit[]=[];
 category:categorie[]=[];
 tailles=TAILLES
@@ -364,8 +375,14 @@ createProduct() {
       next: (data) => {
         this.resetFormProd();
         this.loadProducts()
+<<<<<<< HEAD
         this.AddProductButtonLoading = false
       }
+=======
+
+      },
+      error: (error) => {  }
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
     });
   } else {
     this.AddProductForm.markAllAsTouched();

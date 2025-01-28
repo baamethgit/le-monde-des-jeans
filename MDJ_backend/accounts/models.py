@@ -28,6 +28,10 @@ class CustomUserManager(BaseUserManager):
         # Vérifie que les champs obligatoires sont fournis
         if not extra_fields.get('nom_complet'):
             raise ValueError('Le nom complet est obligatoire.')
+
+        if "<" in extra_fields.get('nom_complet') or ">" in extra_fields.get('nom_complet'):
+            raise ValueError("Le nom d'utilisateur ne peut pas contenir de balises HTML.")
+
         if not extra_fields.get('addresse_mail'):
             raise ValueError('L\'adresse e-mail est obligatoire.')
 
@@ -67,6 +71,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     verification_token = models.CharField(max_length=64, blank=True, null=True)
     verification_token_expires = models.DateTimeField(blank=True, null=True)
+    reset_password_token = models.CharField(max_length=64, blank=True, null=True)
+    reset_password_token_expires = models.DateTimeField(blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True,blank=True)
@@ -81,6 +87,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         self.verification_token_expires = timezone.now() + timezone.timedelta(hours=10)
         self.save()
 
+    def generate_resetpwd_token(self):
+        self.reset_password_token = get_random_string(64)
+        self.reset_password_token_expires = timezone.now() + timezone.timedelta(minutes=10)
+        self.save()
+
     def save(self, *args, **kwargs):
         if self.slug != slugify(self.phone_number):
             self.slug = slugify(self.phone_number)
@@ -88,44 +99,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         
     def __str__(self):
         return str(self.phone_number)
-
-# class CodeOTP(models.Model):
-#     client = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#     code = models.CharField(max_length=6)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def is_valid(self):
-#         expiration_time = self.created_at + timezone.timedelta(minutes=2)
-#         return timezone.now() < expiration_time
-
-class CodeOTP(models.Model):
-    addresse_mail = models.EmailField(max_length=255, unique=True)
-    phone_number = PhoneNumberField(region='SN', unique=True)
-    otp_code = models.CharField(max_length=6) 
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
-    nom_complet = models.CharField(max_length=255) 
-    hashed_password = models.CharField(max_length=255)  # Stocker le mot de passe haché
-
-    def is_valid(self):
-        """ Vérifier si l'OTP est toujours valide (non expiré) """
-        return timezone.now() < self.expires_at
-
-    def __str__(self):
-        return f"OTP for {self.addresse_mail}"
-
-class CodeOTPResetPassword(models.Model):
-    addresse_mail = models.EmailField(max_length=255, unique=True)
-    otp_code = models.CharField(max_length=6) 
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
-
-    def is_valid(self):
-        """ Vérifier si l'OTP est toujours valide (non expiré) """
-        return timezone.now() < self.expires_at
-
-    def __str__(self):
-        return f"OTP for {self.addresse_mail}"
 
 
 class Avis(models.Model):

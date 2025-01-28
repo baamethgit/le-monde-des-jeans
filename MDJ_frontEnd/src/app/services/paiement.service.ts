@@ -18,7 +18,11 @@ export class PaiementService {
     return this.http.post(`${this.apiUrl}/api/wave/initiate/`, { order_id: orderId },{withCredentials:true});
   }
 
-  verifyPaymentStatus(refCode: string) {
+  initiateOMPayment(orderId: number) : Observable<any>{
+    return this.http.post(`${this.apiUrl}/api/wave/initiate/`, { order_id: orderId },{withCredentials:true});
+  }
+
+  verifyPaymentStatus(refCode: string) : Observable<any>{
     return this.http.get(`${this.apiUrl}/api/wave/check_status/${refCode}`, { withCredentials:true });
   }
 

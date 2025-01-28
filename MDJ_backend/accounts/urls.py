@@ -1,7 +1,8 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView,\
-    create_superuser, VerifyEmailView, ClientToAdmin, ActiveDesactiveClient, AdminToClient,UserListView, UserCreateView,AvisView, Logout, InformationsGeneralesView
+from .views import PasswordChangeView, ResetPasswordView, RegisterView, UserDetailView, deleteUserView, LoginView, \
+    create_superuser, VerifyEmailView, ClientToAdmin, ActiveDesactiveClient, AdminToClient, UserListView, AvisView, \
+    Logout, InformationsGeneralesView, VerifyEmailCPWView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -20,9 +21,10 @@ urlpatterns = [
 
     path('change_password/', PasswordChangeView.as_view()),
     path('verify-email/', VerifyEmailView.as_view(), name='verify-email'),
-    path('reset-password/', ResetPasswordView.as_view()),
+    path('init_reset-password/', ResetPasswordView.as_view()),
+    path('reset-password/', VerifyEmailCPWView.as_view()),
     path('admin_users_list/',UserListView.as_view()),
-    path("creer-client/",UserCreateView.as_view()),
+    #path("creer-client/",UserCreateView.as_view()),
     path("client/",UserDetailView.as_view()),
     path("delete-user/<int:id>/",deleteUserView.as_view()),
     path('avis/',AvisView.as_view()),

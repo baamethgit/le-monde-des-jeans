@@ -9,12 +9,18 @@ import { Produit } from '../../models/produit';
 import { PanierService } from '../../services/panier.service';
 import { GalleriaModule } from 'primeng/galleria';
 import { FormsModule } from '@angular/forms';
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import {finalize} from "rxjs";
 
 
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
+<<<<<<< HEAD
   imports: [CarouselModule, RouterLink, NgOptimizedImage, GalleriaModule,FormsModule],
+=======
+    imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule, FormsModule, NgxSkeletonLoaderModule],
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
@@ -30,6 +36,8 @@ export class ProduitDetailComponent implements OnInit{
   userService = inject(UserService);
   errorMessage = '';
   quantity: number = 1;
+  isLoading = false;
+
 responsiveOptions = [
   {
     breakpoint: '1024px',
@@ -48,6 +56,7 @@ responsiveOptions = [
   }
 ];
 
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly produitService: ProduitService,
@@ -64,7 +73,10 @@ responsiveOptions = [
   }
 
   loadProduct(slug: string): void {
-    this.produitService.getProductBySlug(slug).subscribe({
+    this.isLoading = true;
+    this.produitService.getProductBySlug(slug).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next: (data: Produit) => {
         this.product_selected = data;
         this.list_p = data.images;
@@ -109,31 +121,6 @@ acheterDirectement(productSlug : string | undefined){
       });
     } else { /* empty */ }
   }
-
-// addToCart(){
-//   this.panierService.ajouterProduit(this.product_selected?.slug || '').subscribe({
-//     next:(data)=>{
-//       this.router.navigate(['/panier']);
-//     },
-//     error : (error)=>{
-//       if(error.error.message_erreur)
-//         this.errorMessage = error.error.message_erreur;
-//     },
-//   })
-// }
-
-  // acheterDirectement(productSlug: string | undefined): void {
-  //   if (productSlug) {
-  //     this.commandeService.creerCommande(false, productSlug).subscribe({
-  //       next: (data) => {
-  //         // Handle successful order creation
-  //       },
-  //       error: (error) => {
-  //         console.log('Erreur lors de la création de la commande :', error.error.detail);
-  //       },
-  //     });
-  //   }
-  // }
 
   addToCart(): void {
     if (this.product_selected?.slug) {

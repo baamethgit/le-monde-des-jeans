@@ -7,7 +7,7 @@
 
         <form method="post" class="row " [formGroup]="userForm" (ngSubmit)="updateUser()">
           <p class="col-12 col-sm-6">
-            <label for="">Nom Complet</label><br>
+            <label >Nom Complet</label><br>
             <input class="px-2 py-1 border" type="text" formControlName="nom_complet">
             <ng-container *ngIf="userForm.controls['nom_complet'].invalid && (userForm.controls['nom_complet'].dirty || userForm.controls['nom_complet'].touched)">
               <small class="text-danger"
@@ -18,10 +18,18 @@
             </ng-container>
           </p>
           <p class="col-12 col-sm-6">
-            <label for="">Numéro de téléphone</label><br>
+            <label>Numéro de téléphone</label><br>
             <input class="px-2 py-1 border" type="text" formControlName="phone_number">
             <ng-container *ngIf="userForm.controls['phone_number'].invalid && (userForm.controls['phone_number'].dirty || userForm.controls['phone_number'].touched)">
               <small class="text-danger">Veuillez saisir un numéro sénégalais valide</small>
+            </ng-container>
+          </p>
+          <p class="col-12 col-sm-6">
+            <label>Adresse Email</label><br>
+            <input class="px-2 py-1 border" type="email" formControlName="mail">
+            <ng-container *ngIf="userForm.controls['mail'].invalid && (userForm.controls['mail'].dirty || userForm.controls['mail'].touched)">
+              <small class="text-danger" *ngIf="userForm.controls['mail'].hasError('email')">Veuillez saisir un mail valid</small>
+              <small class="text-danger" *ngIf="userForm.controls['mail'].hasError('required')">Le mail est obligatoire</small>
             </ng-container>
           </p>
           <p class="col-12 mt-4 flex-wrap d-flex justify-content-around align-items-center w-100">
@@ -86,5 +94,4 @@
       </div>
     </div>
   </section>
-  
-  
+

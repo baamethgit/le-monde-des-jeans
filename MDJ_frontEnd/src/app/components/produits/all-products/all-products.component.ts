@@ -9,12 +9,13 @@ import { FormsModule } from '@angular/forms';
 
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import {finalize} from "rxjs";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 
 
 @Component({
   selector: 'app-all-products',
   standalone: true,
-  imports: [RouterLink,CommonModule, NgOptimizedImage, FormsModule, NgbPaginationModule],
+  imports: [RouterLink, CommonModule, NgOptimizedImage, FormsModule, NgbPaginationModule, NgxSkeletonLoaderModule],
   templateUrl: './all-products.component.html',
   styleUrl: '../../produits/produits.component.scss'
 })
@@ -37,6 +38,12 @@ export class AllProductsComponent implements OnInit{
     this.categorieService.getAllCategories().subscribe({
       next: (data:categorie[])=>{
         this.list_categorie=data
+<<<<<<< HEAD
+=======
+      },
+      error: (error) => {
+
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
       }
     })
   }
@@ -49,6 +56,12 @@ export class AllProductsComponent implements OnInit{
       next: (data)=>{
         this.produits=data.results;
         this.totalItems = data.count;
+<<<<<<< HEAD
+=======
+      },
+      error: (error) => {
+
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
       }
     })
   }
