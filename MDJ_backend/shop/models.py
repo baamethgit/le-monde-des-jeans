@@ -102,7 +102,7 @@ class ImageProduit(models.Model):
     
 
 
-DUREE_ATTENTE_PANIER = env.int("DUREE_ATTENTE_PANIER",default=5)
+DUREE_ATTENTE_PANIER = env.float("DUREE_ATTENTE_PANIER",default=5)
 
 class PanierProduit(models.Model):
     """
@@ -165,7 +165,7 @@ class ZoneLivraison(models.Model):
     def __str__(self):
         return self.nom
 
-DUREE_ATTENTE_COMMANDE = env.int("DUREE_ATTENTE_COMMANDE",default=5)
+DUREE_ATTENTE_COMMANDE = env.float("DUREE_ATTENTE_COMMANDE",default=5)
 
 class Commande(models.Model):
     STATUT_CHOICES = (

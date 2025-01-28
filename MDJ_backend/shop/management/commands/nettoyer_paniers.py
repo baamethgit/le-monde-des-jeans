@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from shop.models import Panier  # Remplace `nom_de_ton_app` par le nom de ton app
+from shop.models import Panier
 from loguru import logger
 
 class Command(BaseCommand):

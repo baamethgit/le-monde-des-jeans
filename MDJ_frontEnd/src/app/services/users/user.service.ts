@@ -159,7 +159,10 @@ export class UserService {
     return this.http.get<User>(url);
   }
 
-
+  getAdminNumber(slug:string):Observable<any>{
+    const url = `${this.baseUrl}user/admin/number`;
+    return this.http.get<any>(url);
+  }
 
   deleteUser(id:number):Observable<any>{
     const url = `${this.baseUrl}delete-user/${id}/`;

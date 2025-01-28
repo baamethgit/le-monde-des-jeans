@@ -12,6 +12,19 @@
       </div>
 
       <div class="tab-content" *ngIf="activeTab === 'pending'">
+        @if (isEncoursLoading){
+            <ngx-skeleton-loader
+              [count]="10"
+              appearance="line"
+              [theme]="{
+                'width': '200px',
+                'height': '200px',
+                'margin': '10px',
+                'background-color': '#f0f4f0',
+                'border-radius': '8px'
+              }">
+            </ngx-skeleton-loader>
+        } @else {
         @for (order of mesCommandesEnCours; track order.id) {
           <div class="order-card">
           <div class="order-header">
@@ -26,7 +39,7 @@
               </button>
             </p>
             <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
-            <div class="order-details">
+            <div class="order-details" *ngIf="order.produits.length">
               <div class="items">
                 <strong>Articles:</strong>
                 <ul>
@@ -68,10 +81,25 @@
             Aucune commande en cours
           </p>
       }
+        }
       </div>
 
       <div class="tab-content" *ngIf="activeTab === 'completed'">
+        @if (isHistoriqueLoading){
+            <ngx-skeleton-loader
+              [count]="10"
+              appearance="line"
+              [theme]="{
+                'width': '200px',
+                'height': '200px',
+                'margin': '10px',
+                'background-color': '#f0f4f0',
+                'border-radius': '8px'
+              }">
+            </ngx-skeleton-loader>
+        } @else {
         @for (order of mesCommandesLivrees; track order.id) {
+
           <div class="order-card">
               <div class="order-header">
                   <p class="fs-4">Commande N° <span class="fw-bold fs-3">{{order.ref_code}}</span></p>
@@ -80,7 +108,7 @@
                   </span>
                 </div>
                 <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
-                <div class="order-details">
+                <div class="order-details" *ngIf="order.produits.length">
                   <div class="items">
                     <strong>Articles:</strong>
                     <ul>
@@ -118,6 +146,7 @@
           <p class="no-orders">
             Aucun historique de commande
           </p>
+        }
         }
       </div>
     </div>

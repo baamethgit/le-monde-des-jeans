@@ -4,11 +4,41 @@
         <div class="col-12 col-md-7">
             <div class="col-10 mx-auto my-3 border p-2 rounded-2">
                 <h5 class="text-center">Informations</h5>
+              @if (isLoading){
+                <div class="first-section-wrapper">
+                  <div class="gravatar">
+                    <ngx-skeleton-loader
+                      appearance="circle"
+                      [theme]="{ width: '80px', height: '80px' }"
+                    >
+                    </ngx-skeleton-loader>
+                  </div>
+                  <div class="gravatar-title">
+                    <div>
+                      <ngx-skeleton-loader
+                        [theme]="{
+            width: '200px',
+            'border-radius': '0',
+            height: '15px',
+            'margin-bottom': '10px'
+          }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div>
+                      <ngx-skeleton-loader
+                        [theme]="{ width: '170px', 'border-radius': '0', height: '15px' }"
+                      >
+                      </ngx-skeleton-loader>
+                    </div>
+                  </div>
+                </div>
+              } @else {
                 <div>
                     <p class="rounded-1 p-2"><span class="fw-bold">Nom Complet : </span><span>{{commande?.client?.nom_complet}}</span></p>
                     <p class="rounded-1 p-2"><span class="fw-bold">Numéro de Téléphone :
                         </span><span>{{commande?.client?.phone_number}}</span></p>
                 </div>
+              }
             </div>
             <div class="col-10 mx-auto my-3 border p-2 rounded-2 delivery-options ">
                 <span class="text-center">Comment recevoir votre colis?</span>
@@ -30,13 +60,20 @@
                     <div class="delivery-zone">
                         <p>SÉLECTIONNER UNE ZONE POUR LA LIVRAISON</p>
                       @if (isZoneLoading) {
-                        <tr>
-                          <td colspan="8" class="text-center">
-                            <div class="spinner-border text-primary" role="status">
-                              <span class="visually-hidden">Chargement...</span>
-                            </div>
-                          </td>
-                        </tr>
+                      <div>
+                            <ngx-skeleton-loader
+                              [count]="2"
+                              appearance="line"
+                              [theme]="{
+                                  'width': '150px',
+                                  'height': '30px',
+                                  'margin': '10px',
+                                  'margin-bottom': '40px',
+                                  'background-color': '#f0f4f0',
+                                  'border-radius': '8px'
+                                }">
+                            </ngx-skeleton-loader>
+                          </div>
                       } @else {
                         <select (change)="onZoneChange($event)">
                           <ng-container *ngFor="let zone of zones">
@@ -99,13 +136,36 @@
                         </span>
 
                     </label>
-                    <small class="text-warning text-center">L'option Orange Money n'est pas encore disponible.</small>
+                    <div *ngIf="methodePaiement=='ORANGE_MONEY'">
+                    <small class="text-warning text-center">L'option Orange Money n'est pas encore disponible.
+                    </small>
+                    <h6>
+                      Le paiement se fait via ce numéro <b class="text-primary"> {{infos?.telephone_site || numAdmin}} </b>et la validation en appelant sur le même  numéro.
+                    </h6>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="col-12 my-3 col-md-5 p-4 p-md-0">
             <div class="border p-4 rounded-2">
                 <h4 class="text-center">COMMANDE</h4>
+              @if (isLoading){
+                <div>
+                  <ngx-skeleton-loader
+                    [count]="5"
+                    appearance="line"
+                    [theme]="{
+                'width': '200px',
+                'height': '30px',
+                'margin': '10px',
+                'margin-bottom': '40px',
+                'background-color': '#f0f4f0',
+                'border-radius': '40px'
+              }">
+                  </ngx-skeleton-loader>
+                </div>
+              } @else {
                 <div *ngFor="let produit of commande?.produits" class="d-flex justify-content-between align-items-center">
                     <article class="d-flex align-items-center">
                         <img src="../../../../assets/img/285645_user_icon.png" alt="" class="image"
@@ -123,6 +183,7 @@
                     <span>TOTAL</span>
                     <span>{{calculTotal}}  FCFA</span>
                 </p>
+              }
             </div>
             <p *ngIf="commande" class="py-3 d-flex justify-content-between flex-wrap">
                 <button class="btn btn-danger" (click)="supprimerCommande(commande.id)">Supprimer la commande</button>

@@ -1,5 +1,5 @@
 from paiement.views import WaveWebhookView, InitiateWavePaymentView, CheckPaymentStatusView, PaymentFilterView, \
-    PaymentSummaryView
+    PaymentSummaryView, InitierPaymentOM
 from django.urls import path
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('api/wave/initiate/', InitiateWavePaymentView.as_view(), name='initiate-wave-paiement'),
     path('api/wave/kpi/', PaymentFilterView.as_view(), name='admin_panel_paiement'),
     path('api/wave/payment_summary/', PaymentSummaryView.as_view(), name='paiement_summary'),
+    path('api/om/repousser_commande/', InitierPaymentOM.as_view(), name='paiement_om'),
 ]

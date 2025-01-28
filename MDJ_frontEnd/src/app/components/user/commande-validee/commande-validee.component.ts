@@ -4,18 +4,20 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { PaiementService } from '../../../services/paiement.service';
 import {Commande} from "../../../models/commande";
 import {CommonModule, NgIf} from "@angular/common";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-commande-validee',
   standalone: true,
-  imports: [CheckoutProgressBarComponent, RouterLink, CommonModule],
+  imports: [CheckoutProgressBarComponent, RouterLink, CommonModule, NgxSkeletonLoaderModule],
   templateUrl: './commande-validee.component.html',
   styleUrl: './commande-validee.component.scss'
 })
 export class CommandeValideeComponent implements OnInit{
   CheckoutStep : CheckoutStep = CheckoutStep.FinaliserCommande;
   private readonly paiementService = inject(PaiementService);
-
+  isLoading = true;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   commande : Commande | undefined;
@@ -25,17 +27,23 @@ export class CommandeValideeComponent implements OnInit{
     if(!refCode){
       this.router.navigate(['**']);
     }else {
-      this.paiementService.verifyPaymentStatus(refCode).subscribe({
+      this.isLoading = true;
+      this.paiementService.verifyPaymentStatus(refCode).pipe(
+        finalize(
+          ()=>{
+            this.isLoading = false;
+          }
+        )
+      ).subscribe({
         next: (data) => {
             this.commande = data['commande'];
-            if(data['status']!='succeeded'){
-              //
+            if(data['status']=='succeeded'){
             }else {
               this.router.navigate(['payment-error',refCode]);
             }
         },
         error:(error)=>{
-          this.router.navigate(['payment-error',refCode]);
+          this.router.navigate(['not-found']);
         }})
     }
   }

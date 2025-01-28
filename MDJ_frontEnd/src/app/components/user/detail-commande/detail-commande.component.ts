@@ -1,26 +1,30 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {Component, Inject, inject, Input, OnInit, PLATFORM_ID} from '@angular/core';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ZoneLivraison } from '../../../models/zone-livraison';
 import { UserService } from '../../../services/users/user.service';
 import { CommandeService } from '../../../services/commandes/commande.service';
-import { CommonModule } from '@angular/common';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { User } from '../../../models/user';
 import { Commande } from '../../../models/commande';
 import { PaiementService } from '../../../services/paiement.service';
 import {finalize} from "rxjs";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import {environment} from "../../../../environments/environment";
+import {InfosService} from "../../../services/infos.service";
+import {Infos} from "../../../models/infos.module";
 
 
 @Component({
   selector: 'app-detail-commande',
   standalone: true,
-  imports: [CheckoutProgressBarComponent,FormsModule,CommonModule,ReactiveFormsModule],
+  imports: [CheckoutProgressBarComponent,FormsModule,CommonModule,ReactiveFormsModule,NgxSkeletonLoaderModule],
   templateUrl: './detail-commande.component.html',
   styleUrl: './detail-commande.component.scss'
 })
 export class DetailCommandeComponent implements OnInit{
-  methodePaiement : string = 'WAVE';
+  methodePaiement : 'ORANGE_MONEY' | 'WAVE' = 'WAVE' ;
   CheckoutStep : CheckoutStep = CheckoutStep.DetailsCommande;
   commande : Commande | undefined;
   zones: ZoneLivraison[] = [];
@@ -30,13 +34,23 @@ export class DetailCommandeComponent implements OnInit{
   commandeService = inject(CommandeService);
   paymentService = inject(PaiementService);
   userService = inject(UserService);
+  private readonly infosService = inject(InfosService);
+  infos:Infos | undefined;
+
+
   isLoading = false;
   isZoneLoading = false;
   selectedOption: string = 'livraison';
+  numAdmin : string = environment.numAdmin;
+  private isBrowser: boolean;
 
 
 
-  constructor(private readonly router : Router){}
+  constructor(private readonly router : Router,
+              @Inject(PLATFORM_ID) platformId: Object
+  ){
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
         this.commandeService.getDeliveryZones().subscribe({
@@ -44,10 +58,20 @@ export class DetailCommandeComponent implements OnInit{
             this.zones = data;
           },
           error:(error)=>{
-
           }
         })
         this.loadData();
+        this.getAdminNumber();
+  }
+
+  getAdminNumber():void{
+    this.infosService.getInfos().subscribe(
+      {
+        next: (data) => {
+          this.infos = data;
+        }
+      }
+    )
   }
 
   payerCommande() : void{
@@ -70,9 +94,18 @@ export class DetailCommandeComponent implements OnInit{
         )
        if(this.methodePaiement === 'WAVE'){
         this.payWithWave();
+       }else if(this.methodePaiement === 'ORANGE_MONEY'){
+         this.payWithOM();
        }
+
+    }else {
+     alert("une erreur est survenue.Impossible de payer");
+      if(this.isBrowser){
+        window.location.reload();
       }
     }
+  }
+
   updateCommandeZone(zoneId: number | undefined) {
     this.isZoneLoading = true;
     if (this.commande?.id) {
@@ -99,6 +132,10 @@ export class DetailCommandeComponent implements OnInit{
             window.location.href = response.wave_launch_url;
           },
           error:(erreur: any) => {
+            alert("Erreur lors de la tentative de paiement.Veuillez réessayer");
+            if(this.isBrowser){
+              window.location.reload();
+            }
           }
         }
 
@@ -108,21 +145,34 @@ export class DetailCommandeComponent implements OnInit{
 
   payWithOM() {
     if(this.commande?.id){
-      this.paymentService.initiateOMPayment(this.commande.id).subscribe({
+
+      this.paymentService.repousserExpiration(this.commande.id).subscribe({
           next:(response: any) => {
-            // window.location.href = response.wave_launch_url;
+            this.router.navigate(["payer/orange_money"], {
+              state: { vientDeRedirection: true }
+            });
           },
           error:(erreur: any) => {
+            alert("Erreur lors de la tentative de paiement.Veuillez réessayer");
+            if(this.isBrowser){
+              window.location.reload();
+            }
           }
         }
-
       );
     }
   }
 
 
   loadData(){
-    this.commandeService.getCurrentCommande().subscribe({
+    this.isLoading = true;
+    this.commandeService.getCurrentCommande().pipe(
+      finalize(
+        ()=>{
+          this.isLoading = false;
+        }
+      )
+    ).subscribe({
       next:(data)=>{
         this.commande = data;
         this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
@@ -169,8 +219,7 @@ export class DetailCommandeComponent implements OnInit{
   supprimerCommande(id:number){
       this.commandeService.supprimerMaCommande(id).subscribe({
         next:(data)=>{
-          // this.alertMessage = 'Votre commande est supprimé'
-          this.router.navigate(['/'])
+          this.router.navigate(['/produits'])
         },
         error:(error)=>{
 

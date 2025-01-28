@@ -25,7 +25,7 @@
               <tr class="my-2">
                 <td class="d-flex align-items-center">
                   <p class="me-2 p-2">
-                    <img style="width: 60px;height:60px;" src="../../../../assets/img/435568931_122138645126191964_618494230128699512_n.jpg" alt="">
+                    <img style="width: 60px;height:60px;" [src]="getProductImageUrl(content.produit)" alt="">
                     <!--<img style="width: 60px;height:60px;" [ngSrc]="content.produit.images[0].image" alt=""> -->
                   </p>
                   <p class="">{{content.produit.nom}}</p>

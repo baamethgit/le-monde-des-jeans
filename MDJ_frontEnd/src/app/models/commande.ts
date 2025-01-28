@@ -9,6 +9,7 @@ export interface Commande {
     ref_code : string;
     produits : Produit[] ;
     date_commande : Date;
+  date_expiration : Date;
     date_livraison : Date ;
     statut : StatutCommande;
     zone_livraison? : ZoneLivraison;

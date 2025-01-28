@@ -140,11 +140,26 @@
 
             @if (product_selected && product_selected.QuantiteStock > 0) {
               <div class="product-info__actions">
-                <button class="btn btn--secondary" (click)="addToCart()">
-                  Ajouter au panier
+                <button [disabled]="isAddToCartLoading || isAchatDirectLoading" class="btn btn--secondary" (click)="addToCart()">
+                  @if (isAddToCartLoading) {
+                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                      <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <span>Patientez...</span>
+                  } @else {
+                    <span>Ajouter au panier</span>
+                  }
                 </button>
-                <button class="btn btn--primary" (click)="acheterDirectement(product_selected.slug)">
-                  Acheter directement
+
+                <button [disabled]="isAddToCartLoading || isAchatDirectLoading" class="btn btn--primary" (click)="acheterDirectement(product_selected.slug)">
+                  @if (isAchatDirectLoading) {
+                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                      <span class="visually-hidden">Chargement...</span>
+                    </div>
+                    <span>Patientez...</span>
+                  } @else {
+                    <span>Acheter directement</span>
+                  }
                 </button>
               </div>
             }@else{

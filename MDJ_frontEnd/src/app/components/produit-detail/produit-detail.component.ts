@@ -1,7 +1,7 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, Inject, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { CarouselModule} from 'primeng/carousel';
 import {ActivatedRoute, Router, RouterLink, RouterOutlet} from '@angular/router';
-import {NgOptimizedImage, SlicePipe} from '@angular/common';
+import {isPlatformBrowser, NgOptimizedImage, SlicePipe} from '@angular/common';
 import { ProduitService } from '../../services/produits/produit.service';
 import { CommandeService } from '../../services/commandes/commande.service';
 import { UserService } from '../../services/users/user.service';
@@ -34,6 +34,8 @@ export class ProduitDetailComponent implements OnInit{
   errorMessage = '';
   quantity: number = 1;
   isLoading = false;
+  isAchatDirectLoading = false;
+  isAddToCartLoading = false;
 
 responsiveOptions = [
   {
@@ -53,12 +55,17 @@ responsiveOptions = [
   }
 ];
 
+  private isBrowser: boolean;
+
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly produitService: ProduitService,
-    private readonly router: Router
-  ) {}
+    private readonly router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -96,14 +103,32 @@ decrementQuantity() {
 
 acheterDirectement(productSlug : string | undefined){
   if(productSlug != undefined){
-    this.commandeService.creerCommande(false,productSlug).subscribe({
+    this.isAchatDirectLoading = true;
+    this.commandeService.creerCommande(false,productSlug).pipe(
+      finalize(
+        ()=>{
+          this.isAchatDirectLoading = false;
+        }
+      )
+    ).subscribe({
       next:(data)=>{
         this.router.navigate(['/detail-commande']);
         this.errorMessage = '';
       },
       error : (error)=>{
-        if(error.error.message_erreur)
+        if (error.status === 409) {
+          alert("Le produit est en rupture de stock");
+          if(this.isBrowser){
+            window.location.reload();
+          }
+        }else if(error.error.message_erreur){
           this.errorMessage = "Vous avez une commande en attente,veuillez la valider d'abord .";
+        }else{
+          alert("Une erreur innatendu est survenu.");
+          if(this.isBrowser){
+            window.location.reload();
+          }
+        }
       }
     });
   }}
@@ -121,9 +146,29 @@ acheterDirectement(productSlug : string | undefined){
 
   addToCart(): void {
     if (this.product_selected?.slug) {
-      this.panierService.ajouterProduit(this.product_selected.slug).subscribe({
+      this.isAddToCartLoading = true;
+      this.panierService.ajouterProduit(this.product_selected.slug).pipe(
+        finalize(
+          ()=>{
+            this.isAddToCartLoading = false;
+          }
+        )
+      ).subscribe({
         next: (data) => {
           this.router.navigate(['/panier']);
+        },
+        error : (error)=>{
+          if (error.status === 409) {
+            alert("Le produit est en rupture de stock");
+            if(this.isBrowser){
+              window.location.reload();
+            }
+          }else{
+            alert("Une erreur innatendu est survenu.");
+            if(this.isBrowser){
+              window.location.reload();
+            }
+          }
         }
       });
     }

@@ -44,3 +44,4 @@ def update_payment_status(sender, instance, **kwargs):
             logger.warning(f"payment created with status failed for order : {instance.order.ref_code}")
 
         payment.save()
+

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {Component, Inject, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/users/user.service';
@@ -20,8 +20,13 @@ export class HeaderComponent implements OnInit{
   infos:Infos | undefined;
   private readonly infosService = inject(InfosService);
   private readonly userService = inject(UserService);
+  private isBrowser: boolean;
 
-  constructor(){}
+  constructor(
+    @Inject(PLATFORM_ID) platformId: Object
+  ){
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
     this.loadInfos();
@@ -49,7 +54,10 @@ export class HeaderComponent implements OnInit{
   logout(): void {
     this.userService.logout().subscribe(
       (response) => {
-    window.location.reload();
+        if(this.isBrowser){
+          window.location.reload();
+
+        }
       }
     );
   }

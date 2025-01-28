@@ -1,4 +1,5 @@
 <app-checkout-progress-bar [currentStep]="CheckoutStep" style="top:60px;z-index:3000;"></app-checkout-progress-bar>
+
 <section class="d-flex justify-content-center align-items-center p-2">
     <div class="shadowed_div col-12 col-sm-8 col-md-6 mx-auto p-5">
         <p class="text-center">
@@ -6,7 +7,35 @@
         </p>
 
         <h6 style="color:gray" class="text-center">MERCI</h6>
-        <h4 class="text-center"  >VOTRE COMMANDE A ETE VALIDEE</h4>
+        <h4 class="text-center"  >
+          <ng-container *ngIf="commande?.statut == 'PAYEE'">
+            VOTRE COMMANDE A ETE VALIDEE
+          </ng-container>
+          <ng-container *ngIf="commande?.statut == 'LIVREE'">
+            VOTRE COMMANDE A ETE LIVREE
+          </ng-container>
+        </h4>
+        <h5 class="text-primary" *ngIf="commande?.statut == 'EN_COURS_LIVRAISON'">
+          VOTRE COMMANDE EST EN COURS DE LIVRAISON
+        </h5>
+      @if (isLoading){
+        <div class="product-detail__gallery">
+          <ngx-skeleton-loader
+            [count]="5"
+            appearance="line"
+            [theme]="{
+                'width': '200px',
+                'height': '45',
+                'margin': '10px',
+                'margin-bottom': '20px',
+                'background-color': '#f0f0f0',
+                'border-radius': '8px'
+              }">
+          </ngx-skeleton-loader>
+        </div>
+      } @else {
+        <div>
+
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Date : </span>
             <span class="fw-bold">{{commande?.date_commande}}</span>
@@ -35,4 +64,7 @@
             </button>
         </p>
     </div>
+      }
+    </div>
+
 </section>

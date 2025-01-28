@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {Component, Inject, inject, OnDestroy, OnInit, PLATFORM_ID} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CheckoutProgressBarComponent, CheckoutStep } from '../../checkout-progress-bar/checkout-progress-bar.component';
 
@@ -30,12 +30,15 @@ export class PanierComponent implements OnInit ,OnDestroy{
   errorMessage : string = '';
   private readonly panierService = inject(PanierService);
   private readonly commandeService = inject(CommandeService);
+  private isBrowser: boolean;
 
   tempsRestant: { [key: number]: { minutes: number, seconds: number } } = {};
   private timerSubscription! : Subscription;
 
 
-  constructor(private readonly router : Router){}
+  constructor(private readonly router : Router,@Inject(PLATFORM_ID) platformId: Object){
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit() {
     this.loadData();
@@ -58,9 +61,14 @@ export class PanierComponent implements OnInit ,OnDestroy{
         this.router.navigate(['/detail-commande']);
       },
       error : (error)=>{
-        if(error.error.message_erreur)
+        if (error.status === 409) {
+          alert(error.error.error);
+          if(this.isBrowser){
+            window.location.reload();
+          }
+        }else if(error.error.message_erreur)
           this.errorMessage = "Vous avez une commande en attente,veuillez la valider d'abord .";
-      },
+      }
     })
   }
 
@@ -71,6 +79,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
         this.loadData();
     },
     error: (error) => {
+      alert("une erreur est survenue,réessayer ou recharger la page.")
     }
     })
   }
@@ -79,10 +88,9 @@ export class PanierComponent implements OnInit ,OnDestroy{
     this.panierService.viderPanier().subscribe({
       next: (data) => {
           this.loadData();
-          // this.message = 'Votre Panier est vidé !'
       },
       error: (error) => {
-
+          alert("une erreur est survenue,réessayer ou recharger la page.")
       }
     });
   }
@@ -107,6 +115,7 @@ export class PanierComponent implements OnInit ,OnDestroy{
 
     },
     error: (error) => {
+      alert("une erreur est survenue,réessayer ou recharger la page.")
     }
     })
     this.mettreAJourTempsRestant();
@@ -152,4 +161,10 @@ export class PanierComponent implements OnInit ,OnDestroy{
     return 'green';
   }
 
+  getProductImageUrl(produit:any): string {
+    if (produit?.images && produit.images.length > 0) {
+      return produit.images[0].image;
+    }
+    return '../../../../assets/img/435568931_122138645126191964_618494230128699512_n.jpg';
+  }
 }

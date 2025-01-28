@@ -31,6 +31,7 @@ class InitiateWavePaymentView(APIView):
         try:
             order = Commande.objects.get(id=request.data['order_id'])
             order.date_expiration = order.date_expiration + timedelta(minutes=2)
+            order.save()
         except:
             logger.error(f"initiation de payment par {request.user} échoué : la commande nest pas trouvé.", exc_info=True)
             return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)
@@ -202,7 +203,7 @@ class CheckPaymentStatusView(APIView):
             return Response({
                 'status': 'error',
                 'message': 'Une erreur est survenue lors de la vérification'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 class PaymentFilterView(APIView):
     permission_classes = (IsAuthenticated,IsAdminUser)
@@ -273,3 +274,19 @@ class PaymentSummaryView(APIView):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+class InitierPaymentOM(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        logger.info(f"initiate OM payment request for commande {request.data['order_id']} by {request.user}.")
+        try:
+            order = Commande.objects.get(id=request.data['order_id'])
+            order.date_expiration = order.date_expiration + timedelta(minutes=env.float("DUREE_ATTENTE_PAYMENT_OM"))
+            order.save()
+            logger.info(f"date d'expiration de la commande {order.ref_code} repoussé de {env.float("DUREE_ATTENTE_PAYMENT_OM")}.")
+            return Response(status=status.HTTP_200_OK)
+        except:
+            logger.error(f"initiation de payment OM par {request.user} échoué : la commande nest pas trouvé.",
+                         exc_info=True)
+            return Response({"error": "Commande inexistante"}, status=status.HTTP_400_BAD_REQUEST)

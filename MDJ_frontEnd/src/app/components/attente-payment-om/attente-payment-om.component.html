@@ -1,0 +1,60 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card border-0 shadow">
+        <div class="card-body p-4">
+          <!-- Logo/Image -->
+          <div class="text-center mb-4">
+            <img src="../../../../assets/img/orange-money.jpg"
+                 alt="Orange Money"
+                 class="img-fluid mb-3"
+                 style="max-height: 100px">
+            <h4 class="mb-0">Paiement en attente</h4>
+          </div>
+
+          <!-- Timer -->
+          <div class="alert alert-warning mb-4">
+            <i class="bi bi-clock me-2"></i>
+            La commande expirera dans: {{ remainingTime }}
+          </div>
+
+          <!-- Instructions -->
+          <div class="mb-4">
+            <h5 class="mb-3">Instructions de paiement:</h5>
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item">Contactez notre service client au
+                <a href="tel:+221771234567" class="text-decoration-none">
+                  <strong>{{infos?.telephone_site || numAdmin}}</strong>
+                </a>
+              </li>
+              <li class="list-group-item">Mentionnez votre numéro de commande:
+                <strong>{{ commande?.ref_code }}</strong>
+              </li>
+              <li class="list-group-item">Montant à payer:
+                <strong>{{ commande?.montant }} FCFA</strong>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Important Notice -->
+          <div class="alert alert-info mb-4">
+            <i class="bi bi-info-circle me-2"></i>
+            Votre commande sera confirmée dès réception du paiement
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-secondary"  [routerLink]="['/produits']">
+              <i class="bi bi-arrow-left me-2"></i>
+              Retour à la boutique
+            </button>
+            <a href="{{infos?.telephone_site || numAdmin}}" class="btn btn-primary">
+              <i class="bi bi-telephone me-2"></i>
+              Appeler maintenant
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

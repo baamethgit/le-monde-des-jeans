@@ -58,7 +58,7 @@ export class AdminDetailCommandeComponent implements OnInit {
 
 
   changeStatut(statut: StatutCommande){
-      this.commandeService.updateCommande(this.commande.id,{'statut':statut.toString()}).subscribe({
+      this.commandeService.updateCommandeStatus(this.commande.id,{'statut':statut.toString()}).subscribe({
         next:(data)=>{
             this.loadCommande();
         },

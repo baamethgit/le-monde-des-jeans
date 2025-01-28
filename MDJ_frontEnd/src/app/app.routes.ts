@@ -36,6 +36,7 @@ import {userGuard} from "./utils/user.guard";
 import {adminGuard} from "./utils/admin.guard";
 import {VerifyEmailComponent} from "./components/user/verify-email/verify-email.component";
 import {InitresetpasswdComponent} from "./components/initresetpasswd/initresetpasswd.component";
+import {AttentePaymentOmComponent} from "./components/attente-payment-om/attente-payment-om.component";
 
 
 export const routes: Routes = [
@@ -62,6 +63,8 @@ export const routes: Routes = [
 
       { path: 'produits/:slug', component: ProduitDetailComponent, title: 'LMDJ | Produit' },
       { path: 'avis', component: AvisComponent, title: 'LMDJ | Avis'},
+      { path: 'payer/orange_money', component: AttentePaymentOmComponent, title: 'LMDJ | payer-par-OM',canActivate:[userGuard] },
+
       { path: 'payment-success/:ref-code', component: CommandeValideeComponent, title: 'LMDJ | Paiement',canActivate:[userGuard]  },
       { path: 'payment-error/:ref-code', component: PaiementFailedComponent, title: 'LMDJ | Paiement' ,canActivate:[userGuard] }
     ]

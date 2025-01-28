@@ -6,11 +6,13 @@ import { StatutCommande } from '../../../models/StatutCommande';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import {finalize} from "rxjs";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 
 @Component({
   selector: 'app-mes-commandes',
   standalone: true,
-  imports: [CommonModule,DatePipe,ReactiveFormsModule,FormsModule,RouterLink],
+  imports: [CommonModule, DatePipe, ReactiveFormsModule, FormsModule, RouterLink, NgxSkeletonLoaderModule],
   templateUrl: './mes-commandes.component.html',
   styleUrl: './mes-commandes.component.scss'
 })
@@ -23,6 +25,8 @@ export class MesCommandesComponent implements OnInit {
   modalService = inject(NgbModal);
   formBuilder = inject(FormBuilder);
   TemoignageForm! : FormGroup;
+  isHistoriqueLoading : boolean = true;
+  isEncoursLoading : boolean = true;
   @ViewChild('temoignage') temoignageModal: any;
 
   constructor() {}
@@ -38,7 +42,14 @@ export class MesCommandesComponent implements OnInit {
   }
 
   loadData(){
-    this.commandeService.getListeCommandesEnCours().subscribe({
+    this.isEncoursLoading = true;
+    this.commandeService.getListeCommandesEnCours().pipe(
+      finalize(
+        ()=>{
+          this.isEncoursLoading = false;
+        }
+      )
+    ).subscribe({
       next : (data) => {
         this.mesCommandesEnCours = data;
       },
@@ -46,7 +57,15 @@ export class MesCommandesComponent implements OnInit {
 
       },
     })
-    this.commandeService.getListeCommandesHistorique().subscribe({
+
+    this.isHistoriqueLoading = true;
+    this.commandeService.getListeCommandesHistorique().pipe(
+      finalize(
+        ()=>{
+          this.isHistoriqueLoading = false;
+        }
+      )
+    ).subscribe({
       next : (value) => {
           this.mesCommandesLivrees = value;
       },

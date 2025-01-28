@@ -24,7 +24,6 @@ def creer_commande(request):
                 return Response({"message_erreur": "Vous avez déjà une commande en attente, validez-la d'abord."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-            commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
 
             if request.data.get('from_panier'):
                 logger.info(f"tentative de création d'une commande à partir du panier.user = {request.user}")
@@ -33,21 +32,22 @@ def creer_commande(request):
                 panier.save()
                 if not panier.panierproduit_set.exists():
                     logger.warning(f"Panier vidé pendant la création de la commande. user={request.user}")
-                    return Response({"message": "Votre panier est vide"},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "Votre panier est vide"},
+                                    status=status.HTTP_409_CONFLICT)
 
                 for panier_produit in panier.panierproduit_set.select_related('produit').all():
                     produit = Produit.objects.select_for_update().get(id=panier_produit.produit.id)
                     if produit.QuantiteStock < panier_produit.quantite:
                         logger.warning(f"Stock insuffisant pour {produit.nom} pour creer une commande.user={request.user}")
-                        return Response({"message_erreur": f"Stock insuffisant pour {produit.nom}"},
-                                        status=status.HTTP_400_BAD_REQUEST)
+                        return Response({"error": f"Stock insuffisant pour {produit.nom}"},
+                                        status=status.HTTP_409_CONFLICT)
 
                     Produit.objects.filter(id=produit.id).update(
                         QuantiteStock=F('QuantiteStock') - panier_produit.quantite
                     )
-                    logger.info(f"produit {produit} ajouté à la commande {commande.ref_code}")
+                    commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
                     commande.produits.add(produit)
+                    logger.info(f"produit {produit} ajouté à la commande {commande.ref_code}")
 
                 panier.panierproduit_set.all().delete()
 
@@ -55,11 +55,13 @@ def creer_commande(request):
                 produit = Produit.objects.select_for_update().get(slug=request.data['produit_slug'])
                 if produit.QuantiteStock <= 0:
                     return Response({"error": "Produit en rupture de stock"},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                                    status=status.HTTP_409_CONFLICT)
 
                 Produit.objects.filter(id=produit.id).update(
                     QuantiteStock=F('QuantiteStock') - 1
                 )
+                commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
+
                 commande.produits.add(produit)
                 logger.info(f"produit {produit} ajouté à la commande {commande.ref_code}")
             else:
