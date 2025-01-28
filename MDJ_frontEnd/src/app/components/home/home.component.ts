@@ -36,10 +36,12 @@ export class HomeComponent  implements OnInit{
   infos:Infos | undefined;
   constructor(private readonly categorieService:CategorieService, private readonly productService:ProduitService, private readonly avisService: UserService, private readonly infosService:InfosService){}
 
-  ngOnInit(){
+  ngOnInit() {
     this.categorieService.getAllCategories().subscribe({
-      next:(data:categorie[])=>{this.catagorie_list=data},
-      error:(error)=>{
+      next: (data: categorie[]) => {
+        this.catagorie_list = data
+      },
+      error: (error) => {
       }
     })
 
@@ -47,15 +49,10 @@ export class HomeComponent  implements OnInit{
     this.loadProducts();
 
     this.loadInfos();
-  this.loadAvis();
+    this.loadAvis();
 
-
-
-    this.avisService.getAllAvis(this.page,this.pageSize).subscribe({
-      next:(data)=>{
-        this.avis_list=data.results;
-      }
   }
+
   loadAvis():void{
     this.isAvisLoading=true;
       this.avisService.getAllAvis(this.page,this.pageSize).pipe(

@@ -78,10 +78,6 @@ export class CommandeService {
     return this.http.post(`${this.baseUrl}apiProduit/creer-commande/`, data,{withCredentials: true  });
   }
 
-  getDetailCommande(commandeId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}apiProduit/detail-commande/${commandeId}/`,{withCredentials: true  });
-  }
-
   getCommandeByRefCode(commandeRefCode: string): Observable<any> {
     return this.http.get(`${this.baseUrl}apiProduit/detail-commande-ref/${commandeRefCode}/`,{withCredentials: true  });
   }

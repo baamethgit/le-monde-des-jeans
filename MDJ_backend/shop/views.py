@@ -210,11 +210,7 @@ class CommandeListView(ListAPIView):
 @permission_classes([IsAuthenticated])
 def panier_detail(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     panier, _ = Panier.objects.get_or_create(client=user)
-    # panier.nettoyer_produits_expires()
     serializer = PanierSerializerSansProd(panier)
     return Response(serializer.data)
 
@@ -222,9 +218,6 @@ def panier_detail(request):
 @permission_classes([IsAuthenticated])
 def ajouter_produit(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     panier, _ = Panier.objects.get_or_create(client=user)
     produit_slug = request.data.get('produit_slug')
     produit = get_object_or_404(Produit, slug=produit_slug)
@@ -238,9 +231,6 @@ def ajouter_produit(request):
 @permission_classes([IsAuthenticated])
 def retirer_produit(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     panier = get_object_or_404(Panier, client=user)
     produit_slug = request.data.get('produit_slug')
     produit = get_object_or_404(Produit, slug=produit_slug)
@@ -256,9 +246,6 @@ def retirer_produit(request):
 @permission_classes([IsAuthenticated])
 def contenu_panier(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     panier = Panier.objects.get(client=user)
     panier.nettoyer_produits_expires()
     panier_produits = PanierProduit.objects.filter(panier=panier)
@@ -269,10 +256,7 @@ def contenu_panier(request):
 @permission_classes([IsAuthenticated])
 def vider_panier(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    panier = Panier.objects.get(client=user)
+    panier = get_object_or_404(Panier,client=user)
     for panier_produit in PanierProduit.objects.filter(panier=panier):
         produit = panier_produit.produit
         produit.QuantiteStock += 1

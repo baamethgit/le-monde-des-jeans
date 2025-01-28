@@ -11,8 +11,6 @@ from .serializers import CommandeSerializer, CommandeHistoriqueSerializer, Comma
 @permission_classes([IsAuthenticated])
 def creer_commande(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
 
     commande_existante = Commande.objects.filter(client=user, statut='EN_ATTENTE').first()
     if commande_existante:
@@ -29,7 +27,7 @@ def creer_commande(request):
         for panier_produit in panier.panierproduit_set.all():
             commande.produits.add(panier_produit.produit)
         commande.save()
-        panier.panierproduit_set.all().delete()  # Vider le panier
+        panier.panierproduit_set.all().delete()
     
     elif request.data.get('produit_slug'):
         produit = get_object_or_404(Produit, slug=request.data['produit_slug'])
@@ -51,9 +49,6 @@ def creer_commande(request):
 @permission_classes([IsAuthenticated])
 def detail_commande(request, commande_id):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     commande = get_object_or_404(Commande, id=commande_id, client=user)
 
     serializer = CommandeSerializer(commande)
@@ -63,10 +58,6 @@ def detail_commande(request, commande_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def detail_commande_by_refcode(request, ref_code):
-    user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     commande = get_object_or_404(Commande, ref_code=ref_code)
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
@@ -74,11 +65,7 @@ def detail_commande_by_refcode(request, ref_code):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def detail_commande_courante(request):
-    user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    commande = get_object_or_404(Commande,client=user,statut = 'EN_ATTENTE')
+    commande = get_object_or_404(Commande,client=request.user,statut = 'EN_ATTENTE')
 
     serializer = CommandeSerializer(commande)
     return Response(serializer.data)
@@ -87,29 +74,20 @@ def detail_commande_courante(request):
 @permission_classes([IsAuthenticated])
 def liste_commandes(request):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     if request.data.get('statut'):
         statut = request.data.get('statut')
         commandes = Commande.objects.filter(client=user,statut = statut).order_by('-date_commande')
     else:
         commandes = Commande.objects.filter(client=user).order_by('-date_commande')
-        
-    # for commande in commandes.all():
-    #     commande.liberer_produits_apres_delais() 
+
     serializer = CommandeSerializer(commandes, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def liste_commandes_en_cours(request):
-    user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     statuts = ['EN_ATTENTE','EN_COURS_LIVRAISON','PAYEE']
-    commandes = Commande.objects.filter(client=user, statut__in=statuts).order_by('-date_commande')
+    commandes = Commande.objects.filter(client=request.user, statut__in=statuts).order_by('-date_commande')
     serializer = CommandeHistoriqueSerializer(commandes, many=True)
     return Response(serializer.data)
 
@@ -117,12 +95,8 @@ def liste_commandes_en_cours(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def liste_commandes_historiques(request):
-    user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     statuts = ['LIVREE']
-    commandes = Commande.objects.filter(client=user, statut__in=statuts).order_by('-date_commande')
+    commandes = Commande.objects.filter(client=request.user, statut__in=statuts).order_by('-date_commande')
     serializer = CommandeHistoriqueSerializer(commandes, many=True)
     return Response(serializer.data)
 
@@ -131,9 +105,6 @@ def liste_commandes_historiques(request):
 @permission_classes([IsAuthenticated])
 def valider_commande(request, commande_id):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     commande = get_object_or_404(Commande, id=commande_id, client=user, statut='EN_ATTENTE')
     commande.marquer_comme_payee()
     
@@ -144,9 +115,7 @@ def valider_commande(request, commande_id):
 @api_view(['POST'])
 def annuler_commande(request, commande_id):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
+    
     commande = get_object_or_404(Commande, id=commande_id, client=user)
     commande.annuler()
     
@@ -157,11 +126,7 @@ def annuler_commande(request, commande_id):
 @api_view(['delete'])
 @permission_classes([IsAuthenticated])
 def deleteCommandeByClient(request,commande_id):
-    user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    commande = get_object_or_404(Commande, id=commande_id, client=user)
+    commande = get_object_or_404(Commande, id=commande_id, client=request.user)
 
     if not commande.statut == 'EN_ATTENTE':
         return Response({"message": f"La commande {commande.ref_code} ne peut pas est supprimée"}, status=status.HTTP_400_BAD_REQUEST)
@@ -179,9 +144,6 @@ def deleteCommandeByClient(request,commande_id):
 @permission_classes([IsAuthenticated,IsAdminUser])
 def deleteCommandeByAdmin(request,commande_id):
     user = request.user
-    if not user:
-        return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-
     commande = get_object_or_404(Commande, id=commande_id, client=user)
 
     if commande.statut == 'LIVREE':
@@ -202,18 +164,16 @@ class CommandeUpdateStatusView(APIView):
     permission_classes = [IsAuthenticated]
     def patch(self, request,id_commande):
         user = request.user
-        if not user:
-            return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+
         commande = get_object_or_404(Commande, id=id_commande, client=user)
         new_status = request.data.get('statut')
         if not new_status:
             return Response({"error":"aucun statut fourni"},status=status.HTTP_400_BAD_REQUEST)
-        if new_status == 'PAYEE':
+        if new_status == 'PAYEE' and user.is_staff and user.is_superuser:
             commande.marquer_comme_payee()
         if new_status == 'LIVREE':
             commande.marquer_comme_livree()
-        if new_status == 'EN_COURS_LIVRAISON':
+        if new_status == 'EN_COURS_LIVRAISON' and user.is_staff and user.is_superuser:
             commande.commencer_livraison()
 
         return Response(status=status.HTTP_200_OK)
@@ -222,9 +182,6 @@ class CommandeUpdateView(APIView):
     permission_classes = [IsAuthenticated]
     def patch(self, request,id_commande):
         user = request.user
-        if not user:
-            return Response({"error": "Utilisateur non authentifié"}, status=status.HTTP_401_UNAUTHORIZED)
-        
         commande = get_object_or_404(Commande, id=id_commande, client=user)
         serializer = CommandeUpdateSerializer(instance=commande,data=request.data,partial=True)
         serializer.is_valid(raise_exception=True)
