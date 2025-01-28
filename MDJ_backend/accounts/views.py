@@ -1,18 +1,20 @@
+from django.core.validators import validate_email
 from django.db import IntegrityError
-from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from django.conf import settings
-
+from loguru import logger
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from .serializers import SuperUserCreateSerializer
+from django.utils import timezone
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import CustomUser
+from .serializers import SuperUserCreateSerializer, UserLoginSerializer
 
 from .serializers import UserSerializer, AvisSerializer,InformationsGeneralesSerializer
-from accounts.models import CodeOTP,Avis, CodeOTPResetPassword, InformationsGenerales
+from accounts.models import Avis, InformationsGenerales
 
-from .utils import send_otp_via_email, send_verification_email
-import random
+from .utils import  send_verification_email, send_resetpassword_email
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import authenticate, logout
@@ -27,7 +29,7 @@ class RegisterView(APIView):
         addresse_mail = request.data.get("addresse_mail")
         password = request.data.get("password")
         nom_complet = request.data.get("nom_complet")
-
+        logger.info(f"Tentative d'inscription via le numéro : {phone_number} et le mail {addresse_mail}")
         try:
             # Crée l'utilisateur en utilisant le CustomUserManager
             user = CustomUser.objects.create_user(
@@ -45,12 +47,14 @@ class RegisterView(APIView):
 
         except ValueError as e:
             # Gère les erreurs de validation (levées par le CustomUserManager)
+            logger.error(e)
             return Response(
                 {"erreur_rencontre": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         except IntegrityError as e:
+            logger.error(e)
             # Gère les erreurs d'unicité (numéro de téléphone ou adresse e-mail déjà utilisés)
             if 'phone_number' in str(e):
                 return Response(
@@ -69,7 +73,7 @@ class RegisterView(APIView):
                 )
 
         except Exception as e:
-            # Gère toutes les autres exceptions inattendues
+            logger.error(f"SIGNUP ,Erreur inattendue : {str(e)}")
             return Response(
                 {"erreur_rencontre": "Une erreur inattendue s'est produite."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -79,17 +83,30 @@ class LoginView(APIView):
     def post(self, request):
         phone_number = request.data.get('phone_number')
         password = request.data.get('password')
+        logger.info(f"Tentative de connexion  via le numéro : {phone_number}")
+        user_serializer = UserLoginSerializer(data={"phone_number": phone_number, "password": password})
+        user_serializer.is_valid(raise_exception=True)
+        logger.info(user_serializer.data)
+        validated_data = user_serializer.validated_data
+        phone_number = validated_data.get('phone_number')
+        password = validated_data.get('password')
         user = authenticate(phone_number=phone_number, password=password)
         if not user:
             user_exists = CustomUser.objects.filter(phone_number=phone_number,is_active=False).exists()
             if user_exists:
-                num_admin = InformationsGenerales.objects.first().telephone_site
+                num_admin = ""
+                try:
+                    num_admin = InformationsGenerales.objects.first().telephone_site
+                except:
+                    pass
                 return Response(
-                    {'error': f"Vérifier votre mail pour activer le compte,ou contacter l'admin sur {num_admin}"},
+                    {
+                        'error': f"Vérifier votre mail pour activer le compte, ou contacter l'admin{f' sur {num_admin}' if num_admin else ''}"
+                    },
                     status=status.HTTP_400_BAD_REQUEST
                 )
             return Response(
-                {'error': 'Identifiants invalides'},
+                {'error_identifiants': 'Identifiants invalides',},
                 status=status.HTTP_400_BAD_REQUEST
             )
         if user is not None:
@@ -103,15 +120,17 @@ class LoginView(APIView):
             return Response(response_data, status=status.HTTP_200_OK)
     
 
-from django.utils import timezone
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .models import CustomUser
+
 
 class VerifyEmailView(APIView):
     def get(self, request):
         token = request.query_params.get('token')
-        num_admin = InformationsGenerales.objects.first().telephone_site
+        num_admin = ""
+        try:
+            num_admin = InformationsGenerales.objects.first().telephone_site
+        except:
+            pass
+        logger.info(f"tentative d'activation de compte")
         try:
             user = CustomUser.objects.get(verification_token=token, verification_token__isnull=False)
             if user.verification_token_expires > timezone.now():
@@ -121,24 +140,72 @@ class VerifyEmailView(APIView):
                 user.save()
                 return Response({"message": "Adresse e-mail vérifiée avec succès."})
             else:
-                return Response({"error": f"Le lien de vérification a expiré.Contacter l'admin sur {num_admin}"}, status=400)
+                return Response({"error": f"Le lien de vérification a expiré.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_403_FORBIDDEN)
         except CustomUser.DoesNotExist:
-            return Response({"error": f"Token invalide.Contacter l'admin sur {num_admin}"}, status=400)
+            return Response({"error": f"Token invalide.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_400_BAD_REQUEST)
 
 class ResetPasswordView(APIView):
     def post(self, request):
-       addresse_mail = request.data['addresse_mail']
-       password = request.data['newPassWord']
-       user = CustomUser.objects.get(addresse_mail=addresse_mail)
-       user.set_password(password)
-       user.save()
-       return Response({"message": "Mot de passe mise a jour !!"})
+        email = request.data.get("email")
+        try:
+            validate_email(email)
+        except ValidationError:
+            return Response({"error": "Adresse e-mail invalide."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(addresse_mail=email)
+            user.generate_resetpwd_token()
+            send_resetpassword_email(user)
+            return Response({"message": "E-mail envoyé."}, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Utilisateur introuvable."}, status=status.HTTP_404_NOT_FOUND)
+
+class VerifyEmailCPWView(APIView):
+    def post(self, request):
+        token = request.query_params.get('token')
+        new_mdp = request.data.get('new_mdp')
+        if not new_mdp:
+            return Response({"error": "Le nouveau mot de passe est requis."}, status=status.HTTP_400_BAD_REQUEST)
+
+        num_admin = ""
+        try:
+            num_admin = InformationsGenerales.objects.first().telephone_site
+        except:
+            pass
+        logger.info(f"tentative de réinitialisation de mot de passe")
+        try:
+            user = CustomUser.objects.get(reset_password_token=token, reset_password_token__isnull=False)
+            if user.reset_password_token_expires > timezone.now():
+                user.reset_password_token = None
+                user.reset_password_token_expires = None
+                user.set_password(new_mdp)
+                user.save()
+                logger.info(f"Mot de passe réinitialisé avec succès pour l'utilisateur {user.addresse_mail}")
+
+                return Response({"message": "mdp réinitialisé avec succès."})
+            else:
+                logger.warning("Lien expiré pour la réinitialisation de mot de passe")
+                return Response({"error": f"Le lien de vérification a expiré.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            logger.error(e)
+            return Response({"error": "Une erreur innateudu s'est produite"}, status=status.HTTP_400_BAD_REQUEST)
+        except CustomUser.DoesNotExist:
+            logger.error("Utilisateur introuvable.")
+            return Response({"error": f"Token invalide.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_400_BAD_REQUEST)
 
 class PasswordChangeView(APIView):
     def post(self,request):
+        logger.info(
+            f"tentative de update password par le user {UserSerializer(request.user).data}")
         user = request.user
         mdp_actuel = request.data['mdp_actuel']
         new_mdp = request.data['nouveau_mdp']
+        if not mdp_actuel or not new_mdp:
+            return Response(
+                {"error": "Le mot de passe actuel et le nouveau mot de passe sont requis."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         if user.check_password(mdp_actuel):
             user.set_password(new_mdp)
             user.save()
@@ -147,7 +214,7 @@ class PasswordChangeView(APIView):
             raise ValidationError('mot de passe actuel incorrect')
 
 class CustomPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 20
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -165,21 +232,14 @@ class UserListView(ListAPIView):
             )
         return queryset
 
-class UserCreateView(APIView):
-    permission_classes = [IsAuthenticated,IsAdminUser]
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class UserDetailView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
         serializer = UserSerializer(user)
-        return Response(serializer.data)
+        data = serializer.data
+        data.pop("id", None)
+        return Response(data)
 
     def put(self, request):
         user = request.user
@@ -205,7 +265,7 @@ class AvisView(APIView):
         elif self.request.method == 'POST':
             return [IsAuthenticated()]
         elif self.request.method == 'DELETE':
-            return [IsAdminUser()]
+            return [IsAuthenticated,IsAdminUser()]
         return []
     def get(self, request):
         list_avis = Avis.objects.all()
@@ -249,6 +309,7 @@ class Logout(APIView):
                 status=status.HTTP_200_OK
             )
         except Exception as e:
+            logger.error(f"Erreur lors de la déconnexion : {str(e)}")
             return Response(
                 {'error': 'Erreur lors de la déconnexion.'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -277,30 +338,41 @@ class InformationsGeneralesView(APIView):
 class ClientToAdmin(APIView):
     permission_classes = (IsAuthenticated,IsAdminUser)
     def post(self,request,id_user):
+        logger.info(f"tentative de passer de client simple à admin,operation par {request.user} ")
+
         user = get_object_or_404(CustomUser, id=id_user)
         user.is_staff = True
         user.is_superuser = True
         user.save()
+        logger.info(f"utilisateur {user} est maintenant admin")
+
         return Response(status=status.HTTP_201_CREATED)
 
 class AdminToClient(APIView):
     permission_classes = (IsAuthenticated,IsAdminUser)
     def post(self,request,id_user):
+        logger.info(f"tentative de passer d'admin à client simple ,operation par {request.user} ")
+
         user = get_object_or_404(CustomUser, id=id_user)
         user.is_staff = False
         user.is_superuser = False
         user.save()
+        logger.info(f"utilisateur {user} n'a plus le role d'amin")
         return Response(status=status.HTTP_201_CREATED)
 
 class ActiveDesactiveClient(APIView):
     permission_classes = (IsAuthenticated,IsAdminUser)
     def post(self,request,id_user):
+        logger.info(f"tentative d'activation d'un compte par {request.user} ")
         user = get_object_or_404(CustomUser, id=id_user)
         if user.is_active:
+            logger.warning(f"le user {user} est déja actif")
             user.is_active = False
         else:
             user.is_active = True
         user.save()
+        logger.info(f"Utilisateur {user} activé avec succés")
+
         return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])

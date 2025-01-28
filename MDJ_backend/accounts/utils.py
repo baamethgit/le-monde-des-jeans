@@ -1,56 +1,5 @@
-from rest_framework.exceptions import AuthenticationFailed
-from accounts.models import CustomUser
-import jwt
-from MDJ_backend.settings import SECRET_KEY
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.conf import settings
-"""
-def verifier_user(request):
-        auth_header = request.headers.get('Authorization', None)
-        if not auth_header:
-            raise AuthenticationFailed('Unauthenticated! No auth header provided.')
-
-        try:
-            token = auth_header.split()[1]
-            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        except jwt.DecodeError:
-            raise AuthenticationFailed('Invalid token .')
-        except Exception as e:
-            raise AuthenticationFailed(f'Error decoding token: {str(e)}')
-
-        try:
-            user = CustomUser.objects.get(id=payload['id'])
-        except ObjectDoesNotExist:
-            raise AuthenticationFailed('User not found.')
-        return user
-"""
-# utils.py
-from twilio.rest import Client
-
-def send_otp_via_sms(phone_number, otp_code):
-    # Remplace ces valeurs par tes informations d'identification Twilio
-    account_sid = 'AC71adcff5e84b892fa695ba07551dc425'
-    auth_token = '63ef5cfb798fe2093d030fb834bc2566'
-    twilio_number = '+1 870 725 5310'  # Remplace par ton numéro Twilio
-
-    client = Client(account_sid, auth_token)
-
-    message = client.messages.create(
-        body=f"Votre code de validation est : {otp_code}",
-        from_=twilio_number,
-        to=str(phone_number) 
-    )
-
-    return message.sid  
-
-def send_otp_via_email(email, otp_code):
-    subject = 'Votre code de validation'
-    message = f'Votre code de validation est : {otp_code}'
-    from_email = settings.DEFAULT_FROM_EMAIL
-    recipient_list = [email]
-    
-    send_mail(subject, message, from_email, recipient_list)
 
 
 import environ
@@ -64,5 +13,12 @@ FRONTEND_URL = env("FRONTEND_URL")
 def send_verification_email(user):
     verification_url = f"{FRONTEND_URL}/verify-email?token={user.verification_token}"
     subject = "Validation de la création de votre compte sur LeMondeDesJeans"
-    message = f"Cliquez sur ce lien pour vérifier votre adresse e-mail et activer votre compte : {verification_url}."
+    message = f"Cliquez sur ce lien pour vérifier votre adresse e-mail et activer votre compte : {verification_url}  ."
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.addresse_mail])
+
+
+def send_resetpassword_email(user):
+    verification_url = f"{FRONTEND_URL}/cpw-verify-email?token={user.reset_password_token}"
+    subject = "Réinitialisation de mot de passe"
+    message = f"Cliquez sur ce lien pour vérifier votre adresse e-mail et modifier votre mot de passe : {verification_url}  ."
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.addresse_mail])

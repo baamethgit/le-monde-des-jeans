@@ -108,6 +108,20 @@ export class DetailCommandeComponent implements OnInit{
       }
     }
 
+  payWithOM() {
+    if(this.commande?.id){
+      this.paymentService.initiateOMPayment(this.commande.id).subscribe({
+          next:(response: any) => {
+            // window.location.href = response.wave_launch_url;
+          },
+          error:(erreur: any) => {
+          }
+        }
+
+      );
+    }
+  }
+
 
   loadData(){
     this.commandeService.getCurrentCommande().subscribe({

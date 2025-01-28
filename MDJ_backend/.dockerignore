@@ -1,0 +1,11 @@
+# Ignorer les fichiers et dossiers suivants
+MDJ_backend/.env
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+node_modules
+staticfiles

@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
 import { User } from '../../../models/user';
+import Validation from "../../../shared/my-validators";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -15,8 +17,9 @@ import { User } from '../../../models/user';
 export class LoginComponent implements OnInit{
   InputType : string = 'password';
   loginForm! : FormGroup;
-  loginError :string = '';
-  currentUser: User | null = null;
+  loginError : boolean = false;
+  identifiantsError = "";
+  isLoading = false;
 
   isServer = false;
 
@@ -33,12 +36,14 @@ export class LoginComponent implements OnInit{
           password: ['', [Validators.required]],
         },
         {
-          // validators: [Validation.mailValidation('courriel')]
+          validators: [Validation.phoneNumberValidation('phone_number')]
         }
       );
     }
 
     loginUser():void{
+    this.loginError=false;
+    this.identifiantsError = '';
       if(this.loginForm.valid){
         let phone_number = this.loginForm.getRawValue().phone_number || '';
         phone_number = phone_number.trim();
@@ -46,15 +51,26 @@ export class LoginComponent implements OnInit{
           phone_number = '+221' + phone_number;
         }
         let password = this.loginForm.getRawValue().password || '';
-        this.userService.login(phone_number,password).subscribe({
+        this.isLoading = true;
+        this.userService.login(phone_number,password)
+          .pipe(
+            finalize(
+              ()=>{
+                this.isLoading = false;
+              }
+            )
+          )
+          .subscribe({
           next: (user) => {
-            console.log('connecté réussi');
             this.router.navigate(["/"]);
           },
           error: (error) => {
             this.loginForm.markAllAsTouched();
-            this.loginError = error.error.error;
-            console.log("login échoué")
+            if (error.error.error_identifiants){
+              this.identifiantsError = error.error.error_identifiants
+            }else {
+              this.loginError = true;
+            }
           }
         })
       }else{

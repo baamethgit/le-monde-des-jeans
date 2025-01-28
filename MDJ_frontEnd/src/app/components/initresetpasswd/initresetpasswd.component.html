@@ -1,0 +1,30 @@
+@if (msg){
+  <h1 class="card-title mb-3">Un lien de vérification est envoyé à cette adresse.</h1>
+} @else {
+
+<div class="card mt-4 col-12 col-sm-6 col-md-4 mx-auto shadow-sm">
+  <div class="card-body p-4">
+    <h5 class="card-title mb-3">Entrez votre adresse email</h5>
+
+    <div class="form-group mb-3">
+      <input
+        type="email"
+        class="form-control"
+        placeholder="exemple@email.com"
+        [(ngModel)]="email"
+        [ngClass]="{'is-invalid': emailError}">
+      <div class="invalid-feedback" *ngIf="emailError">
+        {{emailError}}
+      </div>
+    </div>
+
+    <button
+      class="btn btn-primary w-100"
+      [disabled]="isLoading"
+      (click)="onEmailSubmitted()">
+      <span class="spinner-border spinner-border-sm me-2" *ngIf="isLoading"></span>
+      Recevoir le lien
+    </button>
+  </div>
+</div>
+}

@@ -48,6 +48,5 @@ export class VerifyEmailComponent implements OnInit{
         this.error = error.error.error || 'Une erreur s\'est produite.';
       }
     })
-
   }
 }

@@ -4,11 +4,13 @@ import { UserService } from '../../../services/users/user.service';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CommandeService } from '../../../services/commandes/commande.service';
+import {finalize} from "rxjs";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [RouterLink,CommonModule],
+  imports: [RouterLink, CommonModule, NgxSkeletonLoaderModule],
   templateUrl: './profil.component.html',
   styleUrl: './profil.component.scss'
 })
@@ -17,18 +19,23 @@ export class ProfilComponent implements OnInit{
   nb_commandes_livrees : number = 0;
   nb_commandes_attente : number = 0;
   nb_commandes_total : number = 0;
+  error : boolean = false;
+  profilDataLoading = true;
 
   private commandeService = inject(CommandeService);
 
   constructor (private UserService:UserService){}
 
   ngOnInit(): void {
-    this.UserService.getUser().subscribe({
+    this.profilDataLoading = true;
+    this.UserService.getUser().pipe(
+      finalize(() => this.profilDataLoading = false)
+    ).subscribe({
       next: (data) => {
       this.user = data;
       },
       error: (error) => {
-        console.log(error);
+        this.error = true;
       }
     })
     this.commandeService.getStatsCommande().subscribe({

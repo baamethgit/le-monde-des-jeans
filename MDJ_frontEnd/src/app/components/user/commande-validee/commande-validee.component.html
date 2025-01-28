@@ -9,18 +9,18 @@
         <h4 class="text-center"  >VOTRE COMMANDE A ETE VALIDEE</h4>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Date : </span>
-            <span class="fw-bold">{{commande.date_commande}}</span>
+            <span class="fw-bold">{{commande?.date_commande}}</span>
         </p>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Total : </span>
-            <span class="fw-bold">{{ commande.montant }} frs</span>
+            <span class="fw-bold">{{ commande?.montant }} frs</span>
         </p>
         <p class="px-md-3 d-flex justify-content-around align-items-center">
             <span style="color: gray;">Zone de Livraison : </span>
-          @if (commande.recupere_magasin){
+          @if (commande?.recupere_magasin){
             <span class="fw-bold">Récupération sur place</span>
           } @else {
-            <span class="fw-bold" >{{ commande.zone_livraison }}</span>
+            <span class="fw-bold" >{{ commande?.zone_livraison }}</span>
 
           }
         </p>

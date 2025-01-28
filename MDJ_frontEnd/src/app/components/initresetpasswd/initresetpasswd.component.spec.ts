@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PaiementSuccessComponent } from './paiement-success.component';
+import { InitresetpasswdComponent } from './initresetpasswd.component';
 
-describe('PaiementSuccessComponent', () => {
-  let component: PaiementSuccessComponent;
-  let fixture: ComponentFixture<PaiementSuccessComponent>;
+describe('InitresetpasswdComponent', () => {
+  let component: InitresetpasswdComponent;
+  let fixture: ComponentFixture<InitresetpasswdComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PaiementSuccessComponent]
+      imports: [InitresetpasswdComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PaiementSuccessComponent);
+    fixture = TestBed.createComponent(InitresetpasswdComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

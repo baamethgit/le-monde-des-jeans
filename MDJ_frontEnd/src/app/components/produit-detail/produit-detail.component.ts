@@ -10,12 +10,14 @@ import { PanierService } from '../../services/panier.service';
 import { GalleriaModule } from 'primeng/galleria';
 import { RadioButton } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import {finalize} from "rxjs";
 
 
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-  imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule,FormsModule],
+    imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule, FormsModule, NgxSkeletonLoaderModule],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
 })
@@ -31,6 +33,8 @@ export class ProduitDetailComponent implements OnInit{
   userService = inject(UserService);
   errorMessage = '';
   quantity: number = 1;
+  isLoading = false;
+
 responsiveOptions = [
   {
     breakpoint: '1024px',
@@ -49,6 +53,7 @@ responsiveOptions = [
   }
 ];
 
+
   constructor(
     private route: ActivatedRoute,
     private produitService: ProduitService,
@@ -65,7 +70,10 @@ responsiveOptions = [
   }
 
   loadProduct(slug: string): void {
-    this.produitService.getProductBySlug(slug).subscribe({
+    this.isLoading = true;
+    this.produitService.getProductBySlug(slug).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next: (data: Produit) => {
         this.product_selected = data;
         this.list_p = data.images;
@@ -118,31 +126,6 @@ acheterDirectement(productSlug : string | undefined){
       console.log('Aucun slug de catégorie disponible pour ce produit.');
     }
   }
-
-// addToCart(){
-//   this.panierService.ajouterProduit(this.product_selected?.slug || '').subscribe({
-//     next:(data)=>{
-//       this.router.navigate(['/panier']);
-//     },
-//     error : (error)=>{
-//       if(error.error.message_erreur)
-//         this.errorMessage = error.error.message_erreur;
-//     },
-//   })
-// }
-
-  // acheterDirectement(productSlug: string | undefined): void {
-  //   if (productSlug) {
-  //     this.commandeService.creerCommande(false, productSlug).subscribe({
-  //       next: (data) => {
-  //         // Handle successful order creation
-  //       },
-  //       error: (error) => {
-  //         console.log('Erreur lors de la création de la commande :', error.error.detail);
-  //       },
-  //     });
-  //   }
-  // }
 
   addToCart(): void {
     if (this.product_selected?.slug) {

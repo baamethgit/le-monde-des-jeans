@@ -14,8 +14,6 @@ from django.db import IntegrityError
 import random
 from django.db import transaction
 
-# Utilisez select_related et prefetch_related dans vos vues pour optimiser les requêtes liées aux produits et commandes.
-
 class Categorie(models.Model):
     nom = models.CharField(max_length=100)
     description = models.TextField(blank=True, max_length=1000)
@@ -29,6 +27,12 @@ class Categorie(models.Model):
 
     def __str__(self):
         return self.nom
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            if os.path.isfile(self.image.path):
+                os.remove(self.image.path)
+        super().delete(*args, **kwargs)
 
 class Produit(models.Model):
     TAILLES = (
@@ -57,7 +61,7 @@ class Produit(models.Model):
 
     nom = models.CharField(max_length=200, null=True, blank=True)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
-    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='produits')
+    categorie = models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True, related_name='produits')
     description=models.CharField(null=True, blank=True,max_length=1500)
     taille = models.CharField(max_length=128, choices=TAILLES, blank=True, null=True)
     pointure=models.PositiveIntegerField(blank=True, null=True)
@@ -84,10 +88,16 @@ class Produit(models.Model):
 
     def __str__(self):
         return self.nom
-
+import os
 class ImageProduit(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='images_produits/',verbose_name='photo')
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            if os.path.isfile(self.image.path):
+                os.remove(self.image.path)
+        super().delete(*args, **kwargs)
     
 
 

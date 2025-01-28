@@ -25,7 +25,7 @@
             <img id="second_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (9).png" alt="" srcset="">
             <img id="third_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com.png" alt="" srcset="">
             <img id="fourth_floating" class="position-absolute floating_object" src="../../assets/img/pngwing.com (10).png" alt="" srcset="">
-        
+
         </section>
         <section class="marques">
             <div class="w-100">
@@ -63,15 +63,79 @@
           </section>
           <section class="nouveautes my-5">
             <h2 class="nouveautes__title text-center mb-4">Decouvrez nos Articles</h2>
+            <br>
+            @if (isPLoading){
+              <ngx-skeleton-loader
+                [count]="4"
+                appearance="line"
+                [theme]="{
+    'width': '200px',
+    'height': '200px',
+    'margin': '10px',
+    'background-color': '#f0f0f0',
+    'border-radius': '8px'
+  }">
+              </ngx-skeleton-loader>
+            }@else {
+              <div class="nouveautes__container">
+                @if (products_list.length > 0) {
+                  <div class="nouveautes__list">
+                    @for (item of products_list; track $index) {
+                      <a [routerLink]="['/produits', item.slug]" class="product-card">
+                        <div class="product-card__image-container">
+                          <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
+                        </div>
+
+                        <div class="product-card__info">
+                          <h3 class="product-card__title">{{item.nom}}</h3>
+                          <p class="product-card__price">{{item.prix}} FCFA</p>
+                        </div>
+                      </a>
+                    }
+                  </div>
+                  <div class="related-products__action text-center">
+                    <button [routerLink]="['/produits']" class="btn btn--outline">Voir plus</button>
+                  </div>
+                } @else {
+                  <div class="empty-state">
+                    <div class="empty-state__content">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="empty-state__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 5H3v14h18V5zM3 9h18M9 5v14"/>
+                      </svg>
+                      <p class="empty-state__message">Aucun produit disponible pour le moment</p>
+                      <p class="empty-state__sub-message">Revenez plus tard pour découvrir nos offres</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+
+          </section>
+        <section class="nouveautes my-5">
+          <h2 class="nouveautes__title text-center mb-4">Produits speciaux</h2>
+          <br>
+          @if (isPSpeciauxLoading){
+            <ngx-skeleton-loader
+              [count]="4"
+              appearance="line"
+              [theme]="{
+    'width': '200px',
+    'height': '200px',
+    'margin': '10px',
+    'background-color': '#f0f0f0',
+    'border-radius': '8px'
+  }">
+            </ngx-skeleton-loader>
+          } @else {
             <div class="nouveautes__container">
-              @if (products_list.length > 0) {
+              @if (special_list.length > 0) {
                 <div class="nouveautes__list">
-                  @for (item of products_list; track $index) {
+                  @for (item of special_list; track $index) {
                     <a [routerLink]="['/produits', item.slug]" class="product-card">
                       <div class="product-card__image-container">
                         <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
                       </div>
-          
+
                       <div class="product-card__info">
                         <h3 class="product-card__title">{{item.nom}}</h3>
                         <p class="product-card__price">{{item.prix}} FCFA</p>
@@ -88,46 +152,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="empty-state__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M21 5H3v14h18V5zM3 9h18M9 5v14"/>
                     </svg>
-                    <p class="empty-state__message">Aucun produit disponible pour le moment</p>
-                    <p class="empty-state__sub-message">Revenez plus tard pour découvrir nos offres</p>
+                    <p class="empty-state__message">Aucun produit spécial disponible pour le moment</p>
+                    <p class="empty-state__sub-message">Revenez plus tard pour découvrir nos offres spéciales</p>
                   </div>
                 </div>
               }
             </div>
-          </section>
-        <section class="nouveautes my-5">
-          <h2 class="nouveautes__title text-center mb-4">Produits speciaux</h2>
-          <div class="nouveautes__container">
-            @if (special_list.length > 0) {
-              <div class="nouveautes__list">
-                @for (item of special_list; track $index) {
-                  <a [routerLink]="['/produits', item.slug]" class="product-card">
-                    <div class="product-card__image-container">
-                      <img [ngSrc]="item.images[0].image" fill [alt]="item.nom" class="product-card__image">
-                    </div>
-        
-                    <div class="product-card__info">
-                      <h3 class="product-card__title">{{item.nom}}</h3>
-                      <p class="product-card__price">{{item.prix}} FCFA</p>
-                    </div>
-                  </a>
-                }
-              </div>
-              <div class="related-products__action text-center">
-                <button [routerLink]="['/produits']" class="btn btn--outline">Voir plus</button>
-              </div>
-            } @else {
-              <div class="empty-state">
-                <div class="empty-state__content">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="empty-state__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 5H3v14h18V5zM3 9h18M9 5v14"/>
-                  </svg>
-                  <p class="empty-state__message">Aucun produit spécial disponible pour le moment</p>
-                  <p class="empty-state__sub-message">Revenez plus tard pour découvrir nos offres spéciales</p>
-                </div>
-              </div>
-            }
-          </div>
+          }
+
         </section>
     <!-- <section class="Contacts pb-5 pt-3">
         <div class="contact_head my-5">
@@ -150,7 +182,7 @@
                 <div><img class="mx-lg-auto" ngSrc="../../assets/img/9110984_call_phone_icon.png" width="40" height="40" alt="" srcset=""></div>
                 <div>
                     <a style="color: inherit;" class="text-decoration-none" href="tel:+221784346017">+221 78 434 60 17</a></div>
-    
+
             </div>
             <div class="text-center mt-4">
               <button class="nouveautes__button">Voir plus</button>
@@ -170,11 +202,11 @@
                   </a>
                 }
               </div>
-    
+
         </div>
     </section>
-    
-    
+
+
         <section class="contacts">
             <div class="container">
               <div class="contacts-header">
@@ -217,7 +249,7 @@
               </div>
             </div>
         </section>
-        
+
         <section class="testimonials" *ngIf="avis_list.length">
             <div class="container">
               <div class="testimonials-header">
@@ -241,7 +273,7 @@
               </div>
             </div>
         </section>
-        
+
         <section class="info-section">
             <div class="container">
               <div class="info-grid">

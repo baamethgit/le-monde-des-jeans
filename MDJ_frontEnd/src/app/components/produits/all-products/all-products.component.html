@@ -2,14 +2,17 @@
   <h2 class="product-grid__title">Tous les produits</h2>
 
   @if (isLoading){
-    <div class="bg-dark bg-opacity-50 position-absolute w-100 h-100 d-flex align-items-center justify-content-center" style="top:0;left:0">
-      <p>
-        <button class="btn btn-primary" type="button" disabled>
-          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-          Loading...
-        </button>
-      </p>
-    </div>
+    <ngx-skeleton-loader
+      [count]="4"
+      appearance="line"
+      [theme]="{
+    'width': '200px',
+    'height': '200px',
+    'margin': '10px',
+    'background-color': '#f0f0f0',
+    'border-radius': '8px'
+  }">
+    </ngx-skeleton-loader>
   } @else {
     <div class="product-grid__filters">
       <div class="filter-select">

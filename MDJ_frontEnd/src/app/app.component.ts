@@ -16,7 +16,6 @@ import { filter } from 'rxjs';
 })
 export class AppComponent {
   title = 'MDJ_frontEnd';
-  isAdmin = false;
   private isBrowser: boolean;
 
 

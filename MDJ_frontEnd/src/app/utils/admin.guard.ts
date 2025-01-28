@@ -22,6 +22,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
       }
     }),
     catchError(() => {
+      router.navigate(['**']);
       return of(false);
     })
   );
