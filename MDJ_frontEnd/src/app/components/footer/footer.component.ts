@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { InfosService } from '../../services/infos.service';
@@ -7,13 +6,13 @@ import { Infos } from '../../models/infos.module';
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
   infos:Infos | undefined;
-  constructor(private infosService:InfosService) { }
+  constructor(private readonly infosService:InfosService) { }
   ngOnInit(): void {
     this.loadInfos();
   }
@@ -22,8 +21,7 @@ export class FooterComponent {
       {
         next: (data) => {
           this.infos = data;
-        }
-      }
+        }}
     )
   }
 }

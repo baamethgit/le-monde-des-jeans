@@ -21,10 +21,16 @@ export class ResetPasswordComponent implements OnInit {
   error = "";
   token :string | null = null;
   constructor(
+<<<<<<< HEAD
+    private readonly fb: FormBuilder,
+    private readonly userService: UserService,
+    private readonly router: Router
+=======
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
   ) {}
 
   ngOnInit(): void {
@@ -58,11 +64,18 @@ export class ResetPasswordComponent implements OnInit {
 
     this.userService.resetPassword(newPassword,this.token || '').subscribe({
       next: () => {
+<<<<<<< HEAD
+        // Rediriger vers la page de connexion avec un message de succès
+        this.router.navigate(['/login'], {
+          queryParams: { message: 'Mot de passe réinitialisé avec succès' }
+        });
+=======
         this.router.navigate(['/login']);
       },
       error: (error) => {
         this.error = error.error.error
         this.isLoading = false;
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
       }
     });
   }

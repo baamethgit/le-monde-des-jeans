@@ -19,7 +19,7 @@ alertMessage : string = '';
 zoneUpdateForm! : FormGroup;
 fb = inject(FormBuilder);
 
-constructor(private route: ActivatedRoute, private router : Router){}
+constructor(private readonly route: ActivatedRoute, private readonly router : Router){}
 
 ngOnInit(): void {
    this.zoneUpdateForm = this.fb.group({
@@ -53,10 +53,7 @@ updateZone(newZone : ZoneLivraison){
     next:(response)=>{
         this.alertMessage = "La zone est mis à jour";
         this.router.navigate(['/mdj_admin/zones-livraison']);
-    },
-    error : (error) => {
-        console.log(error.error);
-    },
+    }
   })
 }
 
@@ -70,10 +67,7 @@ updateZone(newZone : ZoneLivraison){
       next:(response)=>{
         this.zone = response;
         this.zoneUpdateForm.patchValue(this.zone);
-    },
-    error : (error) => {
-        console.log(error.error);
-    },
+    }
     })
   }
 }

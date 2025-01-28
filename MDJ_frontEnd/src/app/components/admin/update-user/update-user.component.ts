@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../services/users/user.service';
 import { Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import Validation from '../../../shared/my-validators';
 
 @Component({
@@ -21,7 +20,7 @@ export class UpdateUserComponent {
   userForm ! : FormGroup;
   passwordForm! : FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) { }
+  constructor(private readonly formBuilder: FormBuilder, private readonly userService: UserService, private readonly router: Router) { }
 
   ngOnInit(): void {
     this.passwordForm = this.formBuilder.group(
@@ -48,11 +47,7 @@ export class UpdateUserComponent {
           this.user = data;
           this.initiazeForm();
           
-        } else {
-        }
-      },
-      error: (error) => {
-        console.log(error.error.detail);
+        } else { /* empty */ }
       }
     });
   
@@ -84,9 +79,6 @@ export class UpdateUserComponent {
       this.userService.updateUser(this.user).subscribe({
         next: (data) => {
           this.router.navigate(['/profile']);
-        },
-        error: (error) => {
-          console.log('Erreur lors de la maj du user :', error.error.detail);
         }
       });
     }

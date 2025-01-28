@@ -14,10 +14,15 @@ import {CommonModule, NgIf} from "@angular/common";
 })
 export class CommandeValideeComponent implements OnInit{
   CheckoutStep : CheckoutStep = CheckoutStep.FinaliserCommande;
+<<<<<<< HEAD
+  commande! : Commande;
+  private readonly paiementService = inject(PaiementService);
+=======
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private paiementService = inject(PaiementService);
   commande : Commande | undefined;
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
 
   ngOnInit(): void {
     const refCode = this.route.snapshot.params['ref-code'];

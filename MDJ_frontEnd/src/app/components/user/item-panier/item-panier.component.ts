@@ -14,7 +14,7 @@ export class ItemPanierComponent implements OnInit {
   @Input() produit: Produit | undefined;
   @Input() panierProduit: PanierProduit | undefined;
 
-  constructor(private userService: UserService){}
+  constructor(private readonly userService: UserService){}
 
   removeProduit(id:number | undefined):void {
     this.userService.delProductFromCart(<number>id).subscribe({
@@ -23,7 +23,6 @@ export class ItemPanierComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('produit: ', this.produit);
   }
 
   getProductImageUrl(): string {

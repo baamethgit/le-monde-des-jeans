@@ -1,13 +1,16 @@
+<<<<<<< HEAD
+import { Component, inject, TemplateRef } from '@angular/core';
+=======
 import {Component, inject, NgModule, numberAttribute, OnInit, TemplateRef} from '@angular/core';
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
 import { ProduitService } from '../../../services/produits/produit.service';
 import { Produit } from '../../../models/produit';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormGroup, FormsModule, NgForm, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
 import { categorie } from '../../../models/categorie';
 import { CategorieService } from '../../../services/categories/categorie.service';
-import { spec } from 'node:test/reporters';
 import { RouterLink } from '@angular/router';
 import {finalize} from "rxjs";
 
@@ -50,10 +53,17 @@ export const COULEUR = [
 })
 
 
+<<<<<<< HEAD
+export class AdminProduitsComponent {
+private readonly produitsService=inject(ProduitService)
+private readonly categoryService=inject(CategorieService)
+private readonly modalService=inject(NgbModal)
+=======
 export class AdminProduitsComponent implements OnInit{
 private produitsService=inject(ProduitService)
 private categoryService=inject(CategorieService)
 private modalService=inject(NgbModal)
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
 produits:Produit[]=[];
 category:categorie[]=[];
 tailles=TAILLES
@@ -64,9 +74,13 @@ pageSize:number=10;
 collectionSize:number=0;
 
 AddProductForm!:FormGroup;
+AddProductButtonLoading:boolean=false
 UpdateProductForm!:FormGroup;
+UpdateProductButtonLoading:boolean=false
 AddCategoryForm!:FormGroup;
+AddCategoryButtonLoading:boolean=false
 UpdateCategoryForm!:FormGroup;
+UpdateCategoryButtonLoading:boolean=false
 
 formBuilder=inject(FormBuilder)
 files: NgxFileDropEntry[] = [];
@@ -178,8 +192,7 @@ openWindowCustomClass(content: TemplateRef<any>, categorie:categorie) {
           const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
           this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
           this.previewUrlsProd.push(categorie.image);
-           console.log('Image chargée :', categorie.image)
-        }).catch(err => console.error('Erreur lors du chargement de l\'image :', err));
+        }).catch();
   }
   this.modalService.open(content, { windowClass: 'dark-modal', centered:true });
 }
@@ -215,7 +228,6 @@ openUpdateProductModal(content: TemplateRef<any>, product: Produit) {
           const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
           this.imagesProdUpdateFormArray.push(this.formBuilder.control(file));
           this.previewUrlsProd.push(img.image);
-           console.log('Image chargée :', img.image)
         });
     });
   }
@@ -328,6 +340,7 @@ removeImageProdUpdate(index: number) {
 }
 
 createProduct() {
+  this.AddProductButtonLoading = true;
   if (this.AddProductForm.valid) {
     const formData = new FormData();
 
@@ -362,9 +375,14 @@ createProduct() {
       next: (data) => {
         this.resetFormProd();
         this.loadProducts()
+<<<<<<< HEAD
+        this.AddProductButtonLoading = false
+      }
+=======
 
       },
       error: (error) => {  }
+>>>>>>> 9b3677841ef8f6c50420a767ed20a12d34ebf9d1
     });
   } else {
     this.AddProductForm.markAllAsTouched();
@@ -372,6 +390,7 @@ createProduct() {
 }
 
 UpdateProduct(id:number) {
+  this.UpdateProductButtonLoading = true;
   if (this.UpdateProductForm.valid) {
     const formData = new FormData();
 
@@ -404,12 +423,10 @@ UpdateProduct(id:number) {
 
     this.produitsService.updateProduct(id,formData).subscribe({
       next: (data) => {
-        console.log('MAJ réussie !!! :', data);
         this.loadProducts()
         this.resetFormProdUpdate();
-
-      },
-      error: (error) => { console.log('Erreur lors de l\'enregistrement : ', error); }
+        this.UpdateProductButtonLoading = false
+      }
     });
   } else {
     this.UpdateProductForm.markAllAsTouched();
@@ -417,6 +434,7 @@ UpdateProduct(id:number) {
 }
 
 createCategory() {
+  this.AddCategoryButtonLoading = true;
   if (this.AddCategoryForm.valid) {
     const formData = new FormData();
 
@@ -433,11 +451,10 @@ createCategory() {
 
     this.categoryService.createCategory(formData).subscribe({
       next: (data) => {
-        console.log('Enregistrement réussi !!! :', data);
         this.loadCategories();
         this.resetFormCat();
-      },
-      error: (error) => { console.log('Erreur lors de l\'enregistrement : ', error); }
+        this.AddCategoryButtonLoading = false
+      }
     });
   } else {
     this.AddCategoryForm.markAllAsTouched();
@@ -508,23 +525,22 @@ resetFormUpdateCat() {
 
 deleteProd(id:number){
   this.produitsService.deleteProduct(id).subscribe({
-    next:(data)=>{console.log('Delete product done : ', data);
+    next:(data)=>{
       this.loadProducts();
-    },
-    error:(error)=>{console.log('erreur lors de la suppression : ', error)}
+    }
   })
 }
 
 deleteCat(id:number){
   this.categoryService.deleteCategory(id).subscribe({
-    next:(data)=>{console.log('Delete category done : ', data);
+    next:(data)=>{
       this.loadCategories();
-    },
-    error:(error)=>{console.log('erreur lors de la suppression : ', error)}
+    }
   })
 }
 
 UpdateCat(id:number){
+  this.UpdateCategoryButtonLoading = true
   if (this.UpdateCategoryForm.valid) {
     const formData = new FormData();
 
@@ -541,11 +557,10 @@ UpdateCat(id:number){
 
     this.categoryService.updateCategory(id,formData).subscribe({
       next: (data) => {
-        console.log('Mise a jour réussie !!! :', data);
         this.loadCategories()
         this.resetFormUpdateCat();
-      },
-      error: (error) => { console.log('Erreur lors de la mise a jour : ', error); }
+        this.UpdateCategoryButtonLoading = false;
+      }
     });
   } else {
     this.UpdateCategoryForm.markAllAsTouched();
