@@ -94,7 +94,7 @@ ngOnInit():void{
       prix_produit:['',[Validators.required,Validators.pattern("^[0-9]*$"),]],
       pointure_produit: ['', [Validators.pattern("^[0-9]+(\\.[0-9]{1,2})?$")]],
       stock_produit:['1',[Validators.pattern("^[0-9]*$"),]],
-      categorySelect:[''],
+      categorySelect:['',[Validators.required]],
       nom_produit:[''],
       taille:[''],
       couleur:[''],
@@ -386,7 +386,7 @@ createProduct() {
       next: (data) => {
         this.resetFormProd();
         this.loadProducts()
-
+        this.AddProductButtonLoading=false
 
       },
       error: (error) => {  }
