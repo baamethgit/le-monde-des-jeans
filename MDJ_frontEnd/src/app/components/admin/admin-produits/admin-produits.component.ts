@@ -386,7 +386,7 @@ createProduct() {
       next: (data) => {
         this.resetFormProd();
         this.loadProducts()
-
+        this.AddProductButtonLoading=false
 
       },
       error: (error) => {  }
