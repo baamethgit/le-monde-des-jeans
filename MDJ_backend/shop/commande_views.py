@@ -34,20 +34,11 @@ def creer_commande(request):
                     logger.warning(f"Panier vidé pendant la création de la commande. user={request.user}")
                     return Response({"error": "Votre panier est vide"},
                                     status=status.HTTP_409_CONFLICT)
+                commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
 
                 for panier_produit in panier.panierproduit_set.select_related('produit').all():
-                    produit = Produit.objects.select_for_update().get(id=panier_produit.produit.id)
-                    if produit.QuantiteStock < panier_produit.quantite:
-                        logger.warning(f"Stock insuffisant pour {produit.nom} pour creer une commande.user={request.user}")
-                        return Response({"error": f"Stock insuffisant pour {produit.nom}"},
-                                        status=status.HTTP_409_CONFLICT)
-
-                    Produit.objects.filter(id=produit.id).update(
-                        QuantiteStock=F('QuantiteStock') - panier_produit.quantite
-                    )
-                    commande = Commande.objects.create(client=user, statut='EN_ATTENTE')
-                    commande.produits.add(produit)
-                    logger.info(f"produit {produit} ajouté à la commande {commande.ref_code}")
+                    commande.produits.add(panier_produit.produit)
+                    logger.info(f"produit {panier_produit.produit} ajouté à la commande {commande.ref_code}")
 
                 panier.panierproduit_set.all().delete()
 
@@ -71,7 +62,17 @@ def creer_commande(request):
 
         serializer = CommandeSerializer(commande)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Produit.DoesNotExist as e:
+        logger.error(f"Produit non trouvé pour la creation de commande:details: {str(e)}", exc_info=True)
+        return Response({"error": "Produit non trouvé."},
+                        status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
+        if request.data.get('from_panier'):
+            try:
+                logger.warning(f"erreur de création de commande,tentative de la supprimer automatiquement.User = {request.user}", exc_info=True)
+                commande.delete()
+            except Exception:
+                pass
         logger.error(f"Une erreur est survenue lors de la création de la commande:details: {str(e)}", exc_info=True)
         return Response({"error": "Une erreur est survenue lors de la création de la commande."},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)

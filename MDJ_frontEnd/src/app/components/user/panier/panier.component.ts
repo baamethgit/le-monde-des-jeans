@@ -75,11 +75,9 @@ export class PanierComponent implements OnInit ,OnDestroy{
   removeProd(produitSlug:string){
     this.panierService.retirerProduit(produitSlug).subscribe({
       next: (data) => {
-        alert('produit supprimé avec succés');
         this.loadData();
     },
     error: (error) => {
-      alert("une erreur est survenue,réessayer ou recharger la page.")
     }
     })
   }

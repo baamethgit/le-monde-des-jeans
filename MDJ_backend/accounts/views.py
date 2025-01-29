@@ -95,6 +95,8 @@ class LoginView(APIView):
         if not user:
             user_exists = CustomUser.objects.filter(phone_number=phone_number,is_active=False).exists()
             if user_exists:
+                logger.error(f"connexion échouée : Compte inactif ,phone_number = {phone_number}")
+
                 num_admin = ""
                 try:
                     num_admin = InformationsGenerales.objects.first().telephone_site
@@ -106,8 +108,9 @@ class LoginView(APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
+            logger.error(f"connexion échouée : Identifiants invalides ,phone_number = {phone_number}")
             return Response(
-                {'error_identifiants': 'Identifiants invalides',},
+                {'error_identifiants': 'Identifiants invalides'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         if user is not None:

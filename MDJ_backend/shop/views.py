@@ -278,15 +278,19 @@ def ajouter_produit(request):
 @permission_classes([IsAuthenticated])
 def retirer_produit(request):
     with transaction.atomic():
-        panier = get_object_or_404(Panier, client=request.user)
-        produit_slug = request.data.get('produit_slug')
-        if not produit_slug:
-            return Response({"error": "Le slug du produit est requis."}, status=status.HTTP_400_BAD_REQUEST)
-        produit = get_object_or_404(Produit, slug=produit_slug)
-        panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
+        try:
+            panier = get_object_or_404(Panier, client=request.user)
+            produit_slug = request.data.get('produit_slug')
+            if not produit_slug:
+                return Response({"error": "Le slug du produit est requis."}, status=status.HTTP_400_BAD_REQUEST)
+            produit = get_object_or_404(Produit, slug=produit_slug)
+            panier_produit = get_object_or_404(PanierProduit, panier=panier, produit=produit)
 
-        Produit.objects.filter(id=produit.id).update(QuantiteStock=F('QuantiteStock') + panier_produit.quantite)
-        panier_produit.delete()
+            Produit.objects.filter(id=produit.id).update(QuantiteStock=F('QuantiteStock') + panier_produit.quantite)
+            panier_produit.delete()
+        except Exception as e:
+            logger.error(f"erreur retrait produit : {str(e)}", exc_info=True)
+            return Response(status=status.HTTP_409_CONFLICT)
     logger.info(f"quantité du produit {produit} incrémenté de {panier_produit.quantite}")
     logger.info(f"le produit {produit} est retiré du panier de {request.user}")
     return Response({"message": "Produit retiré du panier"}, status=status.HTTP_200_OK)

@@ -116,7 +116,10 @@ acheterDirectement(productSlug : string | undefined){
         this.errorMessage = '';
       },
       error : (error)=>{
-        if (error.status === 409) {
+        if(error.status===401){
+          alert("Veuillez vous connecter pour acheter .");
+          this.router.navigate(['/login']);
+        }else if (error.status === 409) {
           alert("Le produit est en rupture de stock");
           if(this.isBrowser){
             window.location.reload();
@@ -141,7 +144,7 @@ acheterDirectement(productSlug : string | undefined){
           this.must_like_product = data.results.filter((p: { slug: string | undefined; }) => p.slug !== this.product_selected?.slug);
         }
       });
-    } else { /* empty */ }
+    } else { }
   }
 
   addToCart(): void {
@@ -158,7 +161,10 @@ acheterDirectement(productSlug : string | undefined){
           this.router.navigate(['/panier']);
         },
         error : (error)=>{
-          if (error.status === 409) {
+          if(error.status===401){
+            alert("Veuillez vous connecter pour acheter .");
+            this.router.navigate(['/login']);
+          }else if (error.status === 409) {
             alert("Le produit est en rupture de stock");
             if(this.isBrowser){
               window.location.reload();
