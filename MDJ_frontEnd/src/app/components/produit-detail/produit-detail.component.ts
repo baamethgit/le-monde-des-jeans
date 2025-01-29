@@ -40,7 +40,7 @@ export class ProduitDetailComponent implements OnInit{
 responsiveOptions = [
   {
     breakpoint: '1024px',
-    numVisible: 5,
+    numVisible: 4,
     showThumbnails: true
   },
   {
