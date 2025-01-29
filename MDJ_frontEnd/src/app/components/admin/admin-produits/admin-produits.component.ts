@@ -24,7 +24,8 @@ export const TAILLES = [
 // compositions.ts
 export const COMPO = [
   { value: 'coton', label: 'Coton' },
-  { value: 'nilon', label: 'Nilon' }
+  { value: 'nilon', label: 'Nilon' },
+  { value: 'jean', label: 'Jean' },
 ];
 
 // couleurs.ts
