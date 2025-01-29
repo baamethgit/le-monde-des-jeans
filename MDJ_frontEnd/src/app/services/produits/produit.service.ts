@@ -23,10 +23,14 @@ export class ProduitService {
   }
 
 
-  getProductsAdmin(page: number = 1, pageSize: number = 10): Observable<any> {
+  getProductsAdmin(page: number = 1, pageSize: number = 10, ordering:string=''): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
+
+    if (ordering) {
+        params = params.set('ordering', ordering);
+      }
 
     return this.http.get<Produit[]>(`${this.apiUrl}`, { params });
   }

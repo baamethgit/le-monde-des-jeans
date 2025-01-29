@@ -15,7 +15,10 @@ export const TAILLES = [
   { value: 'S', label: 'S' },
   { value: 'M', label: 'M' },
   { value: 'L', label: 'L' },
-  { value: 'XL', label: 'XL' }
+  { value: 'XL', label: 'XL' },
+  { value: 'XXL', label: 'XXL' },
+  { value: '48L', label: '48L' },
+  { value: '48M', label: '48M' },
 ];
 
 // compositions.ts
@@ -51,9 +54,9 @@ export const COULEUR = [
 
 
 export class AdminProduitsComponent implements OnInit{
-private produitsService=inject(ProduitService)
-private categoryService=inject(CategorieService)
-private modalService=inject(NgbModal)
+private readonly produitsService=inject(ProduitService)
+private readonly categoryService=inject(CategorieService)
+private readonly modalService=inject(NgbModal)
 produits:Produit[]=[];
 category:categorie[]=[];
 tailles=TAILLES
@@ -62,6 +65,8 @@ couleur=COULEUR
 page:number=1;
 pageSize:number=10;
 collectionSize:number=0;
+sortColumn: string = '';
+sortDirection: 'asc' | 'desc' = 'asc';
 
 AddProductForm!:FormGroup;
 AddProductButtonLoading:boolean=false
@@ -133,16 +138,31 @@ ngOnInit():void{
   )
 
 }
-loadProducts(){
+loadProducts() {
   this.isPLoading = true;
-  this.produitsService.getProductsAdmin(this.page,this.pageSize).pipe(
+  const ordering = this.sortColumn ? 
+    (this.sortDirection === 'desc' ? '-' : '') + this.sortColumn : '';
+    
+  this.produitsService.getProductsAdmin(this.page, this.pageSize, ordering).pipe(
     finalize(() => this.isPLoading = false)
   ).subscribe({
-    next:(data)=>{
-      this.produits=data.results;
-      this.collectionSize=data.count
+    next: (data) => {
+      this.produits = data.results;
+      this.collectionSize = data.count;
     }
-  })
+  });
+}
+
+sort(column: string) {
+  if (this.sortColumn === column) {
+    // Si on clique sur la même colonne, on inverse la direction
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+  } else {
+    // Nouvelle colonne, on met par défaut en ascendant
+    this.sortColumn = column;
+    this.sortDirection = 'asc';
+  }
+  this.loadProducts();
 }
 
 OnPageChange(page: number) {

@@ -244,17 +244,40 @@
 <div class="table-container my-4">
     <h2>Liste des Produits</h2>
     <table class="table table-bordered orders-table">
-        <thead class="position-sticky">
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Produit</th>
-            <th scope="col">Categorie</th>
-            <th scope="col" class="text-center">Prix</th>
-            <th scope="col" class="text-center">Quantite Stock</th>
-            <th scope="col" class="text-center">Taille</th>
-            <th class="actions-header text-center">Actions</th>
-          </tr>
-        </thead>
+      <thead class="position-sticky">
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col" class="cursor-pointer" (click)="sort('nom')">
+            Produit
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortColumn === 'nom' && sortDirection === 'asc',
+              'bi-arrow-down': sortColumn === 'nom' && sortDirection === 'desc',
+              'bi-arrow-down-up': sortColumn !== 'nom'
+            }"></i>
+          </th>
+          <th  scope="col" class="text-center">
+            Categorie
+          </th>
+          <th scope="col" class="text-center cursor-pointer" (click)="sort('prix')">
+            Prix
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortColumn === 'prix' && sortDirection === 'asc',
+              'bi-arrow-down': sortColumn === 'prix' && sortDirection === 'desc',
+              'bi-arrow-down-up': sortColumn !== 'prix'
+            }"></i>
+          </th>
+          <th scope="col" class="text-center cursor-pointer" (click)="sort('QuantiteStock')">
+            Quantite Stock
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortColumn === 'QuantiteStock' && sortDirection === 'asc',
+              'bi-arrow-down': sortColumn === 'QuantiteStock' && sortDirection === 'desc',
+              'bi-arrow-down-up': sortColumn !== 'QuantiteStock'
+            }"></i>
+          </th>
+          <th scope="col" class="text-center">Taille</th>
+          <th class="actions-header text-center">Actions</th>
+        </tr>
+      </thead>
         <tbody>
           @if (isPLoading) {
             <tr>

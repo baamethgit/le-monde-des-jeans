@@ -144,6 +144,16 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering:
+            # Gestion du tri multiple (séparé par des virgules)
+            order_fields = ordering.split(',')
+            for field in order_fields:
+                # Vérifier si le champ est valide pour éviter les injections SQL
+                valid_fields = ['prix', '-prix', 'nom', '-nom', 'categorie', '-categorie', 'special','QuantiteStock', '-QuantiteStock']
+                if field in valid_fields:
+                    queryset = queryset.order_by(field)
 
         # Filtrer par slug de catégorie si "category_slug" est fourni dans les paramètres
         categorie = self.request.query_params.get('categorie', None)

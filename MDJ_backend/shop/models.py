@@ -41,11 +41,15 @@ class Produit(models.Model):
         ('S', 'S'),
         ('M', 'M'),
         ('L', 'L'),
-        ('XL', 'XL') 
+        ('XL', 'XL'),
+        ('XXL', 'XXL'),
+        ('48L', '48L'),
+        ('48M', '48M'),
     )
     COMPO = (
         ('coton', 'Coton'),
         ('nilon', 'Nilon'),
+        ('jean', 'Jean'),
     )
     COULEUR = (
         ('BL', 'Bleu'),
