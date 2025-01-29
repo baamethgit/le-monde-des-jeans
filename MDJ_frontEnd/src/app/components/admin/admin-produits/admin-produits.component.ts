@@ -66,8 +66,8 @@ couleur=COULEUR
 page:number=1;
 pageSize:number=10;
 collectionSize:number=0;
-sortColumn: string = '';
-sortDirection: 'asc' | 'desc' = 'asc';
+sortColumn: string = 'id';
+sortDirection: string = 'desc';
 
 AddProductForm!:FormGroup;
 AddProductButtonLoading:boolean=false

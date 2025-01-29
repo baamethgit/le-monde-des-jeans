@@ -207,36 +207,18 @@ a{
 
 .product-item__new-badge {
   position: absolute;
-  top: 20px;
-  right: -10px;
-  background-color: #3cff00;
+  top: 10px;
+  right: 10px;
+  background-color: #0066ff;
+  border-radius: 10px;
   color: white;
   padding: 3px 15px;
   font-size: 12px;
   font-weight: bold;
-  transform: rotate(45deg);
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   text-align: center;
   
-  // Effet de ruban
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 5px;
-    height: 100%;
-    background-color: darken(#7ee734, 15%);
-  }
-  
-  &::before {
-    left: 0;
-  }
-  
-  &::after {
-    right: 0;
-  }
 }
 
 // Modification de l'animation au survol
@@ -305,25 +287,19 @@ a{
 
 .product-item__crown {
   position: absolute;
-  top: -15px;
-  left: -10px;
+  top: -10px;
+  left: -5px;
   z-index: 2;
   width: 50px;
   height: 50px;
   animation: float 3s ease-in-out infinite;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    transition: transform 0.3s ease;
-  }
 }
 
-.product-item:hover .product-item__crown img {
-  transform: scale(1.1) rotate(-5deg);
+.gold_special{
+  background-color: #ffd700;
 }
+
+
 
 @keyframes float {
   0% {
@@ -386,85 +362,36 @@ a{
     min-width: unset;
   }
 }
-.product_legend {
-  border-top: 1px solid #eee;
-  padding-top: 1rem;
-}
-
-.legend_items {
-  padding-left: 0.5rem;
-}
-
-.legend_item {
-  font-size: 0.9rem;
-  color: #666;
-  transition: all 0.2s ease;
-}
-
-.legend_item:hover {
-  color: #333;
-}
-
-.legend_icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
-.legend-badge-wrapper {
-  width: 20px;
-  height: 20px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-item__new-badge-legend {
-  background-color: #3cff00;
+.product-item__stock-badge {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: #ff4444;
   color: white;
-  padding: 3px 7px;
-  font-size: 8px;
+  padding: clamp(4px, 1vw, 10px) clamp(6px, 2vw, 15px);
+  border-radius: 4px;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   font-weight: bold;
-  transform: rotate(45deg);
-  z-index: 1;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  white-space: nowrap;
   text-align: center;
-  position: relative;
-  
-  &::before,
-  &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      width: 5px;
-      height: 100%;
-      background-color: darken(#7ee734, 15%);
-  }
-  
-  &::before {
-      left: 0;
-  }
-  
-  &::after {
-      right: 0;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2;
+}
+
+/* Pour les très petits écrans */
+@media screen and (max-width: 320px) {
+  .product-item__stock-badge {
+    padding: 3px 6px;
+    font-size: 0.65rem;
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .product_legend {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-  }
-
-  .legend_items {
-      display: flex;
-      justify-content: space-around;
-      padding: 0;
-  }
-
-  .legend_item {
-      margin-bottom: 0 !important;
+/* Pour les écrans moyens */
+@media screen and (min-width: 768px) {
+  .product-item__stock-badge {
+    padding: 5px 10px;
+    font-size: 0.8rem;
   }
 }

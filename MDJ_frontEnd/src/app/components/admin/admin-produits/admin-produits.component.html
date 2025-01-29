@@ -246,7 +246,14 @@
     <table class="table table-bordered orders-table">
       <thead class="position-sticky">
         <tr>
-          <th scope="col">ID</th>
+          <th scope="col" class="cursor-pointer" (click)="sort('id')" scope="col">
+            ID
+            <i class="bi" [ngClass]="{
+              'bi-arrow-up': sortColumn === 'id' && sortDirection === 'asc',
+              'bi-arrow-down': sortColumn === 'id' && sortDirection === 'desc',
+              'bi-arrow-down-up': sortColumn !== 'id'
+            }"></i>
+          </th>
           <th scope="col" class="cursor-pointer" (click)="sort('nom')">
             Produit
             <i class="bi" [ngClass]="{

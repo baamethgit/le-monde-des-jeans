@@ -15,11 +15,23 @@ export class ProduitService {
 
   constructor(private http:HttpClient) { }
 
-  getProducts(page: number = 1, pageSize: number = 10):Observable<any>{
+  getProductsAvailables(page: number = 1, pageSize: number = 10):Observable<any>{
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
     return this.http.get<Produit[]>(this.apiUrl+`?available="True"`, { params })
+  }
+
+  getAllProducts(page: number = 1, pageSize: number = 10, ordering:string=''):Observable<any>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+
+      if (ordering) {
+        params = params.set('ordering', ordering);
+      }
+      
+    return this.http.get<Produit[]>(this.apiUrl, { params })
   }
 
 

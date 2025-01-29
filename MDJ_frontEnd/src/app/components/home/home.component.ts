@@ -62,7 +62,7 @@ export class HomeComponent  implements OnInit{
 
   loadProducts(){
     this.isPLoading = true;
-    this.productService.getProducts(this.page, this.pageSize).pipe(
+    this.productService.getProductsAvailables(this.page, this.pageSize).pipe(
       finalize(() => this.isPLoading = false)
     ).subscribe({
       next:(data)=>{
