@@ -28,4 +28,22 @@
       }
     </div>
   </div>
+  <div *ngIf="Avis.length" class="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-white rounded-lg shadow-sm">
+    <!-- Pagination Controls -->
+    <ngb-pagination
+      [collectionSize]="totalItems"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+      [boundaryLinks]="true"
+      [maxSize]="5"
+      aria-label="Navigation des pages"
+      class="pagination-custom">
+    </ngb-pagination>
+  
+    <!-- Total Items Counter -->
+    <p class="text-sm font-medium text-gray-600">
+      <span class="font-bold text-gray-800">{{totalItems}}</span> Avis au total
+    </p>
+  </div>
 </section>
