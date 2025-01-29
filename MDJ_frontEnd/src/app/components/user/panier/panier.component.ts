@@ -75,9 +75,11 @@ export class PanierComponent implements OnInit ,OnDestroy{
   removeProd(produitSlug:string){
     this.panierService.retirerProduit(produitSlug).subscribe({
       next: (data) => {
+        alert('produit supprimé avec succés');
         this.loadData();
     },
     error: (error) => {
+      alert("une erreur est survenue,réessayer ou recharger la page.")
     }
     })
   }
@@ -134,7 +136,16 @@ export class PanierComponent implements OnInit ,OnDestroy{
     const tempsRestantMs = (this.DUREEATTENTEPANIER * 60 * 1000) - tempsEcoule; // DUREEATTENTEPANIER minutes en millisecondes
 
     if (tempsRestantMs <= 0) {
-      this.removeProd(produitSlug);
+      this.panierService.retirerProduit(produitSlug).subscribe({
+        next: (data) => {
+          this.loadData();
+        },
+        error: (error) => {
+          if(this.isBrowser){
+            window.location.reload();
+          }
+        }
+      })
       return 'Expiré';
     }
 
