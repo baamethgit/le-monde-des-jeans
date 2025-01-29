@@ -96,3 +96,42 @@
     grid-template-columns: 1fr;
   }
 }
+.pagination-custom ::ng-deep {
+  .page-item {
+    margin: 0 2px;
+    
+    .page-link {
+      border-radius: 6px;
+      padding: 8px 14px;
+      color: #4B5563;
+      border: 1px solid #E5E7EB;
+      background-color: white;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #F3F4F6;
+        color: #1F2937;
+      }
+    }
+    
+    &.active .page-link {
+      background-color: #3B82F6;
+      border-color: #3B82F6;
+      color: white;
+      
+      &:hover {
+        background-color: #2563EB;
+      }
+    }
+    
+    &.disabled .page-link {
+      background-color: #F9FAFB;
+      color: #9CA3AF;
+      cursor: not-allowed;
+      
+      &:hover {
+        background-color: #F9FAFB;
+      }
+    }
+  }
+}
