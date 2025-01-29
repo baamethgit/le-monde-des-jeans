@@ -66,8 +66,8 @@ couleur=COULEUR
 page:number=1;
 pageSize:number=10;
 collectionSize:number=0;
-sortColumn: string = '';
-sortDirection: 'asc' | 'desc' = 'asc';
+sortColumn: string = 'id';
+sortDirection: string = 'desc';
 
 AddProductForm!:FormGroup;
 AddProductButtonLoading:boolean=false
@@ -77,6 +77,8 @@ AddCategoryForm!:FormGroup;
 AddCategoryButtonLoading:boolean=false
 UpdateCategoryForm!:FormGroup;
 UpdateCategoryButtonLoading:boolean=false
+DeleteProductButtonLoading:boolean=false
+DeleteCatButtonLoadding:boolean=false
 
 formBuilder=inject(FormBuilder)
 files: NgxFileDropEntry[] = [];
@@ -534,17 +536,21 @@ resetFormUpdateCat() {
 }
 
 deleteProd(id:number){
+  this.DeleteProductButtonLoading=true
   this.produitsService.deleteProduct(id).subscribe({
     next:(data)=>{
       this.loadProducts();
+      this.DeleteProductButtonLoading=false
     }
   })
 }
 
 deleteCat(id:number){
+  this.DeleteCatButtonLoadding=true
   this.categoryService.deleteCategory(id).subscribe({
     next:(data)=>{
       this.loadCategories();
+      this.DeleteCatButtonLoadding=false;
     }
   })
 }

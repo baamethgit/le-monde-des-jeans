@@ -151,7 +151,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             order_fields = ordering.split(',')
             for field in order_fields:
                 # Vérifier si le champ est valide pour éviter les injections SQL
-                valid_fields = ['prix', '-prix', 'nom', '-nom', 'categorie', '-categorie', 'special','QuantiteStock', '-QuantiteStock']
+                valid_fields = ['prix', '-prix', 'nom', '-nom', 'categorie', '-categorie', 'special','QuantiteStock', '-QuantiteStock','id', '-id']
                 if field in valid_fields:
                     queryset = queryset.order_by(field)
 

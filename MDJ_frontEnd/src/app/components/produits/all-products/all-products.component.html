@@ -37,7 +37,7 @@
     <div class="product-grid__container">
       @if (produits && produits.length > 0) {
         @for (item of produits; track item) {
-          @if (item.QuantiteStock > 0 &&
+          @if (
           (selectedNew === '' || item.neuf.toString() === selectedNew) &&
           (selectedSpecial === '' || item.special.toString() === selectedSpecial)) {
             <div class="product-item">
@@ -48,8 +48,11 @@
                   }
                   @if (item.special) {
                     <div class="product-item__crown">
-                      <img src="../../../../assets/img/king.png" alt="" srcset="">
+                      <div class="p-1 text-light text-center rounded rounded-2 gold_special">VIP</div>
                     </div>
+                  }
+                  @if (item.QuantiteStock === 0) {
+                    <div class="product-item__stock-badge">RUPTURE DE STOCK</div>
                   }
                   <img
                     [ngSrc]="item.images[0].image"

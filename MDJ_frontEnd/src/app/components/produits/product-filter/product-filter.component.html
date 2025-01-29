@@ -36,9 +36,9 @@
   <div class="product-grid__container">
     @if (produits_category && produits_category.length > 0) {
       @for (item of produits_category; track item) {
-        @if (item.QuantiteStock > 0 &&
-            (selectedNew === '' || item.neuf.toString() === selectedNew) &&
-            (selectedSpecial === '' || item.special.toString() === selectedSpecial)) {
+        @if (
+        (selectedNew === '' || item.neuf.toString() === selectedNew) &&
+        (selectedSpecial === '' || item.special.toString() === selectedSpecial)) {
           <div class="product-item">
             <a [routerLink]="['/produits', item.slug]" class="product-item__link">
               <div class="product-item__img-container">
@@ -47,7 +47,7 @@
                 }
                 @if (item.special) {
                   <div class="product-item__crown">
-                    <img src="../../../../assets/img/king.png" alt="" srcset="">
+                    <div class="p-1 text-light text-center rounded rounded-2 gold_special">VIP</div>
                   </div>
                 }
                 <img
@@ -56,6 +56,7 @@
                   [height]="400"
                   [alt]="item.nom"
                   class="product-item__img"
+                  loading="lazy"
                 >
               </div>
               <div class="product-item__info">
