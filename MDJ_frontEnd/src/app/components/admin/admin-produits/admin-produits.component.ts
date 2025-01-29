@@ -351,8 +351,9 @@ removeImageProdUpdate(index: number) {
 }
 
 createProduct() {
-  this.AddProductButtonLoading = true;
+  
   if (this.AddProductForm.valid) {
+    this.AddProductButtonLoading = true;
     const formData = new FormData();
 
     formData.append('prix', this.AddProductForm.get('prix_produit')?.value);
@@ -397,8 +398,9 @@ createProduct() {
 }
 
 UpdateProduct(id:number) {
-  this.UpdateProductButtonLoading = true;
+  
   if (this.UpdateProductForm.valid) {
+    this.UpdateProductButtonLoading = true;
     const formData = new FormData();
 
     formData.append('prix', this.UpdateProductForm.get('prix_produit')?.value);
@@ -441,8 +443,9 @@ UpdateProduct(id:number) {
 }
 
 createCategory() {
-  this.AddCategoryButtonLoading = true;
+  
   if (this.AddCategoryForm.valid) {
+    this.AddCategoryButtonLoading = true;
     const formData = new FormData();
 
     formData.append('nom', this.AddCategoryForm.get('nom_categorie')?.value);
@@ -547,8 +550,9 @@ deleteCat(id:number){
 }
 
 UpdateCat(id:number){
-  this.UpdateCategoryButtonLoading = true
+  
   if (this.UpdateCategoryForm.valid) {
+    this.UpdateCategoryButtonLoading = true
     const formData = new FormData();
 
     formData.append('nom', this.UpdateCategoryForm.get('nom_categorie')?.value);
