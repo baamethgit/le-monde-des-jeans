@@ -158,12 +158,10 @@ class ProductViewSet(viewsets.ModelViewSet):
         # Filtrer par slug de catégorie si "category_slug" est fourni dans les paramètres
         categorie = self.request.query_params.get('categorie', None)
         if categorie:
-            print(f"Filtrage par catégorie: {categorie}")
             queryset = queryset.filter(categorie__slug=categorie)
             
         special = self.request.query_params.get('special', None)
         if special:
-            print(f"Filtrage par special: {special}")
             queryset = queryset.filter(special=special)
 
         # Filtrer par taille si "size" est fourni

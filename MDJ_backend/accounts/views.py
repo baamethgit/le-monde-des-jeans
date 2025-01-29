@@ -39,6 +39,7 @@ class RegisterView(APIView):
                 password=password
             )
             send_verification_email(user)
+            logger.info(f"Utilisateur {user} créé avec succès.Email envoyé pour activer le compte.")
             return Response(
                 {
                     "message": "Utilisateur créé avec succès. Veuillez vérifier votre adresse e-mail pour activer votre compte."},
@@ -47,14 +48,14 @@ class RegisterView(APIView):
 
         except ValueError as e:
             # Gère les erreurs de validation (levées par le CustomUserManager)
-            logger.error(e)
+            logger.error(str(e), exc_info=True)
             return Response(
                 {"erreur_rencontre": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         except IntegrityError as e:
-            logger.error(e)
+            logger.error(str(e),exc_info=True)
             # Gère les erreurs d'unicité (numéro de téléphone ou adresse e-mail déjà utilisés)
             if 'phone_number' in str(e):
                 return Response(
@@ -73,7 +74,7 @@ class RegisterView(APIView):
                 )
 
         except Exception as e:
-            logger.error(f"SIGNUP ,Erreur inattendue : {str(e)}")
+            logger.error(f"SIGNUP ,Erreur inattendue : {str(e)}", exc_info=True)
             return Response(
                 {"erreur_rencontre": "Une erreur inattendue s'est produite."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -138,10 +139,13 @@ class VerifyEmailView(APIView):
                 user.verification_token = None
                 user.verification_token_expires = None
                 user.save()
+                logger.info(f"Adresse e-mail vérifiée avec succès .Le compte de {user.phone_number} est activé")
+
                 return Response({"message": "Adresse e-mail vérifiée avec succès."})
             else:
                 return Response({"error": f"Le lien de vérification a expiré.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_403_FORBIDDEN)
-        except CustomUser.DoesNotExist:
+        except CustomUser.DoesNotExist as e:
+            logger.error(f"Token d'activation de compte invalide {str(e)}", exc_info=True)
             return Response({"error": f"Token invalide.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_400_BAD_REQUEST)
 
 class ResetPasswordView(APIView):
@@ -304,6 +308,7 @@ class Logout(APIView):
     def post(self, request):
         try:
             logout(request)
+
             return Response(
                 {'message': 'Déconnexion réussie.'},
                 status=status.HTTP_200_OK
