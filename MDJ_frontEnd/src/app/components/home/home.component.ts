@@ -77,7 +77,7 @@ export class HomeComponent  implements OnInit{
 
   loadSpecials(){
     this.isPSpeciauxLoading = true;
-    this.productService.getProductBySpecial(this.page, this.pageSize).pipe(
+    this.productService.getProductBySpecialAvailable(this.page, this.pageSize).pipe(
       finalize(() => this.isPSpeciauxLoading = false)
     ).subscribe({
       next:(data)=>{this.special_list=data.results}
