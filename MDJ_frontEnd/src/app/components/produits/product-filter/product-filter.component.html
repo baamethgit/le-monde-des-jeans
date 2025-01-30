@@ -42,13 +42,16 @@
           <div class="product-item">
             <a [routerLink]="['/produits', item.slug]" class="product-item__link">
               <div class="product-item__img-container">
-                @if (item.neuf) {
+                @if (item.neuf && item.QuantiteStock > 0) {
                   <div class="product-item__new-badge">NEUF</div>
                 }
-                @if (item.special) {
+                @if (item.special && item.QuantiteStock > 0) {
                   <div class="product-item__crown">
                     <div class="p-1 text-light text-center rounded rounded-2 gold_special">VIP</div>
                   </div>
+                }
+                @if (item.QuantiteStock === 0) {
+                  <div class="product-item__stock-badge">RUPTURE DE STOCK</div>
                 }
                 <img
                   [ngSrc]="item.images[0].image"
