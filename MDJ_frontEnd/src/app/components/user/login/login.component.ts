@@ -1,7 +1,7 @@
 import {CommonModule, isPlatformServer} from '@angular/common';
 import {Component, Inject, OnInit, PLATFORM_ID, signal} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../services/users/user.service';
 import { User } from '../../../models/user';
 import Validation from "../../../shared/my-validators";
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit{
 
   isServer = false;
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object,private userService:UserService,private fb:FormBuilder,private router:Router){
+  constructor(@Inject(PLATFORM_ID) platformId: Object,private userService:UserService,private fb:FormBuilder,private router:Router, private route:ActivatedRoute){
     this.isServer = isPlatformServer(platformId);
 
   }
@@ -63,6 +63,8 @@ export class LoginComponent implements OnInit{
           .subscribe({
           next: (user) => {
             this.router.navigate(["/"]);
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            this.router.navigateByUrl(returnUrl);
           },
           error: (error) => {
             this.loginForm.markAllAsTouched();
