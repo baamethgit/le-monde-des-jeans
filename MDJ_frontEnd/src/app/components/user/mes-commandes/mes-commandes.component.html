@@ -33,17 +33,12 @@
                 {{order.statut}}
               </span>
             </div>
-            <p class="text-center my-0 py-0" *ngIf="order.statut=='EN_ATTENTE'">
-              <button class="btn-success my-0 btn p-0" type="button">
-                <a [routerLink]="['/detail-commande']" class="m-0 p-3 shadow text-decoration-none text-white">Finaliser</a>
-              </button>
-            </p>
             <div class="order-date">Commandé le {{order.date_commande | date : 'dd MMMM YYYY'}}</div>
             <div class="order-details" *ngIf="order.produits.length">
               <div class="items">
                 <strong>Articles:</strong>
                 <ul>
-                  <li *ngFor="let item of order.produits">{{item.nom}}</li>
+                  <li *ngFor="let item of order.produits">{{item.slug}}</li>
                 </ul>
               </div>
               <div class="delivery-info">
@@ -71,8 +66,15 @@
                 <input type="checkbox" name="" (change)="MarquerColisRecu(order.id, $event)" id="order.id">
                 <label for="order.id" class="mx-1">Colis reçu</label>
               </div>
-              <div class="order-total">
-                Total: {{order.montant}} FCFA
+              <div class="d-flex align-content-center justify-content-between">
+                <p class="text-center my-0 py-0" *ngIf="order.statut=='EN_ATTENTE'">
+                  <button class="btn-success my-0 btn p-0" type="button">
+                    <a [routerLink]="['/detail-commande']" class="m-0 p-3 shadow text-decoration-none text-white">Finaliser</a>
+                  </button>
+                </p>
+                <div class="order-total">
+                  Total: {{order.montant}} FCFA
+                </div>
               </div>
             </div>
       </div>}
