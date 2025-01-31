@@ -85,8 +85,9 @@
         </div>
     }
   </div>
-    <div *ngIf="produits.length" class="d-flex justify-content-between p-2">
+    <div *ngIf="produits.length" class="p-2 text-center my-4">
       <ngb-pagination
+        class="d-flex justify-content-center"
         [collectionSize]="totalItems"
         [(page)]="page"
         [pageSize]="pageSize"

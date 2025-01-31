@@ -211,13 +211,10 @@ $blue_color: #377DFF;
   transform: translateY(-5px);
 }
 
-.product-card__image {
-  position: relative;
-  padding-top: 100%;
-}
 
 .product-card__image img {
   position: absolute;
+  z-index: 3;
   top: 0;
   left: 0;
   width: 100%;
@@ -652,18 +649,6 @@ $blue_color: #377DFF;
   transform: scale(1.05);
 }
 
-.product-card__badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: white;
-  color: black;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  z-index: 1;
-}
 
 .product-card__info {
   padding: 15px;
