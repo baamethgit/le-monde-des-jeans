@@ -81,19 +81,32 @@ class Produit(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            max_length = Produit._meta.get_field('slug').max_length
-            self.slug = orig = slugify(self.nom)[:max_length]
+            # Combinaison de plusieurs attributs pour un slug unique
+            base_slug = "-".join(filter(None, [
+                slugify(self.nom) if self.nom else '',
+                self.categorie.nom if self.categorie else '',
+                self.couleur or '',
+                self.taille or ''
+            ]))
             
+            # Ajout d'un identifiant unique si nécessaire
+            if not base_slug:
+                base_slug = f"produit-{self.id or uuid.uuid4().hex[:8]}"
+            
+            max_length = self._meta.get_field('slug').max_length
+            self.slug = base_slug[:max_length]
+            
+            # Gestion des doublons
+            original_slug = self.slug
             for i in itertools.count(1):
                 if not Produit.objects.filter(slug=self.slug).exists():
                     break
-                # Tronquer le slug original dynamiquement pour faire de la place pour le suffixe
-                self.slug = "{}-{}".format(orig[:max_length - len(str(i)) - 1], i)
-        
+                self.slug = f"{original_slug}-{i}"[:max_length]
+
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.nom
+        return self.slug
 class ImageProduit(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='images_produits/',verbose_name='photo')
