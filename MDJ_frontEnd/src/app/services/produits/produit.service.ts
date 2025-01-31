@@ -70,6 +70,13 @@ export class ProduitService {
     return this.http.get<Produit[]>(`${this.apiUrl}?special=True`,{ params })
   }
 
+  getProductBySpecialAvailable(page: number = 1, pageSize: number = 10):Observable<any>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+    return this.http.get<Produit[]>(`${this.apiUrl}?special=True?available=True`,{ params })
+  }
+
   CreateProduct(formData: FormData): Observable<any> {
     return this.http.post<Produit>(this.apiUrl, formData);
   }

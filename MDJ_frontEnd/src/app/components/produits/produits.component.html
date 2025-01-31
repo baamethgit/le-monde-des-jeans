@@ -27,7 +27,7 @@
                     <a
                       (click)="switch_category('')"
                       class="link_category"
-                      [ngClass]="{'active': current_category === ''}"
+                      [ngClass]="{'active': selectedCategory === ''}"
                     >
                       Tous les produits
                     </a>
@@ -49,7 +49,7 @@
                     <a
                       (click)="switch_category(item.slug)"
                       class="link_category"
-                      [ngClass]="{'active': current_category === item.slug}"
+                      [ngClass]="{'active': selectedCategory === item.slug}"
                     >
                       {{item.nom}}
                     </a>
@@ -62,7 +62,7 @@
                 class="form-select show-tick d-md-none ps-2 pe-5"
                 [(ngModel)]="selectedCategory"
                 (change)="onCategorySelect($event)">
-                <option value="">Tous les produits</option>
+                <option value=''>Tous les produits</option>
                 @for (item of list_categorie; track $index) {
                     <option [value]="item.slug">{{item.nom}}</option>
                 }

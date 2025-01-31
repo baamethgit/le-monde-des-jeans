@@ -16,7 +16,6 @@ import {finalize} from "rxjs";
 })
 export class ProduitsComponent implements OnInit {
   list_categorie: any[] = [];
-  current_category: string = '';
   selectedCategory: string = '';
   isCategoriesLoading : boolean = true;
 
@@ -31,9 +30,11 @@ export class ProduitsComponent implements OnInit {
 this.loadCategories();
     this.route.params.subscribe(params => {
       const slug = this.route.snapshot.firstChild?.paramMap.get('slug');
-      this.current_category = <string>slug;
-      this.selectedCategory = <string>slug;
-
+      if (slug == null) {
+        this.selectedCategory = '';
+        return;
+      }
+      this.selectedCategory = slug;
     });
   }
 
@@ -49,7 +50,6 @@ this.loadCategories();
   }
 
   switch_category(categorySlug: string): void {
-    this.current_category = categorySlug;
     this.selectedCategory = categorySlug;
 
     if (categorySlug === '') {
@@ -62,5 +62,6 @@ this.loadCategories();
   onCategorySelect(event: any): void {
     const categorySlug = event.target.value;
     this.switch_category(categorySlug);
+    console.log('Category selected:', categorySlug);
   }
 }

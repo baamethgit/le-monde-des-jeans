@@ -16,7 +16,7 @@ import {finalize} from "rxjs";
 @Component({
   selector: 'app-produit-detail',
   standalone: true,
-    imports: [SlicePipe, CarouselModule, RouterLink, NgOptimizedImage, RouterOutlet, GalleriaModule, FormsModule, NgxSkeletonLoaderModule,
+    imports: [CarouselModule, RouterLink, NgOptimizedImage, GalleriaModule, FormsModule, NgxSkeletonLoaderModule,
       CarouselModule, RouterLink, NgOptimizedImage, GalleriaModule,FormsModule],
   templateUrl: './produit-detail.component.html',
   styleUrl: './produit-detail.component.scss'
@@ -27,13 +27,14 @@ export class ProduitDetailComponent implements OnInit{
   product_selected: Produit | undefined;
   must_like_product: Produit[] = [];
   page = 1;
-  pageSize = 5;
+  pageSize = 6;
   commandeService = inject(CommandeService);
   panierService = inject(PanierService);
   userService = inject(UserService);
   errorMessage = '';
   quantity: number = 1;
   isLoading = false;
+  isPloading = false;
   isAchatDirectLoading = false;
   isAddToCartLoading = false;
 
@@ -137,14 +138,17 @@ acheterDirectement(productSlug : string | undefined){
   }}
 
   loadSimilarProducts(): void {
+    this.isPloading = true
     if (this.product_selected?.categorie_detail?.slug) {
       const categorySlug = this.product_selected.categorie_detail.slug;
-      this.produitService.getProductByCategory(categorySlug, this.page, this.pageSize).subscribe({
+      this.produitService.getProductByCategory(categorySlug, this.page, this.pageSize).pipe(
+        finalize(() => this.isPloading = false)
+      ).subscribe({
         next: (data) => {
           this.must_like_product = data.results.filter((p: { slug: string | undefined; }) => p.slug !== this.product_selected?.slug);
         }
       });
-    } else { }
+    } else { /* empty */ }
   }
 
   addToCart(): void {
