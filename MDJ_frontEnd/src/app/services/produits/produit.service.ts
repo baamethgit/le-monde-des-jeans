@@ -74,7 +74,7 @@ export class ProduitService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
-    return this.http.get<Produit[]>(`${this.apiUrl}?special=True?available=True`,{ params })
+    return this.http.get<Produit[]>(`${this.apiUrl}?special=True&available=True`,{ params })
   }
 
   CreateProduct(formData: FormData): Observable<any> {
