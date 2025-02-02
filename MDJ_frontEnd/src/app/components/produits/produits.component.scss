@@ -117,7 +117,7 @@ $blue_color: #377DFF;
 
 @media (max-width: 500px) {
   .product-grid__container {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
 }
 
