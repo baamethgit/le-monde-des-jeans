@@ -26,6 +26,7 @@ export const COMPO = [
   { value: 'coton', label: 'Coton' },
   { value: 'nilon', label: 'Nilon' },
   { value: 'jean', label: 'Jean' },
+  { value: 'lin', label: 'Lin' },
 ];
 
 // couleurs.ts
@@ -392,7 +393,9 @@ createProduct() {
         this.AddProductButtonLoading=false
 
       },
-      error: (error) => {  }
+      error: (error) => { 
+        this.AddProductButtonLoading = false
+       }
     });
   } else {
     this.AddProductForm.markAllAsTouched();
@@ -419,8 +422,8 @@ UpdateProduct(id:number) {
     const neuf = this.UpdateProductForm.get('neuf_checkbox')?.value ? 'true' : 'false';
 
     if (nom) formData.append('nom', nom);
-    if (pointure) formData.append('pointure', pointure)
-    if (taille) formData.append('taille', taille);
+    formData.append('pointure', pointure)
+    formData.append('taille', taille);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
     if (desc) formData.append('description', desc);
@@ -436,8 +439,12 @@ UpdateProduct(id:number) {
       next: (data) => {
         this.loadProducts()
         this.resetFormProdUpdate();
+        console.log("update : ",  data);
         this.UpdateProductButtonLoading = false
-      }
+      },
+      error: (error) => { 
+        this.UpdateProductButtonLoading = false
+       }
     });
   } else {
     this.UpdateProductForm.markAllAsTouched();
@@ -541,6 +548,9 @@ deleteProd(id:number){
     next:(data)=>{
       this.loadProducts();
       this.DeleteProductButtonLoading=false
+    },
+    error:(error)=>{
+      this.DeleteProductButtonLoading=false
     }
   })
 }
@@ -550,6 +560,9 @@ deleteCat(id:number){
   this.categoryService.deleteCategory(id).subscribe({
     next:(data)=>{
       this.loadCategories();
+      this.DeleteCatButtonLoadding=false;
+    },
+    error:(error)=>{      
       this.DeleteCatButtonLoadding=false;
     }
   })
@@ -576,6 +589,9 @@ UpdateCat(id:number){
       next: (data) => {
         this.loadCategories()
         this.resetFormUpdateCat();
+        this.UpdateCategoryButtonLoading = false;
+      },
+      error: (error) => {
         this.UpdateCategoryButtonLoading = false;
       }
     });

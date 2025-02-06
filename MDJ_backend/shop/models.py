@@ -50,6 +50,7 @@ class Produit(models.Model):
         ('coton', 'Coton'),
         ('nilon', 'Nilon'),
         ('jean', 'Jean'),
+        ('lin', 'Lin')
     )
     COULEUR = (
         ('BL', 'Bleu'),
