@@ -38,8 +38,9 @@ class RegisterView(APIView):
                 nom_complet=nom_complet,
                 password=password
             )
-            send_verification_email(user)
-            logger.info(f"Utilisateur {user} créé avec succès.Email envoyé pour activer le compte.")
+            #send_verification_email(user)
+            #logger.info(f"Utilisateur {user} créé avec succès.Email envoyé pour activer le compte.")
+            logger.info(f"Utilisateur {user} créé avec succès.A l'admin d'activer le compte.")
             return Response(
                 {
                     "message": "Utilisateur créé avec succès. Veuillez vérifier votre adresse e-mail pour activer votre compte."},

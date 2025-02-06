@@ -61,7 +61,7 @@ class CustomUserManager(BaseUserManager):
 
         if "<" in extra_fields.get('nom_complet') or ">" in extra_fields.get('nom_complet'):
             raise ValueError("Le nom d'utilisateur ne peut pas contenir de balises HTML.")
-
+        """
         if not extra_fields.get('addresse_mail'):
             raise ValueError('L\'adresse e-mail est obligatoire.')
 
@@ -70,12 +70,12 @@ class CustomUserManager(BaseUserManager):
             validate_email_domain(extra_fields.get('addresse_mail'))
         except ValidationError as e:
             raise ValueError(str(e))
-
         # Normalise l'adresse e-mail
         addresse_mail = self.normalize_email(extra_fields.get('addresse_mail'))
         extra_fields['addresse_mail'] = addresse_mail
+"""
 
-        extra_fields.setdefault('is_active', False)
+        #extra_fields.setdefault('is_active', False)
         # Crée l'utilisateur
         user = self.model(phone_number=phone_number, **extra_fields)
         user.set_password(password)
@@ -106,7 +106,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     addresse_mail = models.EmailField(
         max_length=255, 
         unique=True,
-        validators=[validate_email_domain]
+        #validators=[validate_email_domain],
+        null=True,
+        blank=True,
     )
     is_active = models.BooleanField(default=True)
     verification_token = models.CharField(max_length=64, blank=True, null=True)

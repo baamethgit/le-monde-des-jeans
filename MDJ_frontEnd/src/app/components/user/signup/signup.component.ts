@@ -39,7 +39,8 @@ export class SignupComponent implements OnInit{
       {
         nom_complet: ['', [Validators.required]],
         phone_number: ['', [Validators.required]],
-        addresse_mail:['',[Validators.required, Validators.email,CustomValidators.emailDomain()]],
+       //addresse_mail:['',[Validators.required, Validators.email,CustomValidators.emailDomain()]],
+        addresse_mail:['',[Validators.email]],
         password: ['', [Validators.required]],
         password_confirm: ['', [Validators.required]],
       },
@@ -79,8 +80,9 @@ export class SignupComponent implements OnInit{
         )
         .subscribe({
         next: (data) => {
-          this.msgCreation = data.message
-          alert(this.msgCreation);
+          //this.msgCreation = data.message
+          //this.msgCreation = "Contacter l'admin pour activer votre Compte"
+          //alert(this.msgCreation);
           this.router.navigate(['login']);
         },
         error: (error) => {
