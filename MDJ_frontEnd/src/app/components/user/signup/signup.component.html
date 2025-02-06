@@ -34,10 +34,18 @@
           <label for="addresse_mail" class="form-label">Adresse Email</label>
           <input formControlName="addresse_mail" type="email" class="form-control" id="addresse_mail">
           <div *ngIf="SignupForm.controls['addresse_mail'].invalid && (SignupForm.controls['addresse_mail'].dirty || SignupForm.controls['addresse_mail'].touched)">
-            <small class="text-danger" *ngIf="SignupForm.controls['addresse_mail'].hasError('required')">Ce champ est
-              obligatoire.</small>
-            <small class="text-danger" *ngIf="SignupForm.controls['addresse_mail'].hasError('email')">Veuillez saisir une
-              adresse email valide</small>
+            <small class="text-danger" *ngIf="SignupForm.controls['addresse_mail'].hasError('required')">
+              Ce champ est obligatoire.
+            </small>
+            <small class="text-danger" *ngIf="SignupForm.controls['addresse_mail'].hasError('email')">
+              Veuillez saisir une adresse email valide
+            </small>
+            <small class="text-danger" *ngIf="SignupForm.controls['addresse_mail'].hasError('invalidDomain')">
+              Ce domaine d'email n'est pas accepté.
+            </small>
+            <small class="text-danger" *ngIf="SignupForm.controls['addresse_mail'].hasError('invalidEmail')">
+              Le format de l'email est invalide.
+            </small>
           </div>
         </div>
         <div class="mb-3">

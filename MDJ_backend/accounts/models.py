@@ -11,8 +11,38 @@ from accounts.validators import validate_phone_number_senegal
 
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import BaseUserManager
-from .validators import validate_phone_number_senegal  # Importe le validateur personnalisé
+from .validators import validate_phone_number_senegal
 
+from django.core.exceptions import ValidationError
+import re
+
+def validate_email_domain(email):
+    # Liste des domaines de messagerie valides
+    valid_domains = [
+        'gmail.com', 'yahoo.com', 'yahoo.fr', 'hotmail.com', 
+        'hotmail.fr', 'outlook.com', 'outlook.fr', 'live.com',
+        'live.fr', 'orange.fr', 'wanadoo.fr', 'free.fr',
+        'protonmail.com',
+    ]
+    
+    # Vérification basique du format
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(pattern, email):
+        raise ValidationError("Format d'adresse e-mail invalide.")
+    
+    # Extraction du domaine
+    domain = email.split('@')[1].lower()
+    
+    # Vérification du domaine
+    if domain not in valid_domains:
+        raise ValidationError(f"Le domaine '{domain}' n'est pas accepté. Veuillez utiliser une adresse email valide.")
+    
+    # Vérifications supplémentaires
+    if '..' in email:
+        raise ValidationError("L'adresse e-mail ne peut pas contenir deux points consécutifs.")
+    
+    if email.count('@') != 1:
+        raise ValidationError("L'adresse e-mail doit contenir exactement un '@'.")
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
         # Vérifie que le numéro de téléphone est fourni
@@ -34,6 +64,12 @@ class CustomUserManager(BaseUserManager):
 
         if not extra_fields.get('addresse_mail'):
             raise ValueError('L\'adresse e-mail est obligatoire.')
+
+        # Validation de l'email
+        try:
+            validate_email_domain(extra_fields.get('addresse_mail'))
+        except ValidationError as e:
+            raise ValueError(str(e))
 
         # Normalise l'adresse e-mail
         addresse_mail = self.normalize_email(extra_fields.get('addresse_mail'))
@@ -67,7 +103,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Client'
     nom_complet = models.CharField(max_length=255)
     phone_number = PhoneNumberField(region='SN',unique=True,validators=[validate_phone_number_senegal])
-    addresse_mail = models.EmailField(max_length=255, unique=True)
+    addresse_mail = models.EmailField(
+        max_length=255, 
+        unique=True,
+        validators=[validate_email_domain]
+    )
     is_active = models.BooleanField(default=True)
     verification_token = models.CharField(max_length=64, blank=True, null=True)
     verification_token_expires = models.DateTimeField(blank=True, null=True)
