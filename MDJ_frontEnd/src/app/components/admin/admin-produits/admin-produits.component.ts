@@ -159,10 +159,8 @@ loadProducts() {
 
 sort(column: string) {
   if (this.sortColumn === column) {
-    // Si on clique sur la même colonne, on inverse la direction
     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
   } else {
-    // Nouvelle colonne, on met par défaut en ascendant
     this.sortColumn = column;
     this.sortDirection = 'asc';
   }
@@ -172,6 +170,8 @@ sort(column: string) {
 OnPageChange(page: number) {
   this.page = page;
   this.loadProducts();
+  window.scrollTo(0, 0);
+  
 }
 loadCategories(){
   this.isCLoading = true;
@@ -439,7 +439,6 @@ UpdateProduct(id:number) {
       next: (data) => {
         this.loadProducts()
         this.resetFormProdUpdate();
-        console.log("update : ",  data);
         this.UpdateProductButtonLoading = false
       },
       error: (error) => { 

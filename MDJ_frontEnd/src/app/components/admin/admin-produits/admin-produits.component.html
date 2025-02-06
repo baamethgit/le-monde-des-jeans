@@ -296,7 +296,10 @@
                 <td>{{item.id}}</td>
                 <td>
                     <img src="{{item.images[0].image}}" width="30" alt="">
-                    {{item.nom}}
+                    @if (item.nom) {
+                      {{item.nom}}
+                    }
+                    
                 </td>
                 <td>{{item.categorie_detail.nom}}</td>
                 <td class="text-center">{{item.prix}}</td>
