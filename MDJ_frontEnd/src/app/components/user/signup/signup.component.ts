@@ -7,6 +7,7 @@ import { UserService } from '../../../services/users/user.service';
 import Validation from '../../../shared/my-validators';
 import { User } from '../../../models/user';
 import {finalize} from "rxjs";
+import { CustomValidators } from './custom-validator';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class SignupComponent implements OnInit{
       {
         nom_complet: ['', [Validators.required]],
         phone_number: ['', [Validators.required]],
-        addresse_mail:['',[Validators.required, Validators.email]],
+        addresse_mail:['',[Validators.required, Validators.email,CustomValidators.emailDomain()]],
         password: ['', [Validators.required]],
         password_confirm: ['', [Validators.required]],
       },

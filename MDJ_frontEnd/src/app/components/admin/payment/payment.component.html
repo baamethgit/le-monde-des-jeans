@@ -133,7 +133,10 @@
                       <td>
                         {{ payment.ref_commande }}
                       </td>
-                      <td>{{ payment.client || '---' }}</td>
+                      <td>
+                        <span>{{ payment.nom_client || '---' }}</span><br>
+                        <span>{{ payment.telephone_client || '---' }}</span>
+                      </td>
                       <td>{{ payment.montant }} FCFA</td>
                       <td>
                     <span [class]="getMethodeBadgeClass(payment.methode_paiement)">
