@@ -298,6 +298,8 @@
                     <img src="{{item.images[0].image}}" width="30" alt="">
                     @if (item.nom) {
                       {{item.nom}}
+                    }@else {
+                      {{item.slug}}
                     }
                     
                 </td>
