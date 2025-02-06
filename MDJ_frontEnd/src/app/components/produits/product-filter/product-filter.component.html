@@ -65,6 +65,12 @@
               <div class="product-item__info">
                 <div class="product-item__name">{{ item.nom }}</div>
                 <div class="product-item__price">{{ item.prix }} FCFA</div>
+                @if (item.taille) {
+                  <div class="product-item__size">Taille: {{ item.taille }}</div>
+                }
+                @if (item.pointure) {
+                  <div class="product-item__shoe-size">Pointure: {{ item.pointure }}</div>
+                }
               </div>
             </a>
           </div>
