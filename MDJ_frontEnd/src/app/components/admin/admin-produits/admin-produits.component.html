@@ -254,13 +254,8 @@
               'bi-arrow-down-up': sortColumn !== 'id'
             }"></i>
           </th>
-          <th scope="col" class="cursor-pointer" (click)="sort('nom')">
+          <th>
             Produit
-            <i class="bi" [ngClass]="{
-              'bi-arrow-up': sortColumn === 'nom' && sortDirection === 'asc',
-              'bi-arrow-down': sortColumn === 'nom' && sortDirection === 'desc',
-              'bi-arrow-down-up': sortColumn !== 'nom'
-            }"></i>
           </th>
           <th  scope="col" class="text-center">
             Categorie
