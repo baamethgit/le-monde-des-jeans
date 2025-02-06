@@ -52,7 +52,6 @@ export class PaymentComponent implements OnInit{
       {
         next:(data)=>{
           this.payments = data;
-          console.log("paiements : ", data)
         }
       }
     )
