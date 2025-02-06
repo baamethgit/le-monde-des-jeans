@@ -20,16 +20,13 @@ import { log } from 'console';
 })
 export class AdminListeCommandesComponent implements OnInit{
   page = 1;
-  pageSize = 5;
+  pageSize = 100;
   searchTerm = '';
   protected readonly StatutCommande = StatutCommande;
   totalItems = 0;
-  totalPage = 10;
   isLoading : boolean = false;
   statutFiltre : string = '';
   commandes : Commande[] = [];
-  filteredcommandes: Commande[] = [];
-  dateFilter!: string;
   sanitizer = inject(DomSanitizer);
   startDate! : Date;
   endDate! : Date;
@@ -53,6 +50,7 @@ export class AdminListeCommandesComponent implements OnInit{
     this.loadCommandes();
   }
 
+
   loadCommandes() : void{
     this.isLoading = true;
     this.commandeService.getCommandes(this.page, this.pageSize, this.searchTerm,this.statutFiltre,this.startDate,this.endDate)
@@ -66,21 +64,20 @@ export class AdminListeCommandesComponent implements OnInit{
     })
   }
 
-  onSort({ column, direction }: SortEvent) {
-
-	}
-
-  onStatusFilterChange(event: Event) {
-    this.statutFiltre = (event.target as HTMLSelectElement).value;
+  OnPageChange(page: number) {
+    this.page = page;
     this.loadCommandes();
+    window.scrollTo(0, 0);
   }
 
   onDateFilterChange(event: Event) {
+    this.page = 1;
     this.loadCommandes();
   }
 
   openDeleteCommandeModal(id:number){
-    alert("étes vous sur de vouloir supprimer");
+    const confirmed = confirm("étes vous sur de vouloir supprimer");
+    if (confirmed){
     this.commandeService.supprimerCommandeParAdmin(id).subscribe({
       next:(data)=>{
         // this.alertMessage = 'Votre commande est supprimé'
@@ -89,5 +86,5 @@ export class AdminListeCommandesComponent implements OnInit{
 
       }
     })
-  }
+  }}
 }

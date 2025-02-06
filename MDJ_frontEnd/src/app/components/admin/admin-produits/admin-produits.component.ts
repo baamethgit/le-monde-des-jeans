@@ -144,9 +144,9 @@ ngOnInit():void{
 }
 loadProducts() {
   this.isPLoading = true;
-  const ordering = this.sortColumn ? 
+  const ordering = this.sortColumn ?
     (this.sortDirection === 'desc' ? '-' : '') + this.sortColumn : '';
-    
+
   this.produitsService.getProductsAdmin(this.page, this.pageSize, ordering).pipe(
     finalize(() => this.isPLoading = false)
   ).subscribe({
@@ -171,7 +171,6 @@ OnPageChange(page: number) {
   this.page = page;
   this.loadProducts();
   window.scrollTo(0, 0);
-  
 }
 loadCategories(){
   this.isCLoading = true;
@@ -354,7 +353,7 @@ removeImageProdUpdate(index: number) {
 }
 
 createProduct() {
-  
+
   if (this.AddProductForm.valid) {
     this.AddProductButtonLoading = true;
     const formData = new FormData();
@@ -393,7 +392,7 @@ createProduct() {
         this.AddProductButtonLoading=false
 
       },
-      error: (error) => { 
+      error: (error) => {
         this.AddProductButtonLoading = false
        }
     });
@@ -403,7 +402,7 @@ createProduct() {
 }
 
 UpdateProduct(id:number) {
-  
+
   if (this.UpdateProductForm.valid) {
     this.UpdateProductButtonLoading = true;
     const formData = new FormData();
@@ -441,7 +440,7 @@ UpdateProduct(id:number) {
         this.resetFormProdUpdate();
         this.UpdateProductButtonLoading = false
       },
-      error: (error) => { 
+      error: (error) => {
         this.UpdateProductButtonLoading = false
        }
     });
@@ -451,7 +450,7 @@ UpdateProduct(id:number) {
 }
 
 createCategory() {
-  
+
   if (this.AddCategoryForm.valid) {
     this.AddCategoryButtonLoading = true;
     const formData = new FormData();
@@ -561,14 +560,14 @@ deleteCat(id:number){
       this.loadCategories();
       this.DeleteCatButtonLoadding=false;
     },
-    error:(error)=>{      
+    error:(error)=>{
       this.DeleteCatButtonLoadding=false;
     }
   })
 }
 
 UpdateCat(id:number){
-  
+
   if (this.UpdateCategoryForm.valid) {
     this.UpdateCategoryButtonLoading = true
     const formData = new FormData();

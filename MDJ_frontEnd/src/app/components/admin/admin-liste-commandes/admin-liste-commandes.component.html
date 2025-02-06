@@ -11,12 +11,12 @@
 	  >
 	  <div class="d-flex align-items-center ">
 		<span class="d-inline-block me-3 ">Filtrer par Statut : </span>
-		<select [(ngModel)]="statutFiltre" class="filter-select" style="cursor:pointer" (change)="loadCommandes()">
+		<select [(ngModel)]="statutFiltre" class="filter-select" style="cursor:pointer" (change)="onSearch()">
 			<option value="">----------</option>
 			<option value="EN_ATTENTE">En attente</option>
 			<option value="EN_COURS_LIVRAISON">En cours de livraison</option>
+			<option value="PAYEE">Payée</option>
 			<option value="LIVREE">Livrée</option>
-			<option value="delivered">Livré</option>
 		</select>
 	</div>
 	<div class="d-flex align-items-center">
@@ -82,9 +82,21 @@
 </tbody>
 	</table>
 </div>
-	<div class="pagination">
-	  <button class="page-btn me-2">&lt;</button>
-	  <span>Page {{page}} sur {{totalPage}}</span>
-	  <button class="page-btn ms-2">&gt;</button>
-	</div>
+  <div *ngIf="commandes.length" class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="totalItems"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      (pageChange)="OnPageChange($event)"
+      [boundaryLinks]="true"
+      [maxSize]="5"
+      aria-label="Navigation des pages">
+    </ngb-pagination>
+    <p>{{totalItems}} commandes au total</p>
+    <select class="form-select" style="width: max-content;" [(ngModel)]="pageSize" (ngModelChange)="loadCommandes();">
+      <option selected [ngValue]="10">10 commandes par page</option>
+      <option [ngValue]="50">50 commandes par page</option>
+      <option [ngValue]="totalItems">Toutes les commandes</option>
+    </select>
+  </div>
   </div>
