@@ -10,6 +10,7 @@ import { categorie } from '../../../models/categorie';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
 import {finalize} from "rxjs";
+import { blob } from 'node:stream/consumers';
 
 export const TAILLES = [
   { value: 'S', label: 'S' },
@@ -67,7 +68,7 @@ couleur=COULEUR
 page:number=1;
 pageSize:number=10;
 collectionSize:number=0;
-sortColumn: string = 'id';
+sortColumn: string = 'updated_at';
 sortDirection: string = 'desc';
 
 AddProductForm!:FormGroup;
@@ -421,16 +422,19 @@ UpdateProduct(id:number) {
     const special = this.UpdateProductForm.get('special_checkbox')?.value ? 'true' : 'false';
     const neuf = this.UpdateProductForm.get('neuf_checkbox')?.value ? 'true' : 'false';
 
-    if (nom) formData.append('nom', nom);
-    formData.append('pointure', pointure)
-    formData.append('taille', taille);
+    if (nom !== '') formData.append('nom', nom);
+    if (pointure !== '') formData.append('pointure', pointure);
+    if (taille !== '') formData.append('taille', taille);
     if (couleur) formData.append('couleur', couleur);
     if (composition) formData.append('composition', composition);
-    if (desc) formData.append('description', desc);
+    if (desc !== '') formData.append('description', desc);
     if (stock) formData.append('QuantiteStock', stock);
     formData.append('special', special);
     formData.append('neuf', neuf);
 
+    if (taille === '') formData.append('taille', '');
+    if (nom === '') formData.append('nom', '');
+    if (desc === '') formData.append('desc', '');
     this.imagesProdUpdateFormArray.controls.forEach((control) => {
       formData.append('image', control.value);
     });

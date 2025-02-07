@@ -177,7 +177,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         if ordering:
             order_fields = ordering.split(',')
             for field in order_fields:
-                valid_fields = ['prix', '-prix', 'special', 'QuantiteStock', '-QuantiteStock', 'id', '-id']
+                valid_fields = ['prix', '-prix', 'special', 'QuantiteStock', '-QuantiteStock', 'id', '-id', '-updated_at', '-created_at']
                 if field in valid_fields:
                     queryset = queryset.order_by(field)
 
