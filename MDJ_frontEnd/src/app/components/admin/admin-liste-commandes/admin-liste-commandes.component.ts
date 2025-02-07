@@ -20,7 +20,7 @@ import { log } from 'console';
 })
 export class AdminListeCommandesComponent implements OnInit{
   page = 1;
-  pageSize = 100;
+  pageSize = 200;
   searchTerm = '';
   protected readonly StatutCommande = StatutCommande;
   totalItems = 0;
