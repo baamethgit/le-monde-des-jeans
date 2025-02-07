@@ -305,7 +305,14 @@
                 </td>
                 <td>{{item.categorie_detail.nom}}</td>
                 <td class="text-center">{{item.prix}}</td>
-                <td class="text-center">{{item.QuantiteStock}}</td>
+                <td class="text-center align-content-center">
+                  @if (item.QuantiteStock>0) {
+                    {{item.QuantiteStock}}
+                  }@else {
+                    <span class="empty_prod_admin">VENDU</span>
+                  }
+                  
+                </td>
                 <td class="text-center">{{item.taille}}</td>
                 <td class="actions-cell text-center">
                     <button class="action-btn view" [routerLink]="['/produits', item.slug]" style="background-color: rgb(134, 224, 99); border: none;" >

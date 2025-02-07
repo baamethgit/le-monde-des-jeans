@@ -89,6 +89,12 @@
                         <div class="product-card__info">
                           <h3 class="product-card__title">{{item.nom}}</h3>
                           <p class="product-card__price">{{item.prix}} FCFA</p>
+                          @if (item.taille) {
+                            <div class="product-item__size">Taille: {{ item.taille }}</div>
+                          }
+                          @if (item.pointure) {
+                            <div class="product-item__shoe-size">Pointure: {{ item.pointure }}</div>
+                          }
                         </div>
                       </a>
                     }
@@ -139,6 +145,12 @@
                       <div class="product-card__info">
                         <h3 class="product-card__title">{{item.nom}}</h3>
                         <p class="product-card__price">{{item.prix}} FCFA</p>
+                        @if (item.taille) {
+                          <div class="product-item__size">Taille: {{ item.taille }}</div>
+                        }
+                        @if (item.pointure) {
+                          <div class="product-item__shoe-size">Pointure: {{ item.pointure }}</div>
+                        }
                       </div>
                     </a>
                   }

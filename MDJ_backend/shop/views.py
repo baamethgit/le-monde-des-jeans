@@ -22,6 +22,10 @@ from datetime import timedelta
 from django.utils.timezone import now
 from loguru import logger
 from django.db import transaction
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 
 class getDeliveryZones(ListAPIView):
@@ -80,6 +84,31 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProductSerializer
     pagination_class = CustomPagination
 
+    def compress_image(self, uploaded_image):
+        # Ouvrir l'image avec Pillow
+        im = Image.open(uploaded_image)
+        
+        # Convertir en RGB si nécessaire (pour les images PNG)
+        if im.mode != 'RGB':
+            im = im.convert('RGB')
+        
+        max_size = (800, 800)
+        im.thumbnail(max_size, Image.LANCZOS)
+        
+        output = BytesIO()
+        
+        im.save(output, format='JPEG', quality=60, optimize=True)
+        output.seek(0)
+        
+        return InMemoryUploadedFile(
+            output,
+            'ImageField',
+            f"{uploaded_image.name.split('.')[0]}.jpg",
+            'image/jpeg',
+            sys.getsizeof(output),
+            None
+        )
+
     def get_permissions(self):
         if self.action == 'retrieve' or self.action == 'list':
             permission_classes = []
@@ -90,7 +119,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def retrieve(self, request, *args, **kwargs):
-        # Récupérer le produit par le slug au lieu de l'id
         slug = kwargs.get('pk')  
         produit = get_object_or_404(models.Produit, slug=slug)
         serializer = self.get_serializer(produit)
@@ -99,21 +127,19 @@ class ProductViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)  # Toujours partiel
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
         if 'image' in request.FILES:
-            # Gérer les mises à jour d'images comme avant
             instance.images.all().delete()
             images = request.FILES.getlist('image')
             for image in images:
-                models.ImageProduit.objects.create(produit=instance, image=image)
+                # Compression de l'image avant sauvegarde
+                compressed_image = self.compress_image(image)
+                models.ImageProduit.objects.create(produit=instance, image=compressed_image)
 
         return Response(serializer.data)
-
-    def perform_update(self, serializer):
-        serializer.save()
     
     def create(self, request, *args, **kwargs):
         produit_data = {
@@ -121,22 +147,24 @@ class ProductViewSet(viewsets.ModelViewSet):
             'prix': request.data.get('prix'),
             'categorie': request.data.get('categorie'),
             'taille': request.data.get('taille'),
-            'pointure':request.data.get('pointure'),
+            'pointure': request.data.get('pointure'),
             'composition': request.data.get('composition'),
             'couleur': request.data.get('couleur'),
-            'special':request.data.get('special'),
-            'neuf':request.data.get('neuf'),
-            'description':request.data.get('description'),
-            'QuantiteStock':request.data.get('QuantiteStock')
+            'special': request.data.get('special'),
+            'neuf': request.data.get('neuf'),
+            'description': request.data.get('description'),
+            'QuantiteStock': request.data.get('QuantiteStock')
         }
         produit_serializer = self.get_serializer(data=produit_data)
         if produit_serializer.is_valid():
             produit = produit_serializer.save()
             
-            # Gérer les images
+            # Gérer les images avec compression
             images = request.FILES.getlist('image')
             for image in images:
-                models.ImageProduit.objects.create(produit=produit, image=image)
+                # Compression de l'image avant sauvegarde
+                compressed_image = self.compress_image(image)
+                models.ImageProduit.objects.create(produit=produit, image=compressed_image)
             
             return Response(produit_serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -147,15 +175,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         
         ordering = self.request.query_params.get('ordering', None)
         if ordering:
-            # Gestion du tri multiple (séparé par des virgules)
             order_fields = ordering.split(',')
             for field in order_fields:
-                # Vérifier si le champ est valide pour éviter les injections SQL
-                valid_fields = ['prix', '-prix', 'special','QuantiteStock', '-QuantiteStock','id', '-id']
+                valid_fields = ['prix', '-prix', 'special', 'QuantiteStock', '-QuantiteStock', 'id', '-id']
                 if field in valid_fields:
                     queryset = queryset.order_by(field)
 
-        # Filtrer par slug de catégorie si "category_slug" est fourni dans les paramètres
         categorie = self.request.query_params.get('categorie', None)
         if categorie:
             queryset = queryset.filter(categorie__slug=categorie)
@@ -164,17 +189,14 @@ class ProductViewSet(viewsets.ModelViewSet):
         if special:
             queryset = queryset.filter(special=special)
 
-        # Filtrer par taille si "size" est fourni
         size = self.request.query_params.get('size', None)
         if size:
             queryset = queryset.filter(taille=size)
 
-        # Filtrer par couleur si "color" est fourni
         color = self.request.query_params.get('color', None)
         if color:
             queryset = queryset.filter(couleur=color)
 
-        # Filtrer par composition si "compo" est fourni
         compo = self.request.query_params.get('compo', None)
         if compo:
             queryset = queryset.filter(composition=compo)
