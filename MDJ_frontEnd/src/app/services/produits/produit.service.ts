@@ -15,14 +15,18 @@ export class ProduitService {
 
   constructor(private http:HttpClient) { }
 
-  getProductsAvailables(page: number = 1, pageSize: number = 10):Observable<any>{
+  getProductsAvailables(page: number = 1, pageSize: number = 10, ordering:string='-updated_at'):Observable<any>{
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
+
+      if (ordering) {
+        params = params.set('ordering', ordering);
+      }
     return this.http.get<Produit[]>(this.apiUrl+`?available="True"`, { params })
   }
 
-  getAllProducts(page: number = 1, pageSize: number = 10, ordering:string=''):Observable<any>{
+  getAllProducts(page: number = 1, pageSize: number = 10, ordering:string='-updated_at'):Observable<any>{
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
@@ -35,7 +39,7 @@ export class ProduitService {
   }
 
 
-  getProductsAdmin(page: number = 1, pageSize: number = 10, ordering:string=''): Observable<any> {
+  getProductsAdmin(page: number = 1, pageSize: number = 10, ordering:string='-updated_at'): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
@@ -56,24 +60,36 @@ export class ProduitService {
 
 
 
-  getProductByCategory(categorie:string, page: number = 1, pageSize: number = 10):Observable<any>{
+  getProductByCategory(categorie:string, page: number = 1, pageSize: number = 10,  ordering:string='-updated_at'):Observable<any>{
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
+
+      if (ordering) {
+        params = params.set('ordering', ordering);
+      }
     return this.http.get<Produit[]>(`${this.apiUrl}?categorie=${categorie}`,{ params })
   }
 
-  getProductBySpecial(page: number = 1, pageSize: number = 10):Observable<any>{
+  getProductBySpecial(page: number = 1, pageSize: number = 10,  ordering:string='-updated_at'):Observable<any>{
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
+
+      if (ordering) {
+        params = params.set('ordering', ordering);
+      }
     return this.http.get<Produit[]>(`${this.apiUrl}?special=True`,{ params })
   }
 
-  getProductBySpecialAvailable(page: number = 1, pageSize: number = 10):Observable<any>{
+  getProductBySpecialAvailable(page: number = 1, pageSize: number = 10,  ordering:string='-updated_at'):Observable<any>{
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
+
+      if (ordering) {
+        params = params.set('ordering', ordering);
+      }
     return this.http.get<Produit[]>(`${this.apiUrl}?special=True&available=True`,{ params })
   }
 

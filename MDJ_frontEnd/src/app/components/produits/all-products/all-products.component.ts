@@ -47,7 +47,7 @@ export class AllProductsComponent implements OnInit{
 
   loadProducts() {
     this.isLoading = true;
-    this.produitService.getAllProducts(this.page, this.pageSize,"-id").pipe(
+    this.produitService.getAllProducts(this.page, this.pageSize).pipe(
       finalize(() => this.isLoading = false)
     ).subscribe({
       next: (data)=>{

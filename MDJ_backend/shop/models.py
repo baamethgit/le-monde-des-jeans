@@ -79,6 +79,8 @@ class Produit(models.Model):
     special = models.BooleanField(default=False)
     neuf = models.BooleanField(default=False)
     isDeletable=models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
