@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { InfosService } from '../../services/infos.service';
 import { Infos } from '../../models/infos.module';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
