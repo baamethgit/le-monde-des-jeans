@@ -58,7 +58,7 @@
 			<span [innerHTML]="highlightText(commande.client.nom_complet)"></span><br>
 			<span class="text-center" [innerHTML]="highlightText(commande.client.phone_number)"></span>
 		  </td>
-		  <td>{{commande.date_commande | date : 'dd MMMM YYYY'}}</td>
+		  <td>{{commande.date_commande | date : 'dd MMMM YYYY'}} à {{commande.date_commande | date : 'HH:mm:ss'}}</td>
 		  <td class="text-center text-primary fw-bold">{{ commande.montant }}</td>
 		  <td *ngIf="commande.zone_livraison">Zone {{commande.zone_livraison.numero}} : {{commande.zone_livraison.nom}}</td>
 		  <td *ngIf="!commande.zone_livraison">Récupéré au magasin</td>
