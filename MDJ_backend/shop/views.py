@@ -214,7 +214,7 @@ class CommandeListView(ListAPIView):
     permission_classes = [IsAuthenticated,IsAdminUser]
 
     def get_queryset(self):
-        queryset = Commande.objects.all()
+        queryset = Commande.objects.all().order_by('-date_commande')
 
         search_term = self.request.query_params.get('search', None)
         start_date = self.request.query_params.get('start_date')
