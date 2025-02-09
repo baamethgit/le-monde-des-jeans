@@ -14,23 +14,53 @@
   }">
     </ngx-skeleton-loader>
   } @else {
-    <div class="product-grid__filters">
-      <div class="filter-select">
-        <label for="newFilter" class="filter-select__label">Produits neufs</label>
-        <select id="newFilter" class="filter-select__input" [(ngModel)]="selectedNew">
-          <option value="">Tous</option>
-          <option value="true">Neufs uniquement</option>
-          <option value="false">Non neufs</option>
-        </select>
+    <div class="filters-group">
+      <div class="filter-section">
+        <p class="filter-title">État</p>
+        <div class="filter-buttons">
+          <button 
+            [class.active]="selectedNew === ''"
+            (click)="selectedNew = ''" 
+            class="filter-btn">
+            Tous
+          </button>
+          <button 
+            [class.active]="selectedNew === 'true'"
+            (click)="selectedNew = 'true'" 
+            class="filter-btn">
+            Neufs
+          </button>
+          <button 
+            [class.active]="selectedNew === 'false'"
+            (click)="selectedNew = 'false'" 
+            class="filter-btn">
+            Non neufs
+          </button>
+        </div>
       </div>
-
-      <div class="filter-select">
-        <label for="specialFilter" class="filter-select__label">Produits spéciaux</label>
-        <select id="specialFilter" class="filter-select__input" [(ngModel)]="selectedSpecial">
-          <option value="">Tous</option>
-          <option value="true">Spéciaux uniquement</option>
-          <option value="false">Non spéciaux</option>
-        </select>
+    
+      <div class="filter-section">
+        <p class="filter-title">Type</p>
+        <div class="filter-buttons">
+          <button 
+            [class.active]="selectedSpecial === ''"
+            (click)="selectedSpecial = ''" 
+            class="filter-btn">
+            Tous
+          </button>
+          <button 
+            [class.active]="selectedSpecial === 'true'"
+            (click)="selectedSpecial = 'true'" 
+            class="filter-btn">
+            Spéciaux
+          </button>
+          <button 
+            [class.active]="selectedSpecial === 'false'"
+            (click)="selectedSpecial = 'false'" 
+            class="filter-btn">
+            Standards
+          </button>
+        </div>
       </div>
     </div>
 

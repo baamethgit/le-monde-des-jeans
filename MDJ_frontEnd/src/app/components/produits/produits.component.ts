@@ -59,9 +59,9 @@ this.loadCategories();
     }
   }
 
-  onCategorySelect(event: any): void {
-    const categorySlug = event.target.value;
+  onCategorySelect(categorySlug: string): void {
+    this.selectedCategory = categorySlug;
     this.switch_category(categorySlug);
     console.log('Category selected:', categorySlug);
-  }
+}
 }
