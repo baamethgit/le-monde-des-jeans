@@ -6,11 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import html2canvas from 'html2canvas';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {ImageViewerComponent} from "../../image-viewer/image-viewer.component";
 
 @Component({
   selector: 'app-admin-detail-commande',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,ImageViewerComponent],
   templateUrl: './admin-detail-commande.component.html',
   styleUrl: './admin-detail-commande.component.scss'
 })

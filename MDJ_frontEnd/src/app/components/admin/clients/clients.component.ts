@@ -20,7 +20,7 @@ export class ClientsComponent implements OnInit {
   page = 1;
   isLoading: boolean = false;
   isUpdateLoading: boolean = false;
-  pageSize = 20;
+  pageSize = 50;
   searchTerm = '';
   totalItems = 0;
   modalService = inject(NgbModal);
