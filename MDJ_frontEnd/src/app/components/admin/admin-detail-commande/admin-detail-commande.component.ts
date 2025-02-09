@@ -37,7 +37,6 @@ export class AdminDetailCommandeComponent implements OnInit {
       {
         next:(value)=> {
           this.commande = value;
-          console.log(this.commande);
         },
         error:(error)=> {
           this.notCommandFound = true;

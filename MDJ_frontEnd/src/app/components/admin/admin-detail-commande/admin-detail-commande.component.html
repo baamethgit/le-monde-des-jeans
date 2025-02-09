@@ -20,42 +20,42 @@
           <h5 class="fw-bold mt-3 text-center">Détail de la Commande</h5>
 
           <div class="row mx-3 p-3 border">
-            <button type="" class="px-2 mx-auto my-2 py-1 rounded-3 rounded border-0 fw-bold btn btn-{{commande.statut |lowercase}}">{{commande.statut}}</button>
+            <button type="" class="px-2 mx-auto my-2 py-1 rounded-3 rounded border-0 fw-bold btn btn-{{commande?.statut |lowercase}}">{{commande?.statut}}</button>
 
             <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50">N° Commande:</div>
-                <div class="fw-bold">{{commande.ref_code}}</div>
+                <div class="fw-bold">{{commande?.ref_code}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50"> Nom du Client:</div>
-                <div class="">{{commande.client.nom_complet}}</div>
+                <div class="">{{commande?.client?.nom_complet}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50"><i class="fa-solid fa-phone me-1"></i>Numéro du client:</div>
-                <div class="">{{commande.client.phone_number}}</div>
+                <div class="">{{commande?.client?.phone_number}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50"><i class="fa-solid fa-calendar-days me-1"></i> Commandé le:</div>
-                <div class="">{{commande.date_commande | date:'dd MMM yyyy'}}</div>
+                <div class="">{{commande?.date_commande | date:'dd MMM yyyy'}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50"><i class="fa-solid fa-calendar-days me-1"></i>Livré le:</div>
-                <div class="">{{commande.date_livraison | date:'dd MMM yyyy'}}</div>
+                <div class="">{{commande?.date_livraison | date:'dd MMM yyyy'}}</div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6 my-3">
               <div class="">
                 <div class="text-black-50"><i class="fa-solid fa-location-dot me-1"></i> Zone de livraison</div>
-                <div class="" *ngIf="commande.zone_livraison">ZONE {{commande.zone_livraison.numero}} : {{commande.zone_livraison.nom}}</div>
+                <div class="" *ngIf="commande?.zone_livraison">ZONE {{commande?.zone_livraison?.numero}} : {{commande?.zone_livraison?.nom}}</div>
               </div>
             </div>
             <div class="col-12 my-3">
@@ -64,18 +64,18 @@
                 <hr class="flex-grow-1">
               </div>
               <ul class="list-unstyled">
-                <!--  <li *ngFor="let item of commande.produits">
+                <!--  <li *ngFor="let item of commande?.produits">
                     <img src="{{item.images[0].image}}" width="50" height="50" alt="">
                     {{item.nom}}
                 </li> -->
-                <li *ngFor="let item of commande.produits">
+                <li class="m-3" *ngFor="let item of commande?.produits">
                   <app-image-viewer
                     [images]="item.images"
-                    [width]="50"
-                    [height]="50"
+                    [width]="70"
+                    [height]="70"
                     [alt]="item.nom">
                   </app-image-viewer>
-                  {{item.nom}}
+                  {{item.nom || item.slug}} ({{item.prix}})
                 </li>
               </ul>
             </div>
@@ -89,20 +89,20 @@
             <p class="me-2 mt-2">Changer le statut</p>
             <div class="dropdown">
               <button  class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ textStatut }} {{commande.statut}}
+                {{ textStatut }} {{commande?.statut}}
               </button>
               <ul class="dropdown-menu">
-                <li *ngIf="commande.statut===StatutCommande.EN_ATTENTE" >
+                <li *ngIf="commande?.statut===StatutCommande.EN_ATTENTE" >
                   <button (click)="changeStatut(StatutCommande.PAYEE)" class="dropdown-item btn-secondary btn" type="button">
                     Payée
                   </button>
                 </li>
-                <li *ngIf="commande.statut===StatutCommande.PAYEE" >
+                <li *ngIf="commande?.statut===StatutCommande.PAYEE" >
                   <button   (click)="changeStatut(StatutCommande.EN_COURS_LIVRAISON)" class="dropdown-item btn-secondary btn" type="button">
                     En cours de Livraison
                   </button>
                 </li>
-                <li *ngIf="commande.statut === StatutCommande.PAYEE || commande.statut === StatutCommande.EN_COURS_LIVRAISON">
+                <li *ngIf="commande?.statut === StatutCommande.PAYEE || commande?.statut === StatutCommande.EN_COURS_LIVRAISON">
                   <button  (click)="changeStatut(StatutCommande.LIVREE)" class="dropdown-item btn-secondary btn" type="button">
                     Livrée
                   </button>
