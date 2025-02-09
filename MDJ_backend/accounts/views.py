@@ -64,6 +64,7 @@ class RegisterView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             elif 'addresse_mail' in str(e):
+
                 return Response(
                     {"erreur_rencontre": "Cette adresse e-mail est déjà utilisée."},
                     status=status.HTTP_400_BAD_REQUEST

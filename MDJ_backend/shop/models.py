@@ -110,6 +110,7 @@ class Produit(models.Model):
 
     def __str__(self):
         return self.slug
+
 class ImageProduit(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='images_produits/',verbose_name='photo')

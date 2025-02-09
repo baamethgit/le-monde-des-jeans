@@ -105,7 +105,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = PhoneNumberField(region='SN',unique=True,validators=[validate_phone_number_senegal])
     addresse_mail = models.EmailField(
         max_length=255, 
-        unique=True,
+        #unique=True,
         #validators=[validate_email_domain],
         null=True,
         blank=True,
