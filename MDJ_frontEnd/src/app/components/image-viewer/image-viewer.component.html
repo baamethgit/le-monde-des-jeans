@@ -1,0 +1,35 @@
+<div class="thumbnail" (click)="toggleFullscreen()">
+  <img [ngSrc]="images[0].image" [width]="width" [height]="height" [alt]="alt">
+  @if (images.length > 1) {
+    <span class="image-count">+{{ images.length - 1 }}</span>
+  }
+</div>
+
+@if (isFullscreen) {
+  <div class="fullscreen-overlay" (keydown)="handleKeydown($event)" tabindex="0">
+    <div class="fullscreen-content">
+      <button class="nav-button prev" (click)="previousImage()" [class.hidden]="currentIndex === 0">❮</button>
+
+      <div class="main-image-container">
+        <img [src]="images[currentIndex].image" [alt]="alt">
+      </div>
+
+      <button class="nav-button next" (click)="nextImage()" [class.hidden]="currentIndex === images.length - 1">❯</button>
+
+      <button class="close-button" (click)="toggleFullscreen()">×</button>
+
+      <div class="thumbnails-container">
+        @for (img of images; track img.image; let i = $index) {
+          <img
+            [src]="img.image"
+            [class.active]="i === currentIndex"
+            (click)="setCurrentImage(i)"
+            [alt]="alt + ' thumbnail ' + (i + 1)"
+            class="thumbnail-preview">
+        }
+      </div>
+
+      <div class="counter">{{ currentIndex + 1 }} / {{ images.length }}</div>
+    </div>
+  </div>
+}

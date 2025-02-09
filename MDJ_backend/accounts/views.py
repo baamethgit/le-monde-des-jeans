@@ -38,8 +38,9 @@ class RegisterView(APIView):
                 nom_complet=nom_complet,
                 password=password
             )
-            send_verification_email(user)
-            logger.info(f"Utilisateur {user} créé avec succès.Email envoyé pour activer le compte.")
+            #send_verification_email(user)
+            #logger.info(f"Utilisateur {user} créé avec succès.Email envoyé pour activer le compte.")
+            logger.info(f"Utilisateur {user} créé avec succès.A l'admin d'activer le compte.")
             return Response(
                 {
                     "message": "Utilisateur créé avec succès. Veuillez vérifier votre adresse e-mail pour activer votre compte."},
@@ -63,6 +64,7 @@ class RegisterView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             elif 'addresse_mail' in str(e):
+
                 return Response(
                     {"erreur_rencontre": "Cette adresse e-mail est déjà utilisée."},
                     status=status.HTTP_400_BAD_REQUEST
@@ -195,7 +197,7 @@ class VerifyEmailCPWView(APIView):
                 return Response({"error": f"Le lien de vérification a expiré.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_403_FORBIDDEN)
         except Exception as e:
             logger.error(e)
-            return Response({"error": "Une erreur innateudu s'est produite"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Une erreur inattendu s'est produite"}, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
             logger.error("Utilisateur introuvable.")
             return Response({"error": f"Token invalide.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_400_BAD_REQUEST)
