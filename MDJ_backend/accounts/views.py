@@ -196,7 +196,7 @@ class VerifyEmailCPWView(APIView):
                 return Response({"error": f"Le lien de vérification a expiré.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_403_FORBIDDEN)
         except Exception as e:
             logger.error(e)
-            return Response({"error": "Une erreur innateudu s'est produite"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Une erreur inattendu s'est produite"}, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
             logger.error("Utilisateur introuvable.")
             return Response({"error": f"Token invalide.contacter l'admin{f' sur {num_admin}' if num_admin else ''}"}, status=status.HTTP_400_BAD_REQUEST)

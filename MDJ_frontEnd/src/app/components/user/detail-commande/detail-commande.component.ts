@@ -14,6 +14,7 @@ import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 import {environment} from "../../../../environments/environment";
 import {InfosService} from "../../../services/infos.service";
 import {Infos} from "../../../models/infos.module";
+import {ImageViewerComponent} from "../../image-viewer/image-viewer.component";
 
 
 @Component({

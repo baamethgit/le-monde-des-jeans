@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NgOptimizedImage} from "@angular/common";
+import {CommonModule, NgOptimizedImage} from "@angular/common";
 interface ImageItem {
   image: string;
 }
@@ -7,7 +7,7 @@ interface ImageItem {
   selector: 'app-image-viewer',
   standalone: true,
   imports: [
-    NgOptimizedImage
+    NgOptimizedImage,CommonModule
   ],
   templateUrl: './image-viewer.component.html',
   styleUrl: './image-viewer.component.scss'
