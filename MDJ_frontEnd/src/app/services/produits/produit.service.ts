@@ -39,7 +39,7 @@ export class ProduitService {
   }
 
 
-  getProductsAdmin(page: number = 1, pageSize: number = 10, ordering:string='-updated_at'): Observable<any> {
+  getProductsAdmin(page: number = 1, pageSize: number = 10, ordering:string='-updated_at',search_term:string): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('page_size', pageSize.toString());
@@ -47,6 +47,10 @@ export class ProduitService {
     if (ordering) {
         params = params.set('ordering', ordering);
       }
+    
+    if(search_term){
+      params = params.set('search_term', search_term)
+    }
 
     return this.http.get<Produit[]>(`${this.apiUrl}`, { params });
   }
