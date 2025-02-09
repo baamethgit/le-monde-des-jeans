@@ -175,14 +175,18 @@ export class DetailCommandeComponent implements OnInit{
     ).subscribe({
       next:(data)=>{
         this.commande = data;
-        this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
-        if (this.selectedOption === 'livraison'){
+        //this.selectedOption = this.commande?.recupere_magasin ? 'recuperation' : 'livraison';
+        //if (this.selectedOption === 'livraison'){
           if (this.commande?.zone_livraison) {
+            this.selectedOption = "livraison";
             this.selectedZone = this.commande.zone_livraison;
-          } else if (this.zones.length) {
-            this.selectedZone = this.zones[0];
+          } else {
+            this.selectedOption = "recuperation";
+            if (this.zones.length) {
+              this.selectedZone = this.zones[0];
+            }
           }
-        }
+        //}
 
       },
       error:(error)=>{
