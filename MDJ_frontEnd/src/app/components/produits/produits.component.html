@@ -58,15 +58,24 @@
               }
 
             </ul>
-            <select
-                class="form-select show-tick d-md-none ps-2 pe-5"
-                [(ngModel)]="selectedCategory"
-                (change)="onCategorySelect($event)">
-                <option value=''>Tous les produits</option>
+            <div class="categories-scroll d-md-none">
+              <div class="d-flex align-items-center gap-2 overflow-x-auto py-2">
+                <button 
+                  [class.active]="selectedCategory === ''"
+                  (click)="onCategorySelect('')" 
+                  class="category-btn">
+                  All
+                </button>
                 @for (item of list_categorie; track $index) {
-                    <option [value]="item.slug">{{item.nom}}</option>
+                  <button 
+                    [class.active]="selectedCategory === item.slug"
+                    (click)="onCategorySelect(item.slug)" 
+                    class="category-btn">
+                    {{item.nom}}
+                  </button>
                 }
-            </select>
+              </div>
+            </div>
         </div>
 
         <router-outlet class="p-0 m-0 row"></router-outlet>

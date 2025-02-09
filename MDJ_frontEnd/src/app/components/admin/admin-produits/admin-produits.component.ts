@@ -10,7 +10,7 @@ import { categorie } from '../../../models/categorie';
 import { CategorieService } from '../../../services/categories/categorie.service';
 import { RouterLink } from '@angular/router';
 import {finalize} from "rxjs";
-import { blob } from 'node:stream/consumers';
+
 
 export const TAILLES = [
   { value: 'S', label: 'S' },
@@ -70,6 +70,7 @@ pageSize:number=10;
 collectionSize:number=0;
 sortColumn: string = 'updated_at';
 sortDirection: string = 'desc';
+search_term:string='';
 
 AddProductForm!:FormGroup;
 AddProductButtonLoading:boolean=false
@@ -148,7 +149,7 @@ loadProducts() {
   const ordering = this.sortColumn ?
     (this.sortDirection === 'desc' ? '-' : '') + this.sortColumn : '';
 
-  this.produitsService.getProductsAdmin(this.page, this.pageSize, ordering).pipe(
+  this.produitsService.getProductsAdmin(this.page, this.pageSize, ordering, this.search_term).pipe(
     finalize(() => this.isPLoading = false)
   ).subscribe({
     next: (data) => {
@@ -156,6 +157,11 @@ loadProducts() {
       this.collectionSize = data.count;
     }
   });
+}
+
+onSearch(){
+  this.page = 1;
+  this.loadProducts();
 }
 
 sort(column: string) {
