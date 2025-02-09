@@ -180,6 +180,13 @@ class ProductViewSet(viewsets.ModelViewSet):
                 valid_fields = ['prix', '-prix', 'special', 'QuantiteStock', '-QuantiteStock', 'id', '-id', '-updated_at', '-created_at']
                 if field in valid_fields:
                     queryset = queryset.order_by(field)
+                    
+        search_term= self.request.query_params.get('search_term', None)
+        if search_term:
+            queryset = queryset.filter(
+                Q(nom__icontains=search_term) |
+                Q(slug__icontains=search_term) 
+            )
 
         categorie = self.request.query_params.get('categorie', None)
         if categorie:

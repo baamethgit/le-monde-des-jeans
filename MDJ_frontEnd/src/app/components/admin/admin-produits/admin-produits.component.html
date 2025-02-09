@@ -242,17 +242,30 @@
     </div>
   </div>
 <div class="table-container my-4">
-    <h2>Liste des Produits</h2>
+    <div class="d-flex justify-content-between align-items-center my-2">
+      <h2>Liste des Produits</h2>
+      <form class="col-xs-3 col-sm-auto">
+
+        <label for="table-complete-search" class="col-form-label fs-5">Rechercher par nom de produit</label>
+        <div class="w-100">
+          <input
+            id="table-complete-search"
+            type="text"
+            class="form-control w-100"
+            name="searchTerm"
+            [(ngModel)]="search_term"
+            (input)="onSearch()"
+            placeholder="produit"
+            style="min-width:400px;"
+          />
+        </div>
+      </form>
+    </div>
     <table class="table table-bordered orders-table">
       <thead class="position-sticky">
         <tr>
-          <th scope="col" class="cursor-pointer" (click)="sort('id')" scope="col">
+          <th scope="col">
             ID
-            <i class="bi" [ngClass]="{
-              'bi-arrow-up': sortColumn === 'id' && sortDirection === 'asc',
-              'bi-arrow-down': sortColumn === 'id' && sortDirection === 'desc',
-              'bi-arrow-down-up': sortColumn !== 'id'
-            }"></i>
           </th>
           <th>
             Produit
@@ -260,21 +273,11 @@
           <th  scope="col" class="text-center">
             Categorie
           </th>
-          <th scope="col" class="text-center cursor-pointer" (click)="sort('prix')">
+          <th scope="col" class="text-center">
             Prix
-            <i class="bi" [ngClass]="{
-              'bi-arrow-up': sortColumn === 'prix' && sortDirection === 'asc',
-              'bi-arrow-down': sortColumn === 'prix' && sortDirection === 'desc',
-              'bi-arrow-down-up': sortColumn !== 'prix'
-            }"></i>
           </th>
-          <th scope="col" class="text-center cursor-pointer" (click)="sort('QuantiteStock')">
+          <th scope="col" class="text-center">
             Quantite Stock
-            <i class="bi" [ngClass]="{
-              'bi-arrow-up': sortColumn === 'QuantiteStock' && sortDirection === 'asc',
-              'bi-arrow-down': sortColumn === 'QuantiteStock' && sortDirection === 'desc',
-              'bi-arrow-down-up': sortColumn !== 'QuantiteStock'
-            }"></i>
           </th>
           <th scope="col" class="text-center">Taille</th>
           <th class="actions-header text-center">Actions</th>
