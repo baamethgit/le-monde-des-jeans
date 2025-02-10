@@ -29,7 +29,7 @@
                   <li><a class="dropdown-item" (click)="logout()" data-toggle="collapse" data-target="#navbarSupportedContent">Se déconnecter</a></li>
                 </ul>
               </div>
-              <span *ngIf="!is_authenticated"><a routerLink="/login" data-toggle="collapse" data-target="#navbarSupportedContent">Se Connecter</a></span>
+              <span *ngIf="!is_authenticated"><a (click)="navigateTo()" data-toggle="collapse" data-target="#navbarSupportedContent">Se Connecter</a></span>
             </button>
           </div>
           @if(is_authenticated){
