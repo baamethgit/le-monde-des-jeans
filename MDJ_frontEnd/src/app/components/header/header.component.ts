@@ -1,11 +1,10 @@
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {Component, Inject, inject, OnInit, PLATFORM_ID} from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterStateSnapshot } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/users/user.service';
 import { Infos } from '../../models/infos.module';
 import { InfosService } from '../../services/infos.service';
-import { log } from 'console';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +22,8 @@ export class HeaderComponent implements OnInit{
   private isBrowser: boolean;
 
   constructor(
-    @Inject(PLATFORM_ID) platformId: Object
+    @Inject(PLATFORM_ID) platformId: Object, private router:Router
+    
   ){
     this.isBrowser = isPlatformBrowser(platformId);
   }
@@ -60,5 +60,11 @@ export class HeaderComponent implements OnInit{
         }
       }
     );
+  }
+
+  navigateTo(): void {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: this.router.url },
+    });
   }
 }

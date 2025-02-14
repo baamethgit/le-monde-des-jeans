@@ -51,7 +51,7 @@ responsiveOptions = [
   },
   {
     breakpoint: '560px',
-    numVisible: 1,
+    numVisible: 3,
     showThumbnails: false
   }
 ];

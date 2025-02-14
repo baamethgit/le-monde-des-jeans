@@ -3,7 +3,7 @@ import { ProduitService } from '../../../services/produits/produit.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {finalize, Subscription} from 'rxjs';
 import { Produit } from '../../../models/produit';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage, ViewportScroller } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { NgbPaginationModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +28,7 @@ export class ProductFilterComponent implements OnInit{
 
   private routeSub: Subscription | undefined;
 
-constructor(private readonly produitService:ProduitService, private readonly route:ActivatedRoute){}
+constructor(private readonly produitService:ProduitService, private readonly route:ActivatedRoute, private readonly viewportScroller: ViewportScroller){}
 
 ngOnInit(): void {
   // Écouter les changements de paramètres de route
@@ -75,5 +75,6 @@ calculateHeight(image: any): number {
 onPageChange(page: number): void {
   this.page = page;
   this.loadProductsByCategory(this.current_category);
+  this.viewportScroller.scrollToPosition([0, 0]);
 }
 }

@@ -62,7 +62,6 @@ export class LoginComponent implements OnInit{
           )
           .subscribe({
           next: (user) => {
-            this.router.navigate(["/"]);
             const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
             this.router.navigateByUrl(returnUrl);
           },

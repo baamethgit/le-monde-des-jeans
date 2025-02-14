@@ -4,7 +4,7 @@ import {  CategorieService } from '../../../services/categories/categorie.servic
 import { RouterLink } from '@angular/router';
 import { Produit } from '../../../models/produit';
 import { categorie } from '../../../models/categorie';
-import { CommonModule ,NgOptimizedImage} from '@angular/common';
+import { CommonModule ,NgOptimizedImage, ViewportScroller} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -30,7 +30,7 @@ export class AllProductsComponent implements OnInit{
   selectedSpecial: string = '';
   isLoading = false;
 
-  constructor(private readonly produitService:ProduitService, private readonly categorieService:CategorieService){}
+  constructor(private readonly produitService:ProduitService, private readonly categorieService:CategorieService, private viewportScroller: ViewportScroller){}
 
 
   ngOnInit():void{
@@ -71,6 +71,7 @@ export class AllProductsComponent implements OnInit{
   onPageChange(page: number) {
     this.page = page;
     this.loadProducts();
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
 
   onPageSizeChange(pageSize: number) {
