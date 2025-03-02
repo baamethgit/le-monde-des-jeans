@@ -13,7 +13,7 @@
 				class="form-control w-100"
 				name="searchTerm"
 				[(ngModel)]="searchTerm"
-                (input)="onSearch()"
+        (input)="onSearch()"
 				placeholder="abou"
 				style="min-width:400px;"
 			/>
@@ -95,7 +95,12 @@
   </table>
 
   <div *ngIf="users.length" class="d-flex justify-content-between p-2">
-    <ngb-pagination (pageChange)="loadUsers()" [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize">
+    <ngb-pagination 
+    (pageChange)="loadUsers()" 
+    [collectionSize]="totalItems" 
+    [(page)]="page" 
+    (pageChange)="OnPageChange($event)"
+    [pageSize]="pageSize">
     </ngb-pagination>
     <p>{{totalItems}} clients au total</p>
   </div>
