@@ -274,7 +274,7 @@ class AvisView(APIView):
         elif self.request.method == 'POST':
             return [IsAuthenticated()]
         elif self.request.method == 'DELETE':
-            return [IsAuthenticated,IsAdminUser()]
+            return [IsAuthenticated(),IsAdminUser()]
         return []
     def get(self, request):
         list_avis = Avis.objects.all()

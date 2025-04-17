@@ -28,10 +28,10 @@ urlpatterns = [
     path("client/",UserDetailView.as_view()),
     path("delete-user/<int:id>/",deleteUserView.as_view()),
     path('avis/',AvisView.as_view()),
-    path('avis/<int:id_avis>',AvisView.as_view()),
+    path('avis/<int:id_avis>/',AvisView.as_view()),
     path('create-superuser/', create_superuser, name='create_superuser'),
     path('InfosGen/', InformationsGeneralesView.as_view()),
-    path('InfosGen/update', InformationsGeneralesView.as_view()),
+    path('InfosGen/update/', InformationsGeneralesView.as_view()),
 
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
