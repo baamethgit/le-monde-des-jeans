@@ -47,6 +47,12 @@ export class ClientsComponent implements OnInit {
     this.loadUsers();
   }
 
+  OnPageChange(page: number) {
+    this.page = page;
+    this.loadUsers();
+    window.scrollTo(0, 0);
+  }
+
 
   deleteUser(id:number){
     const modalRef = this.modalService.open(DeleteModalComponent, { size: 'lg',centered:true, backdrop: 'static' });

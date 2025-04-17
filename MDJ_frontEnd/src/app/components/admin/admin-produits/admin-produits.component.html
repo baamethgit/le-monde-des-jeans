@@ -306,7 +306,14 @@
                     }
                     
                 </td>
-                <td>{{item.categorie_detail.nom}}</td>
+                <td>
+                  @if (item.categorie_detail) {
+                    {{item.categorie_detail.nom}}
+                  }
+                  @else {
+                    "categorie absente ou supprimee"
+                  }
+                </td>
                 <td class="text-center">{{item.prix}}</td>
                 <td class="text-center align-content-center">
                   @if (item.QuantiteStock>0) {
